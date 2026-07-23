@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
-import 'upgrade_plan_screen.dart';
+import 'subscription_screen.dart';
 
-/// Fan+ tab — subscription tiers (Figma 364:1415 / 365:1414, 404:9927 …).
+/// Fan+ — Non-Subscriber (Figma 2145:8198): VIP experiences teaser.
 class FanPlusScreen extends StatelessWidget {
   const FanPlusScreen({super.key});
 
@@ -12,151 +13,128 @@ class FanPlusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabScaffold(
       children: [
-        const TabHeader('Fan+', subtitle: 'Unlock more as a Superfan'),
-        const SizedBox(height: 20),
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _CurrentPlan()),
+        // Header: logo + bell (matches Home)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Svg('logo_s04', size: 36),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+                child: const Center(child: Svg('bell_dot', size: 20)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Hero card
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: AppColors.pointsGradient),
+              borderRadius: BorderRadius.circular(AppRadii.card),
+            ),
+            child: Column(
+              children: [
+                const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 40),
+                const SizedBox(height: 12),
+                Text('Unlock VIP Fan Experiences',
+                    textAlign: TextAlign.center, style: AppText.label1.copyWith(color: Colors.white)),
+                const SizedBox(height: 6),
+                Text('Exclusive raffles, boosts, and rewards',
+                    textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Two locked cards
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Expanded(child: _LockedCard(icon: 'ic_daily_spin', label: 'Extra Spin')),
+              SizedBox(width: 12),
+              Expanded(child: _LockedCard(icon: 'ic_scratch', label: 'Extra Scratch Card')),
+            ],
+          ),
+        ),
         const SizedBox(height: 24),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text('Choose your plan', style: AppText.label1),
+          child: Align(alignment: Alignment.centerLeft, child: Text('VIP Experiences', style: AppText.label1)),
         ),
         const SizedBox(height: 12),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: _PlanCard(
-            name: 'Supporter',
-            price: '€4.99',
-            highlight: false,
-            perks: ['2× Fan Points on purchases', 'Priority ticket window', 'Exclusive newsletter'],
+        for (final t in const [
+          'Virtual and Physical Cards',
+          'Chances to Win a Signed Jersey',
+          'Meet the Players',
+          'Points Multiplier',
+        ])
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            child: Row(
+              children: [
+                const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
+                const SizedBox(width: 12),
+                Expanded(child: Text(t, style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
+                Pill(
+                  gradient: const LinearGradient(colors: AppColors.goldGradient),
+                  child: Text('Exclusive', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                ),
+              ],
+            ),
           ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Text('…and much more!', style: AppText.body2),
         ),
         const SizedBox(height: 12),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: _PlanCard(
-            name: 'Superfan',
-            price: '€9.99',
-            highlight: true,
-            perks: [
-              '3× Fan Points on everything',
-              'Meet & greet raffles',
-              'Free matchday scratch cards',
-              'Members-only experiences',
-            ],
-          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: PrimaryButton('Upgrade to Fan+ Now',
+              onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SubscriptionScreen()),
+                  )),
         ),
       ],
     );
   }
 }
 
-class _CurrentPlan extends StatelessWidget {
-  const _CurrentPlan();
+class _LockedCard extends StatelessWidget {
+  final String icon;
+  final String label;
+  const _LockedCard({required this.icon, required this.label});
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(12)),
-            child: const Icon(Icons.person_outline_rounded, color: AppColors.textNormal),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Current plan', style: AppText.body3Regular),
-                const SizedBox(height: 2),
-                Text('Free', style: AppText.label2.copyWith(color: AppColors.textDarker)),
-              ],
-            ),
-          ),
-          Pill(
-            color: AppColors.surfaceMinimal,
-            child: Text('Active', style: AppText.caption1.copyWith(color: AppColors.textNormal)),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlanCard extends StatelessWidget {
-  final String name;
-  final String price;
-  final bool highlight;
-  final List<String> perks;
-  const _PlanCard({required this.name, required this.price, required this.highlight, required this.perks});
-
-  @override
-  Widget build(BuildContext context) {
-    final onColor = highlight ? Colors.white : AppColors.textDarker;
     return Container(
-      padding: const EdgeInsets.all(20),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        gradient: highlight ? const LinearGradient(colors: AppColors.pointsGradient) : null,
-        color: highlight ? null : AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.card),
-        border: highlight ? null : Border.all(color: AppColors.borderLightest),
-      ),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(name, style: AppText.label1.copyWith(color: onColor)),
-              if (highlight)
-                Pill(
-                  gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text('POPULAR', style: AppText.caption1.copyWith(color: AppColors.textDarker)),
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(price, style: AppText.h2.copyWith(color: onColor)),
-              const SizedBox(width: 4),
-              Text('/ month',
-                  style: AppText.body2.copyWith(color: highlight ? Colors.white70 : AppColors.textLight)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ...perks.map((p) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.check_circle_rounded,
-                        size: 18, color: highlight ? AppColors.gold : AppColors.brandPrimary),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(p,
-                          style: AppText.body2
-                              .copyWith(color: highlight ? Colors.white : AppColors.textNormal)),
-                    ),
-                  ],
-                ),
-              )),
-          const SizedBox(height: 8),
-          Builder(
-            builder: (context) => PrimaryButton(
-              'Upgrade to $name',
-              color: highlight ? AppColors.gold : AppColors.brandPrimary,
-              textColor: highlight ? AppColors.brandDarkest : Colors.white,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: name, price: price)),
-              ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Pill(
+              gradient: const LinearGradient(colors: AppColors.goldGradient),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.lock_rounded, size: 10, color: AppColors.brandDarkest),
+                const SizedBox(width: 3),
+                Text('Locked', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+              ]),
             ),
           ),
+          const SizedBox(height: 4),
+          AssetImg(icon, width: 44, height: 44, fallbackIcon: Icons.lock_rounded),
+          const SizedBox(height: 8),
+          Text(label, textAlign: TextAlign.center, style: AppText.body3),
         ],
       ),
     );
