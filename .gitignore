@@ -12,3 +12,5 @@ macos/
 windows/
 web/
 .DS_Store
+.idea/
+*.iml
