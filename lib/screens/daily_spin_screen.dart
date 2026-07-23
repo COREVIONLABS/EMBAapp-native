@@ -2,9 +2,19 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/sub_scaffold.dart';
 
-/// Daily Spin (Figma 401:2605 / reward / already spun).
+/// Presents Daily Spin as a modal sheet over the current screen (Figma 2145:8385).
+void showDailySpin(BuildContext context) {
+  Navigator.of(context).push(PageRouteBuilder(
+    opaque: false,
+    barrierColor: Colors.black54,
+    barrierDismissible: true,
+    pageBuilder: (_, a, _) => const DailySpinScreen(),
+    transitionsBuilder: (_, a, _, child) =>
+        SlideTransition(position: Tween(begin: const Offset(0, 1), end: Offset.zero).animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)), child: child),
+  ));
+}
+
 class DailySpinScreen extends StatefulWidget {
   const DailySpinScreen({super.key});
   @override
@@ -12,15 +22,15 @@ class DailySpinScreen extends StatefulWidget {
 }
 
 class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 3200));
-  late Animation<double> _anim = const AlwaysStoppedAnimation(0);
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 3400));
+  Animation<double> _anim = const AlwaysStoppedAnimation(0);
   bool _spun = false;
-  final _labels = ['25', '50', '10', '100', '5', '75', '20', '250'];
+
+  static const _labels = ['Signed Jersey', '50 Points', 'Extra Spin', '100 Points', '25 Tickets', '25 Points', '20 Points', '30 Points'];
 
   void _spin() {
     if (_c.isAnimating || _spun) return;
-    final target = 5 * 2 * math.pi + (math.pi / 4) * 3; // land on a segment
-    _anim = Tween<double>(begin: 0, end: target).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
+    _anim = Tween<double>(begin: 0, end: 6 * 2 * math.pi + math.pi / 3).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
     _c.forward(from: 0).whenComplete(() => setState(() => _spun = true));
     setState(() {});
   }
@@ -33,56 +43,87 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return SubScaffold(
-      title: 'Daily Spin',
-      children: [
-        const SizedBox(height: 8),
-        Text('Spin to win Fan Points', textAlign: TextAlign.center, style: AppText.h4),
-        const SizedBox(height: 6),
-        Text('One free spin every day', textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
-        const SizedBox(height: 32),
-        SizedBox(
-          height: 300,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AnimatedBuilder(
-                animation: _anim,
-                builder: (_, _) => Transform.rotate(
-                  angle: _anim.value,
-                  child: CustomPaint(size: const Size(280, 280), painter: _WheelPainter(_labels)),
-                ),
-              ),
-              Positioned(
-                top: 0,
-                child: Icon(Icons.arrow_drop_down_rounded, size: 48, color: AppColors.gold),
-              ),
-              Container(
-                width: 56,
-                height: 56,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.white),
-                child: const Center(child: Svg('logo_s04', size: 40)),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 32),
-        if (_spun)
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Column(
+        children: [
+          Expanded(child: GestureDetector(onTap: () => Navigator.of(context).maybePop(), behavior: HitTestBehavior.opaque)),
           Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.tile)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.celebration_rounded, color: AppColors.success),
-                const SizedBox(width: 10),
-                Text('You won +100 points!', style: AppText.label2.copyWith(color: AppColors.success)),
-              ],
+            width: double.infinity,
+            decoration: const BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(width: 40, height: 5, decoration: BoxDecoration(color: AppColors.surfaceLowContrast, borderRadius: BorderRadius.circular(3))),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Text('Daily Spin', style: AppText.label1),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).maybePop(),
+                            child: const Icon(Icons.close_rounded, color: AppColors.textLight),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text('Spin the wheel to win rewards!', style: AppText.body2.copyWith(color: AppColors.textLight)),
+                  const SizedBox(height: 12),
+                  Pill(
+                    color: AppColors.brandLightest,
+                    child: Text('1 Spin Left', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 290,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedBuilder(
+                          animation: _anim,
+                          builder: (_, _) => Transform.rotate(angle: _anim.value, child: CustomPaint(size: const Size(280, 280), painter: _WheelPainter(_labels))),
+                        ),
+                        Positioned(top: -2, child: Icon(Icons.arrow_drop_down_rounded, size: 44, color: AppColors.gold)),
+                        GestureDetector(
+                          onTap: _spin,
+                          child: Container(
+                            width: 64,
+                            height: 64,
+                            decoration: const BoxDecoration(shape: BoxShape.circle, gradient: LinearGradient(colors: AppColors.goldGradient)),
+                            alignment: Alignment.center,
+                            child: Text('SPIN', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 13)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  if (_spun)
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.tile)),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        const Icon(Icons.celebration_rounded, color: AppColors.success),
+                        const SizedBox(width: 10),
+                        Text('You won 100 Points!', style: AppText.label2.copyWith(color: AppColors.success)),
+                      ]),
+                    )
+                  else
+                    PrimaryButton('Spin Now', onTap: _spin),
+                ],
+              ),
             ),
-          )
-        else
-          PrimaryButton('Spin Now', onTap: _spin),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -90,28 +131,35 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
 class _WheelPainter extends CustomPainter {
   final List<String> labels;
   _WheelPainter(this.labels);
+  static const _colors = [AppColors.brandPrimary, AppColors.gold, AppColors.brandDark, Color(0xFFFF8C00)];
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final radius = size.width / 2;
     final n = labels.length;
     final sweep = 2 * math.pi / n;
-    const colors = [AppColors.brandPrimary, AppColors.brandDark];
     for (var i = 0; i < n; i++) {
-      final paint = Paint()..color = colors[i % 2];
       final start = -math.pi / 2 + i * sweep;
-      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), start, sweep, true, paint);
-      // label
-      final tp = TextPainter(
-        text: TextSpan(
-            text: labels[i],
-            style: const TextStyle(fontFamily: 'Urbanist', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
-        textDirection: TextDirection.ltr,
-      )..layout();
+      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), start, sweep, true, Paint()..color = _colors[i % _colors.length]);
+      final divider = Paint()
+        ..color = Colors.white.withValues(alpha: 0.35)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke;
+      canvas.drawLine(center, center + Offset(math.cos(start) * radius, math.sin(start) * radius), divider);
       final ang = start + sweep / 2;
-      final off = Offset(center.dx + math.cos(ang) * radius * 0.62 - tp.width / 2,
-          center.dy + math.sin(ang) * radius * 0.62 - tp.height / 2);
-      tp.paint(canvas, off);
+      final gold = _colors[i % _colors.length] == AppColors.gold;
+      final tp = TextPainter(
+        text: TextSpan(text: labels[i], style: TextStyle(fontFamily: 'Urbanist', fontSize: 10, fontWeight: FontWeight.w700, color: gold ? AppColors.brandDarkest : Colors.white)),
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,
+      )..layout(maxWidth: 64);
+      canvas.save();
+      canvas.translate(center.dx, center.dy);
+      canvas.rotate(ang);
+      canvas.translate(radius * 0.58, 0);
+      canvas.rotate(math.pi / 2);
+      tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
+      canvas.restore();
     }
     canvas.drawCircle(center, radius, Paint()..color = AppColors.gold..style = PaintingStyle.stroke..strokeWidth = 6);
   }

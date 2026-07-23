@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/points_card.dart';
 import '../widgets/tab_scaffold.dart';
+import 'redeem_screen.dart';
 
-/// Points tab — History / Missions (Figma 386:7030 / 386:7304).
+/// Points tab — History / Missions (Figma 2145:7321 / 7449).
 class PointsScreen extends StatefulWidget {
   const PointsScreen({super.key});
   @override
@@ -17,19 +19,68 @@ class _PointsScreenState extends State<PointsScreen> {
   Widget build(BuildContext context) {
     return TabScaffold(
       children: [
-        const TabHeader('Points', subtitle: 'S04 Fan Points'),
-        const SizedBox(height: 20),
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsHero()),
-        const SizedBox(height: 20),
+        // Header: logo + bell
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _Segmented(
-            labels: const ['History', 'Missions'],
-            index: _seg,
-            onChanged: (i) => setState(() => _seg = i),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Svg('logo_s04', size: 36),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+                child: const Center(child: Svg('bell_dot', size: 20)),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 16),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: S04PointsCard(boost: '3x Boost')),
+        const SizedBox(height: 16),
+        // Use your points banner
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: AppColors.goldGradient),
+              borderRadius: BorderRadius.circular(AppRadii.tile),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Use your points', style: AppText.label2.copyWith(color: AppColors.brandDarkest)),
+                      const SizedBox(height: 2),
+                      Text('Points are ready to use', style: AppText.body3.copyWith(color: AppColors.textDark)),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RedeemScreen())),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Text('Redeem', style: AppText.body3.copyWith(color: Colors.white)),
+                      const SizedBox(width: 4),
+                      const Svg('arrow_left', size: 14),
+                    ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _Segmented(labels: const ['History', 'Missions'], index: _seg, onChanged: (i) => setState(() => _seg = i)),
+        ),
+        const SizedBox(height: 12),
         if (_seg == 0) ..._history() else ..._missions(),
       ],
     );
@@ -37,16 +88,16 @@ class _PointsScreenState extends State<PointsScreen> {
 
   List<Widget> _history() {
     const rows = [
-      ('Matchday check-in', '+120', 'Today · Veltins-Arena', true),
-      ('Prediction correct', '+80', 'Yesterday', true),
-      ('Redeemed: Home jersey', '-1,500', '2 days ago', false),
-      ('Club shop purchase', '+45', 'Last week', true),
-      ('Daily spin', '+25', 'Last week', true),
+      ('Adidas Store Purchase', 'Today', '+252 pts', true),
+      ('Daily Spin Win', 'Today', '+50 pts', true),
+      ('Mission Complete: Spend €200', 'Yesterday', '+100 pts', true),
+      ('Match Prediction (Correct)', 'Saturday', '+75 pts', true),
+      ('Redeemed: Home Jersey', 'Thursday', '-1,500 pts', false),
     ];
     return rows
         .map((r) => Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              child: _PointRow(title: r.$1, pts: r.$2, sub: r.$3, credit: r.$4),
+              child: _HistoryRow(title: r.$1, date: r.$2, pts: r.$3, credit: r.$4),
             ))
         .toList();
   }
@@ -68,22 +119,13 @@ class _PointsScreenState extends State<PointsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(r.$1, style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                        Pill(
-                          color: AppColors.successBg,
-                          child: Text(r.$2,
-                              style: AppText.caption1.copyWith(color: AppColors.success, fontSize: 11)),
-                        ),
+                        Pill(color: AppColors.successBg, child: Text(r.$2, style: AppText.caption1.copyWith(color: AppColors.success, fontSize: 11))),
                       ],
                     ),
                     const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(3),
-                      child: LinearProgressIndicator(
-                        value: r.$3,
-                        minHeight: 6,
-                        backgroundColor: AppColors.surfaceLowContrast,
-                        valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary),
-                      ),
+                      child: LinearProgressIndicator(value: r.$3, minHeight: 6, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary)),
                     ),
                     const SizedBox(height: 8),
                     Text(r.$4, style: AppText.body3Regular),
@@ -92,42 +134,6 @@ class _PointsScreenState extends State<PointsScreen> {
               ),
             ))
         .toList();
-  }
-}
-
-class _PointsHero extends StatelessWidget {
-  const _PointsHero();
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: AppColors.pointsGradient),
-        borderRadius: BorderRadius.circular(AppRadii.card),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Total balance', style: AppText.body2.copyWith(color: Colors.white70)),
-          const SizedBox(height: 6),
-          Text('2,850', style: AppText.h1.copyWith(color: Colors.white)),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Pill(
-                gradient: const LinearGradient(colors: AppColors.goldGradient),
-                child: Text('Superfan tier', style: AppText.caption1.copyWith(color: AppColors.textDarker)),
-              ),
-              const SizedBox(width: 8),
-              Pill(
-                color: AppColors.brandDark,
-                child: Text('+430 this week', style: AppText.caption1.copyWith(color: AppColors.textLightest)),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -140,10 +146,7 @@ class _Segmented extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMinimal,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-      ),
+      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
       child: Row(
         children: [
           for (var i = 0; i < labels.length; i++)
@@ -156,15 +159,10 @@ class _Segmented extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: i == index ? AppColors.surface : Colors.transparent,
                     borderRadius: BorderRadius.circular(AppRadii.pill),
-                    boxShadow: i == index
-                        ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))]
-                        : null,
+                    boxShadow: i == index ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
                   ),
                   child: Center(
-                    child: Text(labels[i],
-                        style: AppText.body2.copyWith(
-                            color: i == index ? AppColors.brandPrimary : AppColors.textLight,
-                            fontWeight: FontWeight.w700)),
+                    child: Text(labels[i], style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
                   ),
                 ),
               ),
@@ -175,44 +173,35 @@ class _Segmented extends StatelessWidget {
   }
 }
 
-class _PointRow extends StatelessWidget {
+class _HistoryRow extends StatelessWidget {
   final String title;
+  final String date;
   final String pts;
-  final String sub;
   final bool credit;
-  const _PointRow({required this.title, required this.pts, required this.sub, required this.credit});
+  const _HistoryRow({required this.title, required this.date, required this.pts, required this.credit});
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      padding: const EdgeInsets.all(14),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: credit ? AppColors.successBg : AppColors.brandLightest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(credit ? Icons.add_rounded : Icons.redeem_rounded,
-                color: credit ? AppColors.success : AppColors.brandPrimary, size: 20),
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(color: credit ? AppColors.successBg : const Color(0xFFFDE7E7), borderRadius: BorderRadius.circular(10)),
+          child: Icon(credit ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: credit ? AppColors.success : AppColors.danger, size: 18),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+              const SizedBox(height: 2),
+              Text(date, style: AppText.body3Regular),
+            ],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                const SizedBox(height: 2),
-                Text(sub, style: AppText.body3Regular),
-              ],
-            ),
-          ),
-          Text(pts,
-              style: AppText.label2.copyWith(
-                  color: credit ? AppColors.success : AppColors.textDarker, fontWeight: FontWeight.w700)),
-        ],
-      ),
+        ),
+        Text(pts, style: AppText.body2.copyWith(color: credit ? AppColors.success : AppColors.danger, fontWeight: FontWeight.w700)),
+      ],
     );
   }
 }

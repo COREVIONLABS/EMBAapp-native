@@ -1,101 +1,110 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 
-/// Redeem Points / Rewards catalog (Figma 386:7492).
+/// Redeem Points (Figma 2145:12395): featured brand rewards + ways to redeem.
 class RedeemScreen extends StatelessWidget {
   const RedeemScreen({super.key});
-
-  static const _rewards = [
-    ('Home Jersey 24/25', '1,500', Icons.checkroom_rounded),
-    ('Match Ticket', '2,000', Icons.confirmation_number_rounded),
-    ('Signed Ball', '3,500', Icons.sports_soccer_rounded),
-    ('Stadium Tour', '900', Icons.tour_rounded),
-    ('Scarf', '450', Icons.style_rounded),
-    ('VIP Lounge', '5,000', Icons.star_rounded),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Redeem',
+      title: 'Redeem Points',
       children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: AppColors.pointsGradient),
-            borderRadius: BorderRadius.circular(AppRadii.card),
-          ),
-          child: Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Your balance', style: AppText.body3.copyWith(color: Colors.white70)),
-                  const SizedBox(height: 2),
-                  Text('2,850 pts', style: AppText.h4.copyWith(color: Colors.white)),
-                ],
-              ),
-              const Spacer(),
-              Pill(
-                gradient: const LinearGradient(colors: AppColors.goldGradient),
-                child: Text('Superfan', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
-              ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Featured Rewards', style: AppText.label2),
+            Text('See All', style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 150,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: const [
+              _BrandCard(brand: 'Nike Stores', cat: 'Clothing', from: '775', color: Color(0xFF111111)),
+              SizedBox(width: 12),
+              _BrandCard(brand: 'Starbucks', cat: 'Food', from: '520', color: Color(0xFF00704A)),
+              SizedBox(width: 12),
+              _BrandCard(brand: 'Adidas', cat: 'Clothing', from: '690', color: Color(0xFF1A2432)),
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        const SectionHeader('Available Rewards', action: null),
+        const SizedBox(height: 24),
+        Text('Ways to redeem', style: AppText.label2),
         const SizedBox(height: 12),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 0.82,
-          children: [
-            for (final r in _rewards) _RewardTile(name: r.$1, cost: r.$2, icon: r.$3),
-          ],
-        ),
+        for (final w in const [
+          (Icons.checkroom_rounded, 'Clothing', 'Get Clothing rewards'),
+          (Icons.hotel_rounded, 'Stays', 'Book hotels and more'),
+          (Icons.sim_card_rounded, 'eSIM', 'Get mobile data worldwide'),
+          (Icons.confirmation_number_rounded, 'Experiences', 'Stadium tours, VIP events'),
+        ])
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: SurfaceCard(
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
+                    child: Icon(w.$1, color: AppColors.brandPrimary, size: 22),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(w.$2, style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15)),
+                        const SizedBox(height: 2),
+                        Text(w.$3, style: AppText.body3Regular),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
 }
 
-class _RewardTile extends StatelessWidget {
-  final String name;
-  final String cost;
-  final IconData icon;
-  const _RewardTile({required this.name, required this.cost, required this.icon});
+class _BrandCard extends StatelessWidget {
+  final String brand;
+  final String cat;
+  final String from;
+  final Color color;
+  const _BrandCard({required this.brand, required this.cat, required this.from, required this.color});
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      padding: const EdgeInsets.all(12),
+    return Container(
+      width: 165,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(AppRadii.tile)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.brandLightest,
-                borderRadius: BorderRadius.circular(AppRadii.chip),
-              ),
-              alignment: Alignment.center,
-              child: AssetImg('reward_${name.hashCode}', width: 56, height: 56, fallbackIcon: icon),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(brand.characters.first, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800)),
+              Text(cat, style: AppText.caption1.copyWith(color: Colors.white70, fontSize: 11)),
+            ],
           ),
-          const SizedBox(height: 10),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+          const Spacer(),
+          Text(brand, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
           Row(
             children: [
-              Text(cost, style: AppText.label2.copyWith(color: AppColors.brandPrimary)),
+              const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 16),
               const SizedBox(width: 4),
-              Text('pts', style: AppText.body3Regular),
+              Text('From $from', style: AppText.body3.copyWith(color: Colors.white)),
             ],
           ),
         ],
