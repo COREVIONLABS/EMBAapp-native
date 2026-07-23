@@ -5,7 +5,8 @@ import '../widgets/asset_img.dart';
 import '../widgets/ios_chrome.dart';
 import 'login_screen.dart';
 
-/// Welcome 1–3 (Figma nodes 385:3473 / 385:3489 / 385:3504).
+/// Welcome 1–3 (Figma 2145:11369 / 11385 / 11400) — full-bleed hero photo
+/// with a bottom sheet, 1:1 with the design.
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
   @override
@@ -19,20 +20,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _slides = [
     (
       'onboarding_earn',
-      'Earn Points',
-      'Collect S04 Fan Points for match attendance, purchases and predictions — every action counts.',
+      'Earn Points Everywhere',
+      'Shop at sponsors, spin daily, complete missions, and earn 3x Points on matchday with Stadium Boost.',
       Icons.stadium_rounded,
     ),
     (
       'onboarding_redeem',
-      'Redeem Rewards',
-      'Turn your points into tickets, exclusive merch and once-in-a-lifetime club experiences.',
+      'Redeem for Merch & Rewards',
+      'Use Fan Points for exclusive jerseys, scarves, signed memorabilia, and partner discounts.',
       Icons.redeem_rounded,
     ),
     (
       'onboarding_experiences',
-      'Exclusive Experiences',
-      'Meet the players, get stadium tours and unlock money-can’t-buy Superfan moments.',
+      'Win Exclusive Rewards',
+      "Enter VIP raffles, scratch cards, and daily spins. Meet the players, win signed gear, and unlock experiences money can't buy.",
       Icons.emoji_events_rounded,
     ),
   ];
@@ -46,89 +47,85 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _goLogin() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-    );
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
-    final last = _page == _slides.length - 1;
     return Scaffold(
       backgroundColor: AppColors.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const IOSStatusBar(),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16, top: 4),
-                child: TextButton(
-                  onPressed: _goLogin,
-                  child: Text('Skip', style: AppText.body2.copyWith(color: AppColors.textLight)),
-                ),
+      body: Stack(
+        children: [
+          // Hero photo (full-bleed, top ~55%)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: PageView.builder(
+              controller: _controller,
+              onPageChanged: (i) => setState(() => _page = i),
+              itemCount: _slides.length,
+              itemBuilder: (_, i) => AssetImg(
+                _slides[i].$1,
+                fit: BoxFit.cover,
+                fallbackIcon: _slides[i].$4,
               ),
             ),
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                onPageChanged: (i) => setState(() => _page = i),
-                itemCount: _slides.length,
-                itemBuilder: (_, i) {
-                  final s = _slides[i];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 240,
-                          height: 240,
+          ),
+          // Bottom sheet
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+              ),
+              padding: const EdgeInsets.fromLTRB(28, 28, 28, 40),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_slides[_page].$2,
+                      style: AppText.h4.copyWith(color: const Color(0xFF101828))),
+                  const SizedBox(height: 10),
+                  Text(_slides[_page].$3,
+                      style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w400)),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (var i = 0; i < _slides.length; i++)
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          width: i == _page ? 22 : 8,
+                          height: 8,
                           decoration: BoxDecoration(
-                            color: AppColors.brandLightest,
-                            borderRadius: BorderRadius.circular(40),
+                            color: i == _page ? AppColors.brandPrimary : AppColors.surfaceLowContrast,
+                            borderRadius: BorderRadius.circular(999),
                           ),
-                          padding: const EdgeInsets.all(28),
-                          child: AssetImg(s.$1, fallbackIcon: s.$4),
                         ),
-                        const SizedBox(height: 48),
-                        Text(s.$2, textAlign: TextAlign.center, style: AppText.h2),
-                        const SizedBox(height: 12),
-                        Text(s.$3,
-                            textAlign: TextAlign.center,
-                            style: AppText.body1.copyWith(color: AppColors.textLight)),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (var i = 0; i < _slides.length; i++)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: i == _page ? 22 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: i == _page ? AppColors.brandPrimary : AppColors.surfaceLowContrast,
-                      borderRadius: BorderRadius.circular(999),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  PrimaryButton(_page == _slides.length - 1 ? 'Get Started' : 'Continue', onTap: _next),
+                  const SizedBox(height: 12),
+                  Center(
+                    child: GestureDetector(
+                      onTap: _goLogin,
+                      child: Text('Skip',
+                          style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w600)),
                     ),
                   ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 28),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: PrimaryButton(last ? 'Get Started' : 'Next', onTap: _next),
-            ),
-            const SizedBox(height: 8),
-            const HomeIndicator(),
-          ],
-        ),
+          ),
+          // Status bar on top of photo
+          const SafeArea(bottom: false, child: IOSStatusBar(color: Colors.white)),
+        ],
       ),
     );
   }

@@ -19,6 +19,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+      - name: Fetch Figma illustrations
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+        continue-on-error: true
+        run: python3 tools/fetch_figma_assets.py
       - name: Generate Android project
         run: flutter create --platforms=android --org de.schalke04 --project-name emba_app .
       - name: Get packages
