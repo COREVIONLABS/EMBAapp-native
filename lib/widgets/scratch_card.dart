@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import '../theme.dart';
+import '../theme/app_theme.dart';
 
+/// Real finger-scratch card (ported from the original EMBA prototype),
+/// restyled to the Schalke design. Swipe to erase the cover; the reward
+/// underneath is revealed once ~45% is scratched.
 class ScratchCard extends StatefulWidget {
   final Widget reward;
   final double height;
   final VoidCallback onRevealed;
-  const ScratchCard({super.key, required this.reward, required this.onRevealed, this.height = 220});
+  const ScratchCard({super.key, required this.reward, required this.onRevealed, this.height = 200});
 
   @override
   State<ScratchCard> createState() => _ScratchCardState();
@@ -39,7 +42,7 @@ class _ScratchCardState extends State<ScratchCard> {
         builder: (context, c) {
           _size = Size(c.maxWidth, widget.height);
           return ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppRadii.card),
             child: Stack(
               children: [
                 Positioned.fill(child: widget.reward),
@@ -68,21 +71,17 @@ class _ScratchPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
     canvas.saveLayer(rect, Paint());
-    // cover
     final cover = Paint()
-      ..shader = const LinearGradient(colors: [Color(0xFF9AA6BF), Color(0xFF6B7890)])
-          .createShader(rect);
+      ..shader = const LinearGradient(colors: [Color(0xFFB0B8C4), Color(0xFF8A94A6)]).createShader(rect);
     canvas.drawRect(rect, cover);
-    // hint text
     final tp = TextPainter(
       text: const TextSpan(
-        text: 'Zum Freirubbeln wischen  🪙',
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
+        text: 'Swipe to scratch  🪙',
+        style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16),
       ),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: size.width);
     tp.paint(canvas, Offset((size.width - tp.width) / 2, (size.height - tp.height) / 2));
-    // erase
     final erase = Paint()
       ..blendMode = BlendMode.clear
       ..style = PaintingStyle.fill;

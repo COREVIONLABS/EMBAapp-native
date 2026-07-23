@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'theme.dart';
-import 'root_nav.dart';
+import 'package:flutter/services.dart';
+import 'theme/app_theme.dart';
+import 'screens/splash_screen.dart';
 
-void main() => runApp(const EmbaApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  runApp(const SchalkeApp());
+}
 
-class EmbaApp extends StatelessWidget {
-  const EmbaApp({super.key});
+class SchalkeApp extends StatelessWidget {
+  const SchalkeApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'EMBA Fan App',
+      title: 'FC Schalke 04',
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(),
-      home: const RootNav(),
+      theme: AppTheme.light(),
+      home: const SplashScreen(),
     );
   }
 }
