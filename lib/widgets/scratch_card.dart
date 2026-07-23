@@ -72,16 +72,24 @@ class _ScratchPainter extends CustomPainter {
     final rect = Offset.zero & size;
     canvas.saveLayer(rect, Paint());
     final cover = Paint()
-      ..shader = const LinearGradient(colors: [Color(0xFFB0B8C4), Color(0xFF8A94A6)]).createShader(rect);
+      ..shader = const LinearGradient(colors: AppColors.pointsGradient).createShader(rect);
     canvas.drawRect(rect, cover);
-    final tp = TextPainter(
+    final title = TextPainter(
       text: const TextSpan(
-        text: 'Swipe to scratch  🪙',
-        style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16),
+        text: 'Scratch Here',
+        style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: 22),
       ),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: size.width);
-    tp.paint(canvas, Offset((size.width - tp.width) / 2, (size.height - tp.height) / 2));
+    title.paint(canvas, Offset((size.width - title.width) / 2, size.height / 2 - title.height - 2));
+    final sub = TextPainter(
+      text: TextSpan(
+        text: 'Swipe your finger',
+        style: TextStyle(fontFamily: 'Urbanist', color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w500, fontSize: 13),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: size.width);
+    sub.paint(canvas, Offset((size.width - sub.width) / 2, size.height / 2 + 4));
     final erase = Paint()
       ..blendMode = BlendMode.clear
       ..style = PaintingStyle.fill;

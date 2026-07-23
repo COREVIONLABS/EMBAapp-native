@@ -240,8 +240,6 @@ class _QuickActions extends StatelessWidget {
 
   Widget _routeFor(String label) {
     switch (label) {
-      case 'Scratch Card':
-        return const ScratchCardScreen();
       case 'Predictions':
         return const PredictionsScreen();
       default:
@@ -259,7 +257,15 @@ class _QuickActions extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => it.$2 == 'Daily Spin' ? showDailySpin(context) : _push(context, _routeFor(it.$2)),
+                onTap: () {
+                  if (it.$2 == 'Daily Spin') {
+                    showDailySpin(context);
+                  } else if (it.$2 == 'Scratch Card') {
+                    showScratchCard(context);
+                  } else {
+                    _push(context, _routeFor(it.$2));
+                  }
+                },
                 child: Column(
                   children: [
                     Container(

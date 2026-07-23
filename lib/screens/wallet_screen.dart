@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
-import 'wallet_detail_screens.dart';
 
-/// Wallet — Free (Figma 2145:7678): fan wallet with bank connect, points/tickets,
-/// virtual-card upsell and sponsor transactions.
+/// Wallet — Supporter/Superfan (Figma 2145:7873/8022): virtual card, card
+/// actions, points/tickets, physical-card upsell, sponsor transactions.
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
 
@@ -13,7 +12,6 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabScaffold(
       children: [
-        // Header: logo + bell
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -30,32 +28,10 @@ class WalletScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // Connect bank account card
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
-                  child: const Icon(Icons.account_balance_rounded, color: AppColors.brandPrimary),
-                ),
-                const SizedBox(height: 14),
-                PrimaryButton('Connect Bank Account',
-                    height: 50,
-                    onTap: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => const BankAccountScreen()))),
-                const SizedBox(height: 10),
-                Text('Secure read-only access via Tink', style: AppText.body3Regular),
-              ],
-            ),
-          ),
-        ),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _VirtualCard()),
         const SizedBox(height: 16),
-        // Points / tickets stats
+        const _CardActions(),
+        const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -67,7 +43,6 @@ class WalletScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // Virtual card upsell
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
@@ -77,11 +52,8 @@ class WalletScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: Text('Upgrade to Virtual Card',
-                      style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
-                ),
-                Text('€4.99/mo', style: AppText.body3.copyWith(color: AppColors.textDark)),
+                Expanded(child: Text('Upgrade to Physical Card', style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                Text('€9.99/mo', style: AppText.body3.copyWith(color: AppColors.textDark)),
                 const SizedBox(width: 4),
                 const Svg('arrow_right', size: 16),
               ],
@@ -91,13 +63,11 @@ class WalletScreen extends StatelessWidget {
         const SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Text('Recent Transactions', style: AppText.label2),
-              const SizedBox(width: 6),
-              Text('(Sponsors Only)', style: AppText.body3Regular),
-            ],
-          ),
+          child: Row(children: [
+            Text('Recent Transactions', style: AppText.label2),
+            const SizedBox(width: 6),
+            Text('(Sponsors Only)', style: AppText.body3Regular),
+          ]),
         ),
         const SizedBox(height: 12),
         ...[
@@ -110,6 +80,95 @@ class WalletScreen extends StatelessWidget {
               child: _TxTile(brand: t.$1, date: t.$2, amount: t.$3, pts: t.$4, color: t.$5),
             )),
       ],
+    );
+  }
+}
+
+class _VirtualCard extends StatelessWidget {
+  const _VirtualCard();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 180,
+      clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFF0A2A5E), Color(0xFF002F63)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(AppRadii.card),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -30,
+            bottom: -40,
+            child: Container(width: 160, height: 160, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.04))),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('S04 FAN VIRTUAL CARD', style: AppText.caption1.copyWith(color: Colors.white70, letterSpacing: 1)),
+                  Text('VISA', style: AppText.label2.copyWith(color: Colors.white, fontStyle: FontStyle.italic, fontWeight: FontWeight.w800)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Pill(
+                gradient: const LinearGradient(colors: AppColors.goldGradient),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                child: Text('Virtual', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+              ),
+              const Spacer(),
+              Text('••••   ••••   ••••   4821',
+                  style: AppText.label1.copyWith(color: Colors.white, letterSpacing: 2, fontWeight: FontWeight.w700)),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('MAX MUSTERMANN', style: AppText.body3.copyWith(color: Colors.white)),
+                  Text('03/28', style: AppText.body3.copyWith(color: Colors.white70)),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CardActions extends StatelessWidget {
+  const _CardActions();
+  @override
+  Widget build(BuildContext context) {
+    const items = [
+      (Icons.ac_unit_rounded, 'Freeze'),
+      (Icons.visibility_outlined, 'Reveal'),
+      (Icons.tune_rounded, 'Limits'),
+      (Icons.more_horiz_rounded, 'More'),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          for (final it in items)
+            Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(14)),
+                    child: Icon(it.$1, color: AppColors.brandPrimary, size: 22),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(it.$2, style: AppText.body3),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -146,8 +205,7 @@ class _TxTile extends StatelessWidget {
   final String amount;
   final String pts;
   final Color color;
-  const _TxTile(
-      {required this.brand, required this.date, required this.amount, required this.pts, required this.color});
+  const _TxTile({required this.brand, required this.date, required this.amount, required this.pts, required this.color});
   @override
   Widget build(BuildContext context) {
     return SurfaceCard(
@@ -159,8 +217,7 @@ class _TxTile extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             alignment: Alignment.center,
-            child: Text(brand.characters.first,
-                style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800)),
+            child: Text(brand.characters.first, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800)),
           ),
           const SizedBox(width: 12),
           Expanded(

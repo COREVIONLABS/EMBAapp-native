@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/scratch_card.dart';
-import '../widgets/sub_scaffold.dart';
 
-/// Daily Card Scratch (Figma 401:3295 / reward / already scratched).
-/// Uses the real finger-scratch interaction from the EMBA prototype.
+/// Presents Daily Card Scratch as a modal sheet over the current screen
+/// (Figma 2145:8564). Real finger-scratch reveal.
+void showScratchCard(BuildContext context) {
+  Navigator.of(context).push(PageRouteBuilder(
+    opaque: false,
+    barrierColor: Colors.black54,
+    barrierDismissible: true,
+    pageBuilder: (_, a, _) => const ScratchCardScreen(),
+    transitionsBuilder: (_, a, _, child) =>
+        SlideTransition(position: Tween(begin: const Offset(0, 1), end: Offset.zero).animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)), child: child),
+  ));
+}
+
 class ScratchCardScreen extends StatefulWidget {
   const ScratchCardScreen({super.key});
   @override
@@ -17,38 +27,74 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SubScaffold(
-      title: 'Scratch Card',
-      bottomBar: _revealed ? PrimaryButton('Claim +50 Points', onTap: () => Navigator.of(context).maybePop()) : null,
-      children: [
-        const SizedBox(height: 8),
-        Text('Scratch to reveal', textAlign: TextAlign.center, style: AppText.h4),
-        const SizedBox(height: 6),
-        Text('Swipe across the card to uncover today’s prize',
-            textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
-        const SizedBox(height: 32),
-        ScratchCard(
-          onRevealed: () => setState(() => _revealed = true),
-          reward: Container(
-            decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.pointsGradient)),
-            child: Center(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Column(
+        children: [
+          Expanded(child: GestureDetector(onTap: () => Navigator.of(context).maybePop(), behavior: HitTestBehavior.opaque)),
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+            child: SafeArea(
+              top: false,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 48),
-                  const SizedBox(height: 8),
-                  Text('+50 Points', style: AppText.h2.copyWith(color: Colors.white)),
+                  Container(width: 40, height: 5, decoration: BoxDecoration(color: AppColors.surfaceLowContrast, borderRadius: BorderRadius.circular(3))),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Text('Daily Card Scratch', style: AppText.label1),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).maybePop(),
+                            child: const Icon(Icons.close_rounded, color: AppColors.textLight),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 4),
-                  Text('Nice one!', style: AppText.body2.copyWith(color: Colors.white70)),
+                  Text('Scratch the card to win rewards!', style: AppText.body2.copyWith(color: AppColors.textLight)),
+                  const SizedBox(height: 12),
+                  Pill(
+                    color: AppColors.brandLightest,
+                    child: Text('1 Scratch Left', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
+                  ),
+                  const SizedBox(height: 20),
+                  ScratchCard(
+                    height: 200,
+                    onRevealed: () => setState(() => _revealed = true),
+                    reward: Container(
+                      decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.goldGradient)),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.emoji_events_rounded, color: AppColors.brandDarkest, size: 44),
+                            const SizedBox(height: 8),
+                            Text('+50 Points', style: AppText.h2.copyWith(color: AppColors.brandDarkest)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (_revealed)
+                    PrimaryButton('Claim +50 Points', onTap: () => Navigator.of(context).maybePop())
+                  else
+                    Text('Scratch at least 40% of the card to reveal your reward',
+                        textAlign: TextAlign.center, style: AppText.body3Regular),
                 ],
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        if (_revealed)
-          Center(child: Text('\u{1F389} Prize unlocked', style: AppText.body2.copyWith(color: AppColors.success))),
-      ],
+        ],
+      ),
     );
   }
 }
