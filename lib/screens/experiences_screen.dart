@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'experience_detail_screen.dart';
 import 'my_bookings_screen.dart';
@@ -48,7 +49,18 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
             decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
             child: Stack(
               children: [
-                const Positioned.fill(child: Icon(Icons.stadium_rounded, size: 120, color: Colors.white10)),
+                const Positioned.fill(child: AssetImg('exp_featured', fit: BoxFit.cover, fallbackIcon: Icons.stadium_rounded)),
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, AppColors.brandDarkest.withValues(alpha: 0.75)],
+                      ),
+                    ),
+                  ),
+                ),
                 Positioned(left: 16, top: 16, child: Pill(color: AppColors.brandPrimary, child: Text('Featured', style: AppText.caption1.copyWith(color: Colors.white)))),
                 Positioned(
                   left: 16, right: 16, bottom: 16,

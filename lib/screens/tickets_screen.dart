@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 
 class _Ticket {
@@ -46,11 +47,36 @@ class _TicketCard extends StatelessWidget {
   const _TicketCard(this.t);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-      child: Column(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppRadii.card),
+      child: Stack(
+        children: [
+          const Positioned.fill(child: AssetImg('ticket_stadium', fit: BoxFit.cover, fallbackIcon: Icons.stadium_rounded)),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [AppColors.brandDarkest, Color(0xCC002F63), Color(0x66002F63)],
+                  stops: [0.0, 0.55, 1.0],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: _content(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _content() {
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text('${t.home} vs. ${t.away}', style: AppText.label2.copyWith(color: Colors.white)),
           const SizedBox(height: 4),
@@ -72,8 +98,7 @@ class _TicketCard extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
+      );
   }
 }
 

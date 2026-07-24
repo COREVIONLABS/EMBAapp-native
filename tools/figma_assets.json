@@ -81,6 +81,16 @@
       "name": "product_kapuzenjacke",
       "node": "2162:6272",
       "scale": 3
+    },
+    {
+      "name": "exp_featured",
+      "node": "2162:6509",
+      "scale": 2
+    },
+    {
+      "name": "ticket_stadium",
+      "node": "2162:5312",
+      "scale": 2
     }
   ]
 }
