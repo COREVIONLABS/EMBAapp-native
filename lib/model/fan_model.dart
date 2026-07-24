@@ -62,3 +62,24 @@ class FanProduct {
   String get priceEur => '€${price.toStringAsFixed(2)}';
   String get pointsLabel => '${FanModel._fmt(points)} pts';
 }
+
+
+class FanExperience {
+  final String title;
+  final String date;
+  final String venue;
+  final int points;
+  final String category;
+  final bool featured;
+  const FanExperience(this.title, this.date, this.venue, this.points, this.category, {this.featured = false});
+  String get pointsLabel => '${FanModel.fmtPublic(points)} pts';
+}
+
+const kExperiences = [
+  FanExperience('Stadium Tour VIP', 'Apr 15, 2026', 'VELTINS-Arena', 2500, 'Stadium', featured: true),
+  FanExperience('Player Meet & Greet', 'Apr 22', 'Fan Zone', 5000, 'Players'),
+  FanExperience('Training Session Visit', 'Apr 28', 'Berger Feld', 3000, 'Players'),
+  FanExperience('Museum Tour', 'May 3', 'VELTINS-Arena', 1000, 'Stadium'),
+  FanExperience('Youth Academy Day', 'May 10', 'Knappenschmiede', 2000, 'Family'),
+  FanExperience('Legends Dinner', 'May 18', 'VIP Lounge', 10000, 'VIP'),
+];

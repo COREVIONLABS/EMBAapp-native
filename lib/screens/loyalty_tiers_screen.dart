@@ -3,7 +3,7 @@ import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
-import 'points_screen.dart';
+import 'points_history_screen.dart';
 
 /// Loyalty Tiers (Figma 2162:5368) — Nordkurve → Legende ladder.
 class LoyaltyTiersScreen extends StatelessWidget {
@@ -23,7 +23,7 @@ class LoyaltyTiersScreen extends StatelessWidget {
     return SubScaffold(
       title: 'Loyalty Tiers',
       bottomBar: SecondaryButton('View Points History',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PointsScreen()))),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PointsHistoryScreen()))),
       children: [
         // Current tier card
         Container(

@@ -8,6 +8,12 @@ import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
 import 'redeem_screen.dart';
 import 'notifications_screen.dart';
+import 'tickets_screen.dart';
+import 'experiences_screen.dart';
+import 'club_news_screen.dart';
+import 'deals_hub_screen.dart';
+import 'achievements_screen.dart';
+import '../model/fan_model.dart';
 
 void _push(BuildContext context, Widget screen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
@@ -39,9 +45,131 @@ class HomeMatchdayScreen extends StatelessWidget {
             _missions(),
             const SizedBox(height: 20),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _RewardCard()),
+            const SizedBox(height: 24),
+            _explore(),
+            const SizedBox(height: 24),
+            _experiencesTeaser(),
+            const SizedBox(height: 24),
+            _newsTeaser(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _explore() {
+    const items = [
+      ('Tickets', Icons.confirmation_number_rounded),
+      ('Experiences', Icons.stadium_rounded),
+      ('Deals', Icons.local_offer_rounded),
+      ('News', Icons.newspaper_rounded),
+      ('Awards', Icons.emoji_events_rounded),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: null)),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 96,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: items.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, i) => GestureDetector(
+              onTap: () => _push(context, switch (items[i].$1) {
+                'Tickets' => const TicketsScreen(),
+                'Experiences' => const ExperiencesScreen(),
+                'Deals' => const DealsHubScreen(),
+                'News' => const ClubNewsScreen(),
+                _ => const AchievementsScreen(),
+              }),
+              child: SizedBox(
+                width: 76,
+                child: Column(children: [
+                  Container(
+                    width: 64, height: 64,
+                    decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+                    child: Icon(items[i].$2, color: AppColors.brandPrimary, size: 28),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(items[i].$1, style: AppText.body3, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                ]),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _experiencesTeaser() {
+    final items = kExperiences.where((e) => !e.featured).take(2).toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Builder(builder: (context) => SectionHeader('Upcoming Experiences', onAction: () => _push(context, const ExperiencesScreen()))),
+        ),
+        const SizedBox(height: 12),
+        for (final e in items)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            child: Builder(builder: (context) => GestureDetector(
+              onTap: () => _push(context, const ExperiencesScreen()),
+              child: SurfaceCard(
+                padding: const EdgeInsets.all(12),
+                child: Row(children: [
+                  Container(width: 48, height: 48, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
+                  const SizedBox(width: 12),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(e.title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                    const SizedBox(height: 2),
+                    Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
+                  ])),
+                  Text(e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                ]),
+              ),
+            )),
+          ),
+      ],
+    );
+  }
+
+  Widget _newsTeaser() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Builder(builder: (context) => SectionHeader('Club News', onAction: () => _push(context, const ClubNewsScreen()))),
+        ),
+        const SizedBox(height: 12),
+        Builder(builder: (context) => GestureDetector(
+          onTap: () => _push(context, const ClubNewsScreen()),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SurfaceCard(
+              padding: EdgeInsets.zero,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Container(height: 130, width: double.infinity, decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.tile))), child: const Center(child: Icon(Icons.image_rounded, color: Colors.white24, size: 44))),
+                Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Pill(color: AppColors.brandLightest, child: Text('Matchday', style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
+                    const Spacer(),
+                    Text('2h ago', style: AppText.body3Regular),
+                  ]),
+                  const SizedBox(height: 8),
+                  Text('Königsblau secures vital home win against Bayern', style: AppText.label2.copyWith(color: AppColors.textDarker)),
+                ])),
+              ]),
+            ),
+          ),
+        )),
+        const SizedBox(height: 8),
+      ],
     );
   }
 
