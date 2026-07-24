@@ -49,6 +49,12 @@ class FanPlusScreen extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text('Exclusive raffles, boosts, and rewards',
                     textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
+                const SizedBox(height: 10),
+                Pill(
+                  color: Colors.white24,
+                  child: Text('Paid membership · separate from your points tier',
+                      style: AppText.caption1.copyWith(color: Colors.white)),
+                ),
               ],
             ),
           ),
