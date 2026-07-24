@@ -98,6 +98,7 @@ class SurfaceCard extends StatelessWidget {
   final double radius;
   final Border? border;
   final List<BoxShadow>? shadow;
+  final VoidCallback? onTap;
   const SurfaceCard({
     super.key,
     required this.child,
@@ -106,11 +107,12 @@ class SurfaceCard extends StatelessWidget {
     this.radius = AppRadii.tile,
     this.border,
     this.shadow,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       padding: padding,
       decoration: BoxDecoration(
         color: color,
@@ -119,6 +121,16 @@ class SurfaceCard extends StatelessWidget {
         boxShadow: shadow,
       ),
       child: child,
+    );
+    if (onTap == null) return card;
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(radius),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(radius),
+        child: card,
+      ),
     );
   }
 }

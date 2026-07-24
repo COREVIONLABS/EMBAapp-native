@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
 import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'cart_screen.dart';
 
@@ -31,8 +32,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       children: [
         Container(
           height: 300,
-          decoration: BoxDecoration(color: p.color, borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Center(child: Icon(Icons.checkroom_rounded, size: 120, color: light ? AppColors.brandPrimary : Colors.white)),
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: p.imageKey != null
+              ? Padding(padding: const EdgeInsets.all(20), child: AssetImg(p.imageKey!, fit: BoxFit.contain, fallbackIcon: Icons.checkroom_rounded))
+              : Center(child: Icon(Icons.checkroom_rounded, size: 120, color: light ? AppColors.brandPrimary : AppColors.textLight)),
         ),
         const SizedBox(height: 20),
         Text(p.name, style: AppText.h4),

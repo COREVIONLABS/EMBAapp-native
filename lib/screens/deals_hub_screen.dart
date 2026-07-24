@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import 'deal_detail_screen.dart';
+import 'matchday_specials_screen.dart';
 
 class _Deal {
   final String brand, offer, category;
@@ -25,14 +27,18 @@ class DealsHubScreen extends StatelessWidget {
     return SubScaffold(
       title: 'Deals Hub',
       children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Row(children: [
-            const Icon(Icons.local_offer_rounded, color: AppColors.brandDarkest),
-            const SizedBox(width: 12),
-            Expanded(child: Text('Matchday Specials — extra points on gameday!', style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
-          ]),
+        GestureDetector(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MatchdaySpecialsScreen())),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Row(children: [
+              const Icon(Icons.local_offer_rounded, color: AppColors.brandDarkest),
+              const SizedBox(width: 12),
+              Expanded(child: Text('Matchday Specials — extra points on gameday!', style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.brandDarkest),
+            ]),
+          ),
         ),
         const SizedBox(height: 20),
         Align(alignment: Alignment.centerLeft, child: Text('Partner Deals', style: AppText.label2)),
@@ -41,6 +47,8 @@ class DealsHubScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: SurfaceCard(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => DealDetailScreen(brand: d.brand, offer: d.offer, category: d.category, color: d.color))),
               child: Row(children: [
                 Container(width: 48, height: 48, decoration: BoxDecoration(color: d.color, shape: BoxShape.circle), alignment: Alignment.center, child: Text(d.brand.characters.first, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800))),
                 const SizedBox(width: 12),

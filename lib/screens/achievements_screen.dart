@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import 'achievement_detail_screen.dart';
 
 class _Badge {
   final String name;
@@ -91,6 +92,8 @@ class _BadgeTile extends StatelessWidget {
       opacity: b.unlocked ? 1 : 0.4,
       child: SurfaceCard(
         padding: const EdgeInsets.all(8),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => AchievementDetailScreen(name: b.name, icon: b.icon, unlocked: b.unlocked))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

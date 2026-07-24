@@ -2,17 +2,85 @@
   "fileKey": "5tQIHTzeg1ZCWFK41AGlob",
   "outDir": "assets/images",
   "assets": [
-    { "name": "ic_daily_spin",         "node": "2145:7246", "scale": 3 },
-    { "name": "ic_scratch",            "node": "2145:7250", "scale": 3 },
-    { "name": "ic_predictions",        "node": "2145:7256", "scale": 3 },
-    { "name": "ic_rewards",            "node": "2145:7261", "scale": 3 },
-    { "name": "home_trophy",           "node": "2145:7232", "scale": 3 },
-    { "name": "home_reward_players",   "node": "2145:7300", "scale": 2 },
-    { "name": "onboarding_earn",       "node": "2145:11370", "scale": 2 },
-    { "name": "onboarding_redeem",     "node": "2145:11386", "scale": 2 },
-    { "name": "onboarding_experiences","node": "2145:11401", "scale": 2 },
-    { "name": "spin_wheel",            "node": "2145:8528", "scale": 2 },
-    { "name": "spin_prize",            "node": "2145:8554", "scale": 3 },
-    { "name": "scratch_graphic",       "node": "2145:8707", "scale": 2 }
+    {
+      "name": "ic_daily_spin",
+      "node": "2145:7246",
+      "scale": 3
+    },
+    {
+      "name": "ic_scratch",
+      "node": "2145:7250",
+      "scale": 3
+    },
+    {
+      "name": "ic_predictions",
+      "node": "2145:7256",
+      "scale": 3
+    },
+    {
+      "name": "ic_rewards",
+      "node": "2145:7261",
+      "scale": 3
+    },
+    {
+      "name": "home_trophy",
+      "node": "2145:7232",
+      "scale": 3
+    },
+    {
+      "name": "home_reward_players",
+      "node": "2145:7300",
+      "scale": 2
+    },
+    {
+      "name": "onboarding_earn",
+      "node": "2145:11370",
+      "scale": 2
+    },
+    {
+      "name": "onboarding_redeem",
+      "node": "2145:11386",
+      "scale": 2
+    },
+    {
+      "name": "onboarding_experiences",
+      "node": "2145:11401",
+      "scale": 2
+    },
+    {
+      "name": "spin_wheel",
+      "node": "2145:8528",
+      "scale": 2
+    },
+    {
+      "name": "spin_prize",
+      "node": "2145:8554",
+      "scale": 3
+    },
+    {
+      "name": "scratch_graphic",
+      "node": "2145:8707",
+      "scale": 2
+    },
+    {
+      "name": "product_home_jersey",
+      "node": "2162:6232",
+      "scale": 3
+    },
+    {
+      "name": "product_away_jersey",
+      "node": "2162:6242",
+      "scale": 3
+    },
+    {
+      "name": "product_windbreaker",
+      "node": "2162:6251",
+      "scale": 3
+    },
+    {
+      "name": "product_kapuzenjacke",
+      "node": "2162:6272",
+      "scale": 3
+    }
   ]
 }

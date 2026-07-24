@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
 import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import 'product_detail_screen.dart';
 import 'cart_screen.dart';
@@ -155,11 +156,16 @@ class _ProductTile extends StatelessWidget {
           Expanded(
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(color: p.color, borderRadius: BorderRadius.circular(AppRadii.tile)),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile)),
               child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Center(child: Icon(Icons.checkroom_rounded, size: 56, color: light ? AppColors.brandPrimary : Colors.white)),
-                  const Positioned(right: 10, top: 10, child: Icon(Icons.favorite_border_rounded, color: Colors.white70, size: 20)),
+                  if (p.imageKey != null)
+                    Padding(padding: const EdgeInsets.all(10), child: AssetImg(p.imageKey!, fit: BoxFit.contain, fallbackIcon: Icons.checkroom_rounded))
+                  else
+                    Center(child: Icon(Icons.checkroom_rounded, size: 56, color: light ? AppColors.brandPrimary : AppColors.textLight)),
+                  const Positioned(right: 10, top: 10, child: Icon(Icons.favorite_border_rounded, color: AppColors.textLight, size: 20)),
                 ],
               ),
             ),

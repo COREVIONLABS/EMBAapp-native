@@ -43,10 +43,10 @@ class FanModel {
 
   /// Product catalogue for the Fanshop (Figma 2162:6193).
   static const products = [
-    FanProduct('Home Jersey 25/26', 89.99, 4500, 'Jerseys', Color(0xFF0A2A5E)),
-    FanProduct('Away Jersey 25/26', 89.99, 4500, 'Jerseys', Color(0xFFEDEFF3)),
-    FanProduct('Windbreaker', 24.99, 1200, 'Jackets', Color(0xFF0A2A5E)),
-    FanProduct('Kapuzen-Jacke', 49.99, 2800, 'Jackets', Color(0xFFEDEFF3)),
+    FanProduct('Home Jersey 25/26', 89.99, 4500, 'Jerseys', Color(0xFF0A2A5E), imageKey: 'product_home_jersey'),
+    FanProduct('Away Jersey 25/26', 89.99, 4500, 'Jerseys', Color(0xFFEDEFF3), imageKey: 'product_away_jersey'),
+    FanProduct('Windbreaker', 24.99, 1200, 'Jackets', Color(0xFF0A2A5E), imageKey: 'product_windbreaker'),
+    FanProduct('Kapuzen-Jacke', 49.99, 2800, 'Jackets', Color(0xFFEDEFF3), imageKey: 'product_kapuzenjacke'),
     FanProduct('Home Scarf 25/26', 19.99, 900, 'Scarves', Color(0xFF0A2A5E)),
     FanProduct('Cap Royal Blue', 22.99, 1100, 'Accessories', Color(0xFF002F63)),
   ];
@@ -58,7 +58,8 @@ class FanProduct {
   final int points;
   final String category;
   final Color color;
-  const FanProduct(this.name, this.price, this.points, this.category, this.color);
+  final String? imageKey;
+  const FanProduct(this.name, this.price, this.points, this.category, this.color, {this.imageKey});
   String get priceEur => '€${price.toStringAsFixed(2)}';
   String get pointsLabel => '${FanModel._fmt(points)} pts';
 }
