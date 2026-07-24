@@ -1,0 +1,179 @@
+import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
+import '../model/fan_model.dart';
+import '../model/cart.dart';
+import '../widgets/app_widgets.dart';
+import '../widgets/tab_scaffold.dart';
+import 'product_detail_screen.dart';
+import 'cart_screen.dart';
+
+/// Fanshop Home (Figma 2162:6193) — Shop tab.
+class FanshopScreen extends StatefulWidget {
+  const FanshopScreen({super.key});
+  @override
+  State<FanshopScreen> createState() => _FanshopScreenState();
+}
+
+class _FanshopScreenState extends State<FanshopScreen> {
+  int _cat = 0;
+  static const _cats = ['All', 'Jerseys', 'Jackets', 'Scarves', 'Accessories'];
+
+  @override
+  Widget build(BuildContext context) {
+    final products = _cat == 0
+        ? FanModel.products
+        : FanModel.products.where((p) => p.category == _cats[_cat]).toList();
+    return TabScaffold(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Text('Schalke Fanshop', style: AppText.h2.copyWith(fontSize: 24)),
+              const Spacer(),
+              _CartButton(),
+              const SizedBox(width: 8),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+                child: const Center(child: Svg('bell_dot', size: 20)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.field)),
+            child: Row(children: [
+              const Icon(Icons.search_rounded, color: AppColors.textLight, size: 20),
+              const SizedBox(width: 8),
+              Text('Search products…', style: AppText.body1.copyWith(color: AppColors.textLight, fontSize: 14)),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+            child: Row(children: [
+              const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 20),
+              const SizedBox(width: 10),
+              Expanded(child: Text('Pay with Fan Points — use points at checkout!', style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 34,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: _cats.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (_, i) => GestureDetector(
+              onTap: () => setState(() => _cat = i),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                decoration: BoxDecoration(
+                  color: i == _cat ? AppColors.brandPrimary : AppColors.surfaceMinimal,
+                  borderRadius: BorderRadius.circular(AppRadii.pill),
+                ),
+                child: Text(_cats[i], style: AppText.body2.copyWith(color: i == _cat ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w600)),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 14,
+            crossAxisSpacing: 14,
+            childAspectRatio: 0.68,
+            children: [for (final p in products) _ProductTile(p)],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CartButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: cartStore,
+      builder: (context, _) => GestureDetector(
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen())),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+              child: const Icon(Icons.shopping_bag_outlined, size: 20, color: AppColors.textNormal),
+            ),
+            if (cartStore.count > 0)
+              Positioned(
+                right: -2,
+                top: -2,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(color: AppColors.danger, shape: BoxShape.circle),
+                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                  child: Text('${cartStore.count}', textAlign: TextAlign.center, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductTile extends StatelessWidget {
+  final FanProduct p;
+  const _ProductTile(this.p);
+  @override
+  Widget build(BuildContext context) {
+    final light = p.color.computeLuminance() > 0.6;
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(color: p.color, borderRadius: BorderRadius.circular(AppRadii.tile)),
+              child: Stack(
+                children: [
+                  Center(child: Icon(Icons.checkroom_rounded, size: 56, color: light ? AppColors.brandPrimary : Colors.white)),
+                  const Positioned(right: 10, top: 10, child: Icon(Icons.favorite_border_rounded, color: Colors.white70, size: 20)),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+          const SizedBox(height: 4),
+          Row(children: [
+            Text(p.priceEur, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+            const SizedBox(width: 6),
+            Text('or ${p.pointsLabel}', style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
+          ]),
+        ],
+      ),
+    );
+  }
+}

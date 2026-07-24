@@ -36,7 +36,7 @@ class WalletScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: const [
-              Expanded(child: _StatCard(icon: Icons.monetization_on_rounded, value: '850', label: 'Points')),
+              Expanded(child: _StatCard(icon: Icons.monetization_on_rounded, value: '12,450', label: 'Points')),
               SizedBox(width: 12),
               Expanded(child: _StatCard(icon: Icons.confirmation_number_rounded, value: '12', label: 'Tickets')),
             ],

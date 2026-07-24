@@ -3,15 +3,16 @@ import '../theme/app_theme.dart';
 import 'app_widgets.dart';
 
 class NavDest {
-  final String icon;
+  final String? icon;
+  final IconData? iconData;
   final String label;
-  const NavDest(this.icon, this.label);
+  const NavDest(this.icon, this.label, {this.iconData});
 }
 
 const kNavDestinations = [
   NavDest('nav_home', 'Home'),
+  NavDest(null, 'Shop', iconData: Icons.shopping_bag_outlined),
   NavDest('nav_wallet', 'Wallet'),
-  NavDest('nav_crown', 'Fan+'),
   NavDest('nav_cup', 'Points'),
   NavDest('nav_profile', 'Profile'),
 ];
@@ -71,7 +72,10 @@ class _NavItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Svg(dest.icon, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal),
+            if (dest.iconData != null)
+              Icon(dest.iconData, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal)
+            else
+              Svg(dest.icon!, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal),
             if (selected) ...[
               const SizedBox(width: 6),
               Text(dest.label,

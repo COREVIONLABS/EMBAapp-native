@@ -145,7 +145,7 @@ class _PointsCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.keyboard_double_arrow_down_rounded, size: 14, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text('Superfan',
+                        Text('Schalker',
                             style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
                         const SizedBox(width: 4),
                         const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
@@ -155,7 +155,7 @@ class _PointsCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              Text('2,850',
+              Text('12,450',
                   style: AppText.h1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
               Row(

@@ -7,7 +7,7 @@ class S04PointsCard extends StatelessWidget {
   final String value;
   final String tickets;
   final String boost;
-  const S04PointsCard({super.key, this.value = '2,850', this.tickets = '12 Raffle Tickets', this.boost = '3x Stadium Boost'});
+  const S04PointsCard({super.key, this.value = '12,450', this.tickets = '12 Raffle Tickets', this.boost = '3x Stadium Boost'});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class S04PointsCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.keyboard_double_arrow_down_rounded, size: 14, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text('Superfan', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
+                        Text('Schalker', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
                         const SizedBox(width: 4),
                         const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
                       ],

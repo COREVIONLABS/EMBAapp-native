@@ -5,6 +5,8 @@ import '../widgets/tab_scaffold.dart';
 import 'settings_screens.dart';
 import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
+import 'loyalty_tiers_screen.dart';
+import 'fanplus_screen.dart';
 
 /// Profile (Figma 2145:11608) — user card + grouped settings menu.
 class ProfileScreen extends StatelessWidget {
@@ -40,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           const Icon(Icons.star_rounded, size: 11, color: AppColors.brandDarkest),
                           const SizedBox(width: 4),
-                          Text('Superfan · 2850 pts', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                          Text('Schalker · 12,450 pts', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
                         ]),
                       ),
                     ],
@@ -54,7 +56,9 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 20),
         _group(context, 'Account', const [
           (Icons.person_outline_rounded, 'Edit Profile', ''),
-          (Icons.workspace_premium_outlined, 'Subscription', 'Superfan · €9.99/mo'),
+          (Icons.military_tech_outlined, 'Loyalty Tiers', 'Schalker'),
+          (Icons.workspace_premium_outlined, 'Fan+ Membership', ''),
+          (Icons.card_membership_outlined, 'Subscription', 'Superfan · €9.99/mo'),
           (Icons.account_balance_outlined, 'Bank Account', 'Connected'),
           (Icons.credit_card_rounded, 'Manage Card', 'Physical + Virtual'),
         ]),
@@ -112,6 +116,10 @@ Widget? _screenFor(String label) {
   switch (label) {
     case 'Edit Profile':
       return const EditProfileScreen();
+    case 'Loyalty Tiers':
+      return const LoyaltyTiersScreen();
+    case 'Fan+ Membership':
+      return const FanPlusScreen();
     case 'Subscription':
       return const SubscriptionScreen();
     case 'Bank Account':
