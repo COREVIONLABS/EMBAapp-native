@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'add_card_screen.dart';
+import '../l10n/strings.dart';
 
 /// Payment Methods (Figma 2162:5563).
 class PaymentMethodsScreen extends StatelessWidget {
@@ -10,8 +11,8 @@ class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Payment Methods',
-      bottomBar: PrimaryButton('Add New Card', trailing: const Icon(Icons.add_rounded, color: Colors.white, size: 20), onTap: () {
+      title: tr('Payment Methods'),
+      bottomBar: PrimaryButton(tr('Add New Card'), trailing: const Icon(Icons.add_rounded, color: Colors.white, size: 20), onTap: () {
         // handled below via Builder context
       }),
       children: [
@@ -30,13 +31,13 @@ class PaymentMethodsScreen extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text('Expires ${c.$3}', style: AppText.body3Regular),
                 ])),
-                if (c.$4) Pill(color: AppColors.brandLightest, child: Text('Default', style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
+                if (c.$4) Pill(color: AppColors.brandLightest, child: Text(tr('Default'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
               ]),
             ),
           ),
         Builder(builder: (context) => TextButton(
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AddCardScreen())),
-          child: Text('+ Add New Card', style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+          child: Text(tr('+ Add New Card'), style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
         )),
       ],
     );

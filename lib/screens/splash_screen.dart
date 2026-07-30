@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/ios_chrome.dart';
 import 'onboarding_screen.dart';
+import '../l10n/strings.dart';
 
 /// Splash Screen (Figma 2145:11344) — solid Schalke blue, crest, wordmark, dots.
 class SplashScreen extends StatefulWidget {
@@ -41,10 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
               child: const Svg('logo_s04', size: 84),
             ),
             const SizedBox(height: 20),
-            Text('FC Schalke 04',
+            Text(tr('FC Schalke 04'),
                 style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
-            Text('Your loyalty. Your rewards.',
+            Text(tr('Your loyalty. Your rewards.'),
                 style: AppText.body1.copyWith(color: Colors.white.withValues(alpha: 0.75))),
             const Spacer(),
             Row(

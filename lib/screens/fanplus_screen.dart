@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import 'subscription_screen.dart';
+import '../l10n/strings.dart';
 
 /// Fan+ (Figma 2145:8198 Non-Subscriber / 2145:8275 Subscriber).
 class FanPlusScreen extends StatelessWidget {
@@ -46,15 +47,15 @@ class FanPlusScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 40),
                 const SizedBox(height: 12),
-                Text('Unlock VIP Fan Experiences',
+                Text(tr('Unlock VIP Fan Experiences'),
                     textAlign: TextAlign.center, style: AppText.label1.copyWith(color: Colors.white)),
                 const SizedBox(height: 6),
-                Text('Exclusive raffles, boosts, and rewards',
+                Text(tr('Exclusive raffles, boosts, and rewards'),
                     textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
                 const SizedBox(height: 10),
                 Pill(
                   color: Colors.white24,
-                  child: Text('Paid membership · separate from your points tier',
+                  child: Text(tr('Paid membership · separate from your points tier'),
                       style: AppText.caption1.copyWith(color: Colors.white)),
                 ),
               ],
@@ -63,20 +64,20 @@ class FanPlusScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         // Two locked cards
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              Expanded(child: _LockedCard(icon: 'ic_daily_spin', label: 'Extra Spin')),
-              SizedBox(width: 12),
-              Expanded(child: _LockedCard(icon: 'ic_scratch', label: 'Extra Scratch Card')),
+              Expanded(child: _LockedCard(icon: 'ic_daily_spin', label: tr('Extra Spin'))),
+              const SizedBox(width: 12),
+              Expanded(child: _LockedCard(icon: 'ic_scratch', label: tr('Extra Scratch Card'))),
             ],
           ),
         ),
         const SizedBox(height: 24),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text('VIP Experiences', style: AppText.label1)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text(tr('VIP Experiences'), style: AppText.label1)),
         ),
         const SizedBox(height: 12),
         for (final t in const [
@@ -94,19 +95,19 @@ class FanPlusScreen extends StatelessWidget {
                 Expanded(child: Text(t, style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
                 Pill(
                   gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text('Exclusive', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                  child: Text(tr('Exclusive'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
                 ),
               ],
             ),
           ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
-          child: Text('…and much more!', style: AppText.body2),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Text(tr('…and much more!'), style: AppText.body2),
         ),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: PrimaryButton('Upgrade to Fan+ Now',
+          child: PrimaryButton(tr('Upgrade to Fan+ Now'),
               onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const SubscriptionScreen()),
                   )),
@@ -150,12 +151,12 @@ class FanPlusScreen extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: Pill(
                   gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text('Active', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+                  child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
                 ),
               ),
               const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 36),
               const SizedBox(height: 8),
-              Text('Superfan', style: AppText.h4.copyWith(color: Colors.white)),
+              Text(tr('Superfan'), style: AppText.h4.copyWith(color: Colors.white)),
               const SizedBox(height: 12),
               Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
                 for (final b in const ['+10% Points', '2x Tickets', '+2 Spins'])
@@ -163,11 +164,11 @@ class FanPlusScreen extends StatelessWidget {
               ]),
               const SizedBox(height: 16),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text('Renews: 28 May 2026', style: AppText.body3.copyWith(color: Colors.white70)),
+                Text(tr('Renews: 28 May 2026'), style: AppText.body3.copyWith(color: Colors.white70)),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Text('Manage Subscription', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+                    Text(tr('Manage Subscription'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
                     const Icon(Icons.chevron_right_rounded, size: 16, color: Colors.white),
                   ]),
                 ),
@@ -177,18 +178,18 @@ class FanPlusScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         // Unlocked perks
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
-            Expanded(child: _UnlockedCard(icon: 'ic_daily_spin', label: 'Extra Spin')),
-            SizedBox(width: 12),
-            Expanded(child: _UnlockedCard(icon: 'ic_scratch', label: 'Extra Scratch Card')),
+            Expanded(child: _UnlockedCard(icon: 'ic_daily_spin', label: tr('Extra Spin'))),
+            const SizedBox(width: 12),
+            Expanded(child: _UnlockedCard(icon: 'ic_scratch', label: tr('Extra Scratch Card'))),
           ]),
         ),
         const SizedBox(height: 24),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text('VIP Experiences', style: AppText.label1)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text(tr('VIP Experiences'), style: AppText.label1)),
         ),
         const SizedBox(height: 12),
         for (final r in const [
@@ -223,7 +224,7 @@ class FanPlusScreen extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
                       child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text('Enter Raffle', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+                        Text(tr('Enter Raffle'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
                         const SizedBox(width: 4),
                         const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.white),
                       ]),
@@ -253,7 +254,7 @@ class _UnlockedCard extends StatelessWidget {
           child: Pill(
             gradient: const LinearGradient(colors: AppColors.goldGradient),
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            child: Text('1 Left', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+            child: Text(tr('1 Left'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
           ),
         ),
         const SizedBox(height: 4),
@@ -284,7 +285,7 @@ class _LockedCard extends StatelessWidget {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 const Icon(Icons.lock_rounded, size: 10, color: AppColors.brandDarkest),
                 const SizedBox(width: 3),
-                Text('Locked', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                Text(tr('Locked'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
               ]),
             ),
           ),

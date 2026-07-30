@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Deal Detail (Figma 2162:5966).
 class DealDetailScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class DealDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: '',
-      bottomBar: PrimaryButton('Activate Deal', onTap: () {
+      bottomBar: PrimaryButton(tr('Activate Deal'), onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$brand deal activated')));
         Navigator.of(context).maybePop();
       }),
@@ -31,9 +32,9 @@ class DealDetailScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text(offer, style: AppText.label2.copyWith(color: AppColors.brandPrimary)),
         const SizedBox(height: 20),
-        Text('How it works', style: AppText.label2),
+        Text(tr('How it works'), style: AppText.label2),
         const SizedBox(height: 6),
-        Text('Activate this partner deal and pay with your connected S04 card or app to automatically apply the offer and earn bonus Fan Points. Valid at all participating locations until the end of the season.',
+        Text(tr('Activate this partner deal and pay with your connected S04 card or app to automatically apply the offer and earn bonus Fan Points. Valid at all participating locations until the end of the season.'),
             style: AppText.body1.copyWith(color: AppColors.textNormal, height: 1.6, fontSize: 14)),
         const SizedBox(height: 16),
         SurfaceCard(
@@ -41,7 +42,7 @@ class DealDetailScreen extends StatelessWidget {
           child: Row(children: [
             const Icon(Icons.monetization_on_rounded, color: AppColors.gold),
             const SizedBox(width: 12),
-            Expanded(child: Text('Earn 2× Fan Points on this deal', style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+            Expanded(child: Text(tr('Earn 2× Fan Points on this deal'), style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
           ]),
         ),
       ],

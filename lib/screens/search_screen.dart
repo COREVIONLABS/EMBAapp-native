@@ -6,6 +6,7 @@ import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
 import 'club_news_screen.dart';
+import '../l10n/strings.dart';
 
 class _Result {
   final IconData icon;
@@ -49,7 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ? const <_Result>[]
         : _all.where((r) => r.title.toLowerCase().contains(_q.toLowerCase())).toList();
     return SubScaffold(
-      title: 'Search',
+      title: tr('Search'),
       children: [
         Container(
           height: 48,

@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/qr_code.dart';
+import '../l10n/strings.dart';
 
 class _MyTicket {
   final String home, away, when, venue, block, row, seat, code;
@@ -20,12 +21,12 @@ class MyTicketsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'My Tickets',
+      title: tr('My Tickets'),
       children: [
         if (_tickets.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 80),
-            child: Center(child: Text('No tickets yet.', style: AppText.body2.copyWith(color: AppColors.textLight))),
+            child: Center(child: Text(tr('No tickets yet.'), style: AppText.body2.copyWith(color: AppColors.textLight))),
           )
         else
           for (final t in _tickets) ...[_TicketStub(t), const SizedBox(height: 16)],
@@ -54,7 +55,7 @@ class _TicketStub extends StatelessWidget {
             decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.pointsGradient)),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Pill(color: Colors.white24, child: Text('Home', style: AppText.caption1.copyWith(color: Colors.white))),
+                Pill(color: Colors.white24, child: Text(tr('Home Match'), style: AppText.caption1.copyWith(color: Colors.white))),
                 const Spacer(),
                 Text(t.venue, style: AppText.body3.copyWith(color: Colors.white70)),
               ]),
@@ -96,7 +97,7 @@ class _TicketStub extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Icon(Icons.info_outline_rounded, size: 15, color: AppColors.textLight),
               const SizedBox(width: 6),
-              Text('Show this QR code at the turnstile', style: AppText.body3Regular),
+              Text(tr('Show this QR code at the turnstile'), style: AppText.body3Regular),
             ]),
           ),
         ],

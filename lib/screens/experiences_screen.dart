@@ -6,6 +6,7 @@ import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'experience_detail_screen.dart';
 import 'my_bookings_screen.dart';
+import '../l10n/strings.dart';
 
 /// Experiences (Figma 2162:6476).
 class ExperiencesScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
     final featured = kExperiences.firstWhere((e) => e.featured);
     final upcoming = kExperiences.where((e) => !e.featured && (_cat == 0 || e.category == _cats[_cat])).toList();
     return SubScaffold(
-      title: 'Experiences',
+      title: tr('Experiences'),
       children: [
         SizedBox(
           height: 34,
@@ -35,7 +36,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
                 decoration: BoxDecoration(color: i == _cat ? AppColors.brandPrimary : AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                child: Text(_cats[i], style: AppText.body2.copyWith(color: i == _cat ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w600)),
+                child: Text(tr(_cats[i]), style: AppText.body2.copyWith(color: i == _cat ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w600)),
               ),
             ),
           ),
@@ -61,7 +62,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
                     ),
                   ),
                 ),
-                Positioned(left: 16, top: 16, child: Pill(color: AppColors.brandPrimary, child: Text('Featured', style: AppText.caption1.copyWith(color: Colors.white)))),
+                Positioned(left: 16, top: 16, child: Pill(color: AppColors.brandPrimary, child: Text(tr('Featured'), style: AppText.caption1.copyWith(color: Colors.white)))),
                 Positioned(
                   left: 16, right: 16, bottom: 16,
                   child: Row(
@@ -80,7 +81,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
           ),
         ),
         const SizedBox(height: 20),
-        SectionHeader('Upcoming', onAction: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyBookingsScreen()))),
+        SectionHeader(tr('Upcoming'), onAction: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyBookingsScreen()))),
         const SizedBox(height: 12),
         for (final e in upcoming) ...[_ExpRow(e), const SizedBox(height: 10)],
       ],

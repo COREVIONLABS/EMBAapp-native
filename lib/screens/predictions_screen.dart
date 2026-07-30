@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 class _Match {
   final String opp;
@@ -28,7 +29,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Predictions',
+      title: tr('Predictions'),
       children: [
         Container(
           padding: const EdgeInsets.all(4),
@@ -60,7 +61,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
             child: Row(children: [
               const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 10),
-              Text('Earn up to +75 pts for correct prediction!', style: AppText.body2.copyWith(color: AppColors.brandDarkest)),
+              Text(tr('Earn up to +75 pts for correct prediction!'), style: AppText.body2.copyWith(color: AppColors.brandDarkest)),
             ]),
           ),
           const SizedBox(height: 16),
@@ -88,7 +89,7 @@ class _MatchCard extends StatelessWidget {
           Row(
             children: [
               Expanded(child: _team('Schalke 04', AppColors.brandPrimary, isS04: true)),
-              Text('VS', style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700)),
+              Text(tr('VS'), style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700)),
               Expanded(child: _team(m.opp, m.color)),
             ],
           ),
@@ -104,7 +105,7 @@ class _MatchCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
                 ),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Text('Predict Score', style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                  Text(tr('Predict Score'), style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
                   const SizedBox(width: 6),
                   const Icon(Icons.arrow_forward_rounded, size: 16, color: AppColors.brandPrimary),
                 ]),
@@ -171,8 +172,8 @@ class _PredictScoreScreenState extends State<PredictScoreScreen> {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Predict Score',
-      bottomBar: PrimaryButton('Submit Prediction', onTap: () {
+      title: tr('Predict Score'),
+      bottomBar: PrimaryButton(tr('Submit Prediction'), onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Predicted Schalke $_h : $_a ${widget.opp}')));
         Navigator.of(context).maybePop();
       }),
@@ -182,9 +183,9 @@ class _PredictScoreScreenState extends State<PredictScoreScreen> {
         const SizedBox(height: 24),
         Row(
           children: [
-            Expanded(child: Column(children: [const Svg('logo_s04', size: 64), const SizedBox(height: 8), const Text('Schalke 04', style: AppText.body2)])),
+            Expanded(child: Column(children: [const Svg('logo_s04', size: 64), const SizedBox(height: 8), Text(tr('Schalke 04'), style: AppText.body2)])),
             _stepper(_h, (v) => setState(() => _h = v)),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(':', style: AppText.h2)),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(tr(':'), style: AppText.h2)),
             _stepper(_a, (v) => setState(() => _a = v)),
             Expanded(child: Column(children: [
               Container(width: 64, height: 64, decoration: BoxDecoration(color: widget.color, shape: BoxShape.circle), alignment: Alignment.center, child: Text(widget.opp.characters.first, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800))),

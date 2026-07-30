@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Notifications (Figma 385:4892).
 class NotificationsScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Notifications',
+      title: tr('Notifications'),
       children: [
         for (final n in _items)
           Padding(

@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/ios_chrome.dart';
 import '../widgets/text_field.dart';
 import '../main_shell.dart';
+import '../l10n/strings.dart';
 
 /// Sign Up (Figma node 385:3518).
 class SignupScreen extends StatelessWidget {
@@ -32,17 +33,17 @@ class SignupScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  Text('Create account', style: AppText.h2),
+                  Text(tr('Create account'), style: AppText.h2),
                   const SizedBox(height: 6),
-                  Text('Join the S04 fan community',
+                  Text(tr('Join the S04 fan community'),
                       style: AppText.body1.copyWith(color: AppColors.textLight)),
                   const SizedBox(height: 28),
-                  const AppTextField(label: 'Full name', hint: 'Max Mustermann'),
+                  AppTextField(label: tr('Full name'), hint: tr('Max Mustermann')),
                   const SizedBox(height: 18),
-                  const AppTextField(
-                      label: 'Email', hint: 'you@example.com', keyboardType: TextInputType.emailAddress),
+                  AppTextField(
+                      label: tr('Email'), hint: tr('you@example.com'), keyboardType: TextInputType.emailAddress),
                   const SizedBox(height: 18),
-                  const AppTextField(label: 'Password', hint: '••••••••', obscure: true),
+                  AppTextField(label: tr('Password'), hint: '••••••••', obscure: true),
                   const SizedBox(height: 20),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,13 +51,13 @@ class SignupScreen extends StatelessWidget {
                       const Icon(Icons.check_box_rounded, color: AppColors.brandPrimary, size: 22),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: Text('I agree to the Terms of Service and Privacy Policy',
+                        child: Text(tr('I agree to the Terms of Service and Privacy Policy'),
                             style: AppText.body2.copyWith(color: AppColors.textLight)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  PrimaryButton('Create Account',
+                  PrimaryButton(tr('Create Account'),
                       onTap: () => Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(builder: (_) => const MainShell()),
                             (r) => false,

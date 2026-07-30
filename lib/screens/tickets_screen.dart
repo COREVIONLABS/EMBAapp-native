@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'my_tickets_screen.dart';
+import '../l10n/strings.dart';
 
 class _Ticket {
   final String home, away, when, venue;
@@ -33,7 +34,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
   Widget build(BuildContext context) {
     final list = _tickets.where((t) => _tab == 0 || (_tab == 1 && t.isHome) || (_tab == 2 && !t.isHome)).toList();
     return SubScaffold(
-      title: 'Tickets',
+      title: tr('Tickets'),
       children: [
         SurfaceCard(
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyTicketsScreen())),
@@ -45,8 +46,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
             ),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('My Tickets', style: AppText.body2.copyWith(color: AppColors.textDarker)),
-              Text('2 upcoming · tap to show QR', style: AppText.body3Regular),
+              Text(tr('My Tickets'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+              Text(tr('2 upcoming · tap to show QR'), style: AppText.body3Regular),
             ])),
             const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
           ]),

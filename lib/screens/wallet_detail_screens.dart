@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Manage Cards (Figma 417:1626).
 class ManageCardsScreen extends StatelessWidget {
@@ -9,8 +10,8 @@ class ManageCardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Manage Cards',
-      bottomBar: PrimaryButton('Add New Card', trailing: const Icon(Icons.add_rounded, color: Colors.white, size: 20)),
+      title: tr('Manage Cards'),
+      bottomBar: PrimaryButton(tr('Add New Card'), trailing: const Icon(Icons.add_rounded, color: Colors.white, size: 20)),
       children: [
         for (final c in const [
           ('Visa', '•••• 4921', '08/27', true),
@@ -42,7 +43,7 @@ class ManageCardsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Max Mustermann', style: AppText.body2.copyWith(color: Colors.white70)),
+                      Text(tr('Max Mustermann'), style: AppText.body2.copyWith(color: Colors.white70)),
                       Text('Exp ${c.$3}', style: AppText.body2.copyWith(color: Colors.white70)),
                     ],
                   ),
@@ -67,10 +68,10 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Bank Account',
+      title: tr('Bank Account'),
       bottomBar: _connected
           ? null
-          : PrimaryButton('Connect Bank Account', onTap: () => setState(() => _connected = true)),
+          : PrimaryButton(tr('Connect Bank Account'), onTap: () => setState(() => _connected = true)),
       children: [
         const SizedBox(height: 12),
         Center(
@@ -95,15 +96,15 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
         ),
         const SizedBox(height: 20),
         if (!_connected)
-          const SurfaceCard(
+          SurfaceCard(
             color: AppColors.brandLightest,
             child: Row(
               children: [
-                Icon(Icons.lock_rounded, color: AppColors.brandPrimary, size: 20),
-                SizedBox(width: 12),
+                const Icon(Icons.lock_rounded, color: AppColors.brandPrimary, size: 20),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: Text('We never store your bank login. Connection is read-only.',
-                      style: TextStyle(fontFamily: 'Urbanist', fontSize: 13, color: AppColors.textNormal)),
+                  child: Text(tr('We never store your bank login. Connection is read-only.'),
+                      style: const TextStyle(fontFamily: 'Urbanist', fontSize: 13, color: AppColors.textNormal)),
                 ),
               ],
             ),

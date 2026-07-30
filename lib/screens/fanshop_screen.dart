@@ -7,6 +7,7 @@ import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import 'product_detail_screen.dart';
 import 'cart_screen.dart';
+import '../l10n/strings.dart';
 
 /// Fanshop Home (Figma 2162:6193) — Shop tab.
 class FanshopScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _FanshopScreenState extends State<FanshopScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              Text('Schalke Fanshop', style: AppText.h2.copyWith(fontSize: 24)),
+              Text(tr('Schalke Fanshop'), style: AppText.h2.copyWith(fontSize: 24)),
               const Spacer(),
               _CartButton(),
               const SizedBox(width: 8),
@@ -52,7 +53,7 @@ class _FanshopScreenState extends State<FanshopScreen> {
             child: Row(children: [
               const Icon(Icons.search_rounded, color: AppColors.textLight, size: 20),
               const SizedBox(width: 8),
-              Text('Search products…', style: AppText.body1.copyWith(color: AppColors.textLight, fontSize: 14)),
+              Text(tr('Search products…'), style: AppText.body1.copyWith(color: AppColors.textLight, fontSize: 14)),
             ]),
           ),
         ),
@@ -65,7 +66,7 @@ class _FanshopScreenState extends State<FanshopScreen> {
             child: Row(children: [
               const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 10),
-              Expanded(child: Text('Pay with Fan Points — use points at checkout!', style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+              Expanded(child: Text(tr('Pay with Fan Points — use points at checkout!'), style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
             ]),
           ),
         ),

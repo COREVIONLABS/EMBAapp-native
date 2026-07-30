@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../l10n/strings.dart';
 
 class NewsArticle {
   final String category, title, teaser, date;
@@ -77,11 +78,11 @@ class NewsDetailScreen extends StatelessWidget {
                   Row(children: [
                     const Icon(Icons.favorite_border_rounded, size: 20, color: AppColors.textLight),
                     const SizedBox(width: 6),
-                    Text('248', style: AppText.body3Regular),
+                    Text(tr('248'), style: AppText.body3Regular),
                     const SizedBox(width: 20),
                     const Icon(Icons.mode_comment_outlined, size: 19, color: AppColors.textLight),
                     const SizedBox(width: 6),
-                    Text('32', style: AppText.body3Regular),
+                    Text(tr('32'), style: AppText.body3Regular),
                   ]),
                 ],
               ),

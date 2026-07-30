@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'app_widgets.dart';
+import '../l10n/strings.dart';
 
 /// The S04 Fan Points hero card, shared by Home and Points (Figma 2145:7214).
 class S04PointsCard extends StatelessWidget {
@@ -36,7 +37,7 @@ class S04PointsCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('S04 Fan Points', style: AppText.body2.copyWith(color: Colors.white)),
+                  Text(tr('S04 Fan Points'), style: AppText.body2.copyWith(color: Colors.white)),
                   Container(
                     padding: const EdgeInsets.fromLTRB(6, 4, 4, 4),
                     decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(999)),
@@ -45,7 +46,7 @@ class S04PointsCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.keyboard_double_arrow_down_rounded, size: 14, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text('Schalker', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
+                        Text(tr('Schalker'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
                         const SizedBox(width: 4),
                         const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
                       ],

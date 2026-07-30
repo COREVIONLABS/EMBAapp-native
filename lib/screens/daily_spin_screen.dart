@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../l10n/strings.dart';
 
 /// Presents Daily Spin as a modal sheet over the current screen (Figma 2145:8385).
 void showDailySpin(BuildContext context) {
@@ -62,7 +63,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                   Row(
                     children: [
                       const Spacer(),
-                      Text('Daily Spin', style: AppText.label1),
+                      Text(tr('Daily Spin'), style: AppText.label1),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -75,11 +76,11 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text('Spin the wheel to win rewards!', style: AppText.body2.copyWith(color: AppColors.textLight)),
+                  Text(tr('Spin the wheel to win rewards!'), style: AppText.body2.copyWith(color: AppColors.textLight)),
                   const SizedBox(height: 12),
                   Pill(
                     color: AppColors.brandLightest,
-                    child: Text('1 Spin Left', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
+                    child: Text(tr('1 Spin Left'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
@@ -99,7 +100,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                             height: 64,
                             decoration: const BoxDecoration(shape: BoxShape.circle, gradient: LinearGradient(colors: AppColors.goldGradient)),
                             alignment: Alignment.center,
-                            child: Text('SPIN', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 13)),
+                            child: Text(tr('SPIN'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 13)),
                           ),
                         ),
                       ],
@@ -113,11 +114,11 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                         const Icon(Icons.celebration_rounded, color: AppColors.success),
                         const SizedBox(width: 10),
-                        Text('You won 100 Points!', style: AppText.label2.copyWith(color: AppColors.success)),
+                        Text(tr('You won 100 Points!'), style: AppText.label2.copyWith(color: AppColors.success)),
                       ]),
                     )
                   else
-                    PrimaryButton('Spin Now', onTap: _spin),
+                    PrimaryButton(tr('Spin Now'), onTap: _spin),
                 ],
               ),
             ),

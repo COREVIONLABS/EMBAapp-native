@@ -5,6 +5,7 @@ import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'deal_detail_screen.dart';
 import 'category_detail_screen.dart';
+import '../l10n/strings.dart';
 
 class _Cat {
   final IconData icon;
@@ -52,7 +53,7 @@ class DealsHubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Deals Hub',
+      title: tr('Deals Hub'),
       children: [
         // Search bar
         Container(
@@ -62,7 +63,7 @@ class DealsHubScreen extends StatelessWidget {
           child: Row(children: [
             const Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
             const SizedBox(width: 12),
-            Expanded(child: Text('Search deals...', style: AppText.body2.copyWith(color: AppColors.textLight))),
+            Expanded(child: Text(tr('Search deals...'), style: AppText.body2.copyWith(color: AppColors.textLight))),
             const Icon(Icons.tune_rounded, size: 20, color: AppColors.textLight),
           ]),
         ),
@@ -78,7 +79,7 @@ class DealsHubScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        SectionHeader('Partner Brands', onAction: () {}),
+        SectionHeader(tr('Partner Brands'), onAction: () {}),
         const SizedBox(height: 12),
         SizedBox(
           height: 58,
@@ -90,7 +91,7 @@ class DealsHubScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        SectionHeader('Featured Deals', onAction: () {}),
+        SectionHeader(tr('Featured Deals'), onAction: () {}),
         const SizedBox(height: 12),
         GridView.count(
           crossAxisCount: 2,
@@ -130,7 +131,7 @@ class _CatTile extends StatelessWidget {
             child: Icon(cat.icon, size: 24, color: active ? Colors.white : AppColors.brandPrimary),
           ),
           const SizedBox(height: 6),
-          Text(cat.label.split(' ').first,
+          Text(tr(cat.label.split(' ').first),
               maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textNormal)),
         ]),
       ),

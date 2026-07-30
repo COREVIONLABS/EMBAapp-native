@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'fanplus_screen.dart';
+import '../l10n/strings.dart';
 
 /// Upgrade Plan checkout (Figma 404:10693 / 404:11074).
 class UpgradePlanScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class UpgradePlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Upgrade Plan',
+      title: tr('Upgrade Plan'),
       bottomBar: PrimaryButton('Confirm & Pay $price', onTap: () {
         showModalBottomSheet(
           context: context,
@@ -37,7 +38,7 @@ class UpgradePlanScreen extends StatelessWidget {
                   Text('$plan plan', style: AppText.label1.copyWith(color: Colors.white)),
                   Pill(
                     gradient: const LinearGradient(colors: AppColors.goldGradient),
-                    child: Text('BEST VALUE', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                    child: Text(tr('BEST VALUE'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
                   ),
                 ],
               ),
@@ -48,14 +49,14 @@ class UpgradePlanScreen extends StatelessWidget {
                 children: [
                   Text(price, style: AppText.h1.copyWith(color: Colors.white)),
                   const SizedBox(width: 4),
-                  Text('/ month', style: AppText.body2.copyWith(color: Colors.white70)),
+                  Text(tr('/ month'), style: AppText.body2.copyWith(color: Colors.white70)),
                 ],
               ),
             ],
           ),
         ),
         const SizedBox(height: 20),
-        const Text("What's included", style: AppText.label2),
+        Text(tr("What's included"), style: AppText.label2),
         const SizedBox(height: 12),
         for (final b in const [
           '3× Fan Points on everything',
@@ -75,15 +76,15 @@ class UpgradePlanScreen extends StatelessWidget {
             ),
           ),
         const SizedBox(height: 12),
-        const Text('Payment method', style: AppText.label2),
+        Text(tr('Payment method'), style: AppText.label2),
         const SizedBox(height: 12),
         SurfaceCard(
           child: Row(
             children: [
               const Icon(Icons.credit_card_rounded, color: AppColors.textNormal),
               const SizedBox(width: 12),
-              Expanded(child: Text('Visa •••• 4921', style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
-              Text('Change', style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+              Expanded(child: Text(tr('Visa •••• 4921'), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
+              Text(tr('Change'), style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
@@ -112,12 +113,12 @@ class _SuccessSheet extends StatelessWidget {
             child: const Icon(Icons.check_rounded, color: AppColors.success, size: 40),
           ),
           const SizedBox(height: 18),
-          Text("You're a Superfan!", style: AppText.h4),
+          Text(tr("You're a Superfan!"), style: AppText.h4),
           const SizedBox(height: 8),
-          Text('Your plan is active. Enjoy 3× points and exclusive perks.',
+          Text(tr('Your plan is active. Enjoy 3× points and exclusive perks.'),
               textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
           const SizedBox(height: 24),
-          PrimaryButton('Done', onTap: () {
+          PrimaryButton(tr('Done'), onTap: () {
             Navigator.of(context).pop(); // close sheet
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const FanPlusScreen(subscribed: true)),

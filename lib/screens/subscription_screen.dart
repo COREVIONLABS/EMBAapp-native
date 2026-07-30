@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'upgrade_plan_screen.dart';
+import '../l10n/strings.dart';
 
 /// Subscription / Fan+ plans (Figma 2145:12518, 8275).
 class SubscriptionScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class SubscriptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Fan+ Plans',
+      title: tr('Fan+ Plans'),
       children: const [
         _PlanCard(
           name: 'Supporter',
@@ -65,7 +66,7 @@ class _PlanCard extends StatelessWidget {
               if (highlight)
                 Pill(
                   gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text('POPULAR', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                  child: Text(tr('POPULAR'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
                 ),
             ],
           ),
@@ -76,7 +77,7 @@ class _PlanCard extends StatelessWidget {
             children: [
               Text(price, style: AppText.h2.copyWith(color: onColor)),
               const SizedBox(width: 4),
-              Text('/ month',
+              Text(tr('/ month'),
                   style: AppText.body2.copyWith(color: highlight ? Colors.white70 : AppColors.textLight)),
             ],
           ),

@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/ios_chrome.dart';
 import 'login_screen.dart';
+import '../l10n/strings.dart';
 
 /// Welcome 1–3 (Figma 2145:11369 / 11385 / 11400) — full-bleed hero photo
 /// with a bottom sheet, 1:1 with the design.
@@ -115,7 +116,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Center(
                     child: GestureDetector(
                       onTap: _goLogin,
-                      child: Text('Skip',
+                      child: Text(tr('Skip'),
                           style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w600)),
                     ),
                   ),

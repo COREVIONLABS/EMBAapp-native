@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/scratch_card.dart';
+import '../l10n/strings.dart';
 
 /// Presents Daily Card Scratch as a modal sheet over the current screen
 /// (Figma 2145:8564). Real finger-scratch reveal.
@@ -46,7 +47,7 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
                   Row(
                     children: [
                       const Spacer(),
-                      Text('Daily Card Scratch', style: AppText.label1),
+                      Text(tr('Daily Card Scratch'), style: AppText.label1),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -59,11 +60,11 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text('Scratch the card to win rewards!', style: AppText.body2.copyWith(color: AppColors.textLight)),
+                  Text(tr('Scratch the card to win rewards!'), style: AppText.body2.copyWith(color: AppColors.textLight)),
                   const SizedBox(height: 12),
                   Pill(
                     color: AppColors.brandLightest,
-                    child: Text('1 Scratch Left', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
+                    child: Text(tr('1 Scratch Left'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
                   ),
                   const SizedBox(height: 20),
                   ScratchCard(
@@ -77,7 +78,7 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
                           children: [
                             const Icon(Icons.emoji_events_rounded, color: AppColors.brandDarkest, size: 44),
                             const SizedBox(height: 8),
-                            Text('+50 Points', style: AppText.h2.copyWith(color: AppColors.brandDarkest)),
+                            Text(tr('+50 Points'), style: AppText.h2.copyWith(color: AppColors.brandDarkest)),
                           ],
                         ),
                       ),
@@ -85,9 +86,9 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
                   ),
                   const SizedBox(height: 16),
                   if (_revealed)
-                    PrimaryButton('Claim +50 Points', onTap: () => Navigator.of(context).maybePop())
+                    PrimaryButton(tr('Claim +50 Points'), onTap: () => Navigator.of(context).maybePop())
                   else
-                    Text('Scratch at least 40% of the card to reveal your reward',
+                    Text(tr('Scratch at least 40% of the card to reveal your reward'),
                         textAlign: TextAlign.center, style: AppText.body3Regular),
                 ],
               ),

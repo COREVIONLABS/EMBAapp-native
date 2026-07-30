@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Points History (Figma 2162:5427).
 class PointsHistoryScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class PointsHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Points History',
+      title: tr('Points History'),
       children: [
         for (final r in _rows)
           Padding(

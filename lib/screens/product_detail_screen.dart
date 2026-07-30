@@ -6,6 +6,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'cart_screen.dart';
+import '../l10n/strings.dart';
 
 /// Product Detail (Figma 2162:6304).
 class ProductDetailScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final light = p.color.computeLuminance() > 0.6;
     return SubScaffold(
       title: '',
-      bottomBar: PrimaryButton('Add to Cart', onTap: () {
+      bottomBar: PrimaryButton(tr('Add to Cart'), onTap: () {
         cartStore.add(p, _sizes[_size]);
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen()));
       }),
@@ -47,7 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Text('or ${p.pointsLabel}', style: AppText.body1.copyWith(color: AppColors.brandPrimary, fontSize: 15)),
         ]),
         const SizedBox(height: 20),
-        Text('Select Size', style: AppText.label2),
+        Text(tr('Select Size'), style: AppText.label2),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -71,7 +72,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
         const SizedBox(height: 20),
-        Text('Description', style: AppText.label2),
+        Text(tr('Description'), style: AppText.label2),
         const SizedBox(height: 6),
         Text('Official FC Schalke 04 ${p.category.toLowerCase()} item for the 2025/26 season. Made with recycled polyester for comfort and sustainability. Features the iconic royal blue design.',
             style: AppText.body1.copyWith(color: AppColors.textNormal, height: 1.6, fontSize: 14)),

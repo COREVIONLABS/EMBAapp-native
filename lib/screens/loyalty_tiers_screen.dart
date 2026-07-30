@@ -4,6 +4,7 @@ import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'points_history_screen.dart';
+import '../l10n/strings.dart';
 
 /// Loyalty Tiers (Figma 2162:5368) — Nordkurve → Legende ladder.
 class LoyaltyTiersScreen extends StatelessWidget {
@@ -21,8 +22,8 @@ class LoyaltyTiersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final tiersDesc = FanModel.tiers.reversed.toList();
     return SubScaffold(
-      title: 'Loyalty Tiers',
-      bottomBar: SecondaryButton('View Points History',
+      title: tr('Loyalty Tiers'),
+      bottomBar: SecondaryButton(tr('View Points History'),
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PointsHistoryScreen()))),
       children: [
         // Current tier card
@@ -35,7 +36,7 @@ class LoyaltyTiersScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Your Current Tier', style: AppText.body3.copyWith(color: Colors.white70)),
+              Text(tr('Your Current Tier'), style: AppText.body3.copyWith(color: Colors.white70)),
               const SizedBox(height: 4),
               Text(FanModel.currentTier, style: AppText.h4.copyWith(color: Colors.white)),
               const SizedBox(height: 4),
@@ -58,7 +59,7 @@ class LoyaltyTiersScreen extends StatelessWidget {
         Row(children: [
           const Icon(Icons.info_outline_rounded, size: 15, color: AppColors.textLight),
           const SizedBox(width: 6),
-          Expanded(child: Text('Free for every fan — your tier rises automatically as you collect Fan Points.',
+          Expanded(child: Text(tr('Free for every fan — your tier rises automatically as you collect Fan Points.'),
               style: AppText.body3Regular.copyWith(fontSize: 12.5))),
         ]),
         const SizedBox(height: 16),
@@ -101,7 +102,7 @@ class _TierRow extends StatelessWidget {
             ),
           ),
           if (current)
-            Pill(color: AppColors.brandPrimary, child: Text('Current', style: AppText.caption1.copyWith(color: Colors.white))),
+            Pill(color: AppColors.brandPrimary, child: Text(tr('Current'), style: AppText.caption1.copyWith(color: Colors.white))),
         ],
       ),
     );

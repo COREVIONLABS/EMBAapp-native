@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../theme/app_theme.dart';
+import '../l10n/strings.dart';
 
 /// Local SVG asset helper.
 class Svg extends StatelessWidget {
@@ -181,7 +182,7 @@ class SectionHeader extends StatelessWidget {
             onTap: onAction,
             child: Row(
               children: [
-                Text(action!, style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
+                Text(tr(action!), style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
                 const SizedBox(width: 4),
                 const Svg('arrow_right', size: 16),
               ],

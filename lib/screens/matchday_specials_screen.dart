@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Matchday Specials (Figma 2162:6061).
 class MatchdaySpecialsScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class MatchdaySpecialsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Matchday Specials',
+      title: tr('Matchday Specials'),
       children: [
         Container(
           padding: const EdgeInsets.all(16),
@@ -18,10 +19,10 @@ class MatchdaySpecialsScreen extends StatelessWidget {
             Row(children: [
               const Icon(Icons.sports_soccer_rounded, color: AppColors.gold),
               const SizedBox(width: 10),
-              Text('Schalke 04 vs. Bayern', style: AppText.label2.copyWith(color: Colors.white)),
+              Text(tr('Schalke 04 vs. Bayern'), style: AppText.label2.copyWith(color: Colors.white)),
             ]),
             const SizedBox(height: 4),
-            Text('Sat, Apr 5 · 15:30 · Only on gameday', style: AppText.body3.copyWith(color: Colors.white70)),
+            Text(tr('Sat, Apr 5 · 15:30 · Only on gameday'), style: AppText.body3.copyWith(color: Colors.white70)),
           ]),
         ),
         const SizedBox(height: 20),
@@ -42,7 +43,7 @@ class MatchdaySpecialsScreen extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(s.$2, style: AppText.body3Regular),
                 ])),
-                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text('Today', style: AppText.caption1.copyWith(color: AppColors.brandDarkest))),
+                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Today'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest))),
               ]),
             ),
           ),

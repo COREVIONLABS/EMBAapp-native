@@ -4,6 +4,7 @@ import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'checkout_screen.dart';
+import '../l10n/strings.dart';
 
 /// Cart (Figma 2162:6348).
 class CartScreen extends StatelessWidget {
@@ -15,7 +16,7 @@ class CartScreen extends StatelessWidget {
       builder: (context, _) {
         final items = cartStore.items;
         return SubScaffold(
-          title: 'Cart',
+          title: tr('Cart'),
           bottomBar: items.isEmpty
               ? null
               : PrimaryButton('Checkout · €${cartStore.subtotal.toStringAsFixed(2)}',
@@ -25,7 +26,7 @@ class CartScreen extends StatelessWidget {
                   const SizedBox(height: 80),
                   const Center(child: Icon(Icons.shopping_bag_outlined, size: 64, color: AppColors.surfaceLowContrast)),
                   const SizedBox(height: 16),
-                  Center(child: Text('Your cart is empty', style: AppText.label2.copyWith(color: AppColors.textLight))),
+                  Center(child: Text(tr('Your cart is empty'), style: AppText.label2.copyWith(color: AppColors.textLight))),
                 ]
               : [
                   for (final it in items) ...[
@@ -37,7 +38,7 @@ class CartScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal', style: AppText.body1.copyWith(color: AppColors.textDarker)),
+                        Text(tr('Subtotal'), style: AppText.body1.copyWith(color: AppColors.textDarker)),
                         Text('€${cartStore.subtotal.toStringAsFixed(2)}', style: AppText.label2),
                       ],
                     ),

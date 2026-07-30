@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// My Bookings (Figma 2162:6647).
 class MyBookingsScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class MyBookingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'My Bookings',
+      title: tr('My Bookings'),
       children: [
         for (final b in const [
           ('Stadium Tour VIP', 'Apr 15, 2026 · VELTINS-Arena', 'Confirmed', true),

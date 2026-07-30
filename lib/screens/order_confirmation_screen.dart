@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/ios_chrome.dart';
+import '../l10n/strings.dart';
 
 /// Order Confirmation (Figma 2162:7502).
 class OrderConfirmationScreen extends StatelessWidget {
@@ -23,11 +24,11 @@ class OrderConfirmationScreen extends StatelessWidget {
               child: const Icon(Icons.check_rounded, color: AppColors.success, size: 48),
             ),
             const SizedBox(height: 20),
-            Text('Order Confirmed!', style: AppText.h4),
+            Text(tr('Order Confirmed!'), style: AppText.h4),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Text('Your order #S04-24815 is on its way. You can track it under My Orders.',
+              child: Text(tr('Your order #S04-24815 is on its way. You can track it under My Orders.'),
                   textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
             ),
             const SizedBox(height: 20),
@@ -43,7 +44,7 @@ class OrderConfirmationScreen extends StatelessWidget {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(20),
-              child: PrimaryButton('Continue Shopping', onTap: () => Navigator.of(context).popUntil((r) => r.isFirst)),
+              child: PrimaryButton(tr('Continue Shopping'), onTap: () => Navigator.of(context).popUntil((r) => r.isFirst)),
             ),
             const HomeIndicator(),
           ],

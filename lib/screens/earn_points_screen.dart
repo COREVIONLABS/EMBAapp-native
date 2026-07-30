@@ -4,6 +4,7 @@ import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'redeem_screen.dart';
+import '../l10n/strings.dart';
 
 class _Way {
   final IconData icon;
@@ -27,7 +28,7 @@ class EarnPointsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Earn Points',
+      title: tr('Earn Points'),
       children: [
         // Balance card
         Container(
@@ -46,7 +47,7 @@ class EarnPointsScreen extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Your Balance', style: AppText.body3.copyWith(color: Colors.white70)),
+                Text(tr('Your Balance'), style: AppText.body3.copyWith(color: Colors.white70)),
                 Text('${FanModel.pointsFormatted} pts', style: AppText.h4.copyWith(color: Colors.white)),
               ]),
             ),
@@ -56,7 +57,7 @@ class EarnPointsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Text('Redeem', style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                  Text(tr('Redeem'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
                   const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
                 ]),
               ),
@@ -64,7 +65,7 @@ class EarnPointsScreen extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 22),
-        Align(alignment: Alignment.centerLeft, child: Text('Ways to Earn', style: AppText.label2)),
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Ways to Earn'), style: AppText.label2)),
         const SizedBox(height: 12),
         for (final w in _ways) ...[
           SurfaceCard(

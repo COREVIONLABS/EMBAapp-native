@@ -16,6 +16,7 @@ import 'achievements_screen.dart';
 import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
 import '../model/fan_model.dart';
+import '../l10n/strings.dart';
 
 void _push(BuildContext context, Widget screen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
@@ -71,7 +72,7 @@ class HomeMatchdayScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: null)),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: SectionHeader(tr('Explore'), action: null)),
         const SizedBox(height: 12),
         SizedBox(
           height: 96,
@@ -98,7 +99,7 @@ class HomeMatchdayScreen extends StatelessWidget {
                     child: Icon(items[i].$2, color: AppColors.brandPrimary, size: 28),
                   ),
                   const SizedBox(height: 6),
-                  Text(items[i].$1, style: AppText.body3, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(tr(items[i].$1), style: AppText.body3, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
                 ]),
               ),
             ),
@@ -115,7 +116,7 @@ class HomeMatchdayScreen extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Builder(builder: (context) => SectionHeader('Upcoming Experiences', onAction: () => _push(context, const ExperiencesScreen()))),
+          child: Builder(builder: (context) => SectionHeader(tr('Upcoming Experiences'), onAction: () => _push(context, const ExperiencesScreen()))),
         ),
         const SizedBox(height: 12),
         for (final e in items)
@@ -148,7 +149,7 @@ class HomeMatchdayScreen extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Builder(builder: (context) => SectionHeader('Club News', onAction: () => _push(context, const ClubNewsScreen()))),
+          child: Builder(builder: (context) => SectionHeader(tr('Club News'), onAction: () => _push(context, const ClubNewsScreen()))),
         ),
         const SizedBox(height: 12),
         Builder(builder: (context) => GestureDetector(
@@ -161,12 +162,12 @@ class HomeMatchdayScreen extends StatelessWidget {
                 Container(height: 130, width: double.infinity, decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.tile))), child: const Center(child: Icon(Icons.image_rounded, color: Colors.white24, size: 44))),
                 Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Pill(color: AppColors.brandLightest, child: Text('Matchday', style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
+                    Pill(color: AppColors.brandLightest, child: Text(tr('Matchday'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
                     const Spacer(),
-                    Text('2h ago', style: AppText.body3Regular),
+                    Text(tr('2h ago'), style: AppText.body3Regular),
                   ]),
                   const SizedBox(height: 8),
-                  Text('Königsblau secures vital home win against Bayern', style: AppText.label2.copyWith(color: AppColors.textDarker)),
+                  Text(tr('Königsblau secures vital home win against Bayern'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
                 ])),
               ]),
             ),
@@ -217,21 +218,21 @@ class HomeMatchdayScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader('Active Missions'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader(tr('Active Missions')),
         ),
         const SizedBox(height: 14),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              _MissionCard(title: 'Spend €200 this week', reward: '+50 pts', progress: 0.4, sub: '€80 / €200 · 40%'),
-              SizedBox(height: 8),
-              _MissionCard(title: 'Invite a friend', reward: '+100 pts', progress: 0, sub: 'Not started'),
-              SizedBox(height: 8),
+              _MissionCard(title: tr('Spend €200 this week'), reward: '+50 pts', progress: 0.4, sub: '€80 / €200 · 40%'),
+              const SizedBox(height: 8),
+              _MissionCard(title: tr('Invite a friend'), reward: '+100 pts', progress: 0, sub: 'Not started'),
+              const SizedBox(height: 8),
               _MissionCard(
-                  title: 'Predict 2 matches',
+                  title: tr('Predict 2 matches'),
                   reward: '+1 Ticket',
                   rewardColor: AppColors.brandPrimary,
                   rewardBg: AppColors.infoBg,
@@ -277,7 +278,7 @@ class _PointsCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('S04 Fan Points', style: AppText.body2.copyWith(color: Colors.white)),
+                  Text(tr('S04 Fan Points'), style: AppText.body2.copyWith(color: Colors.white)),
                   Container(
                     padding: const EdgeInsets.fromLTRB(6, 4, 4, 4),
                     decoration: BoxDecoration(
@@ -289,7 +290,7 @@ class _PointsCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.keyboard_double_arrow_down_rounded, size: 14, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text('Schalker',
+                        Text(tr('Schalker'),
                             style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
                         const SizedBox(width: 4),
                         const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
@@ -299,20 +300,20 @@ class _PointsCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              Text('12,450',
+              Text(tr('12,450'),
                   style: AppText.h1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Pill(
                     color: AppColors.brandDark,
-                    child: Text('12 Raffle Tickets',
+                    child: Text(tr('12 Raffle Tickets'),
                         style: AppText.caption1.copyWith(color: AppColors.textLightest)),
                   ),
                   const SizedBox(width: 8),
                   Pill(
                     gradient: const LinearGradient(colors: AppColors.goldGradient),
-                    child: Text('3x Stadium Boost', style: AppText.caption1.copyWith(color: AppColors.textDarker)),
+                    child: Text(tr('3x Stadium Boost'), style: AppText.caption1.copyWith(color: AppColors.textDarker)),
                   ),
                 ],
               ),
@@ -342,8 +343,8 @@ class _PromoBanner extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('02:14:35', style: AppText.h4.copyWith(color: AppColors.brandDarkest)),
-                Text('Until Kickoff', style: AppText.body3.copyWith(color: AppColors.textDark)),
+                Text(tr('02:14:35'), style: AppText.h4.copyWith(color: AppColors.brandDarkest)),
+                Text(tr('Until Kickoff'), style: AppText.body3.copyWith(color: AppColors.textDark)),
               ],
             ),
           ),
@@ -359,7 +360,7 @@ class _PromoBanner extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Predict Score', style: AppText.body3.copyWith(color: AppColors.textLightest)),
+                    Text(tr('Predict Score'), style: AppText.body3.copyWith(color: AppColors.textLightest)),
                     const SizedBox(width: 4),
                     const Svg('arrow_left', size: 16), // white right-arrow variant
                   ],
@@ -423,7 +424,7 @@ class _QuickActions extends StatelessWidget {
                       child: AssetImg(it.$1, width: 48, height: 48, fallbackIcon: it.$3),
                     ),
                     const SizedBox(height: 8),
-                    Text(it.$2, textAlign: TextAlign.center, style: AppText.body3),
+                    Text(tr(it.$2), textAlign: TextAlign.center, style: AppText.body3),
                   ],
                 ),
               ),
@@ -517,19 +518,19 @@ class _RewardCard extends StatelessWidget {
                   Pill(
                     gradient: const LinearGradient(colors: AppColors.goldGradient),
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text('Exclusive Reward', style: AppText.caption1.copyWith(color: AppColors.textDarker)),
+                    child: Text(tr('Exclusive Reward'), style: AppText.caption1.copyWith(color: AppColors.textDarker)),
                   ),
                   Pill(
                     color: AppColors.brandLightest,
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text('Ends in 4:12:30', style: AppText.caption1.copyWith(color: AppColors.textDarker)),
+                    child: Text(tr('Ends in 4:12:30'), style: AppText.caption1.copyWith(color: AppColors.textDarker)),
                   ),
                 ],
               ),
               const Spacer(),
-              Text('Meet the Players', style: AppText.label1.copyWith(color: AppColors.textLightest)),
+              Text(tr('Meet the Players'), style: AppText.label1.copyWith(color: AppColors.textLightest)),
               const SizedBox(height: 4),
-              Text('Exclusive post-match meet & greet with the team',
+              Text(tr('Exclusive post-match meet & greet with the team'),
                   style: AppText.body3.copyWith(color: AppColors.textLightest.withValues(alpha: 0.7))),
             ],
           ),

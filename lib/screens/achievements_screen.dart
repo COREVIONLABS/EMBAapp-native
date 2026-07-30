@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'achievement_detail_screen.dart';
+import '../l10n/strings.dart';
 
 class _Badge {
   final String name;
@@ -39,7 +40,7 @@ class AchievementsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Achievements',
+      title: tr('Achievements'),
       children: [
         Container(
           padding: const EdgeInsets.all(20),

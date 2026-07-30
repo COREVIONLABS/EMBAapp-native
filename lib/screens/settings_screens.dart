@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/settings_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/text_field.dart';
+import '../l10n/strings.dart';
 
 /// Edit Profile (Figma 385:4414).
 class EditProfileScreen extends StatelessWidget {
@@ -11,8 +12,8 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Edit Profile',
-      bottomBar: PrimaryButton('Save Changes', onTap: () => Navigator.of(context).maybePop()),
+      title: tr('Edit Profile'),
+      bottomBar: PrimaryButton(tr('Save Changes'), onTap: () => Navigator.of(context).maybePop()),
       children: [
         Center(
           child: Stack(
@@ -43,13 +44,13 @@ class EditProfileScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 28),
-        const AppTextField(label: 'Full name', hint: 'Max Mustermann'),
+        AppTextField(label: tr('Full name'), hint: tr('Max Mustermann')),
         const SizedBox(height: 18),
-        const AppTextField(label: 'Email', hint: 'max@example.com', keyboardType: TextInputType.emailAddress),
+        AppTextField(label: tr('Email'), hint: tr('max@example.com'), keyboardType: TextInputType.emailAddress),
         const SizedBox(height: 18),
-        const AppTextField(label: 'Phone', hint: '+49 170 0000000', keyboardType: TextInputType.phone),
+        AppTextField(label: tr('Phone'), hint: '+49 170 0000000', keyboardType: TextInputType.phone),
         const SizedBox(height: 18),
-        const AppTextField(label: 'Favourite section', hint: 'Nordkurve'),
+        AppTextField(label: tr('Favourite section'), hint: tr('Nordkurve')),
       ],
     );
   }
@@ -61,9 +62,9 @@ class NotificationPrefsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Notifications',
-      children: const [
-        Padding(padding: EdgeInsets.only(bottom: 8), child: Text('Push notifications', style: AppText.body3)),
+      title: tr('Notifications'),
+      children: [
+        Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(tr('Push notifications'), style: AppText.body3)),
         SettingsGroup([
           ToggleRow('Matchday reminders', subtitle: 'Kickoff & lineup alerts', initial: true),
           ToggleRow('Points & rewards', subtitle: 'When you earn or can redeem', initial: true),
@@ -71,7 +72,7 @@ class NotificationPrefsScreen extends StatelessWidget {
           ToggleRow('Daily games', subtitle: 'Spin & scratch reminders'),
         ]),
         SizedBox(height: 20),
-        Padding(padding: EdgeInsets.only(bottom: 8), child: Text('Email', style: AppText.body3)),
+        Padding(padding: EdgeInsets.only(bottom: 8), child: Text(tr('Email'), style: AppText.body3)),
         SettingsGroup([
           ToggleRow('Newsletter', initial: true),
           ToggleRow('Exclusive offers'),
@@ -89,16 +90,15 @@ class LanguageScreen extends StatefulWidget {
 }
 
 class _LanguageScreenState extends State<LanguageScreen> {
-  int _sel = 0;
-  static const _langs = ['Deutsch', 'English', 'Türkçe', 'Français', 'Español'];
   @override
   Widget build(BuildContext context) {
+    final isDe = localeNotifier.value == AppLocale.de;
     return SubScaffold(
-      title: 'Language',
+      title: tr('Language'),
       children: [
         SettingsGroup([
-          for (var i = 0; i < _langs.length; i++)
-            SelectRow(_langs[i], selected: i == _sel, onTap: () => setState(() => _sel = i)),
+          SelectRow('Deutsch', selected: isDe, onTap: () => setState(() => localeNotifier.value = AppLocale.de)),
+          SelectRow('English', selected: !isDe, onTap: () => setState(() => localeNotifier.value = AppLocale.en)),
         ]),
       ],
     );
@@ -113,15 +113,15 @@ class ConsentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: title,
-      children: const [
-        SettingsGroup([
+      children: [
+        const SettingsGroup([
           ToggleRow('Personalised offers', subtitle: 'Use my activity to tailor rewards', initial: true),
           ToggleRow('Share with club partners', subtitle: 'Sponsors & official partners'),
           ToggleRow('Analytics', subtitle: 'Help improve the app', initial: true),
           ToggleRow('Third-party marketing'),
         ]),
-        SizedBox(height: 16),
-        Text('You can change these choices at any time. See our Privacy Policy for details on how your data is processed.',
+        const SizedBox(height: 16),
+        Text(tr('You can change these choices at any time. See our Privacy Policy for details on how your data is processed.'),
             style: AppText.body3Regular),
       ],
     );
@@ -134,7 +134,7 @@ class DeviceManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Devices',
+      title: tr('Devices'),
       children: [
         for (final d in const [
           ('iPhone 15 Pro', 'This device · Gelsenkirchen', true),
@@ -159,7 +159,7 @@ class DeviceManagementScreen extends StatelessWidget {
                     ),
                   ),
                   if (d.$3)
-                    Pill(color: AppColors.successBg, child: Text('Active', style: AppText.caption1.copyWith(color: AppColors.success)))
+                    Pill(color: AppColors.successBg, child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.success)))
                   else
                     const Icon(Icons.logout_rounded, color: AppColors.danger, size: 20),
                 ],
@@ -177,7 +177,7 @@ class BiometricScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Biometric Login',
+      title: tr('Biometric Login'),
       children: [
         const SizedBox(height: 24),
         Center(
@@ -189,9 +189,9 @@ class BiometricScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 28),
-        Text('Enable Face ID / Fingerprint', textAlign: TextAlign.center, style: AppText.h4),
+        Text(tr('Enable Face ID / Fingerprint'), textAlign: TextAlign.center, style: AppText.h4),
         const SizedBox(height: 8),
-        Text('Log in securely without typing your password every time.',
+        Text(tr('Log in securely without typing your password every time.'),
             textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
         const SizedBox(height: 28),
         const SettingsGroup([ToggleRow('Use biometric login', initial: true)]),
@@ -207,9 +207,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const p = TextStyle(fontFamily: 'Urbanist', fontSize: 14, height: 1.6, color: AppColors.textNormal);
     return SubScaffold(
-      title: 'Privacy Policy',
+      title: tr('Privacy Policy'),
       children: [
-        Text('Last updated: 22 July 2026', style: AppText.body3Regular),
+        Text(tr('Last updated: 22 July 2026'), style: AppText.body3Regular),
         const SizedBox(height: 16),
         for (final s in const [
           ('1. Data we collect',

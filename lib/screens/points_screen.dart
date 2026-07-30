@@ -5,6 +5,7 @@ import '../widgets/points_card.dart';
 import '../widgets/tab_scaffold.dart';
 import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
+import '../l10n/strings.dart';
 
 /// Points tab — History / Missions (Figma 2145:7321 / 7449).
 class PointsScreen extends StatefulWidget {
@@ -54,9 +55,9 @@ class _PointsScreenState extends State<PointsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Use your points', style: AppText.label2.copyWith(color: AppColors.brandDarkest)),
+                      Text(tr('Use your points'), style: AppText.label2.copyWith(color: AppColors.brandDarkest)),
                       const SizedBox(height: 2),
-                      Text('Points are ready to use', style: AppText.body3.copyWith(color: AppColors.textDark)),
+                      Text(tr('Points are ready to use'), style: AppText.body3.copyWith(color: AppColors.textDark)),
                     ],
                   ),
                 ),
@@ -66,7 +67,7 @@ class _PointsScreenState extends State<PointsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text('Redeem', style: AppText.body3.copyWith(color: Colors.white)),
+                      Text(tr('Redeem'), style: AppText.body3.copyWith(color: Colors.white)),
                       const SizedBox(width: 4),
                       const Svg('arrow_left', size: 14),
                     ]),
@@ -89,8 +90,8 @@ class _PointsScreenState extends State<PointsScreen> {
               ),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Earn more points', style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                Text('See all the ways to collect Fan Points', style: AppText.body3Regular),
+                Text(tr('Earn more points'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                Text(tr('See all the ways to collect Fan Points'), style: AppText.body3Regular),
               ])),
               const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
             ]),
@@ -183,7 +184,7 @@ class _Segmented extends StatelessWidget {
                     boxShadow: i == index ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
                   ),
                   child: Center(
-                    child: Text(labels[i], style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
+                    child: Text(tr(labels[i]), style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
                   ),
                 ),
               ),

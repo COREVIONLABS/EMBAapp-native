@@ -4,6 +4,7 @@ import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'booking_confirmation_screen.dart';
+import '../l10n/strings.dart';
 
 /// Experience Detail (Figma 2162:6574).
 class ExperienceDetailScreen extends StatelessWidget {
@@ -33,9 +34,9 @@ class ExperienceDetailScreen extends StatelessWidget {
         const SizedBox(height: 12),
         Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(exp.pointsLabel, style: AppText.caption1.copyWith(color: AppColors.brandDarkest))),
         const SizedBox(height: 20),
-        Text('About this experience', style: AppText.label2),
+        Text(tr('About this experience'), style: AppText.label2),
         const SizedBox(height: 6),
-        Text('An exclusive FC Schalke 04 experience for Fan+ members. Limited spots available — redeem your Fan Points to secure your place and create memories money can’t buy.',
+        Text(tr('An exclusive FC Schalke 04 experience for Fan+ members. Limited spots available — redeem your Fan Points to secure your place and create memories money can’t buy.'),
             style: AppText.body1.copyWith(color: AppColors.textNormal, height: 1.6, fontSize: 14)),
       ],
     );

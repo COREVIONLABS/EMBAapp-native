@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Redeem Points (Figma 2145:12395): featured brand rewards + ways to redeem.
 class RedeemScreen extends StatelessWidget {
@@ -10,13 +11,13 @@ class RedeemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: 'Redeem Points',
+      title: tr('Redeem Points'),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Featured Rewards', style: AppText.label2),
-            Text('See All', style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
+            Text(tr('Featured Rewards'), style: AppText.label2),
+            Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
           ],
         ),
         const SizedBox(height: 12),
@@ -34,7 +35,7 @@ class RedeemScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Text('Ways to redeem', style: AppText.label2),
+        Text(tr('Ways to redeem'), style: AppText.label2),
         const SizedBox(height: 12),
         for (final w in const [
           (Icons.checkroom_rounded, 'Clothing', 'Get Clothing rewards'),

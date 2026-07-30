@@ -4,6 +4,7 @@ import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'order_confirmation_screen.dart';
+import '../l10n/strings.dart';
 
 /// Checkout (Figma 2162:7425) — pay with card or Fan Points.
 class CheckoutScreen extends StatefulWidget {
@@ -20,14 +21,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final pointsDiscount = _pay == 1 ? 15.0 : 0.0;
     final total = subtotal - pointsDiscount;
     return SubScaffold(
-      title: 'Checkout',
+      title: tr('Checkout'),
       bottomBar: PrimaryButton('Place Order · €${total.toStringAsFixed(2)}', onTap: () {
         final earned = cartStore.earnPoints;
         cartStore.clear();
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderConfirmationScreen(earned: earned)));
       }),
       children: [
-        Text('Shipping Address', style: AppText.label2),
+        Text(tr('Shipping Address'), style: AppText.label2),
         const SizedBox(height: 8),
         SurfaceCard(
           child: Row(
@@ -38,24 +39,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Max Mustermann', style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                    Text(tr('Max Mustermann'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                     const SizedBox(height: 2),
-                    Text('Kurt-Schumacher-Str. 2, 45897 Gelsenkirchen', style: AppText.body3Regular),
+                    Text(tr('Kurt-Schumacher-Str. 2, 45897 Gelsenkirchen'), style: AppText.body3Regular),
                   ],
                 ),
               ),
-              Text('Change', style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+              Text(tr('Change'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
         const SizedBox(height: 20),
-        Text('Payment Method', style: AppText.label2),
+        Text(tr('Payment Method'), style: AppText.label2),
         const SizedBox(height: 8),
-        _PayOption(icon: Icons.credit_card_rounded, title: 'Credit Card', sub: 'Visa ending in 4242', selected: _pay == 0, onTap: () => setState(() => _pay = 0)),
+        _PayOption(icon: Icons.credit_card_rounded, title: tr('Credit Card'), sub: 'Visa ending in 4242', selected: _pay == 0, onTap: () => setState(() => _pay = 0)),
         const SizedBox(height: 8),
-        _PayOption(icon: Icons.monetization_on_rounded, title: 'Fan Points', sub: '2,450 pts available (≈ €24.50)', selected: _pay == 1, onTap: () => setState(() => _pay = 1)),
+        _PayOption(icon: Icons.monetization_on_rounded, title: tr('Fan Points'), sub: '2,450 pts available (≈ €24.50)', selected: _pay == 1, onTap: () => setState(() => _pay = 1)),
         const SizedBox(height: 20),
-        Text('Order Summary', style: AppText.label2),
+        Text(tr('Order Summary'), style: AppText.label2),
         const SizedBox(height: 8),
         SurfaceCard(
           child: Column(
@@ -74,7 +75,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               _row('Shipping', 'Free', color: AppColors.success),
               const SizedBox(height: 4),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text('Total', style: AppText.label1),
+                Text(tr('Total'), style: AppText.label1),
                 Text('€${total.toStringAsFixed(2)}', style: AppText.label1.copyWith(color: AppColors.brandPrimary)),
               ]),
             ],

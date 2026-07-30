@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
+import '../l10n/strings.dart';
 
 /// Wallet — Supporter/Superfan (Figma 2145:7873/8022): virtual card, card
 /// actions, points/tickets, physical-card upsell, sponsor transactions.
@@ -35,10 +36,10 @@ class WalletScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
-            children: const [
-              Expanded(child: _StatCard(icon: Icons.monetization_on_rounded, value: '12,450', label: 'Points')),
-              SizedBox(width: 12),
-              Expanded(child: _StatCard(icon: Icons.confirmation_number_rounded, value: '12', label: 'Tickets')),
+            children: [
+              Expanded(child: _StatCard(icon: Icons.monetization_on_rounded, value: '12,450', label: tr('Points'))),
+              const SizedBox(width: 12),
+              Expanded(child: _StatCard(icon: Icons.confirmation_number_rounded, value: '12', label: tr('Tickets'))),
             ],
           ),
         ),
@@ -52,8 +53,8 @@ class WalletScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
                 const SizedBox(width: 10),
-                Expanded(child: Text('Upgrade to Physical Card', style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
-                Text('€9.99/mo', style: AppText.body3.copyWith(color: AppColors.textDark)),
+                Expanded(child: Text(tr('Upgrade to Physical Card'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                Text(tr('€9.99/mo'), style: AppText.body3.copyWith(color: AppColors.textDark)),
                 const SizedBox(width: 4),
                 const Svg('arrow_right', size: 16),
               ],
@@ -64,9 +65,9 @@ class WalletScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
-            Text('Recent Transactions', style: AppText.label2),
+            Text(tr('Recent Transactions'), style: AppText.label2),
             const SizedBox(width: 6),
-            Text('(Sponsors Only)', style: AppText.body3Regular),
+            Text(tr('(Sponsors Only)'), style: AppText.body3Regular),
           ]),
         ),
         const SizedBox(height: 12),
@@ -109,25 +110,25 @@ class _VirtualCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('S04 FAN VIRTUAL CARD', style: AppText.caption1.copyWith(color: Colors.white70, letterSpacing: 1)),
-                  Text('VISA', style: AppText.label2.copyWith(color: Colors.white, fontStyle: FontStyle.italic, fontWeight: FontWeight.w800)),
+                  Text(tr('S04 FAN VIRTUAL CARD'), style: AppText.caption1.copyWith(color: Colors.white70, letterSpacing: 1)),
+                  Text(tr('VISA'), style: AppText.label2.copyWith(color: Colors.white, fontStyle: FontStyle.italic, fontWeight: FontWeight.w800)),
                 ],
               ),
               const SizedBox(height: 8),
               Pill(
                 gradient: const LinearGradient(colors: AppColors.goldGradient),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                child: Text('Virtual', style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                child: Text(tr('Virtual'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
               ),
               const Spacer(),
-              Text('••••   ••••   ••••   4821',
+              Text(tr('••••   ••••   ••••   4821'),
                   style: AppText.label1.copyWith(color: Colors.white, letterSpacing: 2, fontWeight: FontWeight.w700)),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('MAX MUSTERMANN', style: AppText.body3.copyWith(color: Colors.white)),
-                  Text('03/28', style: AppText.body3.copyWith(color: Colors.white70)),
+                  Text(tr('MAX MUSTERMANN'), style: AppText.body3.copyWith(color: Colors.white)),
+                  Text(tr('03/28'), style: AppText.body3.copyWith(color: Colors.white70)),
                 ],
               ),
             ],

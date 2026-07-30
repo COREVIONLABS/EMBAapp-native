@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'news_detail_screen.dart';
+import '../l10n/strings.dart';
 
 /// Club News (Figma 2162:5325) — category tabs + compact article rows.
 class ClubNewsScreen extends StatefulWidget {
@@ -43,7 +44,7 @@ class _ClubNewsScreenState extends State<ClubNewsScreen> {
   Widget build(BuildContext context) {
     final list = _tab == 0 ? _news : _news.where((n) => n.category == _tabs[_tab]).toList();
     return SubScaffold(
-      title: 'Club News',
+      title: tr('Club News'),
       children: [
         SizedBox(
           height: 34,
@@ -58,7 +59,7 @@ class _ClubNewsScreenState extends State<ClubNewsScreen> {
                 decoration: BoxDecoration(
                     color: i == _tab ? AppColors.brandPrimary : AppColors.surfaceMinimal,
                     borderRadius: BorderRadius.circular(AppRadii.pill)),
-                child: Text(_tabs[i],
+                child: Text(tr(_tabs[i]),
                     style: AppText.body2.copyWith(
                         color: i == _tab ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w600)),
               ),
@@ -69,7 +70,7 @@ class _ClubNewsScreenState extends State<ClubNewsScreen> {
         if (list.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 60),
-            child: Center(child: Text('No articles in this category yet.', style: AppText.body2.copyWith(color: AppColors.textLight))),
+            child: Center(child: Text(tr('No articles in this category yet.'), style: AppText.body2.copyWith(color: AppColors.textLight))),
           )
         else
           for (final n in list) ...[_NewsRow(n), const SizedBox(height: 10)],

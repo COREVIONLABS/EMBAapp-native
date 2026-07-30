@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../l10n/strings.dart';
 import 'app_widgets.dart';
 
 class NavDest {
@@ -78,7 +79,7 @@ class _NavItem extends StatelessWidget {
               Svg(dest.icon!, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal),
             if (selected) ...[
               const SizedBox(width: 6),
-              Text(dest.label,
+              Text(tr(dest.label),
                   style: AppText.body3
                       .copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
             ],
