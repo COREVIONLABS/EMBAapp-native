@@ -15,6 +15,7 @@ import 'deals_hub_screen.dart';
 import 'achievements_screen.dart';
 import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
+import 'exclusive_content_screen.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
@@ -46,6 +47,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             _header(),
             const SizedBox(height: 20),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
+            const SizedBox(height: 12),
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _StreakStrip()),
             const SizedBox(height: 20),
             if (_matchday)
               const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PromoBanner())
@@ -73,6 +76,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     const items = [
       ('Tickets', Icons.confirmation_number_rounded),
       ('Experiences', Icons.stadium_rounded),
+      ('Content', Icons.play_circle_outline_rounded),
       ('Deals', Icons.local_offer_rounded),
       ('Specials', Icons.bolt_rounded),
       ('News', Icons.newspaper_rounded),
@@ -94,6 +98,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               onTap: () => _push(context, switch (items[i].$1) {
                 'Tickets' => const TicketsScreen(),
                 'Experiences' => const ExperiencesScreen(),
+                'Content' => const ExclusiveContentScreen(),
                 'Deals' => const DealsHubScreen(),
                 'Specials' => const MatchdaySpecialsScreen(),
                 'News' => const ClubNewsScreen(),
@@ -139,7 +144,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                   Container(width: 48, height: 48, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(e.title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                    Text(tr(e.title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                     const SizedBox(height: 2),
                     Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
                   ])),
@@ -265,10 +270,70 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                   rewardBg: AppColors.infoBg,
                   progress: 0.75,
                   sub: tr('1 / 2 complete')),
+              const SizedBox(height: 8),
+              _MissionCard(
+                  title: tr('Shop at Veltins on matchday'),
+                  reward: tr('Voucher'),
+                  sponsor: 'Veltins',
+                  rewardColor: AppColors.gold,
+                  rewardBg: AppColors.brandLightest,
+                  progress: 0.0,
+                  sub: tr('Win a €10 Veltins voucher')),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Daily streak strip — season-long engagement mechanic from the Fan+ pitch.
+class _StreakStrip extends StatelessWidget {
+  const _StreakStrip();
+  @override
+  Widget build(BuildContext context) {
+    const done = 5; // days completed this week
+    const labels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    return SurfaceCard(
+      padding: const EdgeInsets.all(14),
+      child: Row(children: [
+        Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(12)),
+          alignment: Alignment.center,
+          child: const Icon(Icons.local_fire_department_rounded, color: AppColors.brandDarkest, size: 24),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Text(tr('5-day streak'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              const SizedBox(width: 6),
+              Text(tr('· keep it going for +10 pts'), style: AppText.body3Regular),
+            ]),
+            const SizedBox(height: 8),
+            Row(children: [
+              for (var i = 0; i < 7; i++) ...[
+                Expanded(
+                  child: Column(children: [
+                    Container(
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: i < done ? AppColors.brandPrimary : AppColors.surfaceMinimal,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: i < done ? const Icon(Icons.check_rounded, size: 13, color: Colors.white) : null,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(labels[i], style: AppText.caption1.copyWith(color: AppColors.textLight, fontSize: 10)),
+                  ]),
+                ),
+                if (i < 6) const SizedBox(width: 5),
+              ],
+            ]),
+          ]),
+        ),
+      ]),
     );
   }
 }
@@ -520,11 +585,13 @@ class _MissionCard extends StatelessWidget {
   final Color rewardBg;
   final double progress;
   final String sub;
+  final String? sponsor;
   const _MissionCard({
     required this.title,
     required this.reward,
     required this.progress,
     required this.sub,
+    this.sponsor,
     this.rewardColor = AppColors.success,
     this.rewardBg = AppColors.successBg,
   });
@@ -538,7 +605,8 @@ class _MissionCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+              Expanded(child: Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker))),
+              const SizedBox(width: 8),
               Pill(
                 color: rewardBg,
                 child: Text(reward,
@@ -546,6 +614,14 @@ class _MissionCard extends StatelessWidget {
               ),
             ],
           ),
+          if (sponsor != null) ...[
+            const SizedBox(height: 4),
+            Row(children: [
+              const Icon(Icons.verified_rounded, size: 12, color: AppColors.brandPrimary),
+              const SizedBox(width: 4),
+              Text('${tr('Sponsored by')} $sponsor', style: AppText.caption1.copyWith(color: AppColors.textLight, fontSize: 11)),
+            ]),
+          ],
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(3),

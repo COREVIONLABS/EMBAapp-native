@@ -13,23 +13,40 @@ class SubscriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Fan+ Plans'),
-      children: const [
-        _PlanCard(
-          name: 'Supporter',
-          price: '€4.99',
+      children: [
+        Text(tr('Every membership pays for itself — you get at least 100% of your fee back in Fan Points.'),
+            style: AppText.body2.copyWith(color: AppColors.textNormal, height: 1.5)),
+        const SizedBox(height: 16),
+        const _PlanCard(
+          name: 'Free',
+          price: '€0',
           highlight: false,
-          perks: ['2× Fan Points on purchases', 'Priority ticket window', 'Exclusive newsletter'],
+          current: true,
+          perks: ['Daily games & challenges', 'Fan Points & partner offers', 'Club news & matchday info'],
         ),
-        SizedBox(height: 12),
-        _PlanCard(
-          name: 'Superfan',
-          price: '€9.99',
+        const SizedBox(height: 12),
+        const _PlanCard(
+          name: 'Fan+',
+          price: '€4.50',
+          highlight: false,
+          perks: [
+            '2× Fan Points boost',
+            'Exclusive content & clips',
+            'Bigger raffles & better rewards',
+            '100% of your fee back in points',
+          ],
+        ),
+        const SizedBox(height: 12),
+        const _PlanCard(
+          name: 'Fan+ Premium',
+          price: '€9.00',
           highlight: true,
           perks: [
-            '3× Fan Points on everything',
-            'Meet & greet raffles',
-            'Free matchday scratch cards',
-            'Members-only experiences',
+            'Everything in Fan+',
+            '3× Fan Points (max boost)',
+            "Money-can't-buy experiences",
+            'VIP draws & premium raffles',
+            'Branded VISA fan card & wallet',
           ],
         ),
       ],
@@ -41,8 +58,9 @@ class _PlanCard extends StatelessWidget {
   final String name;
   final String price;
   final bool highlight;
+  final bool current;
   final List<String> perks;
-  const _PlanCard({required this.name, required this.price, required this.highlight, required this.perks});
+  const _PlanCard({required this.name, required this.price, required this.highlight, this.current = false, required this.perks});
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +84,10 @@ class _PlanCard extends StatelessWidget {
               if (highlight)
                 Pill(
                   gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text(tr('POPULAR'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
-                ),
+                  child: Text(tr('BEST VALUE'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                )
+              else if (current)
+                Pill(color: AppColors.brandLightest, child: Text(tr('Current Plan'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
             ],
           ),
           const SizedBox(height: 8),
@@ -91,23 +111,24 @@ class _PlanCard extends StatelessWidget {
                         size: 18, color: highlight ? AppColors.gold : AppColors.brandPrimary),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: Text(p,
+                      child: Text(tr(p),
                           style: AppText.body2.copyWith(color: highlight ? Colors.white : AppColors.textNormal)),
                     ),
                   ],
                 ),
               )),
           const SizedBox(height: 8),
-          Builder(
-            builder: (context) => PrimaryButton(
-              'Upgrade to $name',
-              color: highlight ? AppColors.gold : AppColors.brandPrimary,
-              textColor: highlight ? AppColors.brandDarkest : Colors.white,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: name, price: price)),
+          if (!current)
+            Builder(
+              builder: (context) => PrimaryButton(
+                '${tr('Upgrade to')} $name',
+                color: highlight ? AppColors.gold : AppColors.brandPrimary,
+                textColor: highlight ? AppColors.brandDarkest : Colors.white,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: name, price: price)),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -421,4 +421,78 @@ const Map<String, String> _de = {
   'Supporter': 'Supporter',
   'No active card yet': 'Noch keine aktive Karte',
   'Activate S04 Card': 'S04-Karte aktivieren',
+
+  // ── Fan+ pitch alignment (tiers, value-back, card) ─────────
+  'Fan+ Premium': 'Fan+ Premium',
+  'Current Plan': 'Aktueller Tarif',
+  'Upgrade to': 'Upgrade auf',
+  'Upgrade to Fan+ Premium': 'Auf Fan+ Premium upgraden',
+  '€9.00 / month': '9,00 € / Monat',
+  '€9.00/mo': '9,00 €/Mon.',
+  "You're a Fan+ member!": 'Du bist jetzt Fan+ Mitglied!',
+  'Every membership pays for itself — you get at least 100% of your fee back in Fan Points.':
+      'Jede Mitgliedschaft zahlt sich aus — du bekommst mindestens 100 % deines Beitrags als Fan-Punkte zurück.',
+  'Your membership pays for itself — get 100% of your fee back in Fan Points.':
+      'Deine Mitgliedschaft zahlt sich aus — 100 % deines Beitrags zurück als Fan-Punkte.',
+  'You have earned back €11.20 in points this month — your membership pays for itself.':
+      'Du hast diesen Monat 11,20 € in Punkten zurückbekommen — deine Mitgliedschaft zahlt sich aus.',
+  'Branded VISA card — with Fan+ Premium': 'Gebrandete VISA-Karte — mit Fan+ Premium',
+  'Unlock the branded VISA card with Fan+ Premium': 'Gebrandete VISA-Karte mit Fan+ Premium freischalten',
+  'Powered by Fan+': 'Powered by Fan+',
+
+  // ── Exclusive Content ──────────────────────────────────────
+  'Exclusive Content': 'Exklusive Inhalte',
+  'Fan+ Exclusive': 'Fan+ Exklusiv',
+  'Latest clips': 'Neueste Clips',
+  'Now playing': 'Läuft jetzt',
+  'See Fan+ Plans': 'Fan+ Tarife ansehen',
+  'This clip is Fan+ exclusive': 'Dieser Clip ist Fan+ exklusiv',
+  'Unlock all locker-room clips, interviews and behind-the-scenes videos with Fan+.':
+      'Schalte alle Kabinen-Clips, Interviews und Behind-the-Scenes-Videos mit Fan+ frei.',
+  'Inside the dressing room — Bayern win': 'In der Kabine — Sieg gegen Bayern',
+  'Behind the scenes · Fan+': 'Behind the Scenes · Fan+',
+  'Interview': 'Interview',
+  'Training · Fan+': 'Training · Fan+',
+  'Feature': 'Feature',
+
+  // ── Streaks / sponsor challenges / raffles ─────────────────
+  '5-day streak': '5-Tage-Serie',
+  '· keep it going for +10 pts': '· dranbleiben für +10 Pkt.',
+  'Sponsored by': 'Präsentiert von',
+  'Shop at Veltins on matchday': 'Am Spieltag bei Veltins einkaufen',
+  'Voucher': 'Gutschein',
+  'Win a €10 Veltins voucher': 'Gewinne einen 10-€-Veltins-Gutschein',
+  'Raffle': 'Verlosung',
+  'Enter': 'Teilnehmen',
+
+  // ── New experiences ────────────────────────────────────────
+  'Train with the Pros': 'Mit den Profis trainieren',
+  'Fans vs Pros Match': 'Fans gegen Profis',
+  'On the Team Photo': 'Aufs Mannschaftsfoto',
+  'Win 2 VIP Tickets — vs Bayern': 'Gewinne 2 VIP-Tickets — gegen Bayern',
+  'Win a Signed Home Shirt': 'Gewinne ein signiertes Heimtrikot',
+
+  // ── Plan perks / benefits ──────────────────────────────────
+  'Daily games & challenges': 'Tägliche Spiele & Challenges',
+  'Fan Points & partner offers': 'Fan-Punkte & Partner-Angebote',
+  'Club news & matchday info': 'Vereins-News & Spieltags-Infos',
+  '2× Fan Points boost': '2× Fan-Punkte-Boost',
+  'Exclusive content & clips': 'Exklusive Inhalte & Clips',
+  'Bigger raffles & better rewards': 'Größere Verlosungen & bessere Prämien',
+  '100% of your fee back in points': '100 % deines Beitrags zurück als Punkte',
+  'Everything in Fan+': 'Alles aus Fan+',
+  '3× Fan Points (max boost)': '3× Fan-Punkte (max. Boost)',
+  "Money-can't-buy experiences": 'Unbezahlbare Erlebnisse',
+  'VIP draws & premium raffles': 'VIP-Ziehungen & Premium-Verlosungen',
+  'Branded VISA fan card & wallet': 'Gebrandete VISA-Fankarte & Wallet',
+  // Fan+ non-subscriber VIP list
+  'Exclusive content & locker-room clips': 'Exklusive Inhalte & Kabinen-Clips',
+  'Chances to Win a Signed Jersey': 'Chance auf ein signiertes Trikot',
+  'Points Multiplier & bigger raffles': 'Punkte-Multiplikator & größere Verlosungen',
+
+  // ── Exclusive content clip titles ──────────────────────────
+  'Matchday walkout — pitchside cam': 'Einlauf am Spieltag — Pitchside-Cam',
+  'Training ground: set-piece session': 'Trainingsplatz: Standard-Training',
+  'Academy talent — first team debut': 'Nachwuchstalent — Profidebüt',
+  "Coach mic'd up vs Dortmund": 'Trainer verkabelt gegen Dortmund',
 };

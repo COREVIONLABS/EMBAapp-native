@@ -24,7 +24,7 @@ class ExperienceDetailScreen extends StatelessWidget {
           child: const Center(child: Icon(Icons.stadium_rounded, size: 96, color: Colors.white24)),
         ),
         const SizedBox(height: 20),
-        Text(exp.title, style: AppText.h4),
+        Text(tr(exp.title), style: AppText.h4),
         const SizedBox(height: 8),
         Row(children: [
           const Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.textLight),

@@ -9,7 +9,7 @@ import '../l10n/strings.dart';
 class UpgradePlanScreen extends StatelessWidget {
   final String plan;
   final String price;
-  const UpgradePlanScreen({super.key, this.plan = 'Superfan', this.price = '€9.99'});
+  const UpgradePlanScreen({super.key, this.plan = 'Fan+ Premium', this.price = '€9.00'});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class _SuccessSheet extends StatelessWidget {
             child: const Icon(Icons.check_rounded, color: AppColors.success, size: 40),
           ),
           const SizedBox(height: 18),
-          Text(tr("You're a Superfan!"), style: AppText.h4),
+          Text(tr("You're a Fan+ member!"), style: AppText.h4),
           const SizedBox(height: 8),
           Text(tr('Your plan is active. Enjoy 3× points and exclusive perks.'),
               textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),

@@ -19,7 +19,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hasCard = _tier != _Tier.free;
+    final premium = _tier == _Tier.superfan;
     return TabScaffold(
       children: [
         Padding(
@@ -67,10 +67,10 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: hasCard ? _VirtualCard(superfan: _tier == _Tier.superfan) : const _LockedCard()),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: premium ? const _VirtualCard(superfan: true) : _LockedCard(fanPlus: _tier == _Tier.supporter)),
         const SizedBox(height: 16),
-        if (hasCard) const _CardActions(),
-        if (hasCard) const SizedBox(height: 16),
+        if (premium) const _CardActions(),
+        if (premium) const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -82,7 +82,7 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        if (_tier != _Tier.superfan)
+        if (!premium)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
@@ -92,16 +92,16 @@ class _WalletScreenState extends State<WalletScreen> {
                 children: [
                   const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
                   const SizedBox(width: 10),
-                  Expanded(child: Text(tr('Upgrade to Physical Card'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
-                  Text(tr('€9.99/mo'), style: AppText.body3.copyWith(color: AppColors.textDark)),
+                  Expanded(child: Text(tr('Unlock the branded VISA card with Fan+ Premium'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                  Text(tr('€9.00/mo'), style: AppText.body3.copyWith(color: AppColors.textDark)),
                   const SizedBox(width: 4),
                   const Svg('arrow_right', size: 16),
                 ],
               ),
             ),
           ),
-        if (_tier != _Tier.superfan) const SizedBox(height: 24),
-        if (_tier == _Tier.superfan) const SizedBox(height: 8),
+        if (!premium) const SizedBox(height: 24),
+        if (premium) const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
@@ -126,14 +126,15 @@ class _WalletScreenState extends State<WalletScreen> {
 
   String _tierName(_Tier t) => switch (t) {
         _Tier.free => 'Free',
-        _Tier.supporter => 'Supporter',
-        _Tier.superfan => 'Superfan',
+        _Tier.supporter => 'Fan+',
+        _Tier.superfan => 'Fan+ Premium',
       };
 }
 
-/// Free state — no active card yet.
+/// No branded card yet — Free ("activate") or Fan+ ("upgrade for the card").
 class _LockedCard extends StatelessWidget {
-  const _LockedCard();
+  final bool fanPlus;
+  const _LockedCard({this.fanPlus = false});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -148,11 +149,13 @@ class _LockedCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(Icons.credit_card_off_rounded, size: 34, color: AppColors.textLight),
+          Icon(fanPlus ? Icons.workspace_premium_rounded : Icons.credit_card_off_rounded,
+              size: 34, color: fanPlus ? AppColors.gold : AppColors.textLight),
           const SizedBox(height: 10),
-          Text(tr('No active card yet'), style: AppText.body2.copyWith(color: AppColors.textNormal)),
+          Text(fanPlus ? tr('Branded VISA card — with Fan+ Premium') : tr('No active card yet'),
+              textAlign: TextAlign.center, style: AppText.body2.copyWith(color: AppColors.textNormal)),
           const SizedBox(height: 12),
-          PrimaryButton(tr('Activate S04 Card'), height: 44, onTap: () {}),
+          PrimaryButton(fanPlus ? tr('Upgrade to Fan+ Premium') : tr('Activate S04 Card'), height: 44, onTap: () {}),
         ],
       ),
     );
@@ -193,7 +196,7 @@ class _VirtualCard extends StatelessWidget {
               Pill(
                 gradient: const LinearGradient(colors: AppColors.goldGradient),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                child: Text(tr(superfan ? 'Superfan' : 'Virtual'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                child: Text(tr(superfan ? 'Fan+ Premium' : 'Virtual'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
               ),
               const Spacer(),
               Text(tr('••••   ••••   ••••   4821'),

@@ -62,6 +62,20 @@ class FanPlusScreen extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        // Value-back framing — the core "why fans pay" argument from the pitch
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            color: AppColors.brandLightest,
+            child: Row(children: [
+              const Icon(Icons.savings_rounded, color: AppColors.gold),
+              const SizedBox(width: 12),
+              Expanded(child: Text(tr('Your membership pays for itself — get 100% of your fee back in Fan Points.'),
+                  style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w600))),
+            ]),
+          ),
+        ),
         const SizedBox(height: 16),
         // Two locked cards
         Padding(
@@ -81,10 +95,11 @@ class FanPlusScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         for (final t in const [
-          'Virtual and Physical Cards',
+          'Exclusive content & locker-room clips',
+          'Branded VISA fan card & wallet',
           'Chances to Win a Signed Jersey',
           'Meet the Players',
-          'Points Multiplier',
+          'Points Multiplier & bigger raffles',
         ])
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
@@ -92,7 +107,7 @@ class FanPlusScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
                 const SizedBox(width: 12),
-                Expanded(child: Text(t, style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
+                Expanded(child: Text(tr(t), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
                 Pill(
                   gradient: const LinearGradient(colors: AppColors.goldGradient),
                   child: Text(tr('Exclusive'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
@@ -156,7 +171,7 @@ class FanPlusScreen extends StatelessWidget {
               ),
               const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 36),
               const SizedBox(height: 8),
-              Text(tr('Superfan'), style: AppText.h4.copyWith(color: Colors.white)),
+              Text(tr('Fan+ Premium'), style: AppText.h4.copyWith(color: Colors.white)),
               const SizedBox(height: 12),
               Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
                 for (final b in const ['+10% Points', '2x Tickets', '+2 Spins'])

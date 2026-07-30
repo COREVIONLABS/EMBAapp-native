@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.military_tech_outlined, 'Loyalty Tiers', 'Schalker'),
           (Icons.history_rounded, 'Points History', ''),
           (Icons.workspace_premium_outlined, 'Fan+ Membership', ''),
-          (Icons.card_membership_outlined, 'Membership Plan', 'Superfan'),
+          (Icons.card_membership_outlined, 'Membership Plan', 'Fan+ Premium'),
           (Icons.account_balance_outlined, 'Bank Account', 'Connected'),
           (Icons.credit_card_rounded, 'Payment Methods', ''),
           (Icons.style_rounded, 'Manage Card', 'Physical + Virtual'),
@@ -89,6 +89,14 @@ class ProfileScreen extends StatelessWidget {
         ]),
         const SizedBox(height: 16),
         const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _LogoutTile()),
+        const SizedBox(height: 20),
+        Center(
+          child: Column(children: [
+            Text('FC Schalke 04 · v1.0.0', style: AppText.caption1.copyWith(color: AppColors.textLight)),
+            const SizedBox(height: 4),
+            Text(tr('Powered by Fan+'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700, letterSpacing: 0.3)),
+          ]),
+        ),
       ],
     );
   }

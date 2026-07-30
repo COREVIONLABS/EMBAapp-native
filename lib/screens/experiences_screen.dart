@@ -17,7 +17,7 @@ class ExperiencesScreen extends StatefulWidget {
 
 class _ExperiencesScreenState extends State<ExperiencesScreen> {
   int _cat = 0;
-  static const _cats = ['All', 'Stadium', 'Players', 'VIP', 'Family'];
+  static const _cats = ['All', 'Raffle', 'Stadium', 'Players', 'VIP', 'Family'];
   @override
   Widget build(BuildContext context) {
     final featured = kExperiences.firstWhere((e) => e.featured);
@@ -69,7 +69,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(featured.title, style: AppText.label1.copyWith(color: Colors.white)),
+                        Text(tr(featured.title), style: AppText.label1.copyWith(color: Colors.white)),
                         Text(featured.date, style: AppText.body3.copyWith(color: Colors.white70)),
                       ])),
                       Text(featured.pointsLabel, style: AppText.label2.copyWith(color: AppColors.gold)),
@@ -102,11 +102,17 @@ class _ExpRow extends StatelessWidget {
           Container(width: 52, height: 52, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(e.title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+            Row(children: [
+              Flexible(child: Text(tr(e.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker))),
+              if (e.raffle) ...[
+                const SizedBox(width: 6),
+                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Raffle'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
+              ],
+            ]),
             const SizedBox(height: 2),
             Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
           ])),
-          Text(e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+          Text(e.raffle ? tr('Enter') : e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
         ]),
       ),
     );
