@@ -13,6 +13,8 @@ import 'experiences_screen.dart';
 import 'club_news_screen.dart';
 import 'deals_hub_screen.dart';
 import 'achievements_screen.dart';
+import 'matchday_specials_screen.dart';
+import 'search_screen.dart';
 import '../model/fan_model.dart';
 
 void _push(BuildContext context, Widget screen) {
@@ -62,6 +64,7 @@ class HomeMatchdayScreen extends StatelessWidget {
       ('Tickets', Icons.confirmation_number_rounded),
       ('Experiences', Icons.stadium_rounded),
       ('Deals', Icons.local_offer_rounded),
+      ('Specials', Icons.bolt_rounded),
       ('News', Icons.newspaper_rounded),
       ('Awards', Icons.emoji_events_rounded),
     ];
@@ -82,6 +85,7 @@ class HomeMatchdayScreen extends StatelessWidget {
                 'Tickets' => const TicketsScreen(),
                 'Experiences' => const ExperiencesScreen(),
                 'Deals' => const DealsHubScreen(),
+                'Specials' => const MatchdaySpecialsScreen(),
                 'News' => const ClubNewsScreen(),
                 _ => const AchievementsScreen(),
               }),
@@ -181,16 +185,28 @@ class HomeMatchdayScreen extends StatelessWidget {
         children: [
           const Svg('logo_s04', size: 36),
           Builder(
-            builder: (context) => GestureDetector(
-              onTap: () => _push(context, const NotificationsScreen()),
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration:
-                    BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-                child: const Center(child: Svg('bell_dot', size: 20)),
+            builder: (context) => Row(children: [
+              GestureDetector(
+                onTap: () => _push(context, const SearchScreen()),
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+                  child: const Icon(Icons.search_rounded, size: 20, color: AppColors.textNormal),
+                ),
               ),
-            ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () => _push(context, const NotificationsScreen()),
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration:
+                      BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+                  child: const Center(child: Svg('bell_dot', size: 20)),
+                ),
+              ),
+            ]),
           ),
         ],
       ),

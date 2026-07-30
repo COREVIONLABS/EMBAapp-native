@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
+import 'my_tickets_screen.dart';
 
 class _Ticket {
   final String home, away, when, venue;
@@ -34,6 +35,23 @@ class _TicketsScreenState extends State<TicketsScreen> {
     return SubScaffold(
       title: 'Tickets',
       children: [
+        SurfaceCard(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyTicketsScreen())),
+          child: Row(children: [
+            Container(
+              width: 40, height: 40,
+              decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
+              child: const Icon(Icons.qr_code_rounded, color: AppColors.brandPrimary, size: 22),
+            ),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('My Tickets', style: AppText.body2.copyWith(color: AppColors.textDarker)),
+              Text('2 upcoming · tap to show QR', style: AppText.body3Regular),
+            ])),
+            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          ]),
+        ),
+        const SizedBox(height: 16),
         _Segmented(labels: _tabs, index: _tab, onChanged: (i) => setState(() => _tab = i)),
         const SizedBox(height: 16),
         for (final t in list) ...[_TicketCard(t), const SizedBox(height: 12)],
