@@ -41,7 +41,7 @@ class MembershipPlanScreen extends StatelessWidget {
         const SizedBox(height: 20),
         Text(tr('Your benefits'), style: AppText.label2),
         const SizedBox(height: 12),
-        for (final b in const ['3× Fan Points (max boost)', "Money-can't-buy experiences", 'VIP draws & premium raffles', 'Branded VISA fan card & wallet', 'Exclusive content & clips'])
+        for (final b in const ['3× Fan Points (max boost)', "Money-can't-buy experiences", 'VIP draws & premium raffles', 'Branded VISA fan card (from Season 2)', 'Exclusive content & clips'])
           Padding(padding: const EdgeInsets.only(bottom: 10), child: Row(children: [
             const Icon(Icons.check_circle_rounded, color: AppColors.brandPrimary, size: 20),
             const SizedBox(width: 12),

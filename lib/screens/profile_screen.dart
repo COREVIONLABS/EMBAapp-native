@@ -66,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.card_membership_outlined, 'Membership Plan', 'Fan+ Premium'),
           (Icons.account_balance_outlined, 'Bank Account', 'Connected'),
           (Icons.credit_card_rounded, 'Payment Methods', ''),
-          (Icons.style_rounded, 'Manage Card', 'Physical + Virtual'),
+          (Icons.style_rounded, 'Manage Card', 'Season 2'),
         ]),
         const SizedBox(height: 16),
         _group(context, 'Settings', const [

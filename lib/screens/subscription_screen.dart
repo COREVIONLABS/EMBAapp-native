@@ -46,7 +46,7 @@ class SubscriptionScreen extends StatelessWidget {
             '3× Fan Points (max boost)',
             "Money-can't-buy experiences",
             'VIP draws & premium raffles',
-            'Branded VISA fan card & wallet',
+            'Branded VISA fan card (from Season 2)',
           ],
         ),
       ],

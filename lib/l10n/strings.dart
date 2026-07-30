@@ -495,4 +495,23 @@ const Map<String, String> _de = {
   'Training ground: set-piece session': 'Trainingsplatz: Standard-Training',
   'Academy talent — first team debut': 'Nachwuchstalent — Profidebüt',
   "Coach mic'd up vs Dortmund": 'Trainer verkabelt gegen Dortmund',
+
+  // ── Wallet season-1 (card deferred to season 2) ────────────
+  'Raffle Tickets': 'Lose',
+  'Points Activity': 'Punkte-Aktivität',
+  'S04 FAN CARD': 'S04 FAN-KARTE',
+  'YOUR NAME': 'DEIN NAME',
+  'Coming Season 2': 'Kommt in Saison 2',
+  'Earn points on every spend with the branded S04 fan card — launching next season.':
+      'Sammle Punkte bei jedem Einkauf mit der gebrandeten S04-Fankarte — Start nächste Saison.',
+  'Join the waitlist': 'Auf die Warteliste',
+  'Branded VISA fan card (from Season 2)': 'Gebrandete VISA-Fankarte (ab Saison 2)',
+  'Home Jersey 25/26': 'Heimtrikot 25/26',
+  'Season 2': 'Saison 2',
+  'Veltins matchday combo': 'Veltins Spieltags-Kombi',
+  'Museum Tour ticket': 'Museumstour-Ticket',
+  'Daily Spin reward': 'Glücksrad-Gewinn',
+  'Today · 14:30': 'Heute · 14:30',
+  'Mon 12 Feb': 'Mo 12. Feb',
+  'Sun 11 Feb': 'So 11. Feb',
 };
