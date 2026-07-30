@@ -5,6 +5,7 @@ import '../widgets/ios_chrome.dart';
 import '../widgets/text_field.dart';
 import '../main_shell.dart';
 import 'signup_screen.dart';
+import 'password_reset_screen.dart';
 
 /// Log In (Figma node 385:3569).
 class LoginScreen extends StatelessWidget {
@@ -48,8 +49,11 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text('Forgot password?',
-                        style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w600)),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PasswordResetScreen())),
+                      child: Text('Forgot password?',
+                          style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w600)),
+                    ),
                   ),
                   const SizedBox(height: 24),
                   PrimaryButton('Log In', onTap: () => _enter(context)),

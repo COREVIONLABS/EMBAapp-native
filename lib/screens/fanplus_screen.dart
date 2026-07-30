@@ -5,12 +5,14 @@ import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import 'subscription_screen.dart';
 
-/// Fan+ — Non-Subscriber (Figma 2145:8198): VIP experiences teaser.
+/// Fan+ (Figma 2145:8198 Non-Subscriber / 2145:8275 Subscriber).
 class FanPlusScreen extends StatelessWidget {
-  const FanPlusScreen({super.key});
+  final bool subscribed;
+  const FanPlusScreen({super.key, this.subscribed = false});
 
   @override
   Widget build(BuildContext context) {
+    if (subscribed) return _subscribed(context);
     return TabScaffold(
       children: [
         // Header: logo + bell (matches Home)
@@ -110,6 +112,155 @@ class FanPlusScreen extends StatelessWidget {
                   )),
         ),
       ],
+    );
+  }
+
+  Widget _subscribed(BuildContext context) {
+    return TabScaffold(
+      children: [
+        // Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Svg('logo_s04', size: 36),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
+                child: const Center(child: Svg('bell_dot', size: 20)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Active membership card
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: AppColors.pointsGradient),
+              borderRadius: BorderRadius.circular(AppRadii.card),
+            ),
+            child: Column(children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: Pill(
+                  gradient: const LinearGradient(colors: AppColors.goldGradient),
+                  child: Text('Active', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+                ),
+              ),
+              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 36),
+              const SizedBox(height: 8),
+              Text('Superfan', style: AppText.h4.copyWith(color: Colors.white)),
+              const SizedBox(height: 12),
+              Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
+                for (final b in const ['+10% Points', '2x Tickets', '+2 Spins'])
+                  Pill(color: Colors.white24, child: Text(b, style: AppText.caption1.copyWith(color: Colors.white))),
+              ]),
+              const SizedBox(height: 16),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text('Renews: 28 May 2026', style: AppText.body3.copyWith(color: Colors.white70)),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Text('Manage Subscription', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+                    const Icon(Icons.chevron_right_rounded, size: 16, color: Colors.white),
+                  ]),
+                ),
+              ]),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Unlocked perks
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(children: [
+            Expanded(child: _UnlockedCard(icon: 'ic_daily_spin', label: 'Extra Spin')),
+            SizedBox(width: 12),
+            Expanded(child: _UnlockedCard(icon: 'ic_scratch', label: 'Extra Scratch Card')),
+          ]),
+        ),
+        const SizedBox(height: 24),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text('VIP Experiences', style: AppText.label1)),
+        ),
+        const SizedBox(height: 12),
+        for (final r in const [
+          ('Meet the Players', 'Exclusive post-match meet & greet with the team', 'Exclusive Reward', 'Ends in 4:12:30'),
+          ('Signed Match Ball', 'Exclusive signed ball by our super stars', 'Limited', '3 Left'),
+        ])
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: AppColors.pointsGradient),
+                borderRadius: BorderRadius.circular(AppRadii.card),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(r.$3, style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                  Pill(color: Colors.white24, child: Text(r.$4, style: AppText.caption1.copyWith(color: Colors.white))),
+                ]),
+                const SizedBox(height: 12),
+                Text(r.$1, style: AppText.label1.copyWith(color: Colors.white)),
+                const SizedBox(height: 4),
+                Text(r.$2, style: AppText.body3.copyWith(color: Colors.white70)),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
+                      child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Text('Enter Raffle', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.white),
+                      ]),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _UnlockedCard extends StatelessWidget {
+  final String icon;
+  final String label;
+  const _UnlockedCard({required this.icon, required this.label});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+      child: Column(children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: Pill(
+            gradient: const LinearGradient(colors: AppColors.goldGradient),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            child: Text('1 Left', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+          ),
+        ),
+        const SizedBox(height: 4),
+        AssetImg(icon, width: 44, height: 44, fallbackIcon: Icons.card_giftcard_rounded),
+        const SizedBox(height: 8),
+        Text(label, textAlign: TextAlign.center, style: AppText.body3),
+      ]),
     );
   }
 }

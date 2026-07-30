@@ -6,6 +6,7 @@ class AppTextField extends StatelessWidget {
   final String hint;
   final bool obscure;
   final Widget? suffix;
+  final Widget? prefix;
   final TextInputType? keyboardType;
   const AppTextField({
     super.key,
@@ -13,6 +14,7 @@ class AppTextField extends StatelessWidget {
     this.hint = '',
     this.obscure = false,
     this.suffix,
+    this.prefix,
     this.keyboardType,
   });
 
@@ -30,6 +32,7 @@ class AppTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: AppText.body1.copyWith(color: AppColors.textLight),
+            prefixIcon: prefix,
             suffixIcon: suffix,
             filled: true,
             fillColor: AppColors.surfaceMinimal,

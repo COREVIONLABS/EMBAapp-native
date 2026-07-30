@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import 'fanplus_screen.dart';
 
 /// Upgrade Plan checkout (Figma 404:10693 / 404:11074).
 class UpgradePlanScreen extends StatelessWidget {
@@ -117,8 +118,10 @@ class _SuccessSheet extends StatelessWidget {
               textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
           const SizedBox(height: 24),
           PrimaryButton('Done', onTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).maybePop();
+            Navigator.of(context).pop(); // close sheet
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const FanPlusScreen(subscribed: true)),
+            );
           }),
         ],
       ),

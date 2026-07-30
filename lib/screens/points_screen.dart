@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/points_card.dart';
 import '../widgets/tab_scaffold.dart';
 import 'redeem_screen.dart';
+import 'earn_points_screen.dart';
 
 /// Points tab — History / Missions (Figma 2145:7321 / 7449).
 class PointsScreen extends StatefulWidget {
@@ -73,6 +74,26 @@ class _PointsScreenState extends State<PointsScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EarnPointsScreen())),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)),
+                child: const Icon(Icons.trending_up_rounded, color: AppColors.brandPrimary, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('Earn more points', style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                Text('See all the ways to collect Fan Points', style: AppText.body3Regular),
+              ])),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            ]),
           ),
         ),
         const SizedBox(height: 16),
