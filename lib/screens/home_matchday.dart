@@ -227,17 +227,17 @@ class HomeMatchdayScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              _MissionCard(title: tr('Spend €200 this week'), reward: '+50 pts', progress: 0.4, sub: '€80 / €200 · 40%'),
+              _MissionCard(title: tr('Spend €200 this week'), reward: tr('+50 pts'), progress: 0.4, sub: '€80 / €200 · 40%'),
               const SizedBox(height: 8),
-              _MissionCard(title: tr('Invite a friend'), reward: '+100 pts', progress: 0, sub: 'Not started'),
+              _MissionCard(title: tr('Invite a friend'), reward: tr('+100 pts'), progress: 0, sub: tr('Not started')),
               const SizedBox(height: 8),
               _MissionCard(
                   title: tr('Predict 2 matches'),
-                  reward: '+1 Ticket',
+                  reward: tr('+1 Ticket'),
                   rewardColor: AppColors.brandPrimary,
                   rewardBg: AppColors.infoBg,
                   progress: 0.75,
-                  sub: '1 / 2 complete'),
+                  sub: tr('1 / 2 complete')),
             ],
           ),
         ),

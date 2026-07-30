@@ -140,7 +140,7 @@ class _PointsScreenState extends State<PointsScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(r.$1, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                        Text(tr(r.$1), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                         Pill(color: AppColors.successBg, child: Text(r.$2, style: AppText.caption1.copyWith(color: AppColors.success, fontSize: 11))),
                       ],
                     ),
@@ -150,7 +150,7 @@ class _PointsScreenState extends State<PointsScreen> {
                       child: LinearProgressIndicator(value: r.$3, minHeight: 6, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary)),
                     ),
                     const SizedBox(height: 8),
-                    Text(r.$4, style: AppText.body3Regular),
+                    Text(tr(r.$4), style: AppText.body3Regular),
                   ],
                 ),
               ),
@@ -216,9 +216,9 @@ class _HistoryRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+              Text(tr(title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
               const SizedBox(height: 2),
-              Text(date, style: AppText.body3Regular),
+              Text(tr(date), style: AppText.body3Regular),
             ],
           ),
         ),

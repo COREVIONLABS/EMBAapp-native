@@ -103,13 +103,13 @@ class _TicketCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Pill(color: Colors.white24, child: Text(t.isHome ? 'Home Match' : 'Away Match', style: AppText.caption1.copyWith(color: Colors.white))),
+              Pill(color: Colors.white24, child: Text(tr(t.isHome ? 'Home Match' : 'Away Match'), style: AppText.caption1.copyWith(color: Colors.white))),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(color: t.buy ? AppColors.gold : Colors.white24, borderRadius: BorderRadius.circular(999)),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Text(t.buy ? 'Buy Now' : 'Earn 100 pts', style: AppText.body3.copyWith(color: t.buy ? AppColors.brandDarkest : Colors.white, fontWeight: FontWeight.w700)),
+                  Text(tr(t.buy ? 'Buy Now' : 'Earn 100 pts'), style: AppText.body3.copyWith(color: t.buy ? AppColors.brandDarkest : Colors.white, fontWeight: FontWeight.w700)),
                   const SizedBox(width: 4),
                   Icon(Icons.arrow_forward_rounded, size: 14, color: t.buy ? AppColors.brandDarkest : Colors.white),
                 ]),
@@ -120,6 +120,12 @@ class _TicketCard extends StatelessWidget {
       );
   }
 }
+
+/// Ticket tabs need a context-specific translation because "Home" here means
+/// a home match (Heim), not the app's Home tab (Start).
+String _ticketTab(String t) => localeNotifier.value == AppLocale.de
+    ? (const {'All': 'Alle', 'Home': 'Heim', 'Away': 'Auswärts'}[t] ?? t)
+    : t;
 
 class _Segmented extends StatelessWidget {
   final List<String> labels;
@@ -139,7 +145,7 @@ class _Segmented extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(color: i == index ? AppColors.surface : Colors.transparent, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                child: Center(child: Text(labels[i], style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700))),
+                child: Center(child: Text(_ticketTab(labels[i]), style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700))),
               ),
             ),
           ),

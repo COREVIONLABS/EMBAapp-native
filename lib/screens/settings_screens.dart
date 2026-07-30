@@ -66,16 +66,16 @@ class NotificationPrefsScreen extends StatelessWidget {
       children: [
         Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(tr('Push notifications'), style: AppText.body3)),
         SettingsGroup([
-          ToggleRow('Matchday reminders', subtitle: 'Kickoff & lineup alerts', initial: true),
-          ToggleRow('Points & rewards', subtitle: 'When you earn or can redeem', initial: true),
-          ToggleRow('Predictions', subtitle: 'Deadlines and results', initial: true),
-          ToggleRow('Daily games', subtitle: 'Spin & scratch reminders'),
+          ToggleRow(tr('Matchday reminders'), subtitle: tr('Kickoff & lineup alerts'), initial: true),
+          ToggleRow(tr('Points & rewards'), subtitle: tr('When you earn or can redeem'), initial: true),
+          ToggleRow(tr('Predictions'), subtitle: tr('Deadlines and results'), initial: true),
+          ToggleRow(tr('Daily games'), subtitle: tr('Spin & scratch reminders')),
         ]),
         SizedBox(height: 20),
         Padding(padding: EdgeInsets.only(bottom: 8), child: Text(tr('Email'), style: AppText.body3)),
         SettingsGroup([
-          ToggleRow('Newsletter', initial: true),
-          ToggleRow('Exclusive offers'),
+          ToggleRow(tr('Newsletter'), initial: true),
+          ToggleRow(tr('Exclusive offers')),
         ]),
       ],
     );
@@ -114,11 +114,11 @@ class ConsentScreen extends StatelessWidget {
     return SubScaffold(
       title: title,
       children: [
-        const SettingsGroup([
-          ToggleRow('Personalised offers', subtitle: 'Use my activity to tailor rewards', initial: true),
-          ToggleRow('Share with club partners', subtitle: 'Sponsors & official partners'),
-          ToggleRow('Analytics', subtitle: 'Help improve the app', initial: true),
-          ToggleRow('Third-party marketing'),
+        SettingsGroup([
+          ToggleRow(tr('Personalised offers'), subtitle: tr('Use my activity to tailor rewards'), initial: true),
+          ToggleRow(tr('Share with club partners'), subtitle: tr('Sponsors & official partners')),
+          ToggleRow(tr('Analytics'), subtitle: tr('Help improve the app'), initial: true),
+          ToggleRow(tr('Third-party marketing')),
         ]),
         const SizedBox(height: 16),
         Text(tr('You can change these choices at any time. See our Privacy Policy for details on how your data is processed.'),
@@ -194,7 +194,7 @@ class BiometricScreen extends StatelessWidget {
         Text(tr('Log in securely without typing your password every time.'),
             textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
         const SizedBox(height: 28),
-        const SettingsGroup([ToggleRow('Use biometric login', initial: true)]),
+        SettingsGroup([ToggleRow(tr('Use biometric login'), initial: true)]),
       ],
     );
   }

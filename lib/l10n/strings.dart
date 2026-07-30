@@ -333,4 +333,78 @@ const Map<String, String> _de = {
   'Internationals': 'International',
   'Next': 'Nächste',
   'Health': 'Gesundheit',
+
+  // ── Settings toggles ───────────────────────────────────────
+  'Matchday reminders': 'Spieltags-Erinnerungen',
+  'Kickoff & lineup alerts': 'Anpfiff- & Aufstellungs-Hinweise',
+  'Points & rewards': 'Punkte & Prämien',
+  'When you earn or can redeem': 'Wenn du sammelst oder einlösen kannst',
+  'Deadlines and results': 'Fristen und Ergebnisse',
+  'Daily games': 'Tägliche Spiele',
+  'Spin & scratch reminders': 'Dreh- & Rubbel-Erinnerungen',
+  'Newsletter': 'Newsletter',
+  'Exclusive offers': 'Exklusive Angebote',
+  'Personalised offers': 'Personalisierte Angebote',
+  'Use my activity to tailor rewards': 'Meine Aktivität für passende Prämien nutzen',
+  'Share with club partners': 'Mit Vereinspartnern teilen',
+  'Sponsors & official partners': 'Sponsoren & offizielle Partner',
+  'Analytics': 'Analyse',
+  'Help improve the app': 'Hilf, die App zu verbessern',
+  'Third-party marketing': 'Marketing von Dritten',
+  'Use biometric login': 'Biometrische Anmeldung verwenden',
+  'You can change these choices at any time. See our Privacy Policy for details on how your data is processed.':
+      'Du kannst diese Einstellungen jederzeit ändern. Details zur Verarbeitung deiner Daten findest du in unserer Datenschutzerklärung.',
+
+  // ── Wallet / card detail ───────────────────────────────────
+  'Virtual': 'Virtuell',
+  'Upgrade to Physical Card': 'Auf physische Karte upgraden',
+  'Visa ending in 4242': 'Visa endet auf 4242',
+  'We never store your bank login. Connection is read-only.':
+      'Wir speichern deine Bank-Zugangsdaten nie. Die Verbindung ist nur lesend.',
+  '(Sponsors Only)': '(Nur Sponsoren)',
+
+  // ── Redeem / rewards ───────────────────────────────────────
+  'Ways to redeem': 'Einlöse-Möglichkeiten',
+  '2,450 pts available (≈ €24.50)': '2.450 Pkt. verfügbar (≈ 24,50 €)',
+  'Your loyalty. Your rewards.': 'Deine Treue. Deine Prämien.',
+  'You won 100 Points!': 'Du hast 100 Punkte gewonnen!',
+
+  // ── Subscription / plans ───────────────────────────────────
+  'Upgrade Plan': 'Tarif upgraden',
+  'What\'s included': 'Enthalten',
+  'Your benefits': 'Deine Vorteile',
+  '€9.99 / month': '9,99 € / Monat',
+  '€9.99/mo': '9,99 €/Mon.',
+  'You\'re a Superfan!': 'Du bist jetzt Superfan!',
+  'Your plan is active. Enjoy 3× points and exclusive perks.':
+      'Dein Tarif ist aktiv. Genieße 3× Punkte und exklusive Vorteile.',
+
+  // ── Cart / checkout / orders ───────────────────────────────
+  'Your cart is empty': 'Dein Warenkorb ist leer',
+  'Your order #S04-24815 is on its way. You can track it under My Orders.':
+      'Deine Bestellung #S04-24815 ist unterwegs. Du kannst sie unter „Meine Bestellungen" verfolgen.',
+
+  // ── Auth misc ──────────────────────────────────────────────
+  'or': 'oder',
+
+  // ── Data rows: dates ───────────────────────────────────────
+  'Today': 'Heute',
+  'Yesterday': 'Gestern',
+  'Saturday': 'Samstag',
+  'Thursday': 'Donnerstag',
+
+  // ── Data rows: transactions & missions ─────────────────────
+  'Adidas Store Purchase': 'Adidas-Shop-Einkauf',
+  'Daily Spin Win': 'Glücksrad-Gewinn',
+  'Mission Complete: Spend €200': 'Mission erfüllt: 200 € ausgeben',
+  'Match Prediction (Correct)': 'Spieltipp (richtig)',
+  'Redeemed: Home Jersey': 'Eingelöst: Heimtrikot',
+  'Attend 3 home games': '3 Heimspiele besuchen',
+  'Share on social': 'In sozialen Medien teilen',
+  'Refer 5 friends': '5 Freunde werben',
+  '2 / 3 attended': '2 / 3 besucht',
+  '2 / 5 referred': '2 / 5 geworben',
+
+  // ── Ticket card CTA ────────────────────────────────────────
+  'Earn 100 pts': '100 Pkt. sammeln',
 };
