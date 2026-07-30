@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'widgets/bottom_nav.dart';
 import 'screens/home_matchday.dart';
-import 'screens/wallet_screen.dart';
+import 'screens/fanplus_screen.dart';
 import 'screens/fanshop_screen.dart';
 import 'screens/points_screen.dart';
 import 'screens/profile_screen.dart';
@@ -23,7 +23,7 @@ class _MainShellState extends State<MainShell> {
     const tabs = <Widget>[
       HomeMatchdayScreen(),
       FanshopScreen(),
-      WalletScreen(),
+      FanPlusScreen(),
       PointsScreen(),
       ProfileScreen(),
     ];

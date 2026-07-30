@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.history_rounded, 'Points History', ''),
           (Icons.workspace_premium_outlined, 'Fan+ Membership', ''),
           (Icons.card_membership_outlined, 'Membership Plan', 'Fan+ Premium'),
-          (Icons.account_balance_outlined, 'Bank Account', 'Connected'),
+          (Icons.account_balance_outlined, 'Bank Account', ''),
           (Icons.credit_card_rounded, 'Payment Methods', ''),
           (Icons.style_rounded, 'Manage Card', 'Season 2'),
         ]),

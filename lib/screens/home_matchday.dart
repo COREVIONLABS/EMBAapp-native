@@ -16,6 +16,7 @@ import 'achievements_screen.dart';
 import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
+import 'fanplus_screen.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
@@ -59,6 +60,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             const SizedBox(height: 20),
             _missions(),
             const SizedBox(height: 20),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _FanPlusCta(onTap: () => _push(context, const FanPlusScreen()))),
+            const SizedBox(height: 20),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _RewardCard()),
             const SizedBox(height: 24),
             _explore(),
@@ -87,36 +90,38 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       children: [
         Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: SectionHeader(tr('Explore'), action: null)),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 96,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: items.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, i) => GestureDetector(
-              onTap: () => _push(context, switch (items[i].$1) {
-                'Tickets' => const TicketsScreen(),
-                'Experiences' => const ExperiencesScreen(),
-                'Content' => const ExclusiveContentScreen(),
-                'Deals' => const DealsHubScreen(),
-                'Specials' => const MatchdaySpecialsScreen(),
-                'News' => const ClubNewsScreen(),
-                _ => const AchievementsScreen(),
-              }),
-              child: SizedBox(
-                width: 76,
-                child: Column(children: [
-                  Container(
-                    width: 64, height: 64,
-                    decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-                    child: Icon(items[i].$2, color: AppColors.brandPrimary, size: 28),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(tr(items[i].$1), style: AppText.body3, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
-                ]),
-              ),
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 14,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.82,
+            children: [
+              for (final it in items)
+                GestureDetector(
+                  onTap: () => _push(context, switch (it.$1) {
+                    'Tickets' => const TicketsScreen(),
+                    'Experiences' => const ExperiencesScreen(),
+                    'Content' => const ExclusiveContentScreen(),
+                    'Deals' => const DealsHubScreen(),
+                    'Specials' => const MatchdaySpecialsScreen(),
+                    'News' => const ClubNewsScreen(),
+                    _ => const AchievementsScreen(),
+                  }),
+                  child: Column(children: [
+                    Container(
+                      width: 56, height: 56,
+                      decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+                      child: Icon(it.$2, color: AppColors.brandPrimary, size: 26),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(tr(it.$1), style: AppText.body3.copyWith(fontSize: 12), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ]),
+                ),
+            ],
           ),
         ),
       ],
@@ -283,6 +288,41 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Compact Fan+ conversion banner — surfaces the paid membership on Home.
+class _FanPlusCta extends StatelessWidget {
+  final VoidCallback onTap;
+  const _FanPlusCta({required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: AppColors.pointsGradient),
+          borderRadius: BorderRadius.circular(AppRadii.card),
+        ),
+        child: Row(children: [
+          const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 26),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Become a Fan+ member'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 2),
+              Text(tr('Get 100% of your fee back in points'), style: AppText.body3.copyWith(color: Colors.white70)),
+            ]),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
+            child: Text(tr('Upgrade'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+          ),
+        ]),
+      ),
     );
   }
 }

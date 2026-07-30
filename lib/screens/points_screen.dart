@@ -104,6 +104,30 @@ class _PointsScreenState extends State<PointsScreen> {
         ),
         const SizedBox(height: 12),
         if (_seg == 0) ..._history() else ..._missions(),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            onTap: () {},
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(11)),
+                child: const Icon(Icons.credit_card_rounded, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Text(tr('S04 Fan Card'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                  const SizedBox(width: 6),
+                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Coming Season 2'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
+                ]),
+                Text(tr('Points on every spend — join the waitlist'), style: AppText.body3Regular),
+              ])),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            ]),
+          ),
+        ),
       ],
     );
   }

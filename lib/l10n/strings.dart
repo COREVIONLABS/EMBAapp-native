@@ -514,4 +514,11 @@ const Map<String, String> _de = {
   'Today · 14:30': 'Heute · 14:30',
   'Mon 12 Feb': 'Mo 12. Feb',
   'Sun 11 Feb': 'So 11. Feb',
+
+  // ── Navigation restructure & Home conversion CTA ───────────
+  'S04 Fan Card': 'S04 Fankarte',
+  'Points on every spend — join the waitlist': 'Punkte bei jedem Einkauf — jetzt vormerken',
+  'Become a Fan+ member': 'Werde Fan+ Mitglied',
+  'Get 100% of your fee back in points': '100 % deines Beitrags zurück als Punkte',
+  'Upgrade': 'Upgrade',
 };
