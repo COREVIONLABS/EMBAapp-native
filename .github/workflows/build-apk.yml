@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,3 +39,13 @@ jobs:
           name: emba-app-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+      - name: Publish rolling Release (direct download link)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk emba-app.apk
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create latest emba-app.apk \
+            --title "FC Schalke Club App — neuester Build" \
+            --notes "Automatischer Build von Commit ${{ github.sha }} (Branch ${{ github.ref_name }})." \
+            --target "${{ github.sha }}"
