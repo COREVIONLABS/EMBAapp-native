@@ -91,6 +91,41 @@
       "name": "ticket_stadium",
       "node": "2162:5312",
       "scale": 2
+    },
+    {
+      "name": "deal_matchday_meal",
+      "node": "2162:5879",
+      "scale": 2
+    },
+    {
+      "name": "deal_banner",
+      "node": "2162:5888",
+      "scale": 2
+    },
+    {
+      "name": "deal_helene_fischer",
+      "node": "2162:5896",
+      "scale": 2
+    },
+    {
+      "name": "deal_museum",
+      "node": "2162:5904",
+      "scale": 2
+    },
+    {
+      "name": "brand_nike",
+      "node": "2162:5944",
+      "scale": 3
+    },
+    {
+      "name": "brand_puma",
+      "node": "2162:5950",
+      "scale": 3
+    },
+    {
+      "name": "brand_levis",
+      "node": "2162:5956",
+      "scale": 3
     }
   ]
 }
