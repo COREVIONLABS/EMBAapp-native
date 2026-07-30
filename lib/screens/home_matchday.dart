@@ -22,9 +22,15 @@ void _push(BuildContext context, Widget screen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
 }
 
-/// Home — Matchday (Figma node 350:1354), built 1:1.
-class HomeMatchdayScreen extends StatelessWidget {
+/// Home tab (Figma 2145:7192 Matchday / 2145:7546 Non-Matchday).
+class HomeMatchdayScreen extends StatefulWidget {
   const HomeMatchdayScreen({super.key});
+  @override
+  State<HomeMatchdayScreen> createState() => _HomeMatchdayScreenState();
+}
+
+class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
+  bool _matchday = true;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,10 @@ class HomeMatchdayScreen extends StatelessWidget {
             const SizedBox(height: 20),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
             const SizedBox(height: 20),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PromoBanner()),
+            if (_matchday)
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PromoBanner())
+            else
+              const _NonMatchdayCards(),
             const SizedBox(height: 20),
             const _QuickActions(),
             const SizedBox(height: 20),
@@ -185,6 +194,24 @@ class HomeMatchdayScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Svg('logo_s04', size: 36),
+          GestureDetector(
+            onTap: () => setState(() => _matchday = !_matchday),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: _matchday ? AppColors.brandLightest : AppColors.surfaceMinimal,
+                borderRadius: BorderRadius.circular(AppRadii.pill),
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(_matchday ? Icons.sports_soccer_rounded : Icons.calendar_today_rounded,
+                    size: 14, color: _matchday ? AppColors.brandPrimary : AppColors.textLight),
+                const SizedBox(width: 6),
+                Text(_matchday ? tr('Matchday') : tr('Non-Matchday'),
+                    style: AppText.caption1.copyWith(
+                        color: _matchday ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
+              ]),
+            ),
+          ),
           Builder(
             builder: (context) => Row(children: [
               GestureDetector(
@@ -242,6 +269,57 @@ class HomeMatchdayScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Non-matchday state (Figma 2145:7546): weekly challenge + community goal.
+class _NonMatchdayCards extends StatelessWidget {
+  const _NonMatchdayCards();
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(children: [
+        SurfaceCard(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text(tr('Weekly Challenge'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
+              Pill(color: AppColors.successBg, child: Text('+50 pts', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700, fontSize: 11))),
+            ]),
+            const SizedBox(height: 8),
+            Text(tr('Spend €50 this week'), style: AppText.body2.copyWith(color: AppColors.textNormal)),
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(3),
+              child: const LinearProgressIndicator(
+                  value: 0.65, minHeight: 6, backgroundColor: AppColors.surfaceLowContrast,
+                  valueColor: AlwaysStoppedAnimation(AppColors.brandPrimary)),
+            ),
+            const SizedBox(height: 8),
+            Text('€32.50 / €50 · 65%', style: AppText.body3Regular),
+          ]),
+        ),
+        const SizedBox(height: 12),
+        SurfaceCard(
+          color: AppColors.brandLightest,
+          border: Border.all(color: AppColors.brandPrimary.withValues(alpha: 0.2)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr('Community Goal'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
+            const SizedBox(height: 6),
+            Text(tr('€32,000 left to unlock Community Bonus'), style: AppText.body2.copyWith(color: AppColors.textNormal)),
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(3),
+              child: const LinearProgressIndicator(
+                  value: 0.36, minHeight: 6, backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation(AppColors.success)),
+            ),
+            const SizedBox(height: 8),
+            Text('€18,000 / €50,000 · ${tr('36% collective')}', style: AppText.body3Regular),
+          ]),
+        ),
+      ]),
     );
   }
 }

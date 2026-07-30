@@ -407,4 +407,18 @@ const Map<String, String> _de = {
 
   // ── Ticket card CTA ────────────────────────────────────────
   'Earn 100 pts': '100 Pkt. sammeln',
+
+  // ── Home non-matchday state ────────────────────────────────
+  'Non-Matchday': 'Kein Spieltag',
+  'Weekly Challenge': 'Wochen-Challenge',
+  'Spend €50 this week': 'Gib diese Woche 50 € aus',
+  'Community Goal': 'Gemeinschaftsziel',
+  '€32,000 left to unlock Community Bonus': 'Noch 32.000 € bis zum Community-Bonus',
+  '36% collective': '36 % gemeinsam',
+
+  // ── Wallet tiers ───────────────────────────────────────────
+  'Free': 'Basis',
+  'Supporter': 'Supporter',
+  'No active card yet': 'Noch keine aktive Karte',
+  'Activate S04 Card': 'S04-Karte aktivieren',
 };

@@ -4,13 +4,22 @@ import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
 import '../l10n/strings.dart';
 
-/// Wallet — Supporter/Superfan (Figma 2145:7873/8022): virtual card, card
-/// actions, points/tickets, physical-card upsell, sponsor transactions.
-class WalletScreen extends StatelessWidget {
+enum _Tier { free, supporter, superfan }
+
+/// Wallet (Figma 2145:7678 Free / 7873 Supporter / 8022 Superfan): virtual
+/// card, card actions, points/tickets, physical-card upsell, transactions.
+class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
+  @override
+  State<WalletScreen> createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  _Tier _tier = _Tier.superfan;
 
   @override
   Widget build(BuildContext context) {
+    final hasCard = _tier != _Tier.free;
     return TabScaffold(
       children: [
         Padding(
@@ -29,10 +38,39 @@ class WalletScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _VirtualCard()),
+        // Tier switcher (prototype: preview each membership state)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+            child: Row(children: [
+              for (final t in _Tier.values)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _tier = t),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 9),
+                      decoration: BoxDecoration(
+                          color: t == _tier ? AppColors.surface : Colors.transparent,
+                          borderRadius: BorderRadius.circular(AppRadii.pill)),
+                      child: Center(
+                        child: Text(tr(_tierName(t)),
+                            style: AppText.body3.copyWith(
+                                color: t == _tier ? AppColors.brandPrimary : AppColors.textLight,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                    ),
+                  ),
+                ),
+            ]),
+          ),
+        ),
         const SizedBox(height: 16),
-        const _CardActions(),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: hasCard ? _VirtualCard(superfan: _tier == _Tier.superfan) : const _LockedCard()),
         const SizedBox(height: 16),
+        if (hasCard) const _CardActions(),
+        if (hasCard) const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -44,24 +82,26 @@ class WalletScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(color: const Color(0xFFFFF3DC), borderRadius: BorderRadius.circular(AppRadii.tile)),
-            child: Row(
-              children: [
-                const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
-                const SizedBox(width: 10),
-                Expanded(child: Text(tr('Upgrade to Physical Card'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
-                Text(tr('€9.99/mo'), style: AppText.body3.copyWith(color: AppColors.textDark)),
-                const SizedBox(width: 4),
-                const Svg('arrow_right', size: 16),
-              ],
+        if (_tier != _Tier.superfan)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(color: const Color(0xFFFFF3DC), borderRadius: BorderRadius.circular(AppRadii.tile)),
+              child: Row(
+                children: [
+                  const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(tr('Upgrade to Physical Card'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                  Text(tr('€9.99/mo'), style: AppText.body3.copyWith(color: AppColors.textDark)),
+                  const SizedBox(width: 4),
+                  const Svg('arrow_right', size: 16),
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 24),
+        if (_tier != _Tier.superfan) const SizedBox(height: 24),
+        if (_tier == _Tier.superfan) const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
@@ -83,10 +123,45 @@ class WalletScreen extends StatelessWidget {
       ],
     );
   }
+
+  String _tierName(_Tier t) => switch (t) {
+        _Tier.free => 'Free',
+        _Tier.supporter => 'Supporter',
+        _Tier.superfan => 'Superfan',
+      };
+}
+
+/// Free state — no active card yet.
+class _LockedCard extends StatelessWidget {
+  const _LockedCard();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 180,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceMinimal,
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        border: Border.all(color: AppColors.borderLightest),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(Icons.credit_card_off_rounded, size: 34, color: AppColors.textLight),
+          const SizedBox(height: 10),
+          Text(tr('No active card yet'), style: AppText.body2.copyWith(color: AppColors.textNormal)),
+          const SizedBox(height: 12),
+          PrimaryButton(tr('Activate S04 Card'), height: 44, onTap: () {}),
+        ],
+      ),
+    );
+  }
 }
 
 class _VirtualCard extends StatelessWidget {
-  const _VirtualCard();
+  final bool superfan;
+  const _VirtualCard({this.superfan = false});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -118,7 +193,7 @@ class _VirtualCard extends StatelessWidget {
               Pill(
                 gradient: const LinearGradient(colors: AppColors.goldGradient),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                child: Text(tr('Virtual'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                child: Text(tr(superfan ? 'Superfan' : 'Virtual'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
               ),
               const Spacer(),
               Text(tr('••••   ••••   ••••   4821'),
