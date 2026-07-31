@@ -542,7 +542,7 @@ class _QuickActions extends StatelessWidget {
                       child: AssetImg(it.$1, width: 48, height: 48, fallbackIcon: it.$3),
                     ),
                     const SizedBox(height: 8),
-                    Text(tr(it.$2), textAlign: TextAlign.center, style: AppText.body3),
+                    Text(tr(it.$2), textAlign: TextAlign.center, style: AppText.body3, maxLines: 1, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
