@@ -728,4 +728,17 @@ const Map<String, String> _de = {
   'Season ranking — earned points only': 'Saison-Ranking — nur verdiente Punkte',
   'Super Fan exclusive': 'Super-Fan-exklusiv',
   'Collect player stickers': 'Spieler-Sticker sammeln',
+
+  // ── Earn / Redeem screens aligned to hub style ───────────────
+  'How you can redeem': 'So kannst du einlösen',
+  'On matchday combos — pay with points': 'Auf Spieltags-Kombis — mit Punkten zahlen',
+  'points back on every Fanshop order': 'Punkte zurück bei jeder Fanshop-Bestellung',
+  '+100 points per home match': '+100 Punkte pro Heimspiel',
+  '1 point per €1 spent': '1 Punkt pro 1 € Umsatz',
+  '+15 points per sponsor clip': '+15 Punkte pro Sponsor-Clip',
+  '+50 points on matchday': '+50 Punkte am Spieltag',
+  '+25 points per share': '+25 Punkte pro Teilen',
+  '+200 points per friend': '+200 Punkte pro Freund',
+  '+10 points every day': '+10 Punkte jeden Tag',
+  '+50 points, one-off': '+50 Punkte, einmalig',
 };

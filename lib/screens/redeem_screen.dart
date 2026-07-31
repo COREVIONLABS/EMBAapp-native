@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
-import '../model/fan_model.dart';
+import '../widgets/hub_widgets.dart';
 import 'voucher_screen.dart';
 import 'buy_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
+import 'search_screen.dart';
 import '../l10n/strings.dart';
 
-/// Redeem hub — a Revolut-style category grid so fans always know *where*
-/// their points can go: club shop, tickets, sponsors, experiences, food &
-/// drink, extra raffle tickets, and donations.
+/// Redeem Points — aligned to the RevPoints hub style: search field, a
+/// "how you can redeem" category list (white rows), and a sponsor promo.
+/// Content is EMBA/S04: club shop, tickets, sponsors, experiences, F&B,
+/// extra raffle tickets, donations.
 class RedeemScreen extends StatelessWidget {
   const RedeemScreen({super.key});
 
@@ -26,75 +27,54 @@ class RedeemScreen extends StatelessWidget {
     (Icons.volunteer_activism_rounded, 'Donations', 'Give points to club causes', Color(0xFF2E7D32)),
   ];
 
+  void _push(BuildContext context, Widget s) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
+
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Redeem Points'),
       children: [
-        // Balance banner with transparent € value
-        Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Row(children: [
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('Available to redeem'), style: AppText.body3.copyWith(color: Colors.white70)),
-              const SizedBox(height: 4),
-              Text('${FanModel.pointsFormatted} pts', style: AppText.h2.copyWith(color: Colors.white)),
-              Text('≈ ${FanModel.balanceEuro} · 100 pts = €1', style: AppText.body3.copyWith(color: Colors.white70)),
-            ])),
-            const Icon(Icons.savings_rounded, color: AppColors.gold, size: 32),
-          ]),
-        ),
+        HubSearchField(hint: 'Search rewards & sponsors', onTap: () => _push(context, const SearchScreen())),
         const SizedBox(height: 20),
-        Text(tr('Where to redeem'), style: AppText.label1),
+        Text(tr('How you can redeem'), style: AppText.label1),
         const SizedBox(height: 12),
-        for (final c in _cats)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: SurfaceCard(
-              onTap: () {
-                final Widget? dest = switch (c.$2) {
-                  'Fanshop' => const FanshopScreen(),
-                  'Tickets' => const TicketsScreen(),
-                  'Experiences' => const ExperiencesScreen(),
-                  'Sponsors' => const VoucherScreen(),
-                  _ => null,
-                };
-                if (dest != null) Navigator.of(context).push(MaterialPageRoute(builder: (_) => dest));
-              },
-              child: Row(children: [
-                Container(
-                  width: 46, height: 46,
-                  decoration: BoxDecoration(color: c.$4.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(13)),
-                  child: Icon(c.$1, color: c.$4, size: 24),
-                ),
-                const SizedBox(width: 14),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(tr(c.$2), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15)),
-                  const SizedBox(height: 2),
-                  Text(tr(c.$3), style: AppText.body3Regular),
-                ])),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-              ]),
-            ),
+        for (final c in _cats) ...[
+          HubListRow(
+            icon: c.$1,
+            title: c.$2,
+            subtitle: c.$3,
+            iconColor: c.$4,
+            onTap: () {
+              final Widget? dest = switch (c.$2) {
+                'Fanshop' => const FanshopScreen(),
+                'Tickets' => const TicketsScreen(),
+                'Experiences' => const ExperiencesScreen(),
+                'Sponsors' => const VoucherScreen(),
+                _ => null,
+              };
+              if (dest != null) _push(context, dest);
+            },
           ),
+          const SizedBox(height: 10),
+        ],
         const SizedBox(height: 6),
-        SurfaceCard(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
-          child: Row(children: [
-            Container(
-              width: 46, height: 46,
-              decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(13)),
-              child: const Icon(Icons.add_rounded, color: Colors.white, size: 24),
-            ),
-            const SizedBox(width: 14),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('Top up points'), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15)),
-              const SizedBox(height: 2),
-              Text(tr('Buy a package · 100 pts = €1'), style: AppText.body3Regular),
-            ])),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-          ]),
+        // Sponsor promo
+        SponsorPromoCard(
+          sponsor: 'Veltins',
+          category: 'Food & Drink',
+          offer: '−20%',
+          sub: 'On matchday combos — pay with points',
+          color: const Color(0xFF00623A),
+          onTap: () => _push(context, const VoucherScreen()),
+        ),
+        const SizedBox(height: 12),
+        HubListRow(
+          icon: Icons.add_rounded,
+          title: 'Top up points',
+          subtitle: 'Buy a package · 100 pts = €1',
+          iconColor: AppColors.brandDarkest,
+          onTap: () => _push(context, const BuyPointsScreen()),
         ),
         const SizedBox(height: 12),
         Row(children: [

@@ -1,73 +1,46 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
-import 'redeem_screen.dart';
+import '../widgets/hub_widgets.dart';
 import 'buy_points_screen.dart';
+import 'search_screen.dart';
 import '../l10n/strings.dart';
 
 class _Way {
   final IconData icon;
-  final String title, sub, pts;
-  const _Way(this.icon, this.title, this.sub, this.pts);
+  final String title, sub;
+  final Color color;
+  const _Way(this.icon, this.title, this.sub, this.color);
 }
 
-/// Earn Points (Figma 2162:5111) — balance + ways to earn Fan Points.
+/// Earn Points — aligned to the RevPoints hub style: search field, a welcome
+/// bonus, a "ways to earn" list (rate in the subtitle), a sponsor promo and a
+/// top-up shortcut. Content is EMBA/S04.
 class EarnPointsScreen extends StatelessWidget {
   const EarnPointsScreen({super.key});
 
   static const _ways = [
-    _Way(Icons.confirmation_number_outlined, 'Attend a Match', 'Earn points for each home match', '+100'),
-    _Way(Icons.shopping_bag_outlined, 'Fanshop Purchase', '1 point per €1 spent', '+1/€1'),
-    _Way(Icons.share_outlined, 'Share on Social', 'Share Schalke content', '+25'),
-    _Way(Icons.group_add_outlined, 'Refer a Friend', 'Invite friends to join', '+200'),
-    _Way(Icons.calendar_today_outlined, 'Daily Check-in', 'Open the app every day', '+10'),
-    _Way(Icons.person_outline_rounded, 'Complete Profile', 'Fill in all profile fields', '+50'),
-    _Way(Icons.play_circle_outline_rounded, 'Watch a Short Ad', 'A quick sponsor clip', '+15'),
-    _Way(Icons.sports_soccer_outlined, 'Live Predictions', 'Predict during matchday', '+50'),
+    _Way(Icons.confirmation_number_outlined, 'Attend a Match', '+100 points per home match', Color(0xFF1565C0)),
+    _Way(Icons.shopping_bag_outlined, 'Fanshop Purchase', '1 point per €1 spent', Color(0xFF0A2A5E)),
+    _Way(Icons.play_circle_outline_rounded, 'Watch a Short Ad', '+15 points per sponsor clip', Color(0xFFE65100)),
+    _Way(Icons.sports_soccer_outlined, 'Live Predictions', '+50 points on matchday', Color(0xFF6A1B9A)),
+    _Way(Icons.share_outlined, 'Share on Social', '+25 points per share', Color(0xFF00897B)),
+    _Way(Icons.group_add_outlined, 'Refer a Friend', '+200 points per friend', Color(0xFFC62828)),
+    _Way(Icons.calendar_today_outlined, 'Daily Check-in', '+10 points every day', Color(0xFF2E7D32)),
+    _Way(Icons.person_outline_rounded, 'Complete Profile', '+50 points, one-off', Color(0xFF1565C0)),
   ];
+
+  void _push(BuildContext context, Widget s) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Earn Points'),
       children: [
-        // Balance card
-        Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: AppColors.pointsGradient),
-            borderRadius: BorderRadius.circular(AppRadii.card),
-          ),
-          child: Row(children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-              child: const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 26),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Your Balance'), style: AppText.body3.copyWith(color: Colors.white70)),
-                Text('${FanModel.pointsFormatted} pts', style: AppText.h4.copyWith(color: Colors.white)),
-              ]),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RedeemScreen())),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Text(tr('Redeem'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-                  const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
-                ]),
-              ),
-            ),
-          ]),
-        ),
-        const SizedBox(height: 12),
+        HubSearchField(hint: 'Search rewards & sponsors', onTap: () => _push(context, const SearchScreen())),
+        const SizedBox(height: 16),
         // Welcome bonus
         SurfaceCard(
           color: AppColors.brandLightest,
@@ -78,49 +51,30 @@ class EarnPointsScreen extends StatelessWidget {
                 style: AppText.body3.copyWith(color: AppColors.brandDarkest))),
           ]),
         ),
-        const SizedBox(height: 12),
-        // Top up points
-        SurfaceCard(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
-          child: Row(children: [
-            Container(
-              width: 40, height: 40,
-              decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(11)),
-              child: const Icon(Icons.add_rounded, color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('Top up points'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-              Text(tr('Buy a package · 100 pts = €1'), style: AppText.body3Regular),
-            ])),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-          ]),
-        ),
-        const SizedBox(height: 22),
-        Align(alignment: Alignment.centerLeft, child: Text(tr('Ways to Earn'), style: AppText.label2)),
+        const SizedBox(height: 20),
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Ways to Earn'), style: AppText.label1)),
         const SizedBox(height: 12),
         for (final w in _ways) ...[
-          SurfaceCard(
-            child: Row(children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)),
-                child: Icon(w.icon, size: 20, color: AppColors.brandPrimary),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(tr(w.title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                  const SizedBox(height: 2),
-                  Text(tr(w.sub), style: AppText.body3Regular),
-                ]),
-              ),
-              Pill(color: AppColors.brandLightest, child: Text(w.pts, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
-            ]),
-          ),
+          HubListRow(icon: w.icon, title: w.title, subtitle: w.sub, iconColor: w.color),
           const SizedBox(height: 10),
         ],
+        const SizedBox(height: 6),
+        // Sponsor promo
+        SponsorPromoCard(
+          sponsor: 'adidas',
+          category: 'Fanshop',
+          offer: '5%',
+          sub: 'points back on every Fanshop order',
+          color: const Color(0xFF111111),
+        ),
+        const SizedBox(height: 12),
+        HubListRow(
+          icon: Icons.add_rounded,
+          title: 'Top up points',
+          subtitle: 'Buy a package · 100 pts = €1',
+          iconColor: AppColors.brandDarkest,
+          onTap: () => _push(context, const BuyPointsScreen()),
+        ),
       ],
     );
   }
