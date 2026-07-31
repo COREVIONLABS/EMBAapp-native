@@ -267,9 +267,22 @@ class _StreakStrip extends StatelessWidget {
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              Text(tr('5-day streak'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-              const SizedBox(width: 6),
-              Text(tr('· keep it going for +10 pts'), style: AppText.body3Regular),
+              Expanded(child: Row(children: [
+                Flexible(child: Text(tr('5-day streak'), overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700))),
+                const SizedBox(width: 6),
+                Flexible(child: Text(tr('· keep it going for +10 pts'), overflow: TextOverflow.ellipsis, style: AppText.body3Regular)),
+              ])),
+              // Streak protection — a Fan Member / Super Fan perk: one missed day
+              // won't reset the streak.
+              Pill(
+                color: AppColors.successBg,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(Icons.shield_rounded, size: 11, color: AppColors.success),
+                  const SizedBox(width: 3),
+                  Text(tr('Protected'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700, fontSize: 10)),
+                ]),
+              ),
             ]),
             const SizedBox(height: 8),
             Row(children: [

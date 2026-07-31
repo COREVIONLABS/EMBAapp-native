@@ -5,6 +5,8 @@ import '../widgets/points_card.dart';
 import '../widgets/tab_scaffold.dart';
 import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
+import 'leaderboard_screen.dart';
+import 'fomo_drop_screen.dart';
 import '../l10n/strings.dart';
 
 /// Points tab — History / Missions (Figma 2145:7321 / 7449).
@@ -92,6 +94,52 @@ class _PointsScreenState extends State<PointsScreen> {
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(tr('Earn more points'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                 Text(tr('See all the ways to collect Fan Points'), style: AppText.body3Regular),
+              ])),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Top Supporters leaderboard entry
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LeaderboardScreen())),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)),
+                child: const Icon(Icons.leaderboard_rounded, color: AppColors.brandPrimary, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('Top Supporters'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                Text(tr("You're #5 this season — earned points only"), style: AppText.body3Regular),
+              ])),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Monthly FOMO drop entry (Super Fan)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FomoDropScreen(subscribed: true))),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(11)),
+                child: const Icon(Icons.local_fire_department_rounded, color: AppColors.brandDarkest, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Text(tr("This Month's Drop"), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                  const SizedBox(width: 6),
+                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Super Fan'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
+                ]),
+                Text(tr('Signed retro shirt · closes in 2 days'), style: AppText.body3Regular),
               ])),
               const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
             ]),

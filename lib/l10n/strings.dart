@@ -571,4 +571,86 @@ const Map<String, String> _de = {
   'See membership plans': 'Mitgliedschaften ansehen',
   'Your plan is active. Enjoy priority access and exclusive perks.':
       'Dein Tarif ist aktiv. Genieße Vorrang-Zugang und exklusive Vorteile.',
+
+  // ── P1: Leaderboard (Top Supporters) ─────────────────────────
+  'Top Supporters': 'Top-Supporter',
+  'This Season': 'Diese Saison',
+  'Hall of Fame': 'Hall of Fame',
+  'Ranked by points earned this season — never by points bought. Resets 30 June.':
+      'Sortiert nach diese Saison verdienten Punkten — nie nach gekauften Punkten. Reset am 30. Juni.',
+  'You': 'Du',
+  "You're #5 this season — earned points only": 'Du bist #5 diese Saison — nur verdiente Punkte',
+  "See where you rank this season": 'Sieh, wo du diese Saison stehst',
+  'Season 24/25': 'Saison 24/25',
+  'Season 23/24': 'Saison 23/24',
+  'Season 22/23': 'Saison 22/23',
+  '512,900 pts earned': '512.900 Pkt. verdient',
+  '498,140 pts earned': '498.140 Pkt. verdient',
+  '451,720 pts earned': '451.720 Pkt. verdient',
+
+  // ── P1: Fan Profile (visibility layer) ───────────────────────
+  'Fan Profile': 'Fan-Profil',
+  'Share profile': 'Profil teilen',
+  'Verified Supporter · Member #0042': 'Verifizierter Supporter · Mitglied #0042',
+  'Your Impact': 'Dein Impact',
+  'Games attended': 'Besuchte Spiele',
+  'Day streak': 'Tage-Serie',
+  'Points this season': 'Punkte diese Saison',
+  'Prediction accuracy': 'Tipp-Trefferquote',
+  'Friends referred': 'Geworbene Freunde',
+  'Supporter rank': 'Supporter-Rang',
+  'Badges': 'Abzeichen',
+  'Verified': 'Verifiziert',
+  'On Fire': 'In Form',
+  'Season Ticket': 'Dauerkarte',
+  'Founding Fan': 'Gründungs-Fan',
+
+  // ── P1: FOMO Drop (monthly Super Fan drop) ───────────────────
+  "This Month's Drop": 'Der Drop des Monats',
+  'Claim your drop': 'Drop sichern',
+  'Unlock with Super Fan': 'Mit Super Fan freischalten',
+  'Super Fan only': 'Nur Super Fan',
+  'Only 50 made': 'Nur 50 Stück',
+  'Signed Retro Shirt — April Drop': 'Signiertes Retro-Trikot — April-Drop',
+  'A limited signed 1997 UEFA Cup retro shirt — dropped once, never restocked.':
+      'Ein limitiertes signiertes 1997er UEFA-Cup-Retro-Trikot — einmal gedroppt, nie nachproduziert.',
+  'Drop closes in': 'Drop endet in',
+  'Days': 'Tage',
+  'Hrs': 'Std.',
+  'Min': 'Min.',
+  'Sec': 'Sek.',
+  'This drop is reserved for Super Fan members. One exclusive drop lands every month.':
+      'Dieser Drop ist Super-Fan-Mitgliedern vorbehalten. Jeden Monat kommt ein exklusiver Drop.',
+  "You're eligible. Claim before the timer runs out — first come, first served.":
+      'Du bist berechtigt. Sichere ihn, bevor die Zeit abläuft — wer zuerst kommt, mahlt zuerst.',
+  'Past drops': 'Vergangene Drops',
+  'January': 'Januar',
+  'February': 'Februar',
+  'March': 'März',
+  'Away-day travel mug': 'Auswärts-Thermobecher',
+  'Matchday scarf — numbered': 'Spieltags-Schal — nummeriert',
+  'Training-worn gloves': 'Trainings-getragene Handschuhe',
+  'Claimed by 50 fans': 'Von 50 Fans gesichert',
+  'Sold out in 3h': 'In 3 Std. ausverkauft',
+  'Sold out in 1h': 'In 1 Std. ausverkauft',
+  'Signed retro shirt · closes in 2 days': 'Signiertes Retro-Trikot · endet in 2 Tagen',
+
+  // ── P1: Redeem hub (category grid) ───────────────────────────
+  'Fanshop': 'Fanshop',
+  'Jerseys, scarves & more': 'Trikots, Schals & mehr',
+  'Matchday & presale access': 'Spieltag & Vorverkaufs-Zugang',
+  'Sponsors': 'Sponsoren',
+  'Partner vouchers & offers': 'Partner-Gutscheine & Angebote',
+  'Stadium tours, VIP, players': 'Stadiontouren, VIP, Spieler',
+  'Food & Drink': 'Essen & Trinken',
+  'Matchday combos & kiosks': 'Spieltags-Kombis & Kioske',
+  'Extra Raffle Tickets': 'Extra-Lose',
+  'Boost your odds on draws': 'Erhöhe deine Gewinnchancen',
+  'Donations': 'Spenden',
+  'Give points to club causes': 'Punkte für Vereins-Projekte spenden',
+  'Available to redeem': 'Verfügbar zum Einlösen',
+  'Where to redeem': 'Wo einlösen',
+
+  // ── P1: Streak protection ────────────────────────────────────
+  'Protected': 'Geschützt',
 };

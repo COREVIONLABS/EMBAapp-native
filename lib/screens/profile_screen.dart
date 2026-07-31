@@ -6,6 +6,7 @@ import 'settings_screens.dart';
 import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
 import 'loyalty_tiers_screen.dart';
+import 'fan_profile_screen.dart';
 import 'fanplus_screen.dart';
 import 'membership_plan_screen.dart';
 import 'payment_methods_screen.dart';
@@ -24,6 +25,7 @@ class ProfileScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SurfaceCard(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FanProfileScreen())),
             child: Row(
               children: [
                 Container(
@@ -38,7 +40,11 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(tr('Max Mustermann'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
+                      Row(children: [
+                        Text(tr('Max Mustermann'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.verified_rounded, size: 15, color: Color(0xFF4DA3FF)),
+                      ]),
                       const SizedBox(height: 4),
                       Pill(
                         gradient: const LinearGradient(colors: AppColors.goldGradient),
