@@ -5,6 +5,9 @@ import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import 'voucher_screen.dart';
 import 'buy_points_screen.dart';
+import 'fanshop_screen.dart';
+import 'tickets_screen.dart';
+import 'experiences_screen.dart';
 import '../l10n/strings.dart';
 
 /// Redeem hub — a Revolut-style category grid so fans always know *where*
@@ -50,9 +53,14 @@ class RedeemScreen extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: SurfaceCard(
               onTap: () {
-                if (c.$2 == 'Sponsors') {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VoucherScreen()));
-                }
+                final Widget? dest = switch (c.$2) {
+                  'Fanshop' => const FanshopScreen(),
+                  'Tickets' => const TicketsScreen(),
+                  'Experiences' => const ExperiencesScreen(),
+                  'Sponsors' => const VoucherScreen(),
+                  _ => null,
+                };
+                if (dest != null) Navigator.of(context).push(MaterialPageRoute(builder: (_) => dest));
               },
               child: Row(children: [
                 Container(

@@ -12,7 +12,6 @@ class NavDest {
 
 const kNavDestinations = [
   NavDest('nav_home', 'Home'),
-  NavDest(null, 'Shop', iconData: Icons.shopping_bag_outlined),
   NavDest(null, 'Membership', iconData: Icons.workspace_premium_outlined),
   NavDest('nav_cup', 'Points'),
   NavDest('nav_profile', 'Profile'),

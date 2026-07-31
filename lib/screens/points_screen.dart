@@ -1,301 +1,409 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/points_card.dart';
 import '../widgets/tab_scaffold.dart';
+import '../model/fan_model.dart';
 import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
+import 'buy_points_screen.dart';
 import 'leaderboard_screen.dart';
 import 'fomo_drop_screen.dart';
+import 'collection_screen.dart';
+import 'subscription_screen.dart';
+import 'points_history_screen.dart';
+import 'fanshop_screen.dart';
+import 'tickets_screen.dart';
+import 'experiences_screen.dart';
+import 'voucher_screen.dart';
+import 'search_screen.dart';
 import '../l10n/strings.dart';
 
-/// Points tab — History / Missions (Figma 2145:7321 / 7449).
-class PointsScreen extends StatefulWidget {
+/// Points tab — RevPoints-style Fan Points hub. Structure follows Revolut's
+/// RevPoints (hero balance → 4 actions → sponsor promo → sponsors → redeem
+/// grid → challenges → transactions), skinned in Schalke blue and filled with
+/// EMBA/S04 content (real club sponsors, fan rewards).
+class PointsScreen extends StatelessWidget {
   const PointsScreen({super.key});
-  @override
-  State<PointsScreen> createState() => _PointsScreenState();
-}
 
-class _PointsScreenState extends State<PointsScreen> {
-  int _seg = 0;
+  void _push(BuildContext context, Widget s) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
   @override
   Widget build(BuildContext context) {
     return TabScaffold(
       children: [
-        // Header: logo + bell
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Svg('logo_s04', size: 36),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-                child: const Center(child: Svg('bell_dot', size: 20)),
-              ),
-            ],
+        // ── Top zone: header + search + hero + actions on a soft gradient ──
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [AppColors.brandLightest, AppColors.surface],
+            ),
           ),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Column(children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Svg('logo_s04', size: 36),
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(36)),
+                  child: const Center(child: Svg('bell_dot', size: 20)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            // Store search
+            GestureDetector(
+              onTap: () => _push(context, const SearchScreen()),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                child: Row(children: [
+                  const Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+                  const SizedBox(width: 10),
+                  Text(tr('Search rewards & sponsors'), style: AppText.body2.copyWith(color: AppColors.textLight)),
+                ]),
+              ),
+            ),
+            const SizedBox(height: 22),
+            // Hero balance
+            GestureDetector(
+              onTap: () => _push(context, const SubscriptionScreen()),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(tr(FanModel.membershipTier), style: AppText.label2.copyWith(color: AppColors.textDarker)),
+                const SizedBox(width: 4),
+                const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
+              ]),
+            ),
+            const SizedBox(height: 8),
+            Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)),
+                child: const Icon(Icons.hexagon_rounded, color: AppColors.gold, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Text(FanModel.pointsFormatted, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 46, fontWeight: FontWeight.w800)),
+            ]),
+            const SizedBox(height: 6),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text('≈ ${FanModel.balanceEuro} · ${tr('1 pt per €1 spent')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+              const SizedBox(width: 4),
+              const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+            ]),
+            const SizedBox(height: 22),
+            // 4 circle actions
+            Row(children: [
+              _Action(icon: Icons.add_rounded, label: tr('Earn'), onTap: () => _push(context, const EarnPointsScreen())),
+              _Action(icon: Icons.savings_rounded, label: tr('Redeem'), onTap: () => _push(context, const RedeemScreen())),
+              _Action(icon: Icons.workspace_premium_rounded, label: tr('Membership'), onTap: () => _push(context, const SubscriptionScreen())),
+              _Action(icon: Icons.more_horiz_rounded, label: tr('More'), onTap: () => _showMore(context)),
+            ]),
+          ]),
         ),
-        const SizedBox(height: 16),
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: S04PointsCard(boost: '3x Boost')),
-        const SizedBox(height: 16),
-        // Use your points banner
+        const SizedBox(height: 8),
+        // ── Sponsor promo ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: AppColors.goldGradient),
-              borderRadius: BorderRadius.circular(AppRadii.tile),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tr('Use your points'), style: AppText.label2.copyWith(color: AppColors.brandDarkest)),
-                      const SizedBox(height: 2),
-                      Text(tr('Points are ready to use'), style: AppText.body3.copyWith(color: AppColors.textDark)),
-                    ],
-                  ),
+            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Row(children: [
+              const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 26),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('Earn points when Schalke wins'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
+                Text('${tr('Redeem for discounts')} · ${tr('Powered by')} Veltins', style: AppText.body3Regular),
+              ])),
+              GestureDetector(
+                onTap: () => _push(context, const RedeemScreen()),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
+                  child: Text(tr('Redeem'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                 ),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RedeemScreen())),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text(tr('Redeem'), style: AppText.body3.copyWith(color: Colors.white)),
-                      const SizedBox(width: 4),
-                      const Svg('arrow_left', size: 14),
-                    ]),
-                  ),
-                ),
-              ],
+              ),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 20),
+        // ── Top Sponsors ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(tr('Top Sponsors'), style: AppText.label1),
+            GestureDetector(
+              onTap: () => _push(context, const RedeemScreen()),
+              child: Row(children: [
+                Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
+              ]),
             ),
+          ]),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 92,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            children: [
+              for (final s in const [
+                ('Veltins', '2× pts', Color(0xFF00623A)),
+                ('Vivawest', '10% off', Color(0xFF6A1B9A)),
+                ('adidas', '5% back', Color(0xFF111111)),
+                ("Ernsting's", '€5 voucher', Color(0xFFE30613)),
+                ('REWE', '3× pts', Color(0xFFC8102E)),
+              ])
+                _SponsorAvatar(name: s.$1, perk: s.$2, color: s.$3, onTap: () => _push(context, const VoucherScreen())),
+            ],
           ),
+        ),
+        const SizedBox(height: 20),
+        // ── Redeem categories (quick grid) ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(tr('Redeem your points'), style: AppText.label1),
+            GestureDetector(
+              onTap: () => _push(context, const RedeemScreen()),
+              child: Row(children: [
+                Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
+              ]),
+            ),
+          ]),
         ),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 14,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.82,
+            children: [
+              _Cat(icon: Icons.checkroom_rounded, label: tr('Fanshop'), color: const Color(0xFF0A2A5E), onTap: () => _push(context, const FanshopScreen())),
+              _Cat(icon: Icons.confirmation_number_rounded, label: tr('Tickets'), color: const Color(0xFF1565C0), onTap: () => _push(context, const TicketsScreen())),
+              _Cat(icon: Icons.storefront_rounded, label: tr('Sponsors'), color: const Color(0xFF00897B), onTap: () => _push(context, const VoucherScreen())),
+              _Cat(icon: Icons.stadium_rounded, label: tr('Experiences'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const ExperiencesScreen())),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        // ── Challenges ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SurfaceCard(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EarnPointsScreen())),
+            onTap: () => _push(context, const EarnPointsScreen()),
             child: Row(children: [
               Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)),
-                child: const Icon(Icons.trending_up_rounded, color: AppColors.brandPrimary, size: 22),
+                width: 44, height: 44,
+                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
+                child: const Icon(Icons.emoji_events_outlined, color: AppColors.brandPrimary, size: 22),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Earn more points'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                Text(tr('See all the ways to collect Fan Points'), style: AppText.body3Regular),
+                Text(tr('Challenges'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                Text(tr('2 active · earn up to +800 pts'), style: AppText.body3Regular),
               ])),
               const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
             ]),
           ),
         ),
-        const SizedBox(height: 12),
-        // Top Supporters leaderboard entry
+        const SizedBox(height: 20),
+        // ── Transactions ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LeaderboardScreen())),
-            child: Row(children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)),
-                child: const Icon(Icons.leaderboard_rounded, color: AppColors.brandPrimary, size: 22),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Top Supporters'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                Text(tr("You're #5 this season — earned points only"), style: AppText.body3Regular),
-              ])),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-            ]),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(tr('Transactions'), style: AppText.label1),
+            GestureDetector(
+              onTap: () => _push(context, const PointsHistoryScreen()),
+              child: Row(children: [
+                Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
+              ]),
+            ),
+          ]),
+        ),
+        const SizedBox(height: 8),
+        for (final r in const [
+          ('adidas Store Purchase', 'Today · 14:30', '+252 pts', true),
+          ('Daily Spin Win', 'Today · 09:12', '+50 pts', true),
+          ('Redeemed: Home Jersey', 'Yesterday', '-1,500 pts', false),
+        ])
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+            child: _TxnRow(title: r.$1, date: r.$2, pts: r.$3, credit: r.$4),
           ),
-        ),
-        const SizedBox(height: 12),
-        // Monthly FOMO drop entry (Super Fan)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FomoDropScreen(subscribed: true))),
-            child: Row(children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(11)),
-                child: const Icon(Icons.local_fire_department_rounded, color: AppColors.brandDarkest, size: 22),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Text(tr("This Month's Drop"), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                  const SizedBox(width: 6),
-                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Super Fan'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
-                ]),
-                Text(tr('Signed retro shirt · closes in 2 days'), style: AppText.body3Regular),
-              ])),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-            ]),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _Segmented(labels: const ['History', 'Missions'], index: _seg, onChanged: (i) => setState(() => _seg = i)),
-        ),
-        const SizedBox(height: 12),
-        if (_seg == 0) ..._history() else ..._missions(),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            onTap: () {},
-            child: Row(children: [
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(11)),
-                child: const Icon(Icons.credit_card_rounded, color: Colors.white, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Text(tr('S04 Fan Card'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                  const SizedBox(width: 6),
-                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Coming Season 2'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
-                ]),
-                Text(tr('Points on every spend — join the waitlist'), style: AppText.body3Regular),
-              ])),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-            ]),
-          ),
-        ),
       ],
     );
   }
 
-  List<Widget> _history() {
-    const rows = [
-      ('Adidas Store Purchase', 'Today', '+252 pts', true),
-      ('Daily Spin Win', 'Today', '+50 pts', true),
-      ('Mission Complete: Spend €200', 'Yesterday', '+100 pts', true),
-      ('Match Prediction (Correct)', 'Saturday', '+75 pts', true),
-      ('Redeemed: Home Jersey', 'Thursday', '-1,500 pts', false),
-    ];
-    return rows
-        .map((r) => Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              child: _HistoryRow(title: r.$1, date: r.$2, pts: r.$3, credit: r.$4),
-            ))
-        .toList();
-  }
-
-  List<Widget> _missions() {
-    const rows = [
-      ('Attend 3 home games', '+300 pts', 0.66, '2 / 3 attended'),
-      ('Share on social', '+40 pts', 0.0, 'Not started'),
-      ('Refer 5 friends', '+500 pts', 0.4, '2 / 5 referred'),
-    ];
-    return rows
-        .map((r) => Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              child: SurfaceCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(tr(r.$1), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                        Pill(color: AppColors.successBg, child: Text(r.$2, style: AppText.caption1.copyWith(color: AppColors.success, fontSize: 11))),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(3),
-                      child: LinearProgressIndicator(value: r.$3, minHeight: 6, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary)),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(tr(r.$4), style: AppText.body3Regular),
-                  ],
-                ),
-              ),
-            ))
-        .toList();
+  void _showMore(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _MoreSheet(onPick: (w) {
+        Navigator.of(context).pop();
+        _push(context, w);
+      }),
+    );
   }
 }
 
-class _Segmented extends StatelessWidget {
-  final List<String> labels;
-  final int index;
-  final ValueChanged<int> onChanged;
-  const _Segmented({required this.labels, required this.index, required this.onChanged});
+class _Action extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _Action({required this.icon, required this.label, required this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-      child: Row(
-        children: [
-          for (var i = 0; i < labels.length; i++)
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: i == index ? AppColors.surface : Colors.transparent,
-                    borderRadius: BorderRadius.circular(AppRadii.pill),
-                    boxShadow: i == index ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
-                  ),
-                  child: Center(
-                    child: Text(tr(labels[i]), style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
-                  ),
-                ),
-              ),
-            ),
-        ],
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Column(children: [
+          Container(
+            width: 56, height: 56,
+            decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, border: Border.all(color: AppColors.borderLightest)),
+            child: Icon(icon, color: AppColors.brandPrimary, size: 24),
+          ),
+          const SizedBox(height: 8),
+          Text(label, textAlign: TextAlign.center, style: AppText.body3.copyWith(fontSize: 12.5), maxLines: 1, overflow: TextOverflow.ellipsis),
+        ]),
       ),
     );
   }
 }
 
-class _HistoryRow extends StatelessWidget {
+class _SponsorAvatar extends StatelessWidget {
+  final String name;
+  final String perk;
+  final Color color;
+  final VoidCallback onTap;
+  const _SponsorAvatar({required this.name, required this.perk, required this.color, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 78,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(children: [
+          Container(
+            width: 52, height: 52,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+            alignment: Alignment.center,
+            child: Text(name.characters.first, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
+          ),
+          const SizedBox(height: 6),
+          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 11)),
+          Text(perk, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 10)),
+        ]),
+      ),
+    );
+  }
+}
+
+class _Cat extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+  const _Cat({required this.icon, required this.label, required this.color, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Column(children: [
+        Container(
+          width: 56, height: 56,
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppRadii.tile)),
+          child: Icon(icon, color: color, size: 26),
+        ),
+        const SizedBox(height: 6),
+        Text(label, style: AppText.body3.copyWith(fontSize: 12), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+      ]),
+    );
+  }
+}
+
+class _TxnRow extends StatelessWidget {
   final String title;
   final String date;
   final String pts;
   final bool credit;
-  const _HistoryRow({required this.title, required this.date, required this.pts, required this.credit});
+  const _TxnRow({required this.title, required this.date, required this.pts, required this.credit});
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(color: credit ? AppColors.successBg : const Color(0xFFFDE7E7), borderRadius: BorderRadius.circular(10)),
-          child: Icon(credit ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: credit ? AppColors.success : AppColors.danger, size: 18),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(tr(title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-              const SizedBox(height: 2),
-              Text(tr(date), style: AppText.body3Regular),
-            ],
+    return Row(children: [
+      Container(
+        width: 40, height: 40,
+        decoration: BoxDecoration(color: credit ? AppColors.successBg : const Color(0xFFFDE7E7), borderRadius: BorderRadius.circular(11)),
+        child: Icon(credit ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: credit ? AppColors.success : AppColors.danger, size: 18),
+      ),
+      const SizedBox(width: 12),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(tr(title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+        const SizedBox(height: 2),
+        Text(tr(date), style: AppText.body3Regular),
+      ])),
+      Text(pts, style: AppText.body2.copyWith(color: credit ? AppColors.success : AppColors.danger, fontWeight: FontWeight.w700)),
+    ]);
+  }
+}
+
+class _MoreSheet extends StatelessWidget {
+  final void Function(Widget) onPick;
+  const _MoreSheet({required this.onPick});
+  @override
+  Widget build(BuildContext context) {
+    final items = <(IconData, String, String, Widget)>[
+      (Icons.add_circle_outline_rounded, 'Top up points', 'Buy a package · 100 pts = €1', const BuyPointsScreen()),
+      (Icons.leaderboard_rounded, 'Top Supporters', 'Season ranking — earned points only', const LeaderboardScreen()),
+      (Icons.local_fire_department_rounded, "This Month's Drop", 'Super Fan exclusive', const FomoDropScreen(subscribed: true)),
+      (Icons.grid_view_rounded, 'Season Collection', 'Collect player stickers', const CollectionScreen()),
+      (Icons.history_rounded, 'Points History', 'All your transactions', const PointsHistoryScreen()),
+    ];
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+      decoration: const BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.borderLightest, borderRadius: BorderRadius.circular(2))),
+        const SizedBox(height: 12),
+        Align(alignment: Alignment.centerLeft, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Text(tr('More'), style: AppText.label1))),
+        const SizedBox(height: 8),
+        for (final it in items)
+          InkWell(
+            onTap: () => onPick(it.$4),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              child: Row(children: [
+                Container(
+                  width: 42, height: 42,
+                  decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
+                  child: Icon(it.$1, color: AppColors.brandPrimary, size: 22),
+                ),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(tr(it.$2), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                  Text(tr(it.$3), style: AppText.body3Regular),
+                ])),
+                const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+              ]),
+            ),
           ),
-        ),
-        Text(pts, style: AppText.body2.copyWith(color: credit ? AppColors.success : AppColors.danger, fontWeight: FontWeight.w700)),
-      ],
+      ]),
     );
   }
 }

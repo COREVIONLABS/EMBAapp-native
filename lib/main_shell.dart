@@ -3,7 +3,6 @@ import 'theme/app_theme.dart';
 import 'widgets/bottom_nav.dart';
 import 'screens/home_matchday.dart';
 import 'screens/fanplus_screen.dart';
-import 'screens/fanshop_screen.dart';
 import 'screens/points_screen.dart';
 import 'screens/profile_screen.dart';
 
@@ -22,7 +21,6 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     const tabs = <Widget>[
       HomeMatchdayScreen(),
-      FanshopScreen(),
       FanPlusScreen(),
       PointsScreen(),
       ProfileScreen(),

@@ -710,4 +710,22 @@ const Map<String, String> _de = {
   // ── P2: Free trial ───────────────────────────────────────────
   'Try Super Fan free': 'Super Fan gratis testen',
   'Free for the next top match — priority seats included': 'Gratis fürs nächste Top-Spiel — Vorrang-Plätze inklusive',
+
+  // ── Points hub (RevPoints-style rebuild) ─────────────────────
+  'Search rewards & sponsors': 'Prämien & Sponsoren suchen',
+  '1 pt per €1 spent': '1 Pkt. pro 1 € ausgegeben',
+  'Earn': 'Verdienen',
+  'More': 'Mehr',
+  'Earn points when Schalke wins': 'Punkte sammeln, wenn Schalke gewinnt',
+  'Redeem for discounts': 'Für Rabatte einlösen',
+  'Top Sponsors': 'Top-Sponsoren',
+  'Redeem your points': 'Punkte einlösen',
+  'Challenges': 'Challenges',
+  '2 active · earn up to +800 pts': '2 aktiv · bis zu +800 Pkt. verdienen',
+  'Transactions': 'Transaktionen',
+  'adidas Store Purchase': 'adidas-Store-Einkauf',
+  'Today · 09:12': 'Heute · 09:12',
+  'Season ranking — earned points only': 'Saison-Ranking — nur verdiente Punkte',
+  'Super Fan exclusive': 'Super-Fan-exklusiv',
+  'Collect player stickers': 'Spieler-Sticker sammeln',
 };
