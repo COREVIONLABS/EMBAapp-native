@@ -96,10 +96,9 @@ class FanPlusScreen extends StatelessWidget {
         const SizedBox(height: 12),
         for (final t in const [
           'Exclusive content & locker-room clips',
-          'Branded VISA fan card (from Season 2)',
-          'Chances to Win a Signed Jersey',
-          'Meet the Players',
+          'Meet the Players & VIP experiences',
           'Points Multiplier & bigger raffles',
+          'Branded VISA fan card (from Season 2)',
         ])
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),

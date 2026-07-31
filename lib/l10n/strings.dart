@@ -521,4 +521,5 @@ const Map<String, String> _de = {
   'Become a Fan+ member': 'Werde Fan+ Mitglied',
   'Get 100% of your fee back in points': '100 % deines Beitrags zurück als Punkte',
   'Upgrade': 'Upgrade',
+  'Meet the Players & VIP experiences': 'Spieler treffen & VIP-Erlebnisse',
 };

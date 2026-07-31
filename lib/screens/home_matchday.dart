@@ -17,7 +17,6 @@ import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'fanplus_screen.dart';
-import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 void _push(BuildContext context, Widget screen) {
@@ -57,18 +56,12 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               const _NonMatchdayCards(),
             const SizedBox(height: 20),
             const _QuickActions(),
-            const SizedBox(height: 20),
-            _missions(),
-            const SizedBox(height: 20),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _FanPlusCta(onTap: () => _push(context, const FanPlusScreen()))),
-            const SizedBox(height: 20),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _RewardCard()),
             const SizedBox(height: 24),
             _explore(),
             const SizedBox(height: 24),
-            _experiencesTeaser(),
-            const SizedBox(height: 24),
-            _newsTeaser(),
+            _missions(),
+            const SizedBox(height: 20),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _FanPlusCta(onTap: () => _push(context, const FanPlusScreen()))),
           ],
         ),
       ),
@@ -124,75 +117,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _experiencesTeaser() {
-    final items = kExperiences.where((e) => !e.featured).take(2).toList();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Builder(builder: (context) => SectionHeader(tr('Upcoming Experiences'), onAction: () => _push(context, const ExperiencesScreen()))),
-        ),
-        const SizedBox(height: 12),
-        for (final e in items)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-            child: Builder(builder: (context) => GestureDetector(
-              onTap: () => _push(context, const ExperiencesScreen()),
-              child: SurfaceCard(
-                padding: const EdgeInsets.all(12),
-                child: Row(children: [
-                  Container(width: 48, height: 48, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
-                  const SizedBox(width: 12),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(tr(e.title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                    const SizedBox(height: 2),
-                    Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
-                  ])),
-                  Text(e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-                ]),
-              ),
-            )),
-          ),
-      ],
-    );
-  }
-
-  Widget _newsTeaser() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Builder(builder: (context) => SectionHeader(tr('Club News'), onAction: () => _push(context, const ClubNewsScreen()))),
-        ),
-        const SizedBox(height: 12),
-        Builder(builder: (context) => GestureDetector(
-          onTap: () => _push(context, const ClubNewsScreen()),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SurfaceCard(
-              padding: EdgeInsets.zero,
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(height: 130, width: double.infinity, decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.tile))), child: const Center(child: Icon(Icons.image_rounded, color: Colors.white24, size: 44))),
-                Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(children: [
-                    Pill(color: AppColors.brandLightest, child: Text(tr('Matchday'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
-                    const Spacer(),
-                    Text(tr('2h ago'), style: AppText.body3Regular),
-                  ]),
-                  const SizedBox(height: 8),
-                  Text(tr('Königsblau secures vital home win against Bayern'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
-                ])),
-              ]),
-            ),
-          ),
-        )),
-        const SizedBox(height: 8),
       ],
     );
   }
@@ -257,17 +181,13 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader(tr('Active Missions')),
+          child: SectionHeader(tr('Active Missions'), action: null),
         ),
         const SizedBox(height: 14),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              _MissionCard(title: tr('Spend €200 this week'), reward: tr('+50 pts'), progress: 0.4, sub: '€80 / €200 · 40%'),
-              const SizedBox(height: 8),
-              _MissionCard(title: tr('Invite a friend'), reward: tr('+100 pts'), progress: 0, sub: tr('Not started')),
-              const SizedBox(height: 8),
               _MissionCard(
                   title: tr('Predict 2 matches'),
                   reward: tr('+1 Ticket'),
@@ -674,60 +594,6 @@ class _MissionCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(sub, style: AppText.body3Regular),
-        ],
-      ),
-    );
-  }
-}
-
-class _RewardCard extends StatelessWidget {
-  const _RewardCard();
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 104,
-      clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: AppColors.pointsGradient),
-        borderRadius: BorderRadius.circular(AppRadii.card),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: 0,
-            top: -20,
-            bottom: -20,
-            child: Opacity(
-              opacity: 0.16,
-              child: AssetImg('home_reward_players', width: 200, fit: BoxFit.cover, fallbackIcon: Icons.groups_rounded),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Pill(
-                    gradient: const LinearGradient(colors: AppColors.goldGradient),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(tr('Exclusive Reward'), style: AppText.caption1.copyWith(color: AppColors.textDarker)),
-                  ),
-                  Pill(
-                    color: AppColors.brandLightest,
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(tr('Ends in 4:12:30'), style: AppText.caption1.copyWith(color: AppColors.textDarker)),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(tr('Meet the Players'), style: AppText.label1.copyWith(color: AppColors.textLightest)),
-              const SizedBox(height: 4),
-              Text(tr('Exclusive post-match meet & greet with the team'),
-                  style: AppText.body3.copyWith(color: AppColors.textLightest.withValues(alpha: 0.7))),
-            ],
-          ),
         ],
       ),
     );
