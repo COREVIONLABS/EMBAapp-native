@@ -231,7 +231,7 @@ class _FanPlusCta extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('Become a Fan+ member'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+              Text(tr('Become a member'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
               const SizedBox(height: 2),
               Text(tr('Get 100% of your fee back in points'), style: AppText.body3.copyWith(color: Colors.white70)),
             ]),

@@ -9,7 +9,7 @@ import '../l10n/strings.dart';
 class UpgradePlanScreen extends StatelessWidget {
   final String plan;
   final String price;
-  const UpgradePlanScreen({super.key, this.plan = 'Fan+ Premium', this.price = '€9.00'});
+  const UpgradePlanScreen({super.key, this.plan = 'Super Fan', this.price = '€9.00'});
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +59,11 @@ class UpgradePlanScreen extends StatelessWidget {
         Text(tr("What's included"), style: AppText.label2),
         const SizedBox(height: 12),
         for (final b in const [
-          '3× Fan Points on everything',
-          'Meet & greet raffle entries',
-          'Free matchday scratch cards',
-          'Members-only experiences',
-          'Priority ticket access',
+          'Priority access to top matches (48–72h)',
+          'Best seats first + matchday upgrades',
+          'Monthly exclusive FOMO drop',
+          'Guaranteed €14+ back · ad-free · +3 VIP raffles',
+          'Superfan Elite badge + name on the big screen',
         ])
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -113,9 +113,9 @@ class _SuccessSheet extends StatelessWidget {
             child: const Icon(Icons.check_rounded, color: AppColors.success, size: 40),
           ),
           const SizedBox(height: 18),
-          Text(tr("You're a Fan+ member!"), style: AppText.h4),
+          Text(tr("You're a Super Fan!"), style: AppText.h4),
           const SizedBox(height: 8),
-          Text(tr('Your plan is active. Enjoy 3× points and exclusive perks.'),
+          Text(tr('Your plan is active. Enjoy priority access and exclusive perks.'),
               textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
           const SizedBox(height: 24),
           PrimaryButton(tr('Done'), onTap: () {

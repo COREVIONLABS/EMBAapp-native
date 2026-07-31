@@ -47,15 +47,15 @@ class FanPlusScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 40),
                 const SizedBox(height: 12),
-                Text(tr('Unlock VIP Fan Experiences'),
+                Text(tr('Priority access to what fans want most'),
                     textAlign: TextAlign.center, style: AppText.label1.copyWith(color: Colors.white)),
                 const SizedBox(height: 6),
-                Text(tr('Exclusive raffles, boosts, and rewards'),
+                Text(tr('Best seats first, exclusive drops, and rewards that pay you back'),
                     textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
                 const SizedBox(height: 10),
                 Pill(
                   color: Colors.white24,
-                  child: Text(tr('Paid membership · separate from your points tier'),
+                  child: Text(tr('Membership · unlocks priority, access & perks'),
                       style: AppText.caption1.copyWith(color: Colors.white)),
                 ),
               ],
@@ -71,7 +71,7 @@ class FanPlusScreen extends StatelessWidget {
             child: Row(children: [
               const Icon(Icons.savings_rounded, color: AppColors.gold),
               const SizedBox(width: 12),
-              Expanded(child: Text(tr('Your membership pays for itself — get 100% of your fee back in Fan Points.'),
+              Expanded(child: Text(tr('Your membership pays for itself — Fan Member gets €6+ back a month, Super Fan €14+.'),
                   style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w600))),
             ]),
           ),
@@ -95,9 +95,10 @@ class FanPlusScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         for (final t in const [
+          'Priority ticket access to top matches (48–72h)',
+          'Best seats first + matchday upgrades',
+          'Monthly exclusive FOMO drop',
           'Exclusive content & locker-room clips',
-          'Meet the Players & VIP experiences',
-          'Points Multiplier & bigger raffles',
           'Branded VISA fan card (from Season 2)',
         ])
           Padding(
@@ -121,7 +122,7 @@ class FanPlusScreen extends StatelessWidget {
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: PrimaryButton(tr('Upgrade to Fan+ Now'),
+          child: PrimaryButton(tr('See membership plans'),
               onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const SubscriptionScreen()),
                   )),
@@ -170,10 +171,10 @@ class FanPlusScreen extends StatelessWidget {
               ),
               const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 36),
               const SizedBox(height: 8),
-              Text(tr('Fan+ Premium'), style: AppText.h4.copyWith(color: Colors.white)),
+              Text(tr('Super Fan'), style: AppText.h4.copyWith(color: Colors.white)),
               const SizedBox(height: 12),
               Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
-                for (final b in const ['+10% Points', '2x Tickets', '+2 Spins'])
+                for (final b in const ['Priority Access', 'Best Seats', '+3 VIP Draws'])
                   Pill(color: Colors.white24, child: Text(b, style: AppText.caption1.copyWith(color: Colors.white))),
               ]),
               const SizedBox(height: 16),

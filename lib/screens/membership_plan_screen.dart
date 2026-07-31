@@ -18,7 +18,7 @@ class MembershipPlanScreen extends StatelessWidget {
           decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              Text(tr('Fan+ Premium'), style: AppText.label1.copyWith(color: Colors.white)),
+              Text(tr('Super Fan'), style: AppText.label1.copyWith(color: Colors.white)),
               const Spacer(),
               Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest))),
             ]),
@@ -41,7 +41,7 @@ class MembershipPlanScreen extends StatelessWidget {
         const SizedBox(height: 20),
         Text(tr('Your benefits'), style: AppText.label2),
         const SizedBox(height: 12),
-        for (final b in const ['3× Fan Points (max boost)', "Money-can't-buy experiences", 'VIP draws & premium raffles', 'Branded VISA fan card (from Season 2)', 'Exclusive content & clips'])
+        for (final b in const ['Priority access to top matches (48–72h)', 'Best seats first + matchday upgrades', 'Monthly exclusive FOMO drop', 'Guaranteed €14+ back · ad-free · +3 VIP raffles', 'Branded VISA fan card (from Season 2)'])
           Padding(padding: const EdgeInsets.only(bottom: 10), child: Row(children: [
             const Icon(Icons.check_circle_rounded, color: AppColors.brandPrimary, size: 20),
             const SizedBox(width: 12),

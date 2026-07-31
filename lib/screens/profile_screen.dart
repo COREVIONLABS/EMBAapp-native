@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.military_tech_outlined, 'Loyalty Tiers', 'Schalker'),
           (Icons.history_rounded, 'Points History', ''),
           (Icons.workspace_premium_outlined, 'Fan+ Membership', ''),
-          (Icons.card_membership_outlined, 'Membership Plan', 'Fan+ Premium'),
+          (Icons.card_membership_outlined, 'Membership Plan', 'Super Fan'),
           (Icons.account_balance_outlined, 'Bank Account', ''),
           (Icons.credit_card_rounded, 'Payment Methods', ''),
           (Icons.style_rounded, 'Manage Card', 'Season 2'),

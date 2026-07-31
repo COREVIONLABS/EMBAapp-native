@@ -31,6 +31,19 @@ class FanModel {
 
   static String fmtPublic(int n) => _fmt(n);
 
+  // ── Transparent points economy: 100 points = €1 (1 point = 1 cent) ──
+  /// Euro value of a points amount, e.g. euroValue(12450) → "€124.50".
+  static String euroValue(int points) {
+    final euros = points / 100;
+    final s = euros.toStringAsFixed(2);
+    return '€$s';
+  }
+
+  static String get balanceEuro => euroValue(fanPoints);
+
+  // Subscription tiers (final concept: Free Fan / Fan Member / Super Fan).
+  static const String membershipTier = 'Super Fan';
+
   static String _fmt(int n) {
     final s = n.toString();
     final b = StringBuffer();

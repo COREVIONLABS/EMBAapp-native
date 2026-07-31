@@ -522,4 +522,53 @@ const Map<String, String> _de = {
   'Get 100% of your fee back in points': '100 % deines Beitrags zurück als Punkte',
   'Upgrade': 'Upgrade',
   'Meet the Players & VIP experiences': 'Spieler treffen & VIP-Erlebnisse',
+
+  // ── P0: Final tier model (Free Fan / Fan Member / Super Fan / Ultra) ──
+  'Membership Plans': 'Mitgliedschaften',
+  'Every membership pays for itself — Fan Member gets €6+ back a month, Super Fan €14+.':
+      'Jede Mitgliedschaft zahlt sich aus — Fan Member bekommt 6 €+ pro Monat zurück, Super Fan 14 €+.',
+  'Your membership pays for itself — Fan Member gets €6+ back a month, Super Fan €14+.':
+      'Deine Mitgliedschaft zahlt sich aus — Fan Member bekommt 6 €+ pro Monat zurück, Super Fan 14 €+.',
+  'Free Fan': 'Free Fan',
+  'Fan Member': 'Fan Member',
+  'Super Fan': 'Super Fan',
+  'Ultra': 'Ultra',
+  "I'm in": 'Ich bin dabei',
+  'I save': 'Ich spare',
+  "I'm first in line": 'Ich bin zuerst dran',
+  'Most popular': 'Am beliebtesten',
+  'Priority': 'Priorität',
+  'Full app access & club news': 'Voller App-Zugang & Vereins-News',
+  'Daily games & 1 free spin': 'Tägliche Spiele & 1 Gratis-Dreh',
+  'Earn Fan Points · 100 pts = €1': 'Fan-Punkte sammeln · 100 Pkt. = 1 €',
+  'Public raffles & supporter streak': 'Öffentliche Verlosungen & Supporter-Serie',
+  'Guaranteed €6+ back every month': 'Garantiert 6 €+ zurück pro Monat',
+  '24h ticket presale + discounts': '24h Ticket-Vorverkauf + Rabatte',
+  'Sponsor vouchers & offers': 'Sponsor-Gutscheine & Angebote',
+  '+1 VIP raffle ticket / month': '+1 VIP-Los / Monat',
+  'Streak protection · 2 spins · +50% points': 'Serien-Schutz · 2 Drehs · +50 % Punkte',
+  'Priority access to top matches (48–72h)': 'Vorrang-Zugang zu Top-Spielen (48–72 Std.)',
+  'Best seats first + matchday upgrades': 'Beste Plätze zuerst + Spieltags-Upgrades',
+  'Monthly exclusive FOMO drop': 'Monatlicher exklusiver FOMO-Drop',
+  'Superfan Elite badge + name on the big screen': 'Superfan-Elite-Abzeichen + Name auf der Videowand',
+  'Guaranteed €14+ back · ad-free · +3 VIP raffles': 'Garantiert 14 €+ zurück · werbefrei · +3 VIP-Verlosungen',
+  'Points are never cashed out — they unlock discounts, access and sponsor rewards.':
+      'Punkte werden nie ausgezahlt — sie schalten Rabatte, Zugang und Sponsor-Prämien frei.',
+  'The maximum — exclusive drops, top priority, concierge':
+      'Das Maximum — exklusive Drops, höchste Priorität, Concierge',
+
+  // ── P0: Fan+ (Membership) tab repositioning ──────────────────
+  'Membership': 'Mitgliedschaft',
+  'Priority access to what fans want most': 'Vorrang bei dem, was Fans am meisten wollen',
+  'Best seats first, exclusive drops, and rewards that pay you back':
+      'Beste Plätze zuerst, exklusive Drops und Prämien, die sich auszahlen',
+  'Membership · unlocks priority, access & perks': 'Mitgliedschaft · schaltet Vorrang, Zugang & Vorteile frei',
+  'Priority Access': 'Vorrang-Zugang',
+  'Best Seats': 'Beste Plätze',
+  '+3 VIP Draws': '+3 VIP-Ziehungen',
+  "You're a Super Fan!": 'Du bist jetzt Super Fan!',
+  'Become a member': 'Werde Mitglied',
+  'See membership plans': 'Mitgliedschaften ansehen',
+  'Your plan is active. Enjoy priority access and exclusive perks.':
+      'Dein Tarif ist aktiv. Genieße Vorrang-Zugang und exklusive Vorteile.',
 };
