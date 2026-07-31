@@ -741,4 +741,29 @@ const Map<String, String> _de = {
   '+200 points per friend': '+200 Punkte pro Freund',
   '+10 points every day': '+10 Punkte jeden Tag',
   '+50 points, one-off': '+50 Punkte, einmalig',
+
+  // ── Consistency + empty states + notifications ───────────────
+  'Fan Level': 'Fan-Level',
+  'Browse the Fanshop and add your favourite gear to get started.':
+      'Stöbere im Fanshop und leg deine Lieblingsteile in den Warenkorb.',
+  'Go to Fanshop': 'Zum Fanshop',
+  "You're all caught up": 'Alles gelesen',
+  'No new notifications. Matchday reminders and rewards will show up here.':
+      'Keine neuen Mitteilungen. Spieltags-Erinnerungen und Prämien erscheinen hier.',
+  'Clear all': 'Alle löschen',
+  'Matchday reminder': 'Spieltags-Erinnerung',
+  'Kickoff vs Bayern in 2 hours. Predict the score for +50 pts!':
+      'Anpfiff gegen Bayern in 2 Stunden. Tippe das Ergebnis für +50 Pkt.!',
+  'You earned points': 'Du hast Punkte erhalten',
+  '+120 Fan Points for your stadium check-in.': '+120 Fan-Punkte für deinen Stadion-Check-in.',
+  'Reward available': 'Prämie verfügbar',
+  'You can now redeem the Home Jersey 24/25.': 'Du kannst jetzt das Heimtrikot 24/25 einlösen.',
+  'Daily spin ready': 'Tägliches Glücksrad bereit',
+  'Your free spin is waiting — win up to 250 pts.': 'Dein Gratis-Dreh wartet — gewinne bis zu 250 Pkt.',
+  'Superfan perk': 'Superfan-Vorteil',
+  'Meet & greet raffle entries are open this week.': 'Meet-&-Greet-Verlosung läuft diese Woche.',
+  'Now': 'Jetzt',
+  '1h ago': 'vor 1 Std.',
+  '3h ago': 'vor 3 Std.',
+  '2d ago': 'vor 2 Tagen',
 };

@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/empty_state.dart';
 import 'checkout_screen.dart';
 import '../l10n/strings.dart';
 
@@ -23,10 +24,13 @@ class CartScreen extends StatelessWidget {
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CheckoutScreen()))),
           children: items.isEmpty
               ? [
-                  const SizedBox(height: 80),
-                  const Center(child: Icon(Icons.shopping_bag_outlined, size: 64, color: AppColors.surfaceLowContrast)),
-                  const SizedBox(height: 16),
-                  Center(child: Text(tr('Your cart is empty'), style: AppText.label2.copyWith(color: AppColors.textLight))),
+                  EmptyState(
+                    icon: Icons.shopping_bag_outlined,
+                    title: 'Your cart is empty',
+                    message: 'Browse the Fanshop and add your favourite gear to get started.',
+                    ctaLabel: 'Go to Fanshop',
+                    onCta: () => Navigator.of(context).maybePop(),
+                  ),
                 ]
               : [
                   for (final it in items) ...[

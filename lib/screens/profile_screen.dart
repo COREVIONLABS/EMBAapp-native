@@ -7,7 +7,6 @@ import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
 import 'loyalty_tiers_screen.dart';
 import 'fan_profile_screen.dart';
-import 'fanplus_screen.dart';
 import 'membership_plan_screen.dart';
 import 'payment_methods_screen.dart';
 import 'points_history_screen.dart';
@@ -66,10 +65,9 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 20),
         _group(context, 'Account', const [
           (Icons.person_outline_rounded, 'Edit Profile', ''),
-          (Icons.military_tech_outlined, 'Loyalty Tiers', 'Schalker'),
+          (Icons.card_membership_outlined, 'Membership', 'Super Fan'),
+          (Icons.military_tech_outlined, 'Fan Level', 'Schalker'),
           (Icons.history_rounded, 'Points History', ''),
-          (Icons.workspace_premium_outlined, 'Fan+ Membership', ''),
-          (Icons.card_membership_outlined, 'Membership Plan', 'Super Fan'),
           (Icons.account_balance_outlined, 'Bank Account', ''),
           (Icons.credit_card_rounded, 'Payment Methods', ''),
           (Icons.style_rounded, 'Manage Card', 'Season 2'),
@@ -136,13 +134,11 @@ Widget? _screenFor(String label) {
   switch (label) {
     case 'Edit Profile':
       return const EditProfileScreen();
-    case 'Loyalty Tiers':
+    case 'Fan Level':
       return const LoyaltyTiersScreen();
     case 'Points History':
       return const PointsHistoryScreen();
-    case 'Fan+ Membership':
-      return const FanPlusScreen();
-    case 'Membership Plan':
+    case 'Membership':
       return const MembershipPlanScreen();
     case 'Payment Methods':
       return const PaymentMethodsScreen();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
+import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
 import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
@@ -299,12 +300,7 @@ class _SponsorAvatar extends StatelessWidget {
         width: 78,
         margin: const EdgeInsets.only(right: 12),
         child: Column(children: [
-          Container(
-            width: 52, height: 52,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-            alignment: Alignment.center,
-            child: Text(name.characters.first, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
-          ),
+          SponsorLogo(name: name, size: 52, bg: color),
           const SizedBox(height: 6),
           Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 11)),
           Text(perk, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 10)),

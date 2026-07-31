@@ -2,6 +2,41 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../l10n/strings.dart';
 
+/// Circular sponsor logo. Loads `assets/images/sponsor_<slug>.png` when the
+/// real logo is bundled, otherwise falls back to a coloured monogram so the
+/// layout looks finished today. Drop the PNGs in later — no code change needed.
+class SponsorLogo extends StatelessWidget {
+  final String name;
+  final double size;
+  final Color bg;
+  final Color fg;
+  const SponsorLogo({super.key, required this.name, this.size = 52, this.bg = AppColors.brandPrimary, this.fg = Colors.white});
+
+  static String slug(String s) =>
+      s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+      clipBehavior: Clip.antiAlias,
+      alignment: Alignment.center,
+      child: Image.asset(
+        'assets/images/sponsor_${slug(name)}.png',
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Text(
+          name.characters.first,
+          style: TextStyle(fontFamily: 'Urbanist', color: fg, fontSize: size * 0.38, fontWeight: FontWeight.w800),
+        ),
+      ),
+    );
+  }
+}
+
 /// Rounded search field used across the Points hub / Earn / Redeem screens
 /// (mirrors Revolut's "Search for a store" pill).
 class HubSearchField extends StatelessWidget {
@@ -65,12 +100,7 @@ class SponsorPromoCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              Container(
-                width: 34, height: 34,
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                alignment: Alignment.center,
-                child: Text(sponsor.characters.first, style: TextStyle(fontFamily: 'Urbanist', color: color, fontSize: 16, fontWeight: FontWeight.w800)),
-              ),
+              SponsorLogo(name: sponsor, size: 34, bg: Colors.white, fg: color),
               const SizedBox(width: 10),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(sponsor, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),

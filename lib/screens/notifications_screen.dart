@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/empty_state.dart';
 import '../l10n/strings.dart';
 
-/// Notifications (Figma 385:4892).
-class NotificationsScreen extends StatelessWidget {
+/// Notifications (Figma 385:4892). Clearable — clearing shows the empty state.
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
 
-  static const _items = [
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  static const _seed = [
     ('Matchday reminder', 'Kickoff vs Bayern in 2 hours. Predict the score for +50 pts!', 'Now', Icons.sports_soccer_rounded, true),
     ('You earned points', '+120 Fan Points for your stadium check-in.', '1h ago', Icons.add_circle_outline_rounded, true),
     ('Reward available', 'You can now redeem the Home Jersey 24/25.', '3h ago', Icons.redeem_rounded, false),
@@ -16,11 +21,35 @@ class NotificationsScreen extends StatelessWidget {
     ('Superfan perk', 'Meet & greet raffle entries are open this week.', '2d ago', Icons.star_rounded, false),
   ];
 
+  late List<(String, String, String, IconData, bool)> _items = List.of(_seed);
+
   @override
   Widget build(BuildContext context) {
+    if (_items.isEmpty) {
+      return SubScaffold(
+        title: tr('Notifications'),
+        children: [
+          EmptyState(
+            icon: Icons.notifications_none_rounded,
+            title: "You're all caught up",
+            message: 'No new notifications. Matchday reminders and rewards will show up here.',
+          ),
+        ],
+      );
+    }
     return SubScaffold(
       title: tr('Notifications'),
       children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: () => setState(() => _items = []),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(tr('Clear all'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+            ),
+          ),
+        ),
         for (final n in _items)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -43,12 +72,12 @@ class NotificationsScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Expanded(child: Text(n.$1, style: AppText.body2.copyWith(color: AppColors.textDarker))),
-                            Text(n.$3, style: AppText.body3Regular),
+                            Expanded(child: Text(tr(n.$1), style: AppText.body2.copyWith(color: AppColors.textDarker))),
+                            Text(tr(n.$3), style: AppText.body3Regular),
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(n.$2, style: AppText.body3Regular),
+                        Text(tr(n.$2), style: AppText.body3Regular),
                       ],
                     ),
                   ),
