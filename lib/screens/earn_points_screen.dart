@@ -4,6 +4,7 @@ import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'redeem_screen.dart';
+import 'buy_points_screen.dart';
 import '../l10n/strings.dart';
 
 class _Way {
@@ -23,6 +24,8 @@ class EarnPointsScreen extends StatelessWidget {
     _Way(Icons.group_add_outlined, 'Refer a Friend', 'Invite friends to join', '+200'),
     _Way(Icons.calendar_today_outlined, 'Daily Check-in', 'Open the app every day', '+10'),
     _Way(Icons.person_outline_rounded, 'Complete Profile', 'Fill in all profile fields', '+50'),
+    _Way(Icons.play_circle_outline_rounded, 'Watch a Short Ad', 'A quick sponsor clip', '+15'),
+    _Way(Icons.sports_soccer_outlined, 'Live Predictions', 'Predict during matchday', '+50'),
   ];
 
   @override
@@ -64,6 +67,35 @@ class EarnPointsScreen extends StatelessWidget {
             ),
           ]),
         ),
+        const SizedBox(height: 12),
+        // Welcome bonus
+        SurfaceCard(
+          color: AppColors.brandLightest,
+          child: Row(children: [
+            const Icon(Icons.card_giftcard_rounded, color: AppColors.gold),
+            const SizedBox(width: 12),
+            Expanded(child: Text(tr('Welcome bonus: +500 points to start — annual members get +1,500.'),
+                style: AppText.body3.copyWith(color: AppColors.brandDarkest))),
+          ]),
+        ),
+        const SizedBox(height: 12),
+        // Top up points
+        SurfaceCard(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
+          child: Row(children: [
+            Container(
+              width: 40, height: 40,
+              decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(11)),
+              child: const Icon(Icons.add_rounded, color: Colors.white, size: 22),
+            ),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Top up points'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+              Text(tr('Buy a package · 100 pts = €1'), style: AppText.body3Regular),
+            ])),
+            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          ]),
+        ),
         const SizedBox(height: 22),
         Align(alignment: Alignment.centerLeft, child: Text(tr('Ways to Earn'), style: AppText.label2)),
         const SizedBox(height: 12),
@@ -79,9 +111,9 @@ class EarnPointsScreen extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(w.title, style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                  Text(tr(w.title), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                   const SizedBox(height: 2),
-                  Text(w.sub, style: AppText.body3Regular),
+                  Text(tr(w.sub), style: AppText.body3Regular),
                 ]),
               ),
               Pill(color: AppColors.brandLightest, child: Text(w.pts, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),

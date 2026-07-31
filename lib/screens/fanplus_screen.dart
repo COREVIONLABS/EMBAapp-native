@@ -120,6 +120,22 @@ class FanPlusScreen extends StatelessWidget {
           child: Text(tr('…and much more!'), style: AppText.body2),
         ),
         const SizedBox(height: 12),
+        // Free-trial trigger — try Super Fan free for the next big match
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            color: AppColors.successBg,
+            child: Row(children: [
+              const Icon(Icons.lock_open_rounded, color: AppColors.success),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('Try Super Fan free'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                Text(tr('Free for the next top match — priority seats included'), style: AppText.body3Regular),
+              ])),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: PrimaryButton(tr('See membership plans'),
@@ -208,8 +224,8 @@ class FanPlusScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         for (final r in const [
-          ('Meet the Players', 'Exclusive post-match meet & greet with the team', 'Exclusive Reward', 'Ends in 4:12:30'),
-          ('Signed Match Ball', 'Exclusive signed ball by our super stars', 'Limited', '3 Left'),
+          ('Meet the Players', 'Exclusive post-match meet & greet with the team', 'Exclusive Reward', 'Ends in 4:12:30', 'Gazprom'),
+          ('Signed Match Ball', 'Exclusive signed ball by our super stars', 'Limited', '3 Left', 'Veltins'),
         ])
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
@@ -229,6 +245,8 @@ class FanPlusScreen extends StatelessWidget {
                 Text(r.$1, style: AppText.label1.copyWith(color: Colors.white)),
                 const SizedBox(height: 4),
                 Text(r.$2, style: AppText.body3.copyWith(color: Colors.white70)),
+                const SizedBox(height: 6),
+                Text('${tr('Powered by')} ${r.$5}', style: AppText.caption1.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,

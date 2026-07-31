@@ -16,6 +16,8 @@ import 'achievements_screen.dart';
 import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
+import 'matchday_live_screen.dart';
+import 'collection_screen.dart';
 import 'fanplus_screen.dart';
 import '../l10n/strings.dart';
 
@@ -73,10 +75,11 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       ('Tickets', Icons.confirmation_number_rounded),
       ('Experiences', Icons.stadium_rounded),
       ('Content', Icons.play_circle_outline_rounded),
+      ('Live', Icons.sensors_rounded),
+      ('Collection', Icons.grid_view_rounded),
       ('Deals', Icons.local_offer_rounded),
       ('Specials', Icons.bolt_rounded),
       ('News', Icons.newspaper_rounded),
-      ('Awards', Icons.emoji_events_rounded),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,6 +102,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                     'Tickets' => const TicketsScreen(),
                     'Experiences' => const ExperiencesScreen(),
                     'Content' => const ExclusiveContentScreen(),
+                    'Live' => const MatchdayLiveScreen(),
+                    'Collection' => const CollectionScreen(),
                     'Deals' => const DealsHubScreen(),
                     'Specials' => const MatchdaySpecialsScreen(),
                     'News' => const ClubNewsScreen(),

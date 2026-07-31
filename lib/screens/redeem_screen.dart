@@ -3,6 +3,8 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
+import 'voucher_screen.dart';
+import 'buy_points_screen.dart';
 import '../l10n/strings.dart';
 
 /// Redeem hub — a Revolut-style category grid so fans always know *where*
@@ -47,7 +49,11 @@ class RedeemScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: SurfaceCard(
-              onTap: () {},
+              onTap: () {
+                if (c.$2 == 'Sponsors') {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VoucherScreen()));
+                }
+              },
               child: Row(children: [
                 Container(
                   width: 46, height: 46,
@@ -64,7 +70,25 @@ class RedeemScreen extends StatelessWidget {
               ]),
             ),
           ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
+        SurfaceCard(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
+          child: Row(children: [
+            Container(
+              width: 46, height: 46,
+              decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(13)),
+              child: const Icon(Icons.add_rounded, color: Colors.white, size: 24),
+            ),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Top up points'), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15)),
+              const SizedBox(height: 2),
+              Text(tr('Buy a package · 100 pts = €1'), style: AppText.body3Regular),
+            ])),
+            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          ]),
+        ),
+        const SizedBox(height: 12),
         Row(children: [
           const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.textLight),
           const SizedBox(width: 6),

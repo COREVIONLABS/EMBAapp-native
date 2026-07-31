@@ -653,4 +653,61 @@ const Map<String, String> _de = {
 
   // ── P1: Streak protection ────────────────────────────────────
   'Protected': 'Geschützt',
+
+  // ── P2: Buy points (top-up) ──────────────────────────────────
+  'Buy Points': 'Punkte kaufen',
+  'Pay': 'Zahlen',
+  '100 points = €1. Bought points unlock rewards but never affect the Top Supporter leaderboard.':
+      '100 Punkte = 1 €. Gekaufte Punkte schalten Prämien frei, zählen aber nie fürs Top-Supporter-Ranking.',
+  'Choose a package': 'Paket wählen',
+  "You'll receive": 'Du erhältst',
+  'bonus': 'Bonus',
+  'Top up points': 'Punkte aufladen',
+  'Buy a package · 100 pts = €1': 'Paket kaufen · 100 Pkt. = 1 €',
+
+  // ── P2: Voucher (QR + Entertainer PIN) ───────────────────────
+  'Your Voucher': 'Dein Gutschein',
+  'Mark as used': 'Als eingelöst markieren',
+  'Powered by': 'Präsentiert von',
+  'Free Veltins 0.5L': 'Gratis Veltins 0,5 L',
+  'Scan at the kiosk': 'Am Kiosk scannen',
+  'Valid until 30 Apr 2026': 'Gültig bis 30. Apr. 2026',
+  'Staff redemption': 'Einlösung durch Personal',
+  'Kiosk staff enter the Entertainer PIN to confirm': 'Kiosk-Personal bestätigt mit der Entertainer-PIN',
+  'Screenshots won\'t work — the code is single-use and confirmed by staff PIN.':
+      'Screenshots funktionieren nicht — der Code ist einmalig und wird per Personal-PIN bestätigt.',
+
+  // ── P2: Matchday Live ────────────────────────────────────────
+  'Matchday Live': 'Spieltag Live',
+  'Live': 'Live',
+  'LIVE · 67’': 'LIVE · 67’',
+  'Schalke': 'Schalke',
+  'Dortmund': 'Dortmund',
+  'Who scores next?': 'Wer trifft als Nächstes?',
+  'member': 'Mitglied',
+  'Closes in 00:24': 'Endet in 00:24',
+  'No goal': 'Kein Tor',
+  'Vote for MVP': 'MVP wählen',
+  'Voting opens after the final whistle': 'Abstimmung öffnet nach dem Schlusspfiff',
+
+  // ── P2: Season Collection (stickers) ─────────────────────────
+  'Season Collection': 'Saison-Sammlung',
+  'Collection': 'Sammlung',
+  'Open a sticker pack · 200 pts': 'Sticker-Pack öffnen · 200 Pkt.',
+  'Team 25/26': 'Team 25/26',
+  'Complete the set to win 2 VIP tickets': 'Sammle alle und gewinne 2 VIP-Tickets',
+  'Your stickers': 'Deine Sticker',
+  'Missing': 'Fehlt',
+
+  // ── P2: Rewarded ads / welcome bonus / live earn ─────────────
+  'Welcome bonus: +500 points to start — annual members get +1,500.':
+      'Willkommensbonus: +500 Punkte zum Start — Jahresmitglieder erhalten +1.500.',
+  'Watch a Short Ad': 'Kurzen Werbeclip ansehen',
+  'A quick sponsor clip': 'Ein kurzer Sponsor-Clip',
+  'Live Predictions': 'Live-Tipps',
+  'Predict during matchday': 'Am Spieltag live tippen',
+
+  // ── P2: Free trial ───────────────────────────────────────────
+  'Try Super Fan free': 'Super Fan gratis testen',
+  'Free for the next top match — priority seats included': 'Gratis fürs nächste Top-Spiel — Vorrang-Plätze inklusive',
 };
