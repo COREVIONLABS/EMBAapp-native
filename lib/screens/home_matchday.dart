@@ -19,6 +19,7 @@ import 'exclusive_content_screen.dart';
 import 'matchday_live_screen.dart';
 import 'fanplus_screen.dart';
 import '../widgets/hub_widgets.dart';
+import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
 
 void _push(BuildContext context, Widget screen) {
@@ -34,6 +35,15 @@ class HomeMatchdayScreen extends StatefulWidget {
 
 class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   bool _matchday = true;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future<void>.delayed(const Duration(milliseconds: 750), () {
+      if (mounted) setState(() => _loading = false);
+    });
+  }
 
   Future<void> _refresh() async {
     await Future<void>.delayed(const Duration(milliseconds: 900));
@@ -54,6 +64,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           children: [
             const IOSStatusBar(),
             const SizedBox(height: 16),
+            if (_loading) const _HomeSkeleton() else ...[
             _header(),
             const SizedBox(height: 14),
             // Personal greeting
@@ -82,6 +93,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             _missions(),
             const SizedBox(height: 20),
             Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _FanPlusCta(onTap: () => _push(context, const FanPlusScreen()))),
+            ],
           ],
           ),
         ),
@@ -226,6 +238,42 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           ]),
         ),
       ],
+    );
+  }
+}
+
+/// Loading placeholder for the Home tab — mirrors the greeting, points card,
+/// fixture card and quick-action row while content settles on first launch.
+class _HomeSkeleton extends StatelessWidget {
+  const _HomeSkeleton();
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+            SkeletonCircle(size: 36),
+            SkeletonBox(width: 92, height: 32, radius: 16),
+            SkeletonBox(width: 82, height: 36, radius: 18),
+          ]),
+          const SizedBox(height: 22),
+          const SkeletonBox(width: 150, height: 22),
+          const SizedBox(height: 18),
+          const SkeletonBox(height: 128, radius: 22),
+          const SizedBox(height: 12),
+          const SkeletonBox(height: 72, radius: 16),
+          const SizedBox(height: 18),
+          const SkeletonBox(height: 176, radius: 22),
+          const SizedBox(height: 22),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+            Column(children: [SkeletonBox(width: 72, height: 72, radius: 20), SizedBox(height: 8), SkeletonBox(width: 46, height: 10)]),
+            Column(children: [SkeletonBox(width: 72, height: 72, radius: 20), SizedBox(height: 8), SkeletonBox(width: 46, height: 10)]),
+            Column(children: [SkeletonBox(width: 72, height: 72, radius: 20), SizedBox(height: 8), SkeletonBox(width: 46, height: 10)]),
+            Column(children: [SkeletonBox(width: 72, height: 72, radius: 20), SizedBox(height: 8), SkeletonBox(width: 46, height: 10)]),
+          ]),
+        ]),
+      ),
     );
   }
 }

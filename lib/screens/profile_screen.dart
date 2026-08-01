@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
+import '../widgets/skeleton.dart';
 import 'settings_screens.dart';
 import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
@@ -22,6 +23,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
+      skeleton: const HubSkeleton(),
       children: [
         // Centered identity header (Figma 2194:15393)
         Column(children: [

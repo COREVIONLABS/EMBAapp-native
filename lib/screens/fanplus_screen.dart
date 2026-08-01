@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
+import '../widgets/skeleton.dart';
 import 'subscription_screen.dart';
 import '../l10n/strings.dart';
 
@@ -16,6 +17,7 @@ class FanPlusScreen extends StatelessWidget {
     if (subscribed) return _subscribed(context);
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
+      skeleton: const HubSkeleton(),
       children: [
         // Header: logo + bell (matches Home)
         Padding(
@@ -151,6 +153,7 @@ class FanPlusScreen extends StatelessWidget {
   Widget _subscribed(BuildContext context) {
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
+      skeleton: const HubSkeleton(),
       children: [
         // Header
         Padding(

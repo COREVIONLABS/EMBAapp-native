@@ -47,10 +47,32 @@ class TabHeader extends StatelessWidget {
 
 /// Wraps a secondary tab's scroll content with status bar + bottom padding
 /// (the floating navbar is supplied by MainShell).
-class TabScaffold extends StatelessWidget {
+class TabScaffold extends StatefulWidget {
   final List<Widget> children;
   final Future<void> Function()? onRefresh;
-  const TabScaffold({super.key, required this.children, this.onRefresh});
+
+  /// Optional placeholder shown for a short beat on first mount, so the tab
+  /// reveals its content instead of snapping in. Pass a [HubSkeleton] or a
+  /// screen-specific skeleton; omit for no loading phase.
+  final Widget? skeleton;
+  const TabScaffold({super.key, required this.children, this.onRefresh, this.skeleton});
+
+  @override
+  State<TabScaffold> createState() => _TabScaffoldState();
+}
+
+class _TabScaffoldState extends State<TabScaffold> {
+  late bool _loading = widget.skeleton != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_loading) {
+      Future<void>.delayed(const Duration(milliseconds: 750), () {
+        if (mounted) setState(() => _loading = false);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +81,16 @@ class TabScaffold extends StatelessWidget {
       children: [
         const IOSStatusBar(),
         const SizedBox(height: 12),
-        ...children,
+        if (_loading) widget.skeleton! else ...widget.children,
       ],
     );
     return Container(
       color: AppColors.surface,
       child: SafeArea(
         bottom: false,
-        child: onRefresh == null
+        child: widget.onRefresh == null || _loading
             ? list
-            : RefreshIndicator(onRefresh: onRefresh!, color: AppColors.brandPrimary, child: list),
+            : RefreshIndicator(onRefresh: widget.onRefresh!, color: AppColors.brandPrimary, child: list),
       ),
     );
   }

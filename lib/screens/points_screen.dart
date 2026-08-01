@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
+import '../widgets/skeleton.dart';
 import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
 import 'redeem_screen.dart';
@@ -33,6 +34,7 @@ class PointsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
+      skeleton: const HubSkeleton(),
       children: [
         // ── Top zone: header + search + hero + actions on a soft gradient ──
         Container(
