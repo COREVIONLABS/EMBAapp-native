@@ -64,6 +64,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen())))
             else
               const _NonMatchdayCards(),
+            const SizedBox(height: 16),
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _LeagueTableCard()),
             const SizedBox(height: 20),
             const _QuickActions(),
             const SizedBox(height: 24),
@@ -325,6 +327,8 @@ class _NonMatchdayCards extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
+        const _LastResultCard(),
+        const SizedBox(height: 12),
         SurfaceCard(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -519,6 +523,120 @@ class _NextMatchCard extends StatelessWidget {
           child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: fg, fontWeight: FontWeight.w800)),
         ),
       );
+}
+
+/// Last-result hero shown on non-matchdays + a teaser for the next fixture.
+class _LastResultCard extends StatelessWidget {
+  const _LastResultCard();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+      child: Column(children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(tr('Last result'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
+          Text(tr('Bundesliga · Matchday 33'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
+        ]),
+        const SizedBox(height: 12),
+        Row(children: [
+          Expanded(child: Column(children: [
+            const Svg('logo_s04', size: 40),
+            const SizedBox(height: 6),
+            Text(tr('Schalke'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+          ])),
+          Column(children: [
+            Text('3 : 1', style: AppText.h2.copyWith(color: AppColors.textDarker)),
+            Pill(color: AppColors.successBg, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), child: Text(tr('Win'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700, fontSize: 10))),
+          ]),
+          Expanded(child: Column(children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.surfaceMinimal, shape: BoxShape.circle), alignment: Alignment.center, child: Icon(Icons.shield_rounded, color: AppColors.textLight, size: 24)),
+            const SizedBox(height: 6),
+            Text(tr('Bremen'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+          ])),
+        ]),
+        const SizedBox(height: 14),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+          child: Row(children: [
+            const Icon(Icons.event_rounded, size: 16, color: AppColors.brandPrimary),
+            const SizedBox(width: 8),
+            Expanded(child: Text('${tr('Next')}: vs Bayern · ${tr('in 5 days')}', style: AppText.body3.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700))),
+            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+/// Compact league-table snippet — position, points and Schalke's recent form.
+class _LeagueTableCard extends StatelessWidget {
+  const _LeagueTableCard();
+
+  // (pos, team, played, points, isS04)
+  static const _rows = [
+    (1, 'Bayern', 33, 71, false),
+    (2, 'Leverkusen', 33, 66, false),
+    (3, 'Dortmund', 33, 61, false),
+    (4, 'Schalke 04', 33, 58, true),
+    (5, 'Leipzig', 33, 55, false),
+  ];
+  // Last 5 results, newest last: W win / D draw / L loss
+  static const _form = ['W', 'W', 'D', 'L', 'W'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(tr('League Table'), style: AppText.label1),
+        Row(children: [
+          Text(tr('Full table'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+          const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
+        ]),
+      ]),
+      const SizedBox(height: 12),
+      SurfaceCard(
+        padding: EdgeInsets.zero,
+        child: Column(children: [
+          for (var i = 0; i < _rows.length; i++) ...[
+            Container(
+              color: _rows[i].$5 ? AppColors.brandLightest : Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+              child: Row(children: [
+                SizedBox(width: 20, child: Text('${_rows[i].$1}', style: AppText.body3.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700))),
+                const SizedBox(width: 8),
+                _rows[i].$5
+                    ? const Svg('logo_s04', size: 22)
+                    : Container(width: 22, height: 22, decoration: BoxDecoration(color: AppColors.surfaceMinimal, shape: BoxShape.circle), alignment: Alignment.center, child: Icon(Icons.shield_rounded, size: 13, color: AppColors.textLight)),
+                const SizedBox(width: 10),
+                Expanded(child: Text(tr(_rows[i].$2), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: _rows[i].$5 ? FontWeight.w800 : FontWeight.w600))),
+                Text('${_rows[i].$3}', style: AppText.body3Regular),
+                const SizedBox(width: 18),
+                SizedBox(width: 28, child: Text('${_rows[i].$4}', textAlign: TextAlign.right, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800))),
+              ]),
+            ),
+            if (i != _rows.length - 1) Divider(height: 1, color: AppColors.borderLightest),
+          ],
+        ]),
+      ),
+      const SizedBox(height: 10),
+      Row(children: [
+        Text('${tr('Form')} · ${tr('Schalke')}', style: AppText.body3Regular),
+        const Spacer(),
+        for (final f in _form) ...[
+          Container(
+            width: 20, height: 20,
+            margin: const EdgeInsets.only(left: 5),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: f == 'W' ? AppColors.success : (f == 'D' ? AppColors.textLight : AppColors.danger)),
+            alignment: Alignment.center,
+            child: Text(tr(f), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 10)),
+          ),
+        ],
+      ]),
+    ]);
+  }
 }
 
 class _QuickActions extends StatelessWidget {

@@ -805,6 +805,18 @@ const Map<String, String> _de = {
   // Home: greeting + next-match card
   'Moin': 'Moin',
   'Bundesliga · Matchday 34': 'Bundesliga · 34. Spieltag',
+  'Bundesliga · Matchday 33': 'Bundesliga · 33. Spieltag',
+  // Home: non-matchday last-result hero + league table
+  'Last result': 'Letztes Ergebnis',
+  'Win': 'Sieg',
+  'Bremen': 'Bremen',
+  'in 5 days': 'in 5 Tagen',
+  'League Table': 'Tabelle',
+  'Full table': 'Ganze Tabelle',
+  'Form': 'Form',
+  'W': 'S',
+  'D': 'U',
+  'L': 'N',
   'Sat 15:30': 'Sa 15:30',
   'Kickoff in': 'Anpfiff in',
   'Keep it going for +10 pts': 'Dranbleiben für +10 Pkt.',
