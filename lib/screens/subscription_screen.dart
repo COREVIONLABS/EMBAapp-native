@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import 'upgrade_plan_screen.dart';
+import 'benefits_screen.dart';
 import '../l10n/strings.dart';
 
 /// Membership plans — Revolut-Metal-style tabbed upgrade screen: pick a tier
@@ -17,30 +18,38 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _Tier {
   final String name;
+  final String tabLabel;
   final String price;
   final String tagline;
   final List<Color> gradient;
   final List<(IconData, String)> features;
   final int partners;
   final int moreBenefits;
-  const _Tier(this.name, this.price, this.tagline, this.gradient, this.features, this.partners, this.moreBenefits);
+  const _Tier(this.name, this.tabLabel, this.price, this.tagline, this.gradient, this.features, this.partners, this.moreBenefits);
+  bool get isFree => partners == 0;
 }
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  // Free Fan is the user's current tier; land on the first paid upgrade.
   int _tab = 1;
 
   static const _tiers = [
-    _Tier('Fan Member', '€4.50', 'Save every month', AppColors.pointsGradient, [
+    _Tier('Free Fan', 'Free', '€0', 'Free for every fan', [Color(0xFF475467), Color(0xFF1D2939)], [
+      (Icons.check_circle_rounded, 'Full app access & club news'),
+      (Icons.casino_rounded, 'Daily games & 1 free spin'),
+      (Icons.savings_rounded, 'Earn Fan Points · 100 pts = €1'),
+    ], 0, 0),
+    _Tier('Fan Member', 'Member', '€4.50', 'Save every month', AppColors.pointsGradient, [
       (Icons.savings_rounded, 'Guaranteed €6+ back every month'),
       (Icons.confirmation_number_rounded, '24h ticket presale + discounts'),
       (Icons.card_giftcard_rounded, 'Sponsor vouchers & offers'),
     ], 8, 12),
-    _Tier('Super Fan', '€9.00', 'First in line', [Color(0xFF0A2A5E), Color(0xFF000D22)], [
+    _Tier('Super Fan', 'Super', '€9.00', 'First in line', [Color(0xFF0A2A5E), Color(0xFF000D22)], [
       (Icons.bolt_rounded, 'Priority access to top matches (48–72h)'),
       (Icons.event_seat_rounded, 'Best seats first + matchday upgrades'),
       (Icons.local_fire_department_rounded, 'Monthly exclusive FOMO drop'),
     ], 12, 24),
-    _Tier('Ultra', '€19.00', 'The maximum', [Color(0xFF2A1A3E), Color(0xFF0B0616)], [
+    _Tier('Ultra', 'Ultra', '€19.00', 'The maximum', [Color(0xFF2A1A3E), Color(0xFF0B0616)], [
       (Icons.diamond_rounded, 'Everything in Super Fan'),
       (Icons.support_agent_rounded, 'Top priority + personal concierge'),
       (Icons.workspace_premium_rounded, 'Exclusive drops & money-can’t-buy days'),
@@ -52,13 +61,26 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final t = _tiers[_tab];
     return SubScaffold(
       title: tr('Membership Plans'),
-      bottomBar: Column(mainAxisSize: MainAxisSize.min, children: [
-        SecondaryButton('${tr('Show all')} ${t.moreBenefits}+ ${tr('benefits')}'),
-        const SizedBox(height: 10),
-        PrimaryButton('${tr('Become a')} ${t.name}',
-            onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: t.name, price: t.price)))),
-      ]),
+      bottomBar: t.isFree
+          ? Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.check_circle_rounded, size: 18, color: AppColors.brandPrimary),
+                const SizedBox(width: 8),
+                Text(tr('Your current plan'), style: AppText.label2.copyWith(color: AppColors.textNormal)),
+              ]),
+            )
+          : Column(mainAxisSize: MainAxisSize.min, children: [
+              SecondaryButton('${tr('Show all')} ${t.moreBenefits}+ ${tr('benefits')}',
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => AllBenefitsScreen(tierName: t.name)))),
+              const SizedBox(height: 10),
+              PrimaryButton('${tr('Become a')} ${t.name}',
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: t.name, price: t.price)))),
+            ]),
       children: [
         // Tabs
         Container(
@@ -78,7 +100,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       boxShadow: i == _tab ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
                     ),
                     child: Center(
-                      child: Text(tr(_tiers[i].name),
+                      child: Text(tr(_tiers[i].tabLabel),
                           maxLines: 1, overflow: TextOverflow.ellipsis,
                           style: AppText.body2.copyWith(color: i == _tab ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
                     ),
@@ -140,7 +162,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 ]),
                 const SizedBox(height: 16),
               ],
-              // Partner perks row
+              // Partner perks row (paid tiers only)
+              if (t.partners > 0)
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Icon(Icons.apps_rounded, color: AppColors.gold, size: 22),
                 const SizedBox(width: 14),
