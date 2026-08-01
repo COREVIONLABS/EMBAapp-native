@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/asset_img.dart';
 import '../widgets/ios_chrome.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
@@ -102,14 +101,15 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   }
 
   Widget _explore() {
+    // (label, image asset, motif icon, motif colour)
     const items = [
-      ('Tickets', Icons.confirmation_number_rounded),
-      ('Experiences', Icons.stadium_rounded),
-      ('Content', Icons.play_circle_outline_rounded),
-      ('Live', Icons.sensors_rounded),
-      ('Deals', Icons.local_offer_rounded),
-      ('Specials', Icons.bolt_rounded),
-      ('News', Icons.newspaper_rounded),
+      ('Tickets', 'img_tickets', Icons.confirmation_number_rounded, Color(0xFF1565C0)),
+      ('Experiences', 'img_experiences', Icons.stadium_rounded, Color(0xFF6A1B9A)),
+      ('Content', 'img_content', Icons.play_circle_outline_rounded, Color(0xFFC62828)),
+      ('Live', 'img_live', Icons.sensors_rounded, Color(0xFFEF6C00)),
+      ('Deals', 'img_deals', Icons.local_offer_rounded, Color(0xFF00897B)),
+      ('Specials', 'img_specials', Icons.bolt_rounded, Color(0xFFF9A825)),
+      ('News', 'img_news', Icons.newspaper_rounded, Color(0xFF3949AB)),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,11 +124,15 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 14,
             crossAxisSpacing: 12,
-            childAspectRatio: 0.82,
+            childAspectRatio: 0.70,
             children: [
               for (final it in items)
-                Tappable(
-                  scale: 0.94,
+                HomeImageTile(
+                  label: it.$1,
+                  image: it.$2,
+                  icon: it.$3,
+                  color: it.$4,
+                  height: 80,
                   onTap: () => _push(context, switch (it.$1) {
                     'Tickets' => const TicketsScreen(),
                     'Experiences' => const ExperiencesScreen(),
@@ -139,15 +143,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                     'News' => const ClubNewsScreen(),
                     _ => const AchievementsScreen(),
                   }),
-                  child: Column(children: [
-                    Container(
-                      width: 56, height: 56,
-                      decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-                      child: Icon(it.$2, color: AppColors.brandPrimary, size: 26),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(tr(it.$1), style: AppText.body3.copyWith(fontSize: 12), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  ]),
                 ),
             ],
           ),
@@ -694,11 +689,12 @@ class _LeagueTableCard extends StatelessWidget {
 
 class _QuickActions extends StatelessWidget {
   const _QuickActions();
+  // (image asset, label, motif icon, motif colour)
   static const _items = [
-    ('ic_daily_spin', 'Daily Spin', Icons.casino_rounded),
-    ('ic_scratch', 'Scratch Card', Icons.style_rounded),
-    ('ic_predictions', 'Predictions', Icons.sports_soccer_rounded),
-    ('ic_rewards', 'Rewards', Icons.card_giftcard_rounded),
+    ('img_spin', 'Daily Spin', Icons.casino_rounded, Color(0xFF6A1B9A)),
+    ('img_scratch', 'Scratch Card', Icons.style_rounded, Color(0xFFB8860B)),
+    ('img_predict', 'Predictions', Icons.sports_soccer_rounded, Color(0xFF1B7A3D)),
+    ('img_rewards', 'Rewards', Icons.card_giftcard_rounded, Color(0xFFC2185B)),
   ];
 
   Widget _routeFor(String label) {
@@ -717,37 +713,28 @@ class _QuickActions extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final it in _items)
+          for (var i = 0; i < _items.length; i++) ...[
+            if (i > 0) const SizedBox(width: 12),
             Expanded(
-              child: Tappable(
-                scale: 0.94,
+              child: HomeImageTile(
+                image: _items[i].$1,
+                label: _items[i].$2,
+                icon: _items[i].$3,
+                color: _items[i].$4,
+                height: 84,
                 onTap: () {
-                  if (it.$2 == 'Daily Spin') {
+                  final label = _items[i].$2;
+                  if (label == 'Daily Spin') {
                     showDailySpin(context);
-                  } else if (it.$2 == 'Scratch Card') {
+                  } else if (label == 'Scratch Card') {
                     showScratchCard(context);
                   } else {
-                    _push(context, _routeFor(it.$2));
+                    _push(context, _routeFor(label));
                   }
                 },
-                child: Column(
-                  children: [
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        color: AppColors.brandLightest,
-                        borderRadius: BorderRadius.circular(AppRadii.tile),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: AssetImg(it.$1, width: 48, height: 48, fallbackIcon: it.$3),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(tr(it.$2), textAlign: TextAlign.center, style: AppText.body3, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  ],
-                ),
               ),
             ),
+          ],
         ],
       ),
     );

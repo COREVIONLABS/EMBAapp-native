@@ -45,6 +45,61 @@ class SponsorLogo extends StatelessWidget {
   }
 }
 
+/// Careem-style tile: a soft card that shows a real product/category photo
+/// (`assets/images/<image>.png`) filling the card, with the label underneath.
+/// Until a photo is bundled it falls back to a colourful, category-tinted motif
+/// (a vibrant icon badge on a soft gradient) so the tile already reads as rich
+/// and distinct — swapping in the photo later needs no code change.
+class HomeImageTile extends StatelessWidget {
+  final String image;
+  final IconData icon;
+  final Color color;
+  final String label;
+  final double height;
+  final VoidCallback? onTap;
+  const HomeImageTile({super.key, required this.image, required this.icon, required this.color, required this.label, this.height = 92, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.95,
+      onTap: onTap,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Container(
+          height: height,
+          width: double.infinity,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile)),
+          child: Image.asset('assets/images/$image.png', fit: BoxFit.cover, width: double.infinity, errorBuilder: (_, __, ___) => _motif()),
+        ),
+        const SizedBox(height: 7),
+        Text(tr(label), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: AppText.body3.copyWith(fontSize: 12, color: AppColors.textDarker, fontWeight: FontWeight.w600)),
+      ]),
+    );
+  }
+
+  Widget _motif() {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color.withValues(alpha: 0.20), color.withValues(alpha: 0.08)]),
+      ),
+      child: Stack(children: [
+        Positioned(right: -10, bottom: -12, child: Icon(icon, size: 62, color: color.withValues(alpha: 0.16))),
+        Center(
+          child: Container(
+            width: 46, height: 46,
+            decoration: BoxDecoration(
+              color: color, shape: BoxShape.circle,
+              boxShadow: [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 10, offset: const Offset(0, 4))],
+            ),
+            child: Icon(icon, color: Colors.white, size: 24),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
 /// Large gradient promo card (Figma Dell 2194:10203 / lounge 2194:10510 style):
 /// sponsor badge + category top-left, a big headline bottom-left, an info
 /// button bottom-right. Used in a horizontal carousel.
