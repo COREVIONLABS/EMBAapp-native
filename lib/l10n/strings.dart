@@ -66,6 +66,7 @@ const Map<String, String> _de = {
   'Predict Score': 'Ergebnis tippen',
   'Daily Spin': 'Glücksrad',
   'Content': 'Inhalte',
+  'Renews: 28 May 2026': 'Verlängert: 28. Mai 2026',
   'Scratch Card': 'Rubbellos',
   'Predictions': 'Tippspiel',
   'Rewards': 'Prämien',
