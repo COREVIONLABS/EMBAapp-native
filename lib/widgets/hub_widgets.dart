@@ -52,7 +52,7 @@ class HubSearchField extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
         decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
         child: Row(children: [
-          const Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+          Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
           const SizedBox(width: 10),
           Text(tr(hint), style: AppText.body2.copyWith(color: AppColors.textLight)),
         ]),
@@ -154,7 +154,7 @@ class HubListRow extends StatelessWidget {
             const SizedBox(height: 2),
             Text(tr(subtitle), style: AppText.body3Regular),
           ])),
-          const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
         ]),
       ),
     );

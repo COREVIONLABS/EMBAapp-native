@@ -51,7 +51,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
           Expanded(child: GestureDetector(onTap: () => Navigator.of(context).maybePop(), behavior: HitTestBehavior.opaque)),
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
             child: SafeArea(
               top: false,
@@ -69,7 +69,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () => Navigator.of(context).maybePop(),
-                            child: const Icon(Icons.close_rounded, color: AppColors.textLight),
+                            child: Icon(Icons.close_rounded, color: AppColors.textLight),
                           ),
                         ),
                       ),

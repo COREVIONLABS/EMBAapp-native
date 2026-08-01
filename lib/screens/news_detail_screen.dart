@@ -76,11 +76,11 @@ class NewsDetailScreen extends StatelessWidget {
                   ],
                   const SizedBox(height: 8),
                   Row(children: [
-                    const Icon(Icons.favorite_border_rounded, size: 20, color: AppColors.textLight),
+                    Icon(Icons.favorite_border_rounded, size: 20, color: AppColors.textLight),
                     const SizedBox(width: 6),
                     Text(tr('248'), style: AppText.body3Regular),
                     const SizedBox(width: 20),
-                    const Icon(Icons.mode_comment_outlined, size: 19, color: AppColors.textLight),
+                    Icon(Icons.mode_comment_outlined, size: 19, color: AppColors.textLight),
                     const SizedBox(width: 6),
                     Text(tr('32'), style: AppText.body3Regular),
                   ]),

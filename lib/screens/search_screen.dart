@@ -57,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
           child: Row(children: [
-            const Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+            Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
             const SizedBox(width: 12),
             Expanded(
               child: TextField(
@@ -79,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   _controller.clear();
                   _q = '';
                 }),
-                child: const Icon(Icons.close_rounded, size: 18, color: AppColors.textLight),
+                child: Icon(Icons.close_rounded, size: 18, color: AppColors.textLight),
               ),
           ]),
         ),
@@ -151,7 +151,7 @@ class _ResultRow extends StatelessWidget {
         Expanded(child: Text(r.title, style: AppText.body2.copyWith(color: AppColors.textDarker))),
         Text(r.type, style: AppText.caption1.copyWith(color: AppColors.textLight)),
         const SizedBox(width: 6),
-        const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
+        Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
       ]),
     );
   }

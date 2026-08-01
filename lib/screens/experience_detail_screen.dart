@@ -27,7 +27,7 @@ class ExperienceDetailScreen extends StatelessWidget {
         Text(tr(exp.title), style: AppText.h4),
         const SizedBox(height: 8),
         Row(children: [
-          const Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.textLight),
+          Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.textLight),
           const SizedBox(width: 6),
           Text('${exp.date} · ${exp.venue}', style: AppText.body2.copyWith(color: AppColors.textLight)),
         ]),

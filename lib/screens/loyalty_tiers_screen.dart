@@ -57,7 +57,7 @@ class LoyaltyTiersScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Row(children: [
-          const Icon(Icons.info_outline_rounded, size: 15, color: AppColors.textLight),
+          Icon(Icons.info_outline_rounded, size: 15, color: AppColors.textLight),
           const SizedBox(width: 6),
           Expanded(child: Text(tr('Free for every fan — your tier rises automatically as you collect Fan Points.'),
               style: AppText.body3Regular.copyWith(fontSize: 12.5))),

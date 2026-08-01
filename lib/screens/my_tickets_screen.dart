@@ -91,11 +91,11 @@ class _TicketStub extends StatelessWidget {
               ),
             ]),
           ),
-          const Divider(height: 1, color: AppColors.borderLightest),
+          Divider(height: 1, color: AppColors.borderLightest),
           Padding(
             padding: const EdgeInsets.all(14),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Icon(Icons.info_outline_rounded, size: 15, color: AppColors.textLight),
+              Icon(Icons.info_outline_rounded, size: 15, color: AppColors.textLight),
               const SizedBox(width: 6),
               Text(tr('Show this QR code at the turnstile'), style: AppText.body3Regular),
             ]),

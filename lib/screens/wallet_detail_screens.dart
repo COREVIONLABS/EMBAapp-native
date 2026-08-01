@@ -104,7 +104,7 @@ class _BankAccountScreenState extends State<BankAccountScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(tr('We never store your bank login. Connection is read-only.'),
-                      style: const TextStyle(fontFamily: 'Urbanist', fontSize: 13, color: AppColors.textNormal)),
+                      style: TextStyle(fontFamily: 'Urbanist', fontSize: 13, color: AppColors.textNormal)),
                 ),
               ],
             ),

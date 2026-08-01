@@ -146,7 +146,7 @@ class DeviceManagementScreen extends StatelessWidget {
             child: SurfaceCard(
               child: Row(
                 children: [
-                  const Icon(Icons.devices_rounded, color: AppColors.textNormal),
+                  Icon(Icons.devices_rounded, color: AppColors.textNormal),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
@@ -205,7 +205,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    const p = TextStyle(fontFamily: 'Urbanist', fontSize: 14, height: 1.6, color: AppColors.textNormal);
+    final p = TextStyle(fontFamily: 'Urbanist', fontSize: 14, height: 1.6, color: AppColors.textNormal);
     return SubScaffold(
       title: tr('Privacy Policy'),
       children: [

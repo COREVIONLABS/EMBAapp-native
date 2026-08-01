@@ -81,7 +81,7 @@ class UpgradePlanScreen extends StatelessWidget {
         SurfaceCard(
           child: Row(
             children: [
-              const Icon(Icons.credit_card_rounded, color: AppColors.textNormal),
+              Icon(Icons.credit_card_rounded, color: AppColors.textNormal),
               const SizedBox(width: 12),
               Expanded(child: Text(tr('Visa •••• 4921'), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
               Text(tr('Change'), style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
@@ -99,7 +99,7 @@ class _SuccessSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),

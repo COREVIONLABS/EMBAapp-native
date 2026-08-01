@@ -81,7 +81,7 @@ class SecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onTap,
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.borderLightest, width: 1.5),
+          side: BorderSide(color: AppColors.borderLightest, width: 1.5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
           foregroundColor: AppColors.textDarker,
         ),
@@ -95,7 +95,7 @@ class SecondaryButton extends StatelessWidget {
 class SurfaceCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
-  final Color color;
+  final Color? color;
   final double radius;
   final Border? border;
   final List<BoxShadow>? shadow;
@@ -104,7 +104,7 @@ class SurfaceCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
-    this.color = AppColors.surface,
+    this.color,
     this.radius = AppRadii.tile,
     this.border,
     this.shadow,
@@ -116,7 +116,7 @@ class SurfaceCard extends StatelessWidget {
     final card = Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color,
+        color: color ?? AppColors.surface,
         borderRadius: BorderRadius.circular(radius),
         border: border ?? Border.all(color: AppColors.borderLightest),
         boxShadow: shadow,
@@ -139,13 +139,13 @@ class SurfaceCard extends StatelessWidget {
 /// Small rounded pill/badge.
 class Pill extends StatelessWidget {
   final Widget child;
-  final Color color;
+  final Color? color;
   final EdgeInsetsGeometry padding;
   final Gradient? gradient;
   const Pill({
     super.key,
     required this.child,
-    this.color = AppColors.brandLightest,
+    this.color,
     this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     this.gradient,
   });
@@ -155,7 +155,7 @@ class Pill extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: gradient == null ? color : null,
+        color: gradient == null ? (color ?? AppColors.brandLightest) : null,
         gradient: gradient,
         borderRadius: BorderRadius.circular(AppRadii.chip),
       ),

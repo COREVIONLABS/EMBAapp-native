@@ -61,12 +61,12 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      const Expanded(child: Divider(color: AppColors.borderLightest)),
+                      Expanded(child: Divider(color: AppColors.borderLightest)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Text(tr('or'), style: AppText.body3Regular),
                       ),
-                      const Expanded(child: Divider(color: AppColors.borderLightest)),
+                      Expanded(child: Divider(color: AppColors.borderLightest)),
                     ],
                   ),
                   const SizedBox(height: 16),

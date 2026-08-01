@@ -65,7 +65,7 @@ class FomoDropScreen extends StatelessWidget {
               const Icon(Icons.lock_rounded, color: AppColors.brandPrimary),
               const SizedBox(width: 12),
               Expanded(child: Text(tr('This drop is reserved for Super Fan members. One exclusive drop lands every month.'),
-                  style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+                  style: AppText.body2.copyWith(color: AppColors.onAccent))),
             ]),
           )
         else
@@ -93,14 +93,14 @@ class FomoDropScreen extends StatelessWidget {
                 Container(
                   width: 40, height: 40,
                   decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(11)),
-                  child: const Icon(Icons.history_rounded, color: AppColors.textNormal, size: 20),
+                  child: Icon(Icons.history_rounded, color: AppColors.textNormal, size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(tr(d.$2), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                   Text('${tr(d.$1)} · ${tr(d.$3)}', style: AppText.body3Regular),
                 ])),
-                const Icon(Icons.lock_rounded, color: AppColors.textLight, size: 18),
+                Icon(Icons.lock_rounded, color: AppColors.textLight, size: 18),
               ]),
             ),
           ),

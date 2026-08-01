@@ -48,11 +48,11 @@ class VoucherScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(999)),
-              child: Text(code, style: const TextStyle(fontFamily: 'Urbanist', fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: 2, color: AppColors.textDarker)),
+              child: Text(code, style: TextStyle(fontFamily: 'Urbanist', fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: 2, color: AppColors.textDarker)),
             ),
             const SizedBox(height: 12),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Icon(Icons.schedule_rounded, size: 15, color: AppColors.textLight),
+              Icon(Icons.schedule_rounded, size: 15, color: AppColors.textLight),
               const SizedBox(width: 6),
               Text(tr(expiry), style: AppText.body3Regular),
             ]),
@@ -76,7 +76,7 @@ class VoucherScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Row(children: [
-          const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+          Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
           const SizedBox(width: 6),
           Expanded(child: Text(tr('Screenshots won\'t work — the code is single-use and confirmed by staff PIN.'),
               style: AppText.caption1.copyWith(color: AppColors.textLight))),

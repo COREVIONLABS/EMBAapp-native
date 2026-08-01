@@ -48,7 +48,7 @@ class EarnPointsScreen extends StatelessWidget {
             const Icon(Icons.card_giftcard_rounded, color: AppColors.gold),
             const SizedBox(width: 12),
             Expanded(child: Text(tr('Welcome bonus: +500 points to start — annual members get +1,500.'),
-                style: AppText.body3.copyWith(color: AppColors.brandDarkest))),
+                style: AppText.body3.copyWith(color: AppColors.onAccent))),
           ]),
         ),
         const SizedBox(height: 20),

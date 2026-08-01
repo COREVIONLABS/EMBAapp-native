@@ -99,7 +99,7 @@ class _StickerTile extends StatelessWidget {
                       const Icon(Icons.star_rounded, color: AppColors.gold, size: 16),
                     ],
                   ])
-                : const Center(child: Icon(Icons.help_outline_rounded, color: AppColors.textLight, size: 28)),
+                : Center(child: Icon(Icons.help_outline_rounded, color: AppColors.textLight, size: 28)),
           ),
         ),
         Padding(

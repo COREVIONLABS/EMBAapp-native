@@ -57,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+                Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
               ],
             ),
           ),
@@ -77,6 +77,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.notifications_none_rounded, 'Notification Preferences', ''),
           (Icons.lock_outline_rounded, 'Update Password', ''),
           (Icons.fingerprint_rounded, 'Biometric Login', 'toggle'),
+          (Icons.dark_mode_outlined, 'Dark Mode', 'darktoggle'),
           (Icons.devices_other_rounded, 'Device Management', ''),
           (Icons.language_rounded, 'Language', 'English'),
         ]),
@@ -119,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 for (var i = 0; i < items.length; i++) ...[
                   _MenuRow(icon: items[i].$1, label: items[i].$2, value: items[i].$3),
-                  if (i != items.length - 1) const Divider(height: 1, indent: 52, color: AppColors.borderLightest),
+                  if (i != items.length - 1) Divider(height: 1, indent: 52, color: AppColors.borderLightest),
                 ],
               ],
             ),
@@ -182,8 +183,9 @@ class _MenuRowState extends State<_MenuRow> {
   @override
   Widget build(BuildContext context) {
     final isToggle = widget.value == 'toggle';
+    final isDarkToggle = widget.value == 'darktoggle';
     return InkWell(
-      onTap: isToggle
+      onTap: (isToggle || isDarkToggle)
           ? null
           : () {
               final s = _screenFor(widget.label);
@@ -196,7 +198,14 @@ class _MenuRowState extends State<_MenuRow> {
             Icon(widget.icon, size: 20, color: AppColors.textNormal),
             const SizedBox(width: 12),
             Expanded(child: Text(tr(widget.label), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 14.5))),
-            if (isToggle)
+            if (isDarkToggle)
+              Switch(
+                value: darkModeNotifier.value,
+                activeThumbColor: Colors.white,
+                activeTrackColor: AppColors.brandPrimary,
+                onChanged: (v) => darkModeNotifier.value = v,
+              )
+            else if (isToggle)
               Switch(
                 value: _bio,
                 activeThumbColor: Colors.white,
@@ -207,7 +216,7 @@ class _MenuRowState extends State<_MenuRow> {
               if (widget.value.isNotEmpty)
                 Text(tr(widget.value), style: AppText.body3.copyWith(color: AppColors.textLight)),
               const SizedBox(width: 6),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight, size: 20),
+              Icon(Icons.chevron_right_rounded, color: AppColors.textLight, size: 20),
             ],
           ],
         ),

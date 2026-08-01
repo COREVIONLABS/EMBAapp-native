@@ -35,7 +35,7 @@ class MembershipPlanScreen extends StatelessWidget {
             const Icon(Icons.savings_rounded, color: AppColors.gold),
             const SizedBox(width: 12),
             Expanded(child: Text(tr('You have earned back €11.20 in points this month — your membership pays for itself.'),
-                style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+                style: AppText.body2.copyWith(color: AppColors.onAccent))),
           ]),
         ),
         const SizedBox(height: 20),

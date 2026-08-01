@@ -42,7 +42,7 @@ class DealDetailScreen extends StatelessWidget {
           child: Row(children: [
             const Icon(Icons.monetization_on_rounded, color: AppColors.gold),
             const SizedBox(width: 12),
-            Expanded(child: Text(tr('Earn 2× Fan Points on this deal'), style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+            Expanded(child: Text(tr('Earn 2× Fan Points on this deal'), style: AppText.body2.copyWith(color: AppColors.onAccent))),
           ]),
         ),
       ],

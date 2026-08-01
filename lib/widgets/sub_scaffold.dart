@@ -7,21 +7,21 @@ class SubScaffold extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final Widget? bottomBar;
-  final Color background;
+  final Color? background;
   final EdgeInsetsGeometry padding;
   const SubScaffold({
     super.key,
     required this.title,
     required this.children,
     this.bottomBar,
-    this.background = AppColors.surface,
+    this.background,
     this.padding = const EdgeInsets.fromLTRB(20, 8, 20, 24),
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: background ?? AppColors.surface,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -44,7 +44,7 @@ class SubScaffold extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () => Navigator.of(context).maybePop(),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.textDarker),
+            icon: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.textDarker),
           ),
           Expanded(
             child: Text(title, textAlign: TextAlign.center, style: AppText.label1),

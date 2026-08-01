@@ -14,7 +14,7 @@ class SettingsGroup extends StatelessWidget {
         children: [
           for (var i = 0; i < rows.length; i++) ...[
             rows[i],
-            if (i != rows.length - 1) const Divider(height: 1, indent: 16, endIndent: 16, color: AppColors.borderLightest),
+            if (i != rows.length - 1) Divider(height: 1, indent: 16, endIndent: 16, color: AppColors.borderLightest),
           ],
         ],
       ),

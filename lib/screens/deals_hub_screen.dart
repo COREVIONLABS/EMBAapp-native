@@ -61,10 +61,10 @@ class DealsHubScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
           child: Row(children: [
-            const Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+            Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
             const SizedBox(width: 12),
             Expanded(child: Text(tr('Search deals...'), style: AppText.body2.copyWith(color: AppColors.textLight))),
-            const Icon(Icons.tune_rounded, size: 20, color: AppColors.textLight),
+            Icon(Icons.tune_rounded, size: 20, color: AppColors.textLight),
           ]),
         ),
         const SizedBox(height: 20),

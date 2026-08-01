@@ -67,6 +67,7 @@ const Map<String, String> _de = {
   'Daily Spin': 'Glücksrad',
   'Content': 'Inhalte',
   'Renews: 28 May 2026': 'Verlängert: 28. Mai 2026',
+  'Dark Mode': 'Dunkelmodus',
   'Scratch Card': 'Rubbellos',
   'Predictions': 'Tippspiel',
   'Rewards': 'Prämien',

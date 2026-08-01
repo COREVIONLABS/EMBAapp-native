@@ -51,7 +51,7 @@ class _FanshopScreenState extends State<FanshopScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.field)),
             child: Row(children: [
-              const Icon(Icons.search_rounded, color: AppColors.textLight, size: 20),
+              Icon(Icons.search_rounded, color: AppColors.textLight, size: 20),
               const SizedBox(width: 8),
               Text(tr('Search products…'), style: AppText.body1.copyWith(color: AppColors.textLight, fontSize: 14)),
             ]),
@@ -66,7 +66,7 @@ class _FanshopScreenState extends State<FanshopScreen> {
             child: Row(children: [
               const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 10),
-              Expanded(child: Text(tr('Pay with Fan Points — use points at checkout!'), style: AppText.body2.copyWith(color: AppColors.brandDarkest))),
+              Expanded(child: Text(tr('Pay with Fan Points — use points at checkout!'), style: AppText.body2.copyWith(color: AppColors.onAccent))),
             ]),
           ),
         ),
@@ -123,7 +123,7 @@ class _CartButton extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-              child: const Icon(Icons.shopping_bag_outlined, size: 20, color: AppColors.textNormal),
+              child: Icon(Icons.shopping_bag_outlined, size: 20, color: AppColors.textNormal),
             ),
             if (cartStore.count > 0)
               Positioned(
@@ -166,7 +166,7 @@ class _ProductTile extends StatelessWidget {
                     Padding(padding: const EdgeInsets.all(10), child: AssetImg(p.imageKey!, fit: BoxFit.contain, fallbackIcon: Icons.checkroom_rounded))
                   else
                     Center(child: Icon(Icons.checkroom_rounded, size: 56, color: light ? AppColors.brandPrimary : AppColors.textLight)),
-                  const Positioned(right: 10, top: 10, child: Icon(Icons.favorite_border_rounded, color: AppColors.textLight, size: 20)),
+                  Positioned(right: 10, top: 10, child: Icon(Icons.favorite_border_rounded, color: AppColors.textLight, size: 20)),
                 ],
               ),
             ),

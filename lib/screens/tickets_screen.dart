@@ -49,7 +49,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
               Text(tr('My Tickets'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
               Text(tr('2 upcoming · tap to show QR'), style: AppText.body3Regular),
             ])),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
           ]),
         ),
         const SizedBox(height: 16),

@@ -50,7 +50,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           const Icon(Icons.emoji_events_rounded, color: AppColors.gold),
           const SizedBox(width: 12),
           Expanded(child: Text(tr('Ranked by points earned this season — never by points bought. Resets 30 June.'),
-              style: AppText.body3.copyWith(color: AppColors.brandDarkest))),
+              style: AppText.body3.copyWith(color: AppColors.onAccent))),
         ]),
       ),
       const SizedBox(height: 16),

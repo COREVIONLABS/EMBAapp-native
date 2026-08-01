@@ -104,7 +104,7 @@ class FanProfileScreen extends StatelessWidget {
               Text(tr('Top Supporters'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
               Text(tr("See where you rank this season"), style: AppText.body3Regular),
             ])),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
           ]),
         ),
       ],

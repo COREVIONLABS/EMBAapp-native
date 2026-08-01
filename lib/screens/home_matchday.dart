@@ -156,7 +156,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-                  child: const Icon(Icons.search_rounded, size: 20, color: AppColors.textNormal),
+                  child: Icon(Icons.search_rounded, size: 20, color: AppColors.textNormal),
                 ),
               ),
               const SizedBox(width: 10),
@@ -332,7 +332,7 @@ class _NonMatchdayCards extends StatelessWidget {
             const SizedBox(height: 10),
             ClipRRect(
               borderRadius: BorderRadius.circular(3),
-              child: const LinearProgressIndicator(
+              child: LinearProgressIndicator(
                   value: 0.65, minHeight: 6, backgroundColor: AppColors.surfaceLowContrast,
                   valueColor: AlwaysStoppedAnimation(AppColors.brandPrimary)),
             ),
@@ -558,7 +558,7 @@ class _MissionCard extends StatelessWidget {
   final String title;
   final String reward;
   final Color rewardColor;
-  final Color rewardBg;
+  final Color? rewardBg;
   final double progress;
   final String sub;
   final String? sponsor;
@@ -569,7 +569,7 @@ class _MissionCard extends StatelessWidget {
     required this.sub,
     this.sponsor,
     this.rewardColor = AppColors.success,
-    this.rewardBg = AppColors.successBg,
+    this.rewardBg,
   });
 
   @override
@@ -584,7 +584,7 @@ class _MissionCard extends StatelessWidget {
               Expanded(child: Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker))),
               const SizedBox(width: 8),
               Pill(
-                color: rewardBg,
+                color: rewardBg ?? AppColors.successBg,
                 child: Text(reward,
                     style: AppText.caption1.copyWith(color: rewardColor, fontWeight: FontWeight.w600, fontSize: 11)),
               ),

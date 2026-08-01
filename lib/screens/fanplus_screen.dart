@@ -72,7 +72,7 @@ class FanPlusScreen extends StatelessWidget {
               const Icon(Icons.savings_rounded, color: AppColors.gold),
               const SizedBox(width: 12),
               Expanded(child: Text(tr('Your membership pays for itself — Fan Member gets €6+ back a month, Super Fan €14+.'),
-                  style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w600))),
+                  style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
             ]),
           ),
         ),

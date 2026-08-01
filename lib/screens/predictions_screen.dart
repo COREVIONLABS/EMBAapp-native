@@ -61,7 +61,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
             child: Row(children: [
               const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 10),
-              Text(tr('Earn up to +75 pts for correct prediction!'), style: AppText.body2.copyWith(color: AppColors.brandDarkest)),
+              Text(tr('Earn up to +75 pts for correct prediction!'), style: AppText.body2.copyWith(color: AppColors.onAccent)),
             ]),
           ),
           const SizedBox(height: 16),

@@ -40,7 +40,7 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
             const Icon(Icons.info_outline_rounded, color: AppColors.brandPrimary),
             const SizedBox(width: 12),
             Expanded(child: Text(tr('100 points = €1. Bought points unlock rewards but never affect the Top Supporter leaderboard.'),
-                style: AppText.body3.copyWith(color: AppColors.brandDarkest))),
+                style: AppText.body3.copyWith(color: AppColors.onAccent))),
           ]),
         ),
         const SizedBox(height: 20),

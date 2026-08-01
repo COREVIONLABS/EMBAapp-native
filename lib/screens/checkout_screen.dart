@@ -69,7 +69,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     Text('€${(it.product.price * it.qty).toStringAsFixed(2)}', style: AppText.body2.copyWith(color: AppColors.textDarker)),
                   ]),
                 ),
-              const Divider(color: AppColors.borderLightest),
+              Divider(color: AppColors.borderLightest),
               _row('Subtotal', '€${subtotal.toStringAsFixed(2)}'),
               if (pointsDiscount > 0) _row('Points Discount', '-€${pointsDiscount.toStringAsFixed(2)}', color: AppColors.success),
               _row('Shipping', 'Free', color: AppColors.success),
@@ -88,7 +88,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Row(children: [
             const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 18),
             const SizedBox(width: 8),
-            Text("You'll earn +${cartStore.earnPoints} Fan Points with this order!", style: AppText.body3.copyWith(color: AppColors.brandDarkest)),
+            Text("You'll earn +${cartStore.earnPoints} Fan Points with this order!", style: AppText.body3.copyWith(color: AppColors.onAccent)),
           ]),
         ),
       ],

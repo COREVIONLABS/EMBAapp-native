@@ -24,7 +24,7 @@ class SignupScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.of(context).maybePop(),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.textDarker),
+                    icon: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.textDarker),
                   ),
                 ],
               ),

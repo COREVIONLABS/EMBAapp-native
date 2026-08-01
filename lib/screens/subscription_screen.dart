@@ -65,7 +65,7 @@ class SubscriptionScreen extends StatelessWidget {
         const _UltraRow(),
         const SizedBox(height: 12),
         Row(children: [
-          const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.textLight),
+          Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.textLight),
           const SizedBox(width: 6),
           Expanded(child: Text(tr('Points are never cashed out — they unlock discounts, access and sponsor rewards.'),
               style: AppText.caption1.copyWith(color: AppColors.textLight))),
@@ -193,7 +193,7 @@ class _UltraRow extends StatelessWidget {
           ]),
           Text(tr('The maximum — exclusive drops, top priority, concierge'), style: AppText.body3Regular),
         ])),
-        const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+        Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
       ]),
     );
   }

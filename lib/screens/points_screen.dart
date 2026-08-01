@@ -35,7 +35,7 @@ class PointsScreen extends StatelessWidget {
       children: [
         // ── Top zone: header + search + hero + actions on a soft gradient ──
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -65,7 +65,7 @@ class PointsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
                 decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill)),
                 child: Row(children: [
-                  const Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+                  Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
                   const SizedBox(width: 10),
                   Text(tr('Search rewards & sponsors'), style: AppText.body2.copyWith(color: AppColors.textLight)),
                 ]),
@@ -78,7 +78,7 @@ class PointsScreen extends StatelessWidget {
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(tr(FanModel.membershipTier), style: AppText.label2.copyWith(color: AppColors.textDarker)),
                 const SizedBox(width: 4),
-                const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
+                Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
               ]),
             ),
             const SizedBox(height: 8),
@@ -95,7 +95,7 @@ class PointsScreen extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text('≈ ${FanModel.balanceEuro} · ${tr('1 pt per €1 spent')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
               const SizedBox(width: 4),
-              const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+              Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
             ]),
             const SizedBox(height: 22),
             // 4 circle actions
@@ -118,7 +118,7 @@ class PointsScreen extends StatelessWidget {
               const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 26),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Earn points when Schalke wins'), style: AppText.body2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
+                Text(tr('Earn points when Schalke wins'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
                 Text('${tr('Redeem for discounts')} · ${tr('Powered by')} Veltins', style: AppText.body3Regular),
               ])),
@@ -216,7 +216,7 @@ class PointsScreen extends StatelessWidget {
                 Text(tr('Challenges'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                 Text(tr('2 active · earn up to +800 pts'), style: AppText.body3Regular),
               ])),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
             ]),
           ),
         ),
@@ -373,7 +373,7 @@ class _MoreSheet extends StatelessWidget {
     ];
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-      decoration: const BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.borderLightest, borderRadius: BorderRadius.circular(2))),
         const SizedBox(height: 12),
@@ -395,7 +395,7 @@ class _MoreSheet extends StatelessWidget {
                   Text(tr(it.$2), style: AppText.body2.copyWith(color: AppColors.textDarker)),
                   Text(tr(it.$3), style: AppText.body3Regular),
                 ])),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+                Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
               ]),
             ),
           ),
