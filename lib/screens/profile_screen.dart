@@ -21,6 +21,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabScaffold(
+      onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       children: [
         // Centered identity header (Figma 2194:15393)
         Column(children: [

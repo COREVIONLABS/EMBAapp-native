@@ -15,6 +15,7 @@ class FanPlusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     if (subscribed) return _subscribed(context);
     return TabScaffold(
+      onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       children: [
         // Header: logo + bell (matches Home)
         Padding(
@@ -149,6 +150,7 @@ class FanPlusScreen extends StatelessWidget {
 
   Widget _subscribed(BuildContext context) {
     return TabScaffold(
+      onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       children: [
         // Header
         Padding(
@@ -196,7 +198,7 @@ class FanPlusScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(tr('Renews: 28 May 2026'), style: AppText.body3.copyWith(color: Colors.white70)),
-                GestureDetector(
+                Tappable(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Text(tr('Manage Subscription'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
@@ -250,7 +252,7 @@ class FanPlusScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
-                  child: GestureDetector(
+                  child: Tappable(
                     onTap: () {},
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
