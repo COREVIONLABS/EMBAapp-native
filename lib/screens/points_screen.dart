@@ -27,6 +27,14 @@ import '../l10n/strings.dart';
 class PointsScreen extends StatelessWidget {
   const PointsScreen({super.key});
 
+  // (title, category, old pts, new pts, badge, glyph, colour)
+  static const _deals = <(String, String, int, int, String, IconData, Color)>[
+    ('adidas home shirt', 'Fanshop', 3000, 2400, 'Only today', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
+    ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B)),
+    ('Home vs Bayern ticket', 'Tickets', 8000, 6500, 'Hot', Icons.confirmation_number_rounded, Color(0xFF1565C0)),
+    ('Signed ball raffle', 'Experience', 1000, 750, 'Limited', Icons.emoji_events_rounded, Color(0xFFC62828)),
+  ];
+
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
@@ -130,6 +138,42 @@ class PointsScreen extends StatelessWidget {
                 onTap: () => _push(context, const RedeemScreen()),
               );
             },
+          ),
+        ),
+        const SizedBox(height: 20),
+        // ── Reward deals (strikethrough pricing, Careem-style) ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader('Reward deals', onAction: () => _push(context, const RedeemScreen())),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 194,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: _deals.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final d = _deals[i];
+              return DealCard(
+                title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7,
+                onTap: () => _push(context, const RedeemScreen()),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 18),
+        // ── FOMO drop hero ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: HeroBanner(
+            eyebrow: 'Only today',
+            title: 'Reward drop: prices cut for 24h',
+            cta: 'See all deals',
+            glyph: Icons.local_fire_department_rounded,
+            gradient: const [Color(0xFFC62828), Color(0xFF7F1414)],
+            onTap: () => _push(context, const FomoDropScreen()),
           ),
         ),
         const SizedBox(height: 20),

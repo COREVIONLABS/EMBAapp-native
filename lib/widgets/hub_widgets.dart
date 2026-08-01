@@ -4,6 +4,96 @@ import '../model/fan_model.dart';
 import 'app_widgets.dart';
 import '../l10n/strings.dart';
 
+/// Reward deal card (Careem grocery "3.90 ~~5.70~~" style): a photo/motif with
+/// a corner badge, a title, and a points price with the old value struck
+/// through, plus a quick redeem "+" button.
+class DealCard extends StatelessWidget {
+  final String title;
+  final String category;
+  final int oldPts;
+  final int newPts;
+  final String badge;
+  final IconData glyph;
+  final Color color;
+  final String? image;
+  final VoidCallback? onTap;
+  const DealCard({
+    super.key,
+    required this.title,
+    required this.category,
+    required this.oldPts,
+    required this.newPts,
+    required this.badge,
+    required this.glyph,
+    required this.color,
+    this.image,
+    this.onTap,
+  });
+
+  String _fmt(int n) => n.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]}.');
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        width: 176,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: AppColors.borderLightest),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Stack(children: [
+            SizedBox(
+              height: 96, width: double.infinity,
+              child: Image.asset(
+                'assets/images/${image ?? '_none'}.png',
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => DecoratedBox(
+                  decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color.withValues(alpha: 0.22), color.withValues(alpha: 0.08)])),
+                  child: Center(child: Icon(glyph, size: 40, color: color)),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 8, top: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                decoration: BoxDecoration(color: AppColors.danger, borderRadius: BorderRadius.circular(AppRadii.chip)),
+                child: Text(tr(badge), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 10)),
+              ),
+            ),
+          ]),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 2),
+              Text(tr(category), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+              const SizedBox(height: 8),
+              Row(children: [
+                Expanded(child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Flexible(child: Text('${_fmt(newPts)} ${tr('pts')}', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+                  const SizedBox(width: 5),
+                  Text(_fmt(oldPts), style: AppText.caption1.copyWith(color: AppColors.textLight, decoration: TextDecoration.lineThrough)),
+                ])),
+                Container(
+                  width: 30, height: 30,
+                  decoration: BoxDecoration(color: AppColors.brandPrimary, borderRadius: BorderRadius.circular(9)),
+                  child: const Icon(Icons.add_rounded, color: Colors.white, size: 18),
+                ),
+              ]),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
 /// Full-width editorial hero (Careem "Summer Restaurant Week" style): a large
 /// campaign card with a gradient/photo background, an eyebrow, a big headline
 /// and a text CTA. Shows a real photo (`assets/images/<image>.png`) when one is
