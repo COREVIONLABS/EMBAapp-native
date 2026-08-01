@@ -18,6 +18,7 @@ import 'matchday_live_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'leaderboard_screen.dart';
+import 'subscription_screen.dart';
 import 'fanplus_screen.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/skeleton.dart';
@@ -581,7 +582,9 @@ class _PointsCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(tr('S04 Fan Points'), style: AppText.body2.copyWith(color: Colors.white)),
-                  Container(
+                  Tappable(
+                    onTap: () => _push(context, const SubscriptionScreen()),
+                    child: Container(
                     padding: const EdgeInsets.fromLTRB(6, 4, 4, 4),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.24),
@@ -598,6 +601,7 @@ class _PointsCard extends StatelessWidget {
                         const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
                       ],
                     ),
+                  ),
                   ),
                 ],
               ),

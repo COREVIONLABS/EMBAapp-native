@@ -5,6 +5,7 @@ import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import 'deal_detail_screen.dart';
 import 'category_detail_screen.dart';
+import 'search_screen.dart';
 import '../l10n/strings.dart';
 
 class _Cat {
@@ -31,7 +32,7 @@ const _brands = [
   _Brand('brand_nike', 'Nike', '16% Off'),
   _Brand('brand_puma', 'Puma', '16% Off'),
   _Brand('brand_levis', 'Levis', '16% Off'),
-  _Brand('brand_nike', 'Adidas', '15% Off'),
+  _Brand('brand_adidas', 'Adidas', '15% Off'),
 ];
 
 class _Featured {
@@ -56,16 +57,20 @@ class DealsHubScreen extends StatelessWidget {
       title: tr('Deals Hub'),
       children: [
         // Search bar
-        Container(
-          height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-          child: Row(children: [
-            Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
-            const SizedBox(width: 12),
-            Expanded(child: Text(tr('Search deals...'), style: AppText.body2.copyWith(color: AppColors.textLight))),
-            Icon(Icons.tune_rounded, size: 20, color: AppColors.textLight),
-          ]),
+        Tappable(
+          scale: 0.98,
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SearchScreen())),
+          child: Container(
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+            child: Row(children: [
+              Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+              const SizedBox(width: 12),
+              Expanded(child: Text(tr('Search deals...'), style: AppText.body2.copyWith(color: AppColors.textLight))),
+              Icon(Icons.tune_rounded, size: 20, color: AppColors.textLight),
+            ]),
+          ),
         ),
         const SizedBox(height: 20),
         // Category chips
@@ -144,7 +149,10 @@ class _BrandCard extends StatelessWidget {
   const _BrandCard(this.b);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Tappable(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => DealDetailScreen(brand: b.name, offer: b.discount, category: tr('Partner offer'), color: AppColors.brandDarkest))),
+      child: Container(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -167,6 +175,7 @@ class _BrandCard extends StatelessWidget {
           Text(b.discount, style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700, fontSize: 13)),
         ]),
       ]),
+      ),
     );
   }
 }

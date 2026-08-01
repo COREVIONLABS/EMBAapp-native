@@ -230,3 +230,62 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 }
+
+/// About Us — club/app intro (replaces the Privacy-Policy placeholder route).
+class AboutUsScreen extends StatelessWidget {
+  const AboutUsScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final p = TextStyle(fontFamily: 'Urbanist', fontSize: 14, height: 1.6, color: AppColors.textNormal);
+    return SubScaffold(
+      title: tr('About Us'),
+      children: [
+        for (final s in const [
+          ('The FC Schalke 04 Club App',
+              'Your matchday companion and fan-rewards home — tickets, experiences, exclusive content and Fan Points, all in one place.'),
+          ('Fan Points & Fan+',
+              'Earn points for everything you do as a fan and get them back as real rewards. Fan+ members unlock priority access, exclusive drops and more.'),
+          ('Built for Schalkers',
+              'Powered by EMBA SYSTEMS together with the club and its official partners.'),
+        ]) ...[
+          Text(tr(s.$1), style: AppText.label2),
+          const SizedBox(height: 6),
+          Text(tr(s.$2), style: p),
+          const SizedBox(height: 18),
+        ],
+        Text('FC Schalke 04 · v1.0.0', style: AppText.caption1.copyWith(color: AppColors.textLight)),
+      ],
+    );
+  }
+}
+
+/// Terms & Conditions — short prototype terms (replaces the placeholder route).
+class TermsScreen extends StatelessWidget {
+  const TermsScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final p = TextStyle(fontFamily: 'Urbanist', fontSize: 14, height: 1.6, color: AppColors.textNormal);
+    return SubScaffold(
+      title: tr('Terms & Conditions'),
+      children: [
+        Text(tr('Last updated: 22 July 2026'), style: AppText.body3Regular),
+        const SizedBox(height: 16),
+        for (final s in const [
+          ('1. Using the app',
+              'By using the FC Schalke 04 Club App you agree to these terms and to fair, personal use of your account and rewards.'),
+          ('2. Fan Points',
+              'Fan Points have no cash value, cannot be transferred or sold, and may expire or be adjusted in line with the rewards programme rules.'),
+          ('3. Rewards & vouchers',
+              'Rewards, drops and vouchers are subject to availability and partner terms. Redeemed vouchers cannot be reversed.'),
+          ('4. Memberships',
+              'Fan+ memberships renew until cancelled. You can manage or cancel your plan any time under Profile → Membership.'),
+        ]) ...[
+          Text(tr(s.$1), style: AppText.label2),
+          const SizedBox(height: 6),
+          Text(tr(s.$2), style: p),
+          const SizedBox(height: 18),
+        ],
+      ],
+    );
+  }
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
 import '../l10n/strings.dart';
 
 /// Voucher detail — a redeemed reward shown as a scannable QR + short code,
@@ -24,7 +25,13 @@ class VoucherScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Your Voucher'),
-      bottomBar: SecondaryButton(tr('Mark as used')),
+      bottomBar: SecondaryButton(tr('Mark as used'), onTap: () async {
+        final ok = await showConfirmDialog(context, title: 'Mark voucher as used?', message: 'This can\'t be undone — only do this at the counter.', confirmLabel: 'Mark used');
+        if (ok && context.mounted) {
+          await showSuccessSheet(context, title: 'Voucher redeemed', message: 'Enjoy! This voucher is now marked as used.');
+          if (context.mounted) Navigator.of(context).pop();
+        }
+      }),
       children: [
         Container(
           width: double.infinity,

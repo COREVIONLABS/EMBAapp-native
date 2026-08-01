@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
 import 'subscription_screen.dart';
 import '../l10n/strings.dart';
 
@@ -17,7 +18,8 @@ class FomoDropScreen extends StatelessWidget {
     return SubScaffold(
       title: tr('This Month\'s Drop'),
       bottomBar: subscribed
-          ? PrimaryButton(tr('Claim your drop'), color: AppColors.gold, textColor: AppColors.brandDarkest)
+          ? PrimaryButton(tr('Claim your drop'), color: AppColors.gold, textColor: AppColors.brandDarkest,
+              onTap: () => showSuccessSheet(context, title: 'Drop claimed!', message: 'It\'s reserved for you — we\'ll email the collection details.'))
           : PrimaryButton(tr('Unlock with Super Fan'),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen()))),
       children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
 import '../l10n/strings.dart';
 
 /// All membership benefits (Figma 2194:11585 / 2194:12047) — a grid of
@@ -97,7 +98,10 @@ class _PerkTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Tappable(
+      scale: 0.95,
+      onTap: () => showSuccessSheet(context, title: 'Perk claimed', message: 'Added to your vouchers — show it at the partner to redeem.'),
+      child: Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
       decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
       child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -118,6 +122,7 @@ class _PerkTile extends StatelessWidget {
           child: Text(tr('Claim'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 10)),
         ),
       ]),
+      ),
     );
   }
 }

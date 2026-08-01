@@ -6,6 +6,7 @@ import '../widgets/skeleton.dart';
 import '../widgets/action_sheets.dart';
 import 'login_screen.dart';
 import 'settings_screens.dart';
+import 'password_reset_screen.dart';
 import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
 import 'loyalty_tiers_screen.dart';
@@ -174,9 +175,11 @@ Widget? _screenFor(String label) {
     case 'Privacy Policy':
       return const PrivacyPolicyScreen();
     case 'Update Password':
+      return const PasswordResetScreen();
     case 'About Us':
+      return const AboutUsScreen();
     case 'Terms & Conditions':
-      return const PrivacyPolicyScreen();
+      return const TermsScreen();
   }
   return null;
 }
