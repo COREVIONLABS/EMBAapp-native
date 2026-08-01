@@ -29,7 +29,8 @@ String trp(String en, {String? n, String? a, String? b}) {
 /// English source → German. Keep keys identical to the literal in the widget.
 const Map<String, String> _de = {
   // ── Navigation ─────────────────────────────────────────────
-  'Home': 'Start',
+  'Home': 'Home',
+  'Home Game': 'Heim',
   'Shop': 'Shop',
   'Wallet': 'Wallet',
   'Points': 'Punkte',

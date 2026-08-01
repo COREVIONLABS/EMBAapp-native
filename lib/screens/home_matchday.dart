@@ -92,8 +92,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen())))
             else
               const _NonMatchdayCards(),
-            const SizedBox(height: 16),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _LeagueTableCard()),
             const SizedBox(height: 20),
             const _QuickActions(),
             const SizedBox(height: 24),
@@ -731,68 +729,6 @@ class _LastResultCard extends StatelessWidget {
         ),
       ]),
     );
-  }
-}
-
-/// Compact league-table snippet — position, points and Schalke's recent form.
-class _LeagueTableCard extends StatelessWidget {
-  const _LeagueTableCard();
-
-  // (pos, team, played, points, isS04)
-  static const _rows = [
-    (1, 'Bayern', 33, 71, false),
-    (2, 'Leverkusen', 33, 66, false),
-    (3, 'Dortmund', 33, 61, false),
-    (4, 'Schalke 04', 33, 58, true),
-    (5, 'Leipzig', 33, 55, false),
-  ];
-  // Last 5 results, newest last: W win / D draw / L loss
-  static const _form = ['W', 'W', 'D', 'L', 'W'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const SectionHeader('League Table', action: null),
-      const SizedBox(height: 12),
-      SurfaceCard(
-        padding: EdgeInsets.zero,
-        child: Column(children: [
-          for (var i = 0; i < _rows.length; i++) ...[
-            Container(
-              color: _rows[i].$5 ? AppColors.brandLightest : Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-              child: Row(children: [
-                SizedBox(width: 20, child: Text('${_rows[i].$1}', style: AppText.body3.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700))),
-                const SizedBox(width: 8),
-                _rows[i].$5
-                    ? const Svg('logo_s04', size: 22)
-                    : Container(width: 22, height: 22, decoration: BoxDecoration(color: AppColors.surfaceMinimal, shape: BoxShape.circle), alignment: Alignment.center, child: Icon(Icons.shield_rounded, size: 13, color: AppColors.textLight)),
-                const SizedBox(width: 10),
-                Expanded(child: Text(tr(_rows[i].$2), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: _rows[i].$5 ? FontWeight.w800 : FontWeight.w600))),
-                Text('${_rows[i].$3}', style: AppText.body3Regular),
-                const SizedBox(width: 18),
-                SizedBox(width: 28, child: Text('${_rows[i].$4}', textAlign: TextAlign.right, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800))),
-              ]),
-            ),
-            if (i != _rows.length - 1) Divider(height: 1, color: AppColors.borderLightest),
-          ],
-        ]),
-      ),
-      const SizedBox(height: 10),
-      Row(children: [
-        Text('${tr('Form')} · ${tr('Schalke')}', style: AppText.body3Regular),
-        const Spacer(),
-        for (final f in _form) ...[
-          Container(
-            width: 20, height: 20,
-            margin: const EdgeInsets.only(left: 5),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: f == 'W' ? AppColors.success : (f == 'D' ? AppColors.textLight : AppColors.danger)),
-            alignment: Alignment.center,
-            child: Text(tr(f), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 10)),
-          ),
-        ],
-      ]),
-    ]);
   }
 }
 
