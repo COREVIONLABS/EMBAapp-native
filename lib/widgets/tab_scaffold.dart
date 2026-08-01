@@ -49,22 +49,26 @@ class TabHeader extends StatelessWidget {
 /// (the floating navbar is supplied by MainShell).
 class TabScaffold extends StatelessWidget {
   final List<Widget> children;
-  const TabScaffold({super.key, required this.children});
+  final Future<void> Function()? onRefresh;
+  const TabScaffold({super.key, required this.children, this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
+    final list = ListView(
+      padding: const EdgeInsets.only(bottom: 120),
+      children: [
+        const IOSStatusBar(),
+        const SizedBox(height: 12),
+        ...children,
+      ],
+    );
     return Container(
       color: AppColors.surface,
       child: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 120),
-          children: [
-            const IOSStatusBar(),
-            const SizedBox(height: 12),
-            ...children,
-          ],
-        ),
+        child: onRefresh == null
+            ? list
+            : RefreshIndicator(onRefresh: onRefresh!, color: AppColors.brandPrimary, child: list),
       ),
     );
   }

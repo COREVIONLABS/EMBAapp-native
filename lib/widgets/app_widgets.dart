@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../theme/app_theme.dart';
 import '../l10n/strings.dart';
@@ -49,7 +50,10 @@ class _TappableState extends State<Tappable> {
     if (widget.onTap == null) return widget.child;
     return GestureDetector(
       behavior: widget.behavior,
-      onTap: widget.onTap,
+      onTap: () {
+        HapticFeedback.selectionClick();
+        widget.onTap!();
+      },
       onTapDown: (_) => _set(true),
       onTapUp: (_) => _set(false),
       onTapCancel: () => _set(false),
@@ -89,7 +93,12 @@ class PrimaryButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadii.pill),
         child: InkWell(
           borderRadius: BorderRadius.circular(AppRadii.pill),
-          onTap: onTap,
+          onTap: onTap == null
+              ? null
+              : () {
+                  HapticFeedback.lightImpact();
+                  onTap!();
+                },
           child: Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,

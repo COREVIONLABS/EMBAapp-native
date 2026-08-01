@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/app_theme.dart';
 import '../l10n/strings.dart';
 import 'app_widgets.dart';
@@ -43,7 +44,10 @@ class AppBottomNav extends StatelessWidget {
               _NavItem(
                 dest: kNavDestinations[i],
                 selected: i == active,
-                onTap: () => onTap(i),
+                onTap: () {
+                  if (i != active) HapticFeedback.selectionClick();
+                  onTap(i);
+                },
               ),
           ],
         ),

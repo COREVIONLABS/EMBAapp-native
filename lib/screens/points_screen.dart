@@ -32,6 +32,7 @@ class PointsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabScaffold(
+      onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       children: [
         // ── Top zone: header + search + hero + actions on a soft gradient ──
         Container(

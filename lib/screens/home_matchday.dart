@@ -35,13 +35,21 @@ class HomeMatchdayScreen extends StatefulWidget {
 class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   bool _matchday = true;
 
+  Future<void> _refresh() async {
+    await Future<void>.delayed(const Duration(milliseconds: 900));
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.surface,
       child: SafeArea(
         bottom: false,
-        child: ListView(
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          color: AppColors.brandPrimary,
+          child: ListView(
           padding: const EdgeInsets.only(bottom: 120),
           children: [
             const IOSStatusBar(),
@@ -75,6 +83,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             const SizedBox(height: 20),
             Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _FanPlusCta(onTap: () => _push(context, const FanPlusScreen()))),
           ],
+          ),
         ),
       ),
     );
