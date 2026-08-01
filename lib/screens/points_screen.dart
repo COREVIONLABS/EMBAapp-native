@@ -59,7 +59,8 @@ class PointsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             // Store search
-            GestureDetector(
+            Tappable(
+              scale: 0.98,
               onTap: () => _push(context, const SearchScreen()),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
@@ -231,8 +232,8 @@ class _Action extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+      child: Tappable(
+        scale: 0.94,
         onTap: onTap,
         child: Column(children: [
           Container(
@@ -257,7 +258,8 @@ class _SponsorAvatar extends StatelessWidget {
   const _SponsorAvatar({required this.name, required this.perk, required this.color, this.symbol, required this.onTap});
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
+      scale: 0.94,
       onTap: onTap,
       child: Container(
         width: 78,
@@ -281,8 +283,8 @@ class _Cat extends StatelessWidget {
   const _Cat({required this.icon, required this.label, required this.color, required this.onTap});
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return Tappable(
+      scale: 0.94,
       onTap: onTap,
       child: Column(children: [
         Container(

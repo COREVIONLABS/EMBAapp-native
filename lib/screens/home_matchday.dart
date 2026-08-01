@@ -106,7 +106,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             childAspectRatio: 0.82,
             children: [
               for (final it in items)
-                GestureDetector(
+                Tappable(
+                  scale: 0.94,
                   onTap: () => _push(context, switch (it.$1) {
                     'Tickets' => const TicketsScreen(),
                     'Experiences' => const ExperiencesScreen(),
@@ -226,8 +227,9 @@ class _FanPlusCta extends StatelessWidget {
   const _FanPlusCta({required this.onTap});
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
       onTap: onTap,
+      scale: 0.98,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -514,7 +516,7 @@ class _NextMatchCard extends StatelessWidget {
         Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
       ]);
 
-  Widget _cta(String label, Color bg, Color fg, VoidCallback onTap) => GestureDetector(
+  Widget _cta(String label, Color bg, Color fg, VoidCallback onTap) => Tappable(
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -660,8 +662,8 @@ class _QuickActions extends StatelessWidget {
         children: [
           for (final it in _items)
             Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
+              child: Tappable(
+                scale: 0.94,
                 onTap: () {
                   if (it.$2 == 'Daily Spin') {
                     showDailySpin(context);

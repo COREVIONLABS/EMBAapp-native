@@ -58,7 +58,7 @@ class BigPromoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
       onTap: onTap,
       child: Container(
         width: 300,
@@ -116,7 +116,7 @@ class FeaturedGoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -176,7 +176,7 @@ class FeaturedImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
       onTap: onTap,
       child: Container(
         width: 170,
@@ -224,7 +224,7 @@ class HubSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
@@ -261,7 +261,7 @@ class SponsorPromoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
       onTap: onTap,
       child: Container(
         height: 170,
@@ -310,8 +310,7 @@ class HubListRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = iconColor ?? AppColors.brandPrimary;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return Tappable(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(14),

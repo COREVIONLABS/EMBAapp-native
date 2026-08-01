@@ -23,6 +23,46 @@ class Svg extends StatelessWidget {
   }
 }
 
+/// App-wide tap feedback: a subtle press-scale on any tappable content whose
+/// custom decoration would otherwise swallow an InkWell ripple (cards, gradient
+/// tiles, image cards). When [onTap] is null the child is returned untouched, so
+/// it stays inert with no phantom press animation.
+class Tappable extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+  final double scale;
+  final HitTestBehavior behavior;
+  const Tappable({super.key, required this.child, this.onTap, this.scale = 0.97, this.behavior = HitTestBehavior.opaque});
+
+  @override
+  State<Tappable> createState() => _TappableState();
+}
+
+class _TappableState extends State<Tappable> {
+  bool _down = false;
+  void _set(bool v) {
+    if (_down != v) setState(() => _down = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.onTap == null) return widget.child;
+    return GestureDetector(
+      behavior: widget.behavior,
+      onTap: widget.onTap,
+      onTapDown: (_) => _set(true),
+      onTapUp: (_) => _set(false),
+      onTapCancel: () => _set(false),
+      child: AnimatedScale(
+        scale: _down ? widget.scale : 1.0,
+        duration: const Duration(milliseconds: 90),
+        curve: Curves.easeOut,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
 /// Primary filled pill button (Schalke blue).
 class PrimaryButton extends StatelessWidget {
   final String label;
@@ -124,15 +164,7 @@ class SurfaceCard extends StatelessWidget {
       child: child,
     );
     if (onTap == null) return card;
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(radius),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(radius),
-        child: card,
-      ),
-    );
+    return Tappable(onTap: onTap, scale: 0.98, child: card);
   }
 }
 

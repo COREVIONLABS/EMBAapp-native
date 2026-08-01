@@ -88,27 +88,25 @@ class _ExpRow extends StatelessWidget {
   const _ExpRow(this.e);
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return SurfaceCard(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ExperienceDetailScreen(exp: e))),
-      child: SurfaceCard(
-        padding: const EdgeInsets.all(12),
-        child: Row(children: [
-          Container(width: 52, height: 52, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
-          const SizedBox(width: 12),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Flexible(child: Text(tr(e.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker))),
-              if (e.raffle) ...[
-                const SizedBox(width: 6),
-                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Raffle'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
-              ],
-            ]),
-            const SizedBox(height: 2),
-            Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
-          ])),
-          Text(e.raffle ? tr('Enter') : e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-        ]),
-      ),
+      padding: const EdgeInsets.all(12),
+      child: Row(children: [
+        Container(width: 52, height: 52, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Flexible(child: Text(tr(e.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker))),
+            if (e.raffle) ...[
+              const SizedBox(width: 6),
+              Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Raffle'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
+            ],
+          ]),
+          const SizedBox(height: 2),
+          Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
+        ])),
+        Text(e.raffle ? tr('Enter') : e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+      ]),
     );
   }
 }

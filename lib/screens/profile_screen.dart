@@ -24,7 +24,8 @@ class ProfileScreen extends StatelessWidget {
       children: [
         // Centered identity header (Figma 2194:15393)
         Column(children: [
-          GestureDetector(
+          Tappable(
+            scale: 0.94,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FanProfileScreen())),
             child: Container(
               width: 84,
@@ -241,7 +242,8 @@ class _ProfileBox extends StatelessWidget {
   const _ProfileBox({required this.icon, required this.label, required this.sub, this.highlight = false, required this.onTap});
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Tappable(
+      scale: 0.97,
       onTap: onTap,
       child: Container(
         height: 108,
