@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/asset_img.dart';
 import '../widgets/ios_chrome.dart';
 import 'login_screen.dart';
 import '../l10n/strings.dart';
 
-/// Welcome 1–3 (Figma 2145:11369 / 11385 / 11400) — full-bleed hero photo
-/// with a bottom sheet, 1:1 with the design.
+/// Welcome 1–3 (Figma 2145:11369 / 11385 / 11400) — branded gradient hero art
+/// (self-contained so it always renders, independent of asset fetch) with a
+/// bottom sheet.
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
   @override
@@ -18,21 +18,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _controller = PageController();
   int _page = 0;
 
+  // (gradient, title, body, glyph)
   static const _slides = [
     (
-      'onboarding_earn',
+      [Color(0xFF0055AA), Color(0xFF001B44)],
       'Earn Points Everywhere',
       'Shop at sponsors, spin daily, complete missions, and earn 3x Points on matchday with Stadium Boost.',
       Icons.stadium_rounded,
     ),
     (
-      'onboarding_redeem',
+      [Color(0xFF6A1B9A), Color(0xFF1A1350)],
       'Redeem for Merch & Rewards',
       'Use Fan Points for exclusive jerseys, scarves, signed memorabilia, and partner discounts.',
       Icons.redeem_rounded,
     ),
     (
-      'onboarding_experiences',
+      [Color(0xFF004B9C), Color(0xFF000D22)],
       'Win Exclusive Rewards',
       "Enter VIP raffles, scratch cards, and daily spins. Meet the players, win signed gear, and unlock experiences money can't buy.",
       Icons.emoji_events_rounded,
@@ -67,11 +68,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               controller: _controller,
               onPageChanged: (i) => setState(() => _page = i),
               itemCount: _slides.length,
-              itemBuilder: (_, i) => AssetImg(
-                _slides[i].$1,
-                fit: BoxFit.cover,
-                fallbackIcon: _slides[i].$4,
-              ),
+              itemBuilder: (_, i) => _HeroArt(gradient: _slides[i].$1, glyph: _slides[i].$4),
             ),
           ),
           // Bottom sheet
@@ -88,10 +85,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_slides[_page].$2,
-                      style: AppText.h4.copyWith(color: const Color(0xFF101828))),
+                  Text(tr(_slides[_page].$2),
+                      style: AppText.h4.copyWith(color: AppColors.textDarker)),
                   const SizedBox(height: 10),
-                  Text(_slides[_page].$3,
+                  Text(tr(_slides[_page].$3),
                       style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w400)),
                   const SizedBox(height: 24),
                   Row(
@@ -111,7 +108,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  PrimaryButton(_page == _slides.length - 1 ? 'Get Started' : 'Continue', onTap: _next),
+                  PrimaryButton(_page == _slides.length - 1 ? tr('Get Started') : tr('Continue'), onTap: _next),
                   const SizedBox(height: 12),
                   Center(
                     child: GestureDetector(
@@ -130,4 +127,54 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
+}
+
+/// Self-contained branded hero art for an onboarding slide — a full-bleed
+/// gradient with decorative rings, a large glyph and the S04 crest. Renders
+/// without any bundled photo so the tour always shows a visual.
+class _HeroArt extends StatelessWidget {
+  final List<Color> gradient;
+  final IconData glyph;
+  const _HeroArt({required this.gradient, required this.glyph});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient),
+      ),
+      child: Stack(
+        children: [
+          // Decorative rings
+          Positioned(top: -60, right: -50, child: _ring(230)),
+          Positioned(bottom: 40, left: -70, child: _ring(200)),
+          Positioned(top: 120, left: 30, child: _ring(70)),
+          // Crest watermark
+          const Positioned(top: 70, left: 24, child: Opacity(opacity: 0.9, child: Svg('logo_s04', size: 40))),
+          // Central glyph
+          Center(
+            child: Container(
+              width: 132,
+              height: 132,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.12),
+                border: Border.all(color: Colors.white24, width: 1.5),
+              ),
+              child: Icon(glyph, size: 64, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _ring(double size) => Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.06),
+        ),
+      );
 }

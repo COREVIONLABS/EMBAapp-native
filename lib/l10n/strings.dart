@@ -68,6 +68,16 @@ const Map<String, String> _de = {
   'Content': 'Inhalte',
   'Renews: 28 May 2026': 'Verlängert: 28. Mai 2026',
   'Dark Mode': 'Dunkelmodus',
+  'Get Started': 'Los geht’s',
+  'Earn Points Everywhere': 'Überall Punkte sammeln',
+  'Shop at sponsors, spin daily, complete missions, and earn 3x Points on matchday with Stadium Boost.':
+      'Kaufe bei Sponsoren, dreh täglich am Rad, erfülle Missionen und sammle am Spieltag 3× Punkte mit dem Stadion-Boost.',
+  'Redeem for Merch & Rewards': 'Für Merch & Prämien einlösen',
+  'Use Fan Points for exclusive jerseys, scarves, signed memorabilia, and partner discounts.':
+      'Nutze Fan-Punkte für exklusive Trikots, Schals, signierte Erinnerungsstücke und Partner-Rabatte.',
+  'Win Exclusive Rewards': 'Exklusive Prämien gewinnen',
+  "Enter VIP raffles, scratch cards, and daily spins. Meet the players, win signed gear, and unlock experiences money can't buy.":
+      'Nimm an VIP-Verlosungen, Rubbellosen und täglichen Drehs teil. Triff die Spieler, gewinne signierte Fanartikel und schalte unbezahlbare Erlebnisse frei.',
   'Scratch Card': 'Rubbellos',
   'Predictions': 'Tippspiel',
   'Rewards': 'Prämien',
