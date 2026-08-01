@@ -165,6 +165,10 @@ class Pill extends StatelessWidget {
 }
 
 /// Section header "Title ... See All >".
+/// App-wide section header: a bold title (label1) with an optional trailing
+/// action link ("See All" + chevron). Pass `action: null` for a title-only
+/// header. The trailing link only renders when [onAction] is provided, so
+/// there are never dead links.
 class SectionHeader extends StatelessWidget {
   final String title;
   final String? action;
@@ -176,15 +180,16 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: AppText.label2.copyWith(color: AppColors.textDarker)),
-        if (action != null)
+        Expanded(child: Text(tr(title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label1)),
+        if (action != null && onAction != null)
           GestureDetector(
             onTap: onAction,
+            behavior: HitTestBehavior.opaque,
             child: Row(
               children: [
-                Text(tr(action!), style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
-                const SizedBox(width: 4),
-                const Svg('arrow_right', size: 16),
+                Text(tr(action!), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                const SizedBox(width: 2),
+                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
               ],
             ),
           ),

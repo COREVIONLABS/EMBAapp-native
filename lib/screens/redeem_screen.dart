@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
 import 'voucher_screen.dart';
@@ -42,16 +43,7 @@ class RedeemScreen extends StatelessWidget {
     return SubScaffold(
       title: tr('Redeem Points'),
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(tr('Featured rewards'), style: AppText.label1),
-          GestureDetector(
-            onTap: () => _push(context, const VoucherScreen()),
-            child: Row(children: [
-              Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-              const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
-            ]),
-          ),
-        ]),
+        SectionHeader('Featured rewards', onAction: () => _push(context, const VoucherScreen())),
         const SizedBox(height: 12),
         SizedBox(
           height: 168,
@@ -72,7 +64,7 @@ class RedeemScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Text(tr('How you can redeem'), style: AppText.label1),
+        const SectionHeader('How you can redeem', action: null),
         const SizedBox(height: 12),
         for (final c in _cats) ...[
           HubListRow(

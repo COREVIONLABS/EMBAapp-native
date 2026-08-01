@@ -93,7 +93,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: SectionHeader(tr('Explore'), action: null)),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: null)),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -192,9 +192,9 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader(tr('Active Missions'), action: null),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader('Active Missions', action: null),
         ),
         const SizedBox(height: 14),
         Padding(
@@ -589,13 +589,7 @@ class _LeagueTableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(tr('League Table'), style: AppText.label1),
-        Row(children: [
-          Text(tr('Full table'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-          const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
-        ]),
-      ]),
+      const SectionHeader('League Table', action: null),
       const SizedBox(height: 12),
       SurfaceCard(
         padding: EdgeInsets.zero,

@@ -79,7 +79,7 @@ class DealsHubScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        SectionHeader(tr('Partner Brands'), onAction: () {}),
+        const SectionHeader('Partner Brands', action: null),
         const SizedBox(height: 12),
         SizedBox(
           height: 58,
@@ -91,7 +91,7 @@ class DealsHubScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        SectionHeader(tr('Featured Deals'), onAction: () {}),
+        const SectionHeader('Featured Deals', action: null),
         const SizedBox(height: 12),
         GridView.count(
           crossAxisCount: 2,

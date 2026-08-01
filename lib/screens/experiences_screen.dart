@@ -51,7 +51,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Align(alignment: Alignment.centerLeft, child: Text(tr('Highlights'), style: AppText.label1)),
+        const SectionHeader('Highlights', action: null),
         const SizedBox(height: 12),
         SizedBox(
           height: 194,
@@ -75,7 +75,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
           ),
         ),
         const SizedBox(height: 20),
-        SectionHeader(tr('Upcoming'), onAction: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyBookingsScreen()))),
+        SectionHeader('Upcoming', onAction: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyBookingsScreen()))),
         const SizedBox(height: 12),
         for (final e in upcoming) ...[_ExpRow(e), const SizedBox(height: 10)],
       ],

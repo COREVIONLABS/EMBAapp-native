@@ -132,16 +132,7 @@ class PointsScreen extends StatelessWidget {
         // ── Top Sponsors ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(tr('Top Sponsors'), style: AppText.label1),
-            GestureDetector(
-              onTap: () => _push(context, const RedeemScreen()),
-              child: Row(children: [
-                Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
-              ]),
-            ),
-          ]),
+          child: SectionHeader('Top Sponsors', onAction: () => _push(context, const RedeemScreen())),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -159,16 +150,7 @@ class PointsScreen extends StatelessWidget {
         // ── Redeem categories (quick grid) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(tr('Redeem your points'), style: AppText.label1),
-            GestureDetector(
-              onTap: () => _push(context, const RedeemScreen()),
-              child: Row(children: [
-                Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
-              ]),
-            ),
-          ]),
+          child: SectionHeader('Redeem your points', onAction: () => _push(context, const RedeemScreen())),
         ),
         const SizedBox(height: 12),
         Padding(
@@ -213,16 +195,7 @@ class PointsScreen extends StatelessWidget {
         // ── Transactions ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(tr('Transactions'), style: AppText.label1),
-            GestureDetector(
-              onTap: () => _push(context, const PointsHistoryScreen()),
-              child: Row(children: [
-                Text(tr('See All'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-                const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
-              ]),
-            ),
-          ]),
+          child: SectionHeader('Transactions', onAction: () => _push(context, const PointsHistoryScreen())),
         ),
         const SizedBox(height: 8),
         for (final r in const [
