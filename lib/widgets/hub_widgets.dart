@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
+import 'app_widgets.dart';
 import '../l10n/strings.dart';
 
 /// Circular sponsor mark. Renders, in order of preference: a real bundled logo
@@ -145,6 +146,69 @@ class FeaturedGoalCard extends StatelessWidget {
             const SizedBox(width: 5),
             Text(reward, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
           ]),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Image-style featured card (Figma Top Destinations 2194:9652 / Experiences
+/// 2194:10510): a tall card with a branded gradient "photo", a faint category
+/// glyph, a category pill and a title/subtitle overlay. Used in a carousel.
+class FeaturedImageCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String category;
+  final IconData glyph;
+  final String? badge;
+  final List<Color> gradient;
+  final VoidCallback? onTap;
+  const FeaturedImageCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.category,
+    required this.glyph,
+    required this.gradient,
+    this.badge,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 170,
+        height: 194,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient),
+        ),
+        child: Stack(children: [
+          // Faint category glyph
+          Positioned(right: -14, top: 6, child: Icon(glyph, size: 96, color: Colors.white.withValues(alpha: 0.14))),
+          // Bottom scrim for legible text
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, Colors.black.withValues(alpha: 0.55)]),
+              ),
+            ),
+          ),
+          if (badge != null)
+            Positioned(left: 12, top: 12, child: Pill(color: Colors.white24, child: Text(tr(badge!), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)))),
+          Positioned(
+            left: 12, right: 12, bottom: 12,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(category), style: AppText.caption1.copyWith(color: Colors.white70)),
+              const SizedBox(height: 2),
+              Text(tr(title), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label2.copyWith(color: Colors.white)),
+              const SizedBox(height: 2),
+              Text(tr(subtitle), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+            ]),
+          ),
         ]),
       ),
     );

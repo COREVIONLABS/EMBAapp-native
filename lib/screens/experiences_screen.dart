@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/asset_img.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'experience_detail_screen.dart';
 import 'my_bookings_screen.dart';
 import '../l10n/strings.dart';
+
+/// Branded gradient + glyph per experience category (stand-in for photos).
+(List<Color>, IconData) _catStyle(String category) => switch (category) {
+      'Players' => ([const Color(0xFF6A1B9A), const Color(0xFF311B92)], Icons.sports_soccer_rounded),
+      'VIP' => ([const Color(0xFF2A2440), const Color(0xFF0B0616)], Icons.workspace_premium_rounded),
+      'Family' => ([const Color(0xFF00897B), const Color(0xFF004D40)], Icons.family_restroom_rounded),
+      'Raffle' => ([const Color(0xFFC62828), const Color(0xFF7F1414)], Icons.local_activity_rounded),
+      _ => (AppColors.pointsGradient, Icons.stadium_rounded),
+    };
 
 /// Experiences (Figma 2162:6476).
 class ExperiencesScreen extends StatefulWidget {
@@ -20,7 +29,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
   static const _cats = ['All', 'Raffle', 'Stadium', 'Players', 'VIP', 'Family'];
   @override
   Widget build(BuildContext context) {
-    final featured = kExperiences.firstWhere((e) => e.featured);
+    final highlights = kExperiences.where((e) => e.featured || e.category == 'VIP' || e.category == 'Players').take(5).toList();
     final upcoming = kExperiences.where((e) => !e.featured && (_cat == 0 || e.category == _cats[_cat])).toList();
     return SubScaffold(
       title: tr('Experiences'),
@@ -42,42 +51,27 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        GestureDetector(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ExperienceDetailScreen(exp: featured))),
-          child: Container(
-            height: 150,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Stack(
-              children: [
-                const Positioned.fill(child: AssetImg('exp_featured', fit: BoxFit.cover, fallbackIcon: Icons.stadium_rounded)),
-                Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, AppColors.brandDarkest.withValues(alpha: 0.75)],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(left: 16, top: 16, child: Pill(color: AppColors.brandPrimary, child: Text(tr('Featured'), style: AppText.caption1.copyWith(color: Colors.white)))),
-                Positioned(
-                  left: 16, right: 16, bottom: 16,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(tr(featured.title), style: AppText.label1.copyWith(color: Colors.white)),
-                        Text(featured.date, style: AppText.body3.copyWith(color: Colors.white70)),
-                      ])),
-                      Text(featured.pointsLabel, style: AppText.label2.copyWith(color: AppColors.gold)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Highlights'), style: AppText.label1)),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 194,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: highlights.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final e = highlights[i];
+              final style = _catStyle(e.category);
+              return FeaturedImageCard(
+                title: e.title,
+                subtitle: e.pointsLabel,
+                category: e.category,
+                glyph: style.$2,
+                gradient: style.$1,
+                badge: e.featured ? 'Featured' : (e.raffle ? 'Raffle' : null),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ExperienceDetailScreen(exp: e))),
+              );
+            },
           ),
         ),
         const SizedBox(height: 20),

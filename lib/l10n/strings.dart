@@ -800,6 +800,8 @@ const Map<String, String> _de = {
   'Streak protection': 'Serien-Schutz',
   // Home/Points design elements (featured cards, big promo)
   'Partner offer': 'Partner-Angebot',
+  'Highlights': 'Highlights',
+  'VIP': 'VIP',
   'Keep it going for +10 pts': 'Dranbleiben für +10 Pkt.',
   '1 / 2 complete': '1 / 2 erledigt',
   'On matchday combos — pay with points': 'Auf Spieltags-Kombis — mit Punkten zahlen',
