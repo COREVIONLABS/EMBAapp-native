@@ -61,7 +61,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         onRefresh: _refresh,
         color: AppColors.brandPrimary,
         child: ListView(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 6, bottom: 120),
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 6, bottom: 120 + MediaQuery.of(context).padding.bottom),
           children: [
             if (_loading) const _HomeSkeleton() else ...[
             _header(),

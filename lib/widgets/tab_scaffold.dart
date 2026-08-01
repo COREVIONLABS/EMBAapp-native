@@ -81,9 +81,9 @@ class _TabScaffoldState extends State<TabScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final topInset = MediaQuery.of(context).padding.top;
+    final mq = MediaQuery.of(context).padding;
     final list = ListView(
-      padding: EdgeInsets.only(top: widget.extendTopUnderStatusBar ? 0 : topInset + 6, bottom: 120),
+      padding: EdgeInsets.only(top: widget.extendTopUnderStatusBar ? 0 : mq.top + 6, bottom: 120 + mq.bottom),
       children: [
         if (_loading) widget.skeleton! else ...widget.children,
       ],

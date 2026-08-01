@@ -26,7 +26,7 @@ class SubScaffold extends StatelessWidget {
         child: Column(
           children: [
             _bar(context),
-            Expanded(child: ListView(padding: padding, children: children)),
+            Expanded(child: ListView(padding: padding.add(EdgeInsets.only(bottom: bottomBar == null ? MediaQuery.of(context).padding.bottom : 0)), children: children)),
             if (bottomBar != null)
               SafeArea(top: false, child: Padding(padding: const EdgeInsets.all(20), child: bottomBar!)),
           ],

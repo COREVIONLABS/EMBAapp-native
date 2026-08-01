@@ -7,6 +7,9 @@ import 'screens/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // Draw the app behind the system status + navigation bars so the app's own
+  // background runs seamlessly under them (no separate status-bar band).
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const SchalkeApp());
 }
 
@@ -25,6 +28,9 @@ class SchalkeApp extends StatelessWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
           statusBarBrightness: dark ? Brightness.dark : Brightness.light,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+          systemNavigationBarContrastEnforced: false,
         ));
         return ValueListenableBuilder<AppLocale>(
           valueListenable: localeNotifier,

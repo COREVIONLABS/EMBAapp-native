@@ -26,8 +26,11 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Add the bottom safe-area inset so the floating bar clears the Android
+    // gesture / navigation bar now that the app draws edge-to-edge.
+    final bottomInset = MediaQuery.of(context).padding.bottom;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 10 + bottomInset),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
