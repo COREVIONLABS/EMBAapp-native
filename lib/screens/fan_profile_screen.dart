@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import 'leaderboard_screen.dart';
 import '../l10n/strings.dart';
@@ -16,7 +17,7 @@ class FanProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Fan Profile'),
-      bottomBar: PrimaryButton(tr('Share profile')),
+      bottomBar: PrimaryButton(tr('Share profile'), onTap: () => showShareSheet(context, subject: tr('Max Mustermann · Schalke Fan'))),
       children: [
         // Identity header
         Container(

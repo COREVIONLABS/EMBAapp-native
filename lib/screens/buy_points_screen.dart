@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
@@ -32,7 +33,10 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
     final total = p.$1 + bonus;
     return SubScaffold(
       title: tr('Buy Points'),
-      bottomBar: PrimaryButton('${tr('Pay')} €${p.$2.toStringAsFixed(2)}'),
+      bottomBar: PrimaryButton('${tr('Pay')} €${p.$2.toStringAsFixed(2)}', onTap: () async {
+        await showSuccessSheet(context, title: 'Points added', message: '$total ${tr('points are now in your balance.')}');
+        if (context.mounted) Navigator.of(context).pop();
+      }),
       children: [
         SurfaceCard(
           color: AppColors.brandLightest,

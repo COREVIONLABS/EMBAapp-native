@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import 'add_card_screen.dart';
 import '../l10n/strings.dart';
 
 /// Manage Cards (Figma 417:1626).
@@ -11,7 +12,7 @@ class ManageCardsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Manage Cards'),
-      bottomBar: PrimaryButton(tr('Add New Card'), trailing: const Icon(Icons.add_rounded, color: Colors.white, size: 20)),
+      bottomBar: PrimaryButton(tr('Add New Card'), trailing: const Icon(Icons.add_rounded, color: Colors.white, size: 20), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AddCardScreen()))),
       children: [
         for (final c in const [
           ('Visa', '•••• 4921', '08/27', true),

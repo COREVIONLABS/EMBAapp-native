@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
 import '../l10n/strings.dart';
 
 /// Season Collection — a Panini-style digital sticker album. Fans earn or
@@ -32,7 +33,7 @@ class CollectionScreen extends StatelessWidget {
     final total = _stickers.length;
     return SubScaffold(
       title: tr('Season Collection'),
-      bottomBar: PrimaryButton(tr('Open a sticker pack · 200 pts')),
+      bottomBar: PrimaryButton(tr('Open a sticker pack · 200 pts'), onTap: () => showSuccessSheet(context, title: 'Pack opened!', message: 'You unlocked 3 new stickers — check your album.')),
       children: [
         // Progress
         Container(

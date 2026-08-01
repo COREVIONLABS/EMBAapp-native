@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import 'subscription_screen.dart';
 import '../l10n/strings.dart';
 
 /// Membership Plan (Figma 2162:5498).
@@ -11,7 +12,7 @@ class MembershipPlanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Membership Plan'),
-      bottomBar: SecondaryButton(tr('Manage Subscription')),
+      bottomBar: SecondaryButton(tr('Manage Subscription'), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen()))),
       children: [
         Container(
           padding: const EdgeInsets.all(20),

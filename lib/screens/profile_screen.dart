@@ -282,7 +282,7 @@ class _InviteFriendsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Invite friends'),
-      bottomBar: PrimaryButton(tr('Share invite link')),
+      bottomBar: PrimaryButton(tr('Share invite link'), onTap: () => showShareSheet(context, subject: tr('Join me on the S04 Fan App'))),
       children: [
         Container(
           width: double.infinity,
