@@ -38,6 +38,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   bool _matchday = true;
   bool _loading = true;
   bool _statusDismissed = false;
+  bool _exploreExpanded = false;
 
   @override
   void initState() {
@@ -119,68 +120,57 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       ('Benefits', 'img_benefits', Icons.redeem_rounded, const Color(0xFFF9A825), const DealsHubScreen()),
       ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
     ];
+    // Extra modules revealed by "Show more" (Revolut-style inline expand).
+    final more = <(String, String, IconData, Color, Widget)>[
+      ('Live', 'img_live', Icons.sensors_rounded, const Color(0xFFD32F2F), const MatchdayLiveScreen()),
+      ('Specials', 'img_specials', Icons.bolt_rounded, const Color(0xFFF9A825), const MatchdaySpecialsScreen()),
+      ('Raffles', 'img_raffles', Icons.local_activity_rounded, const Color(0xFF8E24AA), const ExperiencesScreen()),
+      ('Achievements', 'img_achievements', Icons.military_tech_rounded, const Color(0xFFC62828), const AchievementsScreen()),
+      ('Membership', 'img_membership', Icons.workspace_premium_rounded, const Color(0xFFB8860B), const FanPlusScreen()),
+      ('Partner', 'img_partner', Icons.handshake_rounded, const Color(0xFF00897B), const DealsHubScreen()),
+    ];
+    final shown = [...items, if (_exploreExpanded) ...more];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: 'See All', onAction: () => _showMoreExplore(context))),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: null)),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: GridView.count(
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 14,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.70,
-            children: [
-              for (final it in items)
-                HomeImageTile(label: it.$1, image: it.$2, icon: it.$3, color: it.$4, height: 80, onTap: () => _push(context, it.$5)),
-            ],
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOut,
+            alignment: Alignment.topCenter,
+            child: GridView.count(
+              crossAxisCount: 4,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 14,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.70,
+              children: [
+                for (final it in shown)
+                  HomeImageTile(label: it.$1, image: it.$2, icon: it.$3, color: it.$4, height: 80, onTap: () => _push(context, it.$5)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() => _exploreExpanded = !_exploreExpanded),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Center(
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Text(_exploreExpanded ? tr('Show less') : tr('Show more'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                const SizedBox(width: 4),
+                Icon(_exploreExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded, size: 22, color: AppColors.textDarker),
+              ]),
+            ),
           ),
         ),
       ],
-    );
-  }
-
-  // "See all" sheet — extra modules (kept reachable when trimmed from the grid;
-  // future home-editable modules will surface here too).
-  void _showMoreExplore(BuildContext context) {
-    final more = <(IconData, String, Widget)>[
-      (Icons.sensors_rounded, 'Live', const MatchdayLiveScreen()),
-      (Icons.bolt_rounded, 'Specials', const MatchdaySpecialsScreen()),
-      (Icons.local_activity_rounded, 'Raffles', const ExperiencesScreen()),
-      (Icons.military_tech_rounded, 'Achievements', const AchievementsScreen()),
-      (Icons.workspace_premium_rounded, 'Membership', const FanPlusScreen()),
-    ];
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
-      builder: (sheetCtx) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 14), decoration: BoxDecoration(color: AppColors.borderLightest, borderRadius: BorderRadius.circular(2)))),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Text(tr('Discover more'), style: AppText.label1)),
-          const SizedBox(height: 8),
-          for (final m in more)
-            InkWell(
-              onTap: () {
-                Navigator.of(sheetCtx).pop();
-                _push(context, m.$3);
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                child: Row(children: [
-                  Container(width: 42, height: 42, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: Icon(m.$1, color: AppColors.brandPrimary, size: 22)),
-                  const SizedBox(width: 14),
-                  Expanded(child: Text(tr(m.$2), style: AppText.body2.copyWith(color: AppColors.textDarker))),
-                  Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-                ]),
-              ),
-            ),
-        ]),
-      ),
     );
   }
 
