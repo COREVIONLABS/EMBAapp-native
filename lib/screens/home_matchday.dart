@@ -5,6 +5,8 @@ import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
 import 'redeem_screen.dart';
+import 'earn_points_screen.dart';
+import 'fanshop_screen.dart';
 import 'notifications_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
@@ -105,20 +107,22 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   }
 
   Widget _explore() {
-    // (label, image asset, motif icon, motif colour)
-    const items = [
-      ('Tickets', 'img_tickets', Icons.confirmation_number_rounded, Color(0xFF1565C0)),
-      ('Experiences', 'img_experiences', Icons.stadium_rounded, Color(0xFF6A1B9A)),
-      ('Content', 'img_content', Icons.play_circle_outline_rounded, Color(0xFFC62828)),
-      ('Live', 'img_live', Icons.sensors_rounded, Color(0xFFEF6C00)),
-      ('Deals', 'img_deals', Icons.local_offer_rounded, Color(0xFF00897B)),
-      ('Specials', 'img_specials', Icons.bolt_rounded, Color(0xFFF9A825)),
-      ('News', 'img_news', Icons.newspaper_rounded, Color(0xFF3949AB)),
+    // Eight primary shortcuts (label, image asset, motif icon, colour, target).
+    // Row 1 = emotional/interactive, row 2 = content/commercial.
+    final items = <(String, String, IconData, Color, Widget)>[
+      ('Tickets', 'img_tickets', Icons.confirmation_number_rounded, const Color(0xFF1565C0), const TicketsScreen()),
+      ('Experiences', 'img_experiences', Icons.stadium_rounded, const Color(0xFF6A1B9A), const ExperiencesScreen()),
+      ('Community', 'img_community', Icons.groups_rounded, const Color(0xFF00897B), const LeaderboardScreen()),
+      ('Challenges', 'img_challenges', Icons.flag_rounded, const Color(0xFFEF6C00), const EarnPointsScreen()),
+      ('Content', 'img_content', Icons.play_circle_outline_rounded, const Color(0xFFC62828), const ExclusiveContentScreen()),
+      ('News', 'img_news', Icons.newspaper_rounded, const Color(0xFF3949AB), const ClubNewsScreen()),
+      ('Benefits', 'img_benefits', Icons.redeem_rounded, const Color(0xFFF9A825), const DealsHubScreen()),
+      ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: null)),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: 'See All', onAction: () => _showMoreExplore(context))),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -131,27 +135,52 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             childAspectRatio: 0.70,
             children: [
               for (final it in items)
-                HomeImageTile(
-                  label: it.$1,
-                  image: it.$2,
-                  icon: it.$3,
-                  color: it.$4,
-                  height: 80,
-                  onTap: () => _push(context, switch (it.$1) {
-                    'Tickets' => const TicketsScreen(),
-                    'Experiences' => const ExperiencesScreen(),
-                    'Content' => const ExclusiveContentScreen(),
-                    'Live' => const MatchdayLiveScreen(),
-                    'Deals' => const DealsHubScreen(),
-                    'Specials' => const MatchdaySpecialsScreen(),
-                    'News' => const ClubNewsScreen(),
-                    _ => const AchievementsScreen(),
-                  }),
-                ),
+                HomeImageTile(label: it.$1, image: it.$2, icon: it.$3, color: it.$4, height: 80, onTap: () => _push(context, it.$5)),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  // "See all" sheet — extra modules (kept reachable when trimmed from the grid;
+  // future home-editable modules will surface here too).
+  void _showMoreExplore(BuildContext context) {
+    final more = <(IconData, String, Widget)>[
+      (Icons.sensors_rounded, 'Live', const MatchdayLiveScreen()),
+      (Icons.bolt_rounded, 'Specials', const MatchdaySpecialsScreen()),
+      (Icons.local_activity_rounded, 'Raffles', const ExperiencesScreen()),
+      (Icons.military_tech_rounded, 'Achievements', const AchievementsScreen()),
+      (Icons.workspace_premium_rounded, 'Membership', const FanPlusScreen()),
+    ];
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+      builder: (sheetCtx) => Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 14), decoration: BoxDecoration(color: AppColors.borderLightest, borderRadius: BorderRadius.circular(2)))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Text(tr('Discover more'), style: AppText.label1)),
+          const SizedBox(height: 8),
+          for (final m in more)
+            InkWell(
+              onTap: () {
+                Navigator.of(sheetCtx).pop();
+                _push(context, m.$3);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                child: Row(children: [
+                  Container(width: 42, height: 42, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: Icon(m.$1, color: AppColors.brandPrimary, size: 22)),
+                  const SizedBox(width: 14),
+                  Expanded(child: Text(tr(m.$2), style: AppText.body2.copyWith(color: AppColors.textDarker))),
+                  Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+                ]),
+              ),
+            ),
+        ]),
+      ),
     );
   }
 
