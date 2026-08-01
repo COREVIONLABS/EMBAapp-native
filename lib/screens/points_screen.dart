@@ -155,14 +155,8 @@ class PointsScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             children: [
-              for (final s in const [
-                ('Veltins', '2× pts', Color(0xFF00623A)),
-                ('Vivawest', '10% off', Color(0xFF6A1B9A)),
-                ('adidas', '5% back', Color(0xFF111111)),
-                ("Ernsting's", '€5 voucher', Color(0xFFE30613)),
-                ('REWE', '3× pts', Color(0xFFC8102E)),
-              ])
-                _SponsorAvatar(name: s.$1, perk: s.$2, color: s.$3, onTap: () => _push(context, const VoucherScreen())),
+              for (final s in kSponsors)
+                _SponsorAvatar(name: s.name, perk: s.perk, color: s.color, symbol: s.icon, onTap: () => _push(context, const VoucherScreen())),
             ],
           ),
         ),
@@ -290,8 +284,9 @@ class _SponsorAvatar extends StatelessWidget {
   final String name;
   final String perk;
   final Color color;
+  final IconData? symbol;
   final VoidCallback onTap;
-  const _SponsorAvatar({required this.name, required this.perk, required this.color, required this.onTap});
+  const _SponsorAvatar({required this.name, required this.perk, required this.color, this.symbol, required this.onTap});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -300,7 +295,7 @@ class _SponsorAvatar extends StatelessWidget {
         width: 78,
         margin: const EdgeInsets.only(right: 12),
         child: Column(children: [
-          SponsorLogo(name: name, size: 52, bg: color),
+          SponsorLogo(name: name, size: 52, bg: color, symbol: symbol),
           const SizedBox(height: 6),
           Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 11)),
           Text(perk, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 10)),

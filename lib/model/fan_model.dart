@@ -90,6 +90,31 @@ class FanExperience {
   String get pointsLabel => raffle ? '${FanModel.fmtPublic(points)} pts entry' : '${FanModel.fmtPublic(points)} pts';
 }
 
+/// Club sponsor with a *symbolic* category icon (no real logos bundled) so a
+/// fan can tell at a glance what the partner is about.
+class Sponsor {
+  final String name;
+  final IconData icon; // category symbol
+  final Color color;
+  final String perk;
+  const Sponsor(this.name, this.icon, this.color, this.perk);
+}
+
+const kSponsors = [
+  Sponsor('Veltins', Icons.sports_bar_rounded, Color(0xFF00623A), '2× pts'), // beverages
+  Sponsor('Vivawest', Icons.apartment_rounded, Color(0xFF6A1B9A), '10% off'), // housing
+  Sponsor('adidas', Icons.sports_soccer_rounded, Color(0xFF111111), '5% back'), // sportswear
+  Sponsor("Ernsting's", Icons.checkroom_rounded, Color(0xFFE30613), '€5 voucher'), // fashion
+  Sponsor('REWE', Icons.shopping_cart_rounded, Color(0xFFC8102E), '3× pts'), // groceries
+];
+
+Sponsor? sponsorByName(String name) {
+  for (final s in kSponsors) {
+    if (s.name == name) return s;
+  }
+  return null;
+}
+
 const kExperiences = [
   FanExperience('Stadium Tour VIP', 'Apr 15, 2026', 'VELTINS-Arena', 2500, 'Stadium', featured: true),
   FanExperience('Player Meet & Greet', 'Apr 22', 'Fan Zone', 5000, 'Players'),

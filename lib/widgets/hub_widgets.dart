@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
-/// Circular sponsor logo. Loads `assets/images/sponsor_<slug>.png` when the
-/// real logo is bundled, otherwise falls back to a coloured monogram so the
-/// layout looks finished today. Drop the PNGs in later — no code change needed.
+/// Circular sponsor mark. Renders, in order of preference: a real bundled logo
+/// (`assets/images/sponsor_<slug>.png`), otherwise a *symbolic category icon*
+/// (so a fan sees what the partner is about), otherwise a monogram. The full
+/// sponsor name is always shown next to it by the caller.
 class SponsorLogo extends StatelessWidget {
   final String name;
   final double size;
   final Color bg;
   final Color fg;
-  const SponsorLogo({super.key, required this.name, this.size = 52, this.bg = AppColors.brandPrimary, this.fg = Colors.white});
+  final IconData? symbol;
+  const SponsorLogo({super.key, required this.name, this.size = 52, this.bg = AppColors.brandPrimary, this.fg = Colors.white, this.symbol});
 
   static String slug(String s) =>
       s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+
+  Widget _placeholder() => symbol != null
+      ? Icon(symbol, color: fg, size: size * 0.46)
+      : Text(
+          name.characters.first,
+          style: TextStyle(fontFamily: 'Urbanist', color: fg, fontSize: size * 0.38, fontWeight: FontWeight.w800),
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +38,7 @@ class SponsorLogo extends StatelessWidget {
         width: size,
         height: size,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Text(
-          name.characters.first,
-          style: TextStyle(fontFamily: 'Urbanist', color: fg, fontSize: size * 0.38, fontWeight: FontWeight.w800),
-        ),
+        errorBuilder: (_, __, ___) => _placeholder(),
       ),
     );
   }
@@ -100,7 +107,7 @@ class SponsorPromoCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              SponsorLogo(name: sponsor, size: 34, bg: Colors.white, fg: color),
+              SponsorLogo(name: sponsor, size: 34, bg: Colors.white, fg: color, symbol: sponsorByName(sponsor)?.icon),
               const SizedBox(width: 10),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(sponsor, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
