@@ -3,6 +3,8 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/tab_scaffold.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/action_sheets.dart';
+import 'login_screen.dart';
 import 'settings_screens.dart';
 import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
@@ -337,7 +339,21 @@ class _LogoutTile extends StatelessWidget {
     return SurfaceCard(
       padding: EdgeInsets.zero,
       child: InkWell(
-        onTap: () {},
+        onTap: () async {
+          final ok = await showConfirmDialog(
+            context,
+            title: 'Log out?',
+            message: 'You can sign back in any time with your account.',
+            confirmLabel: 'Log Out',
+            destructive: true,
+          );
+          if (ok && context.mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+            );
+          }
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
           child: Row(children: [

@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/action_sheets.dart';
 import 'subscription_screen.dart';
 import '../l10n/strings.dart';
 
@@ -256,7 +257,21 @@ class FanPlusScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: Tappable(
-                    onTap: () {},
+                    onTap: () async {
+                      final ok = await showConfirmDialog(
+                        context,
+                        title: 'Enter this raffle?',
+                        message: 'We’ll use one Super Fan raffle entry — you’ll be notified if you win.',
+                        confirmLabel: 'Enter',
+                      );
+                      if (ok && context.mounted) {
+                        await showSuccessSheet(
+                          context,
+                          title: 'You’re entered!',
+                          message: 'Good luck — winners are announced after the match.',
+                        );
+                      }
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       alignment: Alignment.center,

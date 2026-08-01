@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/action_sheets.dart';
 import '../l10n/strings.dart';
 
 class NewsArticle {
@@ -30,7 +31,7 @@ class NewsDetailScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).maybePop(),
             ),
             actions: [
-              IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}),
+              IconButton(icon: const Icon(Icons.share_outlined), onPressed: () => showShareSheet(context, subject: article.title)),
               const SizedBox(width: 4),
             ],
             flexibleSpace: FlexibleSpaceBar(
