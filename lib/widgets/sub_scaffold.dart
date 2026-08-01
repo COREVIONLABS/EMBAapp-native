@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import 'ios_chrome.dart';
 
 /// Scaffold for pushed detail screens with a back title bar.
 class SubScaffold extends StatelessWidget {
@@ -26,7 +25,6 @@ class SubScaffold extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            const IOSStatusBar(),
             _bar(context),
             Expanded(child: ListView(padding: padding, children: children)),
             if (bottomBar != null)

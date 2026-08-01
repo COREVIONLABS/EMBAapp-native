@@ -30,7 +30,6 @@ String trp(String en, {String? n, String? a, String? b}) {
 const Map<String, String> _de = {
   // ── Navigation ─────────────────────────────────────────────
   'Home': 'Home',
-  'Home Game': 'Heim',
   'Shop': 'Shop',
   'Wallet': 'Wallet',
   'Points': 'Punkte',

@@ -15,7 +15,6 @@ class OrderConfirmationScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const IOSStatusBar(),
             const Spacer(),
             Container(
               width: 88,

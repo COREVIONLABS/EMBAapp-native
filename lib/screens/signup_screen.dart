@@ -17,7 +17,6 @@ class SignupScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const IOSStatusBar(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(

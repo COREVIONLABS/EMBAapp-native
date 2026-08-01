@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/ios_chrome.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
@@ -55,16 +54,12 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.surface,
-      child: SafeArea(
-        bottom: false,
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          color: AppColors.brandPrimary,
-          child: ListView(
-          padding: const EdgeInsets.only(bottom: 120),
+      child: RefreshIndicator(
+        onRefresh: _refresh,
+        color: AppColors.brandPrimary,
+        child: ListView(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 6, bottom: 120),
           children: [
-            const IOSStatusBar(),
-            const SizedBox(height: 16),
             if (_loading) const _HomeSkeleton() else ...[
             _header(),
             const SizedBox(height: 14),
@@ -106,7 +101,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           ],
           ),
         ),
-      ),
     );
   }
 

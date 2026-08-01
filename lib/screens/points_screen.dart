@@ -43,6 +43,7 @@ class PointsScreen extends StatelessWidget {
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       skeleton: const HubSkeleton(),
+      extendTopUnderStatusBar: true,
       children: [
         // ── Top zone: header + search + hero + actions on a soft gradient ──
         Container(
@@ -53,7 +54,7 @@ class PointsScreen extends StatelessWidget {
               colors: [AppColors.brandLightest, AppColors.surface],
             ),
           ),
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 8, 20, 8),
           child: Column(children: [
             // Header
             Row(

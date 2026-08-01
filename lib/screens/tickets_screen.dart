@@ -29,7 +29,7 @@ class TicketsScreen extends StatefulWidget {
 
 class _TicketsScreenState extends State<TicketsScreen> {
   int _tab = 0;
-  static const _tabs = ['All', 'Home Game', 'Away'];
+  static const _tabs = ['All', 'Home', 'Away'];
   @override
   Widget build(BuildContext context) {
     final list = _tickets.where((t) => _tab == 0 || (_tab == 1 && t.isHome) || (_tab == 2 && !t.isHome)).toList();

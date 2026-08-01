@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/ios_chrome.dart';
 import 'login_screen.dart';
 import '../l10n/strings.dart';
 
@@ -121,8 +120,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          // Status bar on top of photo
-          const SafeArea(bottom: false, child: IOSStatusBar(color: Colors.white)),
         ],
       ),
     );

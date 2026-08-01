@@ -7,7 +7,6 @@ import 'screens/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   runApp(const SchalkeApp());
 }
 
@@ -20,6 +19,13 @@ class SchalkeApp extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: darkModeNotifier,
       builder: (context, dark, __) {
+        // Transparent status bar so our edge-to-edge headers show behind it,
+        // with icon brightness following the theme so the clock stays readable.
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: dark ? Brightness.dark : Brightness.light,
+        ));
         return ValueListenableBuilder<AppLocale>(
           valueListenable: localeNotifier,
           builder: (context, _, ___) {

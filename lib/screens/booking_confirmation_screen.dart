@@ -14,7 +14,6 @@ class BookingConfirmationScreen extends StatelessWidget {
       backgroundColor: AppColors.surface,
       body: SafeArea(
         child: Column(children: [
-          const IOSStatusBar(),
           const Spacer(),
           Container(width: 88, height: 88, decoration: BoxDecoration(color: AppColors.successBg, shape: BoxShape.circle), child: const Icon(Icons.check_rounded, color: AppColors.success, size: 48)),
           const SizedBox(height: 20),

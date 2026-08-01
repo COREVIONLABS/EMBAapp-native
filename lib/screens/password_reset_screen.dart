@@ -16,7 +16,6 @@ class PasswordResetScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const IOSStatusBar(),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

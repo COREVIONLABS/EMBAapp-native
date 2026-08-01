@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'app_widgets.dart';
-import 'ios_chrome.dart';
 
 /// Standard header used across secondary tabs: title + optional trailing bell.
 class TabHeader extends StatelessWidget {
@@ -55,7 +54,13 @@ class TabScaffold extends StatefulWidget {
   /// reveals its content instead of snapping in. Pass a [HubSkeleton] or a
   /// screen-specific skeleton; omit for no loading phase.
   final Widget? skeleton;
-  const TabScaffold({super.key, required this.children, this.onRefresh, this.skeleton});
+
+  /// When true the content starts at y=0 (behind the OS status bar) so a
+  /// coloured top zone can bleed edge-to-edge; the first child must then add
+  /// its own top inset. When false the list is padded down by the status-bar
+  /// inset so content clears the clock.
+  final bool extendTopUnderStatusBar;
+  const TabScaffold({super.key, required this.children, this.onRefresh, this.skeleton, this.extendTopUnderStatusBar = false});
 
   @override
   State<TabScaffold> createState() => _TabScaffoldState();
@@ -76,22 +81,18 @@ class _TabScaffoldState extends State<TabScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final topInset = MediaQuery.of(context).padding.top;
     final list = ListView(
-      padding: const EdgeInsets.only(bottom: 120),
+      padding: EdgeInsets.only(top: widget.extendTopUnderStatusBar ? 0 : topInset + 6, bottom: 120),
       children: [
-        const IOSStatusBar(),
-        const SizedBox(height: 12),
         if (_loading) widget.skeleton! else ...widget.children,
       ],
     );
     return Container(
       color: AppColors.surface,
-      child: SafeArea(
-        bottom: false,
-        child: widget.onRefresh == null || _loading
-            ? list
-            : RefreshIndicator(onRefresh: widget.onRefresh!, color: AppColors.brandPrimary, child: list),
-      ),
+      child: widget.onRefresh == null || _loading
+          ? list
+          : RefreshIndicator(onRefresh: widget.onRefresh!, color: AppColors.brandPrimary, child: list),
     );
   }
 }

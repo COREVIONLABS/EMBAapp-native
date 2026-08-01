@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const IOSStatusBar(color: Colors.white),
             const Spacer(),
             Container(
               width: 96,
