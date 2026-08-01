@@ -161,19 +161,21 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     );
   }
 
-  // Editorial campaign hero (Careem "Restaurant Week" style).
+  // Editorial sponsor/campaign hero (Careem "Restaurant Week" style) — kept
+  // deliberately off the fixture so it never duplicates the next-match card.
   Widget _heroBanner() => HeroBanner(
         eyebrow: 'Presented by VELTINS',
-        title: _matchday ? 'Derby Week: Schalke vs Dortmund' : 'Fan+ Week: double points on every buy',
-        cta: _matchday ? 'Get tickets' : 'Discover Fan+',
-        glyph: _matchday ? Icons.stadium_rounded : Icons.workspace_premium_rounded,
-        image: _matchday ? 'img_hero_match' : 'img_hero_fanplus',
-        onTap: () => _push(context, _matchday ? const TicketsScreen() : const FanPlusScreen()),
+        title: 'Win matchday jerseys & VIP seats',
+        cta: 'Enter now',
+        glyph: Icons.emoji_events_rounded,
+        gradient: const [Color(0xFF1B5E20), Color(0xFF0B3D14)],
+        image: 'img_hero_sponsor',
+        onTap: () => _push(context, const DealsHubScreen()),
       );
 
-  // Dismissible contextual status card (Careem "That was fast!" style).
+  // Dismissible status card (Careem "That was fast!" style) — always a
+  // non-fixture nudge so it doesn't repeat the match card on matchdays.
   Widget _statusCard() {
-    final matchday = _matchday;
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 10, 14),
       decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(AppRadii.card)),
@@ -181,20 +183,20 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         Container(
           width: 46, height: 46,
           decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
-          child: Icon(matchday ? Icons.confirmation_number_rounded : Icons.casino_rounded, color: AppColors.gold),
+          child: const Icon(Icons.casino_rounded, color: AppColors.gold),
         ),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(matchday ? tr('Kickoff in 2h · your ticket is ready') : tr('Your daily spin is still open'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+          Text(tr('Your daily spin is still open'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
           const SizedBox(height: 2),
-          Text(matchday ? tr('Tap to open your matchday ticket') : tr('Spin now for bonus points'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+          Text(tr('Spin now for bonus points'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
           const SizedBox(height: 10),
           Tappable(
-            onTap: () => matchday ? _push(context, const TicketsScreen()) : showDailySpin(context),
+            onTap: () => showDailySpin(context),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
               decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
-              child: Text(matchday ? tr('Open ticket') : tr('Spin now'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+              child: Text(tr('Spin now'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
             ),
           ),
         ])),
