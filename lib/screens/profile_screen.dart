@@ -10,6 +10,8 @@ import 'fan_profile_screen.dart';
 import 'membership_plan_screen.dart';
 import 'payment_methods_screen.dart';
 import 'points_history_screen.dart';
+import '../widgets/sub_scaffold.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// Profile (Figma 2145:11608) — user card + grouped settings menu.
@@ -20,49 +22,53 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabScaffold(
       children: [
-        // User card
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
+        // Centered identity header (Figma 2194:15393)
+        Column(children: [
+          GestureDetector(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FanProfileScreen())),
-            child: Row(
-              children: [
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(shape: BoxShape.circle, gradient: const LinearGradient(colors: AppColors.pointsGradient)),
-                  alignment: Alignment.center,
-                  child: Text(tr('MM'), style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        Text(tr('Max Mustermann'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
-                        const SizedBox(width: 5),
-                        const Icon(Icons.verified_rounded, size: 15, color: Color(0xFF4DA3FF)),
-                      ]),
-                      const SizedBox(height: 4),
-                      Pill(
-                        gradient: const LinearGradient(colors: AppColors.goldGradient),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          const Icon(Icons.star_rounded, size: 11, color: AppColors.brandDarkest),
-                          const SizedBox(width: 4),
-                          Text(tr('Schalker · 12,450 pts'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
-                        ]),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-              ],
+            child: Container(
+              width: 84,
+              height: 84,
+              decoration: BoxDecoration(shape: BoxShape.circle, gradient: const LinearGradient(colors: AppColors.pointsGradient)),
+              alignment: Alignment.center,
+              child: Text(tr('MM'), style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
             ),
           ),
+          const SizedBox(height: 12),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(tr('Max Mustermann'), style: AppText.h4.copyWith(color: AppColors.textDarker)),
+            const SizedBox(width: 6),
+            const Icon(Icons.verified_rounded, size: 18, color: Color(0xFF4DA3FF)),
+          ]),
+          const SizedBox(height: 2),
+          Text(tr('@maxmuster · Member #0042'), style: AppText.body2.copyWith(color: AppColors.textLight)),
+        ]),
+        const SizedBox(height: 18),
+        // Two quick boxes: membership plan + invite friends
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(children: [
+            Expanded(
+              child: _ProfileBox(
+                icon: Icons.card_membership_rounded,
+                label: FanModel.membershipTier,
+                sub: 'Your plan',
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MembershipPlanScreen())),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _ProfileBox(
+                icon: Icons.person_add_alt_1_rounded,
+                label: 'Invite friends',
+                sub: 'Earn +200 pts each',
+                highlight: true,
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const _InviteFriendsScreen())),
+              ),
+            ),
+          ]),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 22),
         _group(context, 'Account', const [
           (Icons.person_outline_rounded, 'Edit Profile', ''),
           (Icons.card_membership_outlined, 'Membership', 'Super Fan'),
@@ -221,6 +227,100 @@ class _MenuRowState extends State<_MenuRow> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Compact tappable box under the profile header (plan / invite), Figma 2194:15393.
+class _ProfileBox extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String sub;
+  final bool highlight;
+  final VoidCallback onTap;
+  const _ProfileBox({required this.icon, required this.label, required this.sub, this.highlight = false, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 108,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: highlight ? AppColors.brandLightest : AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: highlight ? AppColors.brandLightest : AppColors.borderLightest),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(icon, size: 24, color: AppColors.brandPrimary),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(label), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 2),
+              Text(tr(sub), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: highlight ? AppColors.brandPrimary : AppColors.textLight)),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Referral screen reached from the "Invite friends" box.
+class _InviteFriendsScreen extends StatelessWidget {
+  const _InviteFriendsScreen();
+  @override
+  Widget build(BuildContext context) {
+    return SubScaffold(
+      title: tr('Invite friends'),
+      bottomBar: PrimaryButton(tr('Share invite link')),
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Column(children: [
+            const Icon(Icons.card_giftcard_rounded, color: AppColors.gold, size: 40),
+            const SizedBox(height: 12),
+            Text(tr('Give 200, get 200'), style: AppText.h4.copyWith(color: Colors.white)),
+            const SizedBox(height: 6),
+            Text(tr('You both earn 200 Fan Points when a friend joins with your code.'),
+                textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
+          ]),
+        ),
+        const SizedBox(height: 16),
+        Text(tr('Your invite code'), style: AppText.label2),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile)),
+          child: Row(children: [
+            Expanded(child: Text('MAX-S04-0042', style: TextStyle(fontFamily: 'Urbanist', fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: 2, color: AppColors.textDarker))),
+            Icon(Icons.copy_rounded, size: 20, color: AppColors.brandPrimary),
+          ]),
+        ),
+        const SizedBox(height: 20),
+        Text(tr('How it works'), style: AppText.label2),
+        const SizedBox(height: 12),
+        for (final s in const [
+          (Icons.share_rounded, 'Share your code', 'Send your invite link to friends'),
+          (Icons.person_add_alt_1_rounded, 'They join S04', 'Your friend signs up with your code'),
+          (Icons.savings_rounded, 'You both earn', '+200 Fan Points each, instantly'),
+        ])
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: SurfaceCard(child: Row(children: [
+              Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)), child: Icon(s.$1, color: AppColors.brandPrimary, size: 20)),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr(s.$2), style: AppText.body2.copyWith(color: AppColors.textDarker)),
+                Text(tr(s.$3), style: AppText.body3Regular),
+              ])),
+            ])),
+          ),
+      ],
     );
   }
 }
