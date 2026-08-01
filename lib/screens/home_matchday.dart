@@ -13,10 +13,8 @@ import 'experiences_screen.dart';
 import 'club_news_screen.dart';
 import 'deals_hub_screen.dart';
 import 'achievements_screen.dart';
-import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
-import 'matchday_live_screen.dart';
 import 'leaderboard_screen.dart';
 import 'fanplus_screen.dart';
 import '../widgets/hub_widgets.dart';
@@ -121,13 +119,10 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
     ];
     // Extra modules revealed by "Show more" (Revolut-style inline expand).
+    // Only tiles with real photos live here — motif-only entries were dropped.
     final more = <(String, String, IconData, Color, Widget)>[
-      ('Live', 'img_live', Icons.sensors_rounded, const Color(0xFFD32F2F), const MatchdayLiveScreen()),
-      ('Specials', 'img_specials', Icons.bolt_rounded, const Color(0xFFF9A825), const MatchdaySpecialsScreen()),
-      ('Raffles', 'img_raffles', Icons.local_activity_rounded, const Color(0xFF8E24AA), const ExperiencesScreen()),
-      ('Achievements', 'img_achievements', Icons.military_tech_rounded, const Color(0xFFC62828), const AchievementsScreen()),
-      ('Membership', 'img_membership', Icons.workspace_premium_rounded, const Color(0xFFB8860B), const FanPlusScreen()),
       ('Partner', 'img_partner', Icons.handshake_rounded, const Color(0xFF00897B), const DealsHubScreen()),
+      ('Podcast', 'img_podcast', Icons.mic_rounded, const Color(0xFF37474F), const ExclusiveContentScreen()),
     ];
     final shown = [...items, if (_exploreExpanded) ...more];
     return Column(

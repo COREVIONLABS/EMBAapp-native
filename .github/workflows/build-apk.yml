@@ -29,6 +29,8 @@ jobs:
         run: python3 tools/fetch_figma_assets.py
       - name: Generate Android project
         run: flutter create --platforms=android --org de.schalke04 --project-name emba_app .
+      - name: Enable edge-to-edge system bars (native theme)
+        run: python3 tools/patch_edge_to_edge.py
       - name: Get packages
         run: flutter pub get
       - name: Build APK

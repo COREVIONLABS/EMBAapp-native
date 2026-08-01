@@ -67,6 +67,7 @@ const Map<String, String> _de = {
   'Show more': 'Mehr anzeigen',
   'Show less': 'Weniger anzeigen',
   'Partner': 'Partner',
+  'Podcast': 'Podcast',
   'Kickoff in 2h · your ticket is ready': 'Anpfiff in 2 Std · dein Ticket ist bereit',
   'Your daily spin is still open': 'Dein Glücksrad ist heute noch offen',
   'Tap to open your matchday ticket': 'Tippen, um dein Matchday-Ticket zu öffnen',
