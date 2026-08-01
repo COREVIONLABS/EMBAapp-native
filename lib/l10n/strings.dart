@@ -802,6 +802,11 @@ const Map<String, String> _de = {
   'Partner offer': 'Partner-Angebot',
   'Highlights': 'Highlights',
   'VIP': 'VIP',
+  // Home: greeting + next-match card
+  'Moin': 'Moin',
+  'Bundesliga · Matchday 34': 'Bundesliga · 34. Spieltag',
+  'Sat 15:30': 'Sa 15:30',
+  'Kickoff in': 'Anpfiff in',
   'Keep it going for +10 pts': 'Dranbleiben für +10 Pkt.',
   '1 / 2 complete': '1 / 2 erledigt',
   'On matchday combos — pay with points': 'Auf Spieltags-Kombis — mit Punkten zahlen',

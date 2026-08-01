@@ -47,13 +47,21 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             const IOSStatusBar(),
             const SizedBox(height: 16),
             _header(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 14),
+            // Personal greeting
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(children: [
+                Expanded(child: Text('${tr('Moin')}, Max 👋', style: AppText.h4.copyWith(color: AppColors.textDarker))),
+              ]),
+            ),
+            const SizedBox(height: 16),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
             const SizedBox(height: 12),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _StreakStrip()),
             const SizedBox(height: 20),
             if (_matchday)
-              const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PromoBanner())
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen())))
             else
               const _NonMatchdayCards(),
             const SizedBox(height: 20),
@@ -439,53 +447,78 @@ class _PointsCard extends StatelessWidget {
   }
 }
 
-class _PromoBanner extends StatelessWidget {
-  const _PromoBanner();
+/// Next-match fixture card — the football-home centrepiece: competition, both
+/// crests, kickoff countdown, venue and quick actions.
+class _NextMatchCard extends StatelessWidget {
+  final VoidCallback onTicket;
+  final VoidCallback onPredict;
+  const _NextMatchCard({required this.onTicket, required this.onPredict});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: AppColors.goldGradient),
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient),
         borderRadius: BorderRadius.circular(AppRadii.card),
       ),
-      child: Row(
-        children: [
-          const AssetImg('home_trophy', width: 43, height: 50, fallbackIcon: Icons.emoji_events_rounded),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(tr('02:14:35'), style: AppText.h4.copyWith(color: AppColors.brandDarkest)),
-                Text(tr('Until Kickoff'), style: AppText.body3.copyWith(color: AppColors.textDark)),
-              ],
-            ),
-          ),
-          Builder(
-            builder: (context) => GestureDetector(
-              onTap: () => _push(context, const PredictionsScreen()),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-                decoration: BoxDecoration(
-                  color: AppColors.brandDarkest.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(tr('Predict Score'), style: AppText.body3.copyWith(color: AppColors.textLightest)),
-                    const SizedBox(width: 4),
-                    const Svg('arrow_left', size: 16), // white right-arrow variant
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: Column(children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(tr('Bundesliga · Matchday 34'), style: AppText.caption1.copyWith(color: Colors.white70)),
+          Pill(color: Colors.white24, child: Text(tr('Home Match'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
+        ]),
+        const SizedBox(height: 16),
+        Row(children: [
+          Expanded(child: _team(const Svg('logo_s04', size: 46), tr('Schalke'))),
+          Column(children: [
+            Text(tr('Sat 15:30'), style: AppText.caption1.copyWith(color: Colors.white70)),
+            const SizedBox(height: 2),
+            Text(tr('VS'), style: AppText.h4.copyWith(color: AppColors.gold)),
+          ]),
+          Expanded(child: _team(
+            Container(width: 46, height: 46, decoration: const BoxDecoration(color: Colors.white24, shape: BoxShape.circle), alignment: Alignment.center, child: const Icon(Icons.shield_rounded, color: Colors.white, size: 26)),
+            tr('Dortmund'),
+          )),
+        ]),
+        const SizedBox(height: 14),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(color: AppColors.brandDarkest.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(999)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.schedule_rounded, size: 14, color: Colors.white70),
+            const SizedBox(width: 6),
+            Text('${tr('Kickoff in')} 02:14:35', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+            const SizedBox(width: 8),
+            Text('· VELTINS-Arena', style: AppText.body3.copyWith(color: Colors.white70)),
+          ]),
+        ),
+        const SizedBox(height: 14),
+        Row(children: [
+          Expanded(child: _cta(tr('Buy Ticket'), AppColors.gold, AppColors.brandDarkest, onTicket)),
+          const SizedBox(width: 10),
+          Expanded(child: _cta(tr('Predict Score'), Colors.white24, Colors.white, onPredict)),
+        ]),
+      ]),
     );
   }
+
+  Widget _team(Widget crest, String name) => Column(children: [
+        crest,
+        const SizedBox(height: 8),
+        Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+      ]);
+
+  Widget _cta(String label, Color bg, Color fg, VoidCallback onTap) => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
+          child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: fg, fontWeight: FontWeight.w800)),
+        ),
+      );
 }
 
 class _QuickActions extends StatelessWidget {
