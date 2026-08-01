@@ -4,6 +4,163 @@ import '../model/fan_model.dart';
 import 'app_widgets.dart';
 import '../l10n/strings.dart';
 
+/// Full-width editorial hero (Careem "Summer Restaurant Week" style): a large
+/// campaign card with a gradient/photo background, an eyebrow, a big headline
+/// and a text CTA. Shows a real photo (`assets/images/<image>.png`) when one is
+/// bundled, otherwise a branded gradient with a faint motif glyph.
+class HeroBanner extends StatelessWidget {
+  final String eyebrow;
+  final String title;
+  final String cta;
+  final IconData glyph;
+  final List<Color> gradient;
+  final String? image;
+  final VoidCallback? onTap;
+  const HeroBanner({
+    super.key,
+    required this.eyebrow,
+    required this.title,
+    required this.cta,
+    required this.glyph,
+    this.gradient = AppColors.pointsGradient,
+    this.image,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.98,
+      onTap: onTap,
+      child: Container(
+        height: 172,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient),
+        ),
+        child: Stack(children: [
+          if (image != null)
+            Positioned.fill(child: Image.asset('assets/images/$image.png', fit: BoxFit.cover, errorBuilder: (_, __, ___) => const SizedBox.shrink())),
+          Positioned(right: -24, bottom: -24, child: Icon(glyph, size: 168, color: Colors.white.withValues(alpha: 0.12))),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text(tr(eyebrow), style: AppText.caption1.copyWith(color: Colors.white70, fontWeight: FontWeight.w700, letterSpacing: 0.4)),
+              Text(tr(title), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800, height: 1.1)),
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                Text(tr(cta), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                const SizedBox(width: 6),
+                const Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
+              ]),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Compact at-a-glance chip (Careem "Balance / SRW / Salik" row): a small card
+/// with a coloured icon badge, a label and a bold value. Used in a horizontal
+/// strip of quick stats.
+class InfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+  final VoidCallback? onTap;
+  const InfoChip({super.key, required this.icon, required this.label, required this.value, required this.color, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.96,
+      onTap: onTap,
+      child: Container(
+        width: 150,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.tile),
+          border: Border.all(color: AppColors.borderLightest),
+        ),
+        child: Row(children: [
+          Container(
+            width: 34, height: 34,
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr(label), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textLight, fontSize: 11)),
+            const SizedBox(height: 1),
+            Text(tr(value), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          ])),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Recommendation card (Careem "For you" restaurant row): a leading brand/motif
+/// tile, a title, a meta line and a discount pill. Two-per-row on the Home feed.
+class ForYouCard extends StatelessWidget {
+  final String title;
+  final String meta;
+  final String badge;
+  final IconData glyph;
+  final Color color;
+  final String? image;
+  final VoidCallback? onTap;
+  const ForYouCard({super.key, required this.title, required this.meta, required this.badge, required this.glyph, required this.color, this.image, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        width: 220,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: AppColors.borderLightest),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(
+            height: 96,
+            width: double.infinity,
+            child: Image.asset(
+              'assets/images/${image ?? '_none'}.png',
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => DecoratedBox(
+                decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color.withValues(alpha: 0.22), color.withValues(alpha: 0.08)])),
+                child: Center(child: Icon(glyph, size: 40, color: color)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 3),
+              Text(tr(meta), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(color: AppColors.brandPrimary.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(AppRadii.chip)),
+                child: Text(tr(badge), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700, fontSize: 11)),
+              ),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
 /// Circular sponsor mark. Renders, in order of preference: a real bundled logo
 /// (`assets/images/sponsor_<slug>.png`), otherwise a *symbolic category icon*
 /// (so a fan sees what the partner is about), otherwise a monogram. The full

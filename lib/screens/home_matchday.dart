@@ -16,6 +16,7 @@ import 'matchday_specials_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'matchday_live_screen.dart';
+import 'leaderboard_screen.dart';
 import 'fanplus_screen.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/skeleton.dart';
@@ -35,6 +36,7 @@ class HomeMatchdayScreen extends StatefulWidget {
 class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   bool _matchday = true;
   bool _loading = true;
+  bool _statusDismissed = false;
 
   @override
   void initState() {
@@ -74,8 +76,16 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               ]),
             ),
             const SizedBox(height: 16),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _heroBanner()),
+            const SizedBox(height: 14),
+            if (!_statusDismissed) ...[
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _statusCard()),
+              const SizedBox(height: 14),
+            ],
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
+            _infoChips(),
+            const SizedBox(height: 16),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _StreakStrip()),
             const SizedBox(height: 20),
             if (_matchday)
@@ -88,6 +98,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             const _QuickActions(),
             const SizedBox(height: 24),
             _explore(),
+            const SizedBox(height: 24),
+            _forYou(),
             const SizedBox(height: 24),
             _missions(),
             const SizedBox(height: 20),
@@ -149,6 +161,103 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         ),
       ],
     );
+  }
+
+  // Editorial campaign hero (Careem "Restaurant Week" style).
+  Widget _heroBanner() => HeroBanner(
+        eyebrow: 'Presented by VELTINS',
+        title: _matchday ? 'Derby Week: Schalke vs Dortmund' : 'Fan+ Week: double points on every buy',
+        cta: _matchday ? 'Get tickets' : 'Discover Fan+',
+        glyph: _matchday ? Icons.stadium_rounded : Icons.workspace_premium_rounded,
+        image: _matchday ? 'img_hero_match' : 'img_hero_fanplus',
+        onTap: () => _push(context, _matchday ? const TicketsScreen() : const FanPlusScreen()),
+      );
+
+  // Dismissible contextual status card (Careem "That was fast!" style).
+  Widget _statusCard() {
+    final matchday = _matchday;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 10, 14),
+      decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(AppRadii.card)),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+          width: 46, height: 46,
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
+          child: Icon(matchday ? Icons.confirmation_number_rounded : Icons.casino_rounded, color: AppColors.gold),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(matchday ? tr('Kickoff in 2h · your ticket is ready') : tr('Your daily spin is still open'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 2),
+          Text(matchday ? tr('Tap to open your matchday ticket') : tr('Spin now for bonus points'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+          const SizedBox(height: 10),
+          Tappable(
+            onTap: () => matchday ? _push(context, const TicketsScreen()) : showDailySpin(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+              decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
+              child: Text(matchday ? tr('Open ticket') : tr('Spin now'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+            ),
+          ),
+        ])),
+        GestureDetector(
+          onTap: () => setState(() => _statusDismissed = true),
+          behavior: HitTestBehavior.opaque,
+          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.close_rounded, color: Colors.white54, size: 20)),
+        ),
+      ]),
+    );
+  }
+
+  // At-a-glance quick-stat chips (Careem "Balance / SRW / Salik" row).
+  Widget _infoChips() {
+    final chips = <(IconData, String, String, Color, VoidCallback)>[
+      (Icons.workspace_premium_rounded, 'Membership', 'Super Fan', AppColors.gold, () => _push(context, const FanPlusScreen())),
+      (Icons.local_fire_department_rounded, 'Streak', '5 days', const Color(0xFFEF6C00), () => _push(context, const AchievementsScreen())),
+      (Icons.leaderboard_rounded, 'Rank', '#12', const Color(0xFF1565C0), () => _push(context, const LeaderboardScreen())),
+      (Icons.card_giftcard_rounded, 'Next reward', '900 pts', const Color(0xFF00897B), () => _push(context, const RedeemScreen())),
+    ];
+    return SizedBox(
+      height: 58,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: chips.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        itemBuilder: (_, i) => InfoChip(icon: chips[i].$1, label: chips[i].$2, value: chips[i].$3, color: chips[i].$4, onTap: chips[i].$5),
+      ),
+    );
+  }
+
+  // Personalised recommendations (Careem "For you, Günter" row).
+  Widget _forYou() {
+    final recs = <(String, String, String, IconData, Color, VoidCallback)>[
+      ('VIP stadium tour', 'Experience · 2,500 pts', 'Recommended', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
+      ('adidas home shirt 24/25', 'Fanshop · 20% with points', 'Popular', Icons.checkroom_rounded, const Color(0xFF0A2A5E), () => _push(context, const RedeemScreen())),
+      ('Players meet & greet', 'Experience · raffle', 'New', Icons.emoji_events_rounded, const Color(0xFFC62828), () => _push(context, const ExperiencesScreen())),
+      ('VELTINS 6-pack', 'Sponsor · -15%', 'Sponsor deal', Icons.local_offer_rounded, const Color(0xFF00897B), () => _push(context, const DealsHubScreen())),
+    ];
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('${tr('For you')}, Max', style: AppText.label1),
+          const SizedBox(height: 2),
+          Text(tr('Based on your activity'), style: AppText.body3Regular),
+        ]),
+      ),
+      const SizedBox(height: 12),
+      SizedBox(
+        height: 192,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          itemCount: recs.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (_, i) => ForYouCard(title: recs[i].$1, meta: recs[i].$2, badge: recs[i].$3, glyph: recs[i].$4, color: recs[i].$5, onTap: recs[i].$6),
+        ),
+      ),
+    ]);
   }
 
   Widget _header() {
