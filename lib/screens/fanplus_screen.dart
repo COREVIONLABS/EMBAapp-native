@@ -5,37 +5,71 @@ import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/action_sheets.dart';
+import '../widgets/hub_widgets.dart';
 import 'subscription_screen.dart';
+import 'fomo_drop_screen.dart';
+import 'exclusive_content_screen.dart';
 import '../l10n/strings.dart';
 
 /// Fan+ (Figma 2145:8198 Non-Subscriber / 2145:8275 Subscriber).
-class FanPlusScreen extends StatelessWidget {
+class FanPlusScreen extends StatefulWidget {
   final bool subscribed;
   const FanPlusScreen({super.key, this.subscribed = false});
+  @override
+  State<FanPlusScreen> createState() => _FanPlusScreenState();
+}
+
+class _FanPlusScreenState extends State<FanPlusScreen> {
+  late bool _member = widget.subscribed;
+
+  void _push(BuildContext context, Widget s) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
+
+  // Member-exclusive drops (title, category, old pts, new pts, badge, glyph, colour)
+  static const _drops = <(String, String, int, int, String, IconData, Color)>[
+    ('Away shirt 24/25', 'Members only', 3200, 2200, 'Members', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
+    ('Hospitality upgrade', 'Matchday', 12000, 9000, '-25%', Icons.wine_bar_rounded, Color(0xFF6A1B9A)),
+    ('Signed poster', 'Collectible', 900, 600, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828)),
+  ];
+
+  // Member content (title, subtitle, category, glyph, gradient)
+  static const _content = <(String, String, String, IconData, List<Color>)>[
+    ('Locker-room after the derby', 'Exclusive clip · 6:20', 'Video', Icons.play_circle_rounded, [Color(0xFF2A2440), Color(0xFF0B0616)]),
+    ('Training-ground access', 'Behind the scenes', 'Video', Icons.videocam_rounded, [Color(0xFF00695C), Color(0xFF003D33)]),
+    ('Captain’s matchday vlog', 'Members only', 'Vlog', Icons.movie_rounded, [Color(0xFF4A148C), Color(0xFF1A0033)]),
+  ];
 
   @override
-  Widget build(BuildContext context) {
-    if (subscribed) return _subscribed(context);
+  Widget build(BuildContext context) => _member ? _lounge(context) : _pitch(context);
+
+  // Shared header with a Guest ↔ Member preview toggle.
+  Widget _header() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        const Svg('logo_s04', size: 36),
+        GestureDetector(
+          onTap: () => setState(() => _member = !_member),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+            decoration: BoxDecoration(color: _member ? AppColors.brandLightest : AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(_member ? Icons.workspace_premium_rounded : Icons.person_outline_rounded, size: 14, color: _member ? AppColors.brandPrimary : AppColors.textLight),
+              const SizedBox(width: 6),
+              Text(_member ? tr('Member') : tr('Guest'), style: AppText.caption1.copyWith(color: _member ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
+            ]),
+          ),
+        ),
+        Container(width: 36, height: 36, decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)), child: const Center(child: Svg('bell_dot', size: 20))),
+      ]),
+    );
+  }
+
+  Widget _pitch(BuildContext context) {
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       skeleton: const HubSkeleton(),
       children: [
-        // Header: logo + bell (matches Home)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Svg('logo_s04', size: 36),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-                child: const Center(child: Svg('bell_dot', size: 20)),
-              ),
-            ],
-          ),
-        ),
+        _header(),
         const SizedBox(height: 16),
         // Hero card
         Padding(
@@ -151,27 +185,12 @@ class FanPlusScreen extends StatelessWidget {
     );
   }
 
-  Widget _subscribed(BuildContext context) {
+  Widget _lounge(BuildContext context) {
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       skeleton: const HubSkeleton(),
       children: [
-        // Header
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Svg('logo_s04', size: 36),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-                child: const Center(child: Svg('bell_dot', size: 20)),
-              ),
-            ],
-          ),
-        ),
+        _header(),
         const SizedBox(height: 16),
         // Active membership card
         Padding(
@@ -213,6 +232,22 @@ class FanPlusScreen extends StatelessWidget {
             ]),
           ),
         ),
+        const SizedBox(height: 14),
+        // Value-back — your membership already paid for itself
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            color: AppColors.successBg,
+            child: Row(children: [
+              const Icon(Icons.savings_rounded, color: AppColors.success),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('€14 back this month'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                Text(tr('Your Super Fan membership already paid for itself'), style: AppText.body3Regular),
+              ])),
+            ]),
+          ),
+        ),
         const SizedBox(height: 16),
         // Unlocked perks
         Padding(
@@ -222,6 +257,46 @@ class FanPlusScreen extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(child: _UnlockedCard(icon: 'ic_scratch', label: tr('Extra Scratch Card'))),
           ]),
+        ),
+        const SizedBox(height: 24),
+        // This week's drops (member-exclusive)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader('This week’s drops', onAction: () => _push(context, const FomoDropScreen(subscribed: true))),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 194,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: _drops.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final d = _drops[i];
+              return DealCard(title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, onTap: () => _push(context, const FomoDropScreen(subscribed: true)));
+            },
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Member content
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader('Member content', onAction: () => _push(context, const ExclusiveContentScreen())),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 194,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: _content.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final c = _content[i];
+              return FeaturedImageCard(title: c.$1, subtitle: c.$2, category: c.$3, glyph: c.$4, gradient: c.$5, badge: 'Members only', onTap: () => _push(context, const ExclusiveContentScreen()));
+            },
+          ),
         ),
         const SizedBox(height: 24),
         Padding(
