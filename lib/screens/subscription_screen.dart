@@ -2,68 +2,173 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../model/fan_model.dart';
 import 'upgrade_plan_screen.dart';
 import '../l10n/strings.dart';
 
-/// Fan membership plans — final subscription concept: Free Fan / Fan Member /
-/// Super Fan (+ optional Ultra). Super Fan is sold on priority & access, not
-/// on a points boost; every paid tier "pays for itself" in savings.
-class SubscriptionScreen extends StatelessWidget {
+/// Membership plans — Revolut-Metal-style tabbed upgrade screen: pick a tier
+/// tab, see one rich card (price + headline benefits + partner perks), then a
+/// "show all benefits" link and a "become a …" CTA. EMBA/S04 tiers.
+class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
+  @override
+  State<SubscriptionScreen> createState() => _SubscriptionScreenState();
+}
+
+class _Tier {
+  final String name;
+  final String price;
+  final String tagline;
+  final List<Color> gradient;
+  final List<(IconData, String)> features;
+  final int partners;
+  final int moreBenefits;
+  const _Tier(this.name, this.price, this.tagline, this.gradient, this.features, this.partners, this.moreBenefits);
+}
+
+class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  int _tab = 1;
+
+  static const _tiers = [
+    _Tier('Fan Member', '€4.50', 'Save every month', AppColors.pointsGradient, [
+      (Icons.savings_rounded, 'Guaranteed €6+ back every month'),
+      (Icons.confirmation_number_rounded, '24h ticket presale + discounts'),
+      (Icons.card_giftcard_rounded, 'Sponsor vouchers & offers'),
+    ], 8, 12),
+    _Tier('Super Fan', '€9.00', 'First in line', [Color(0xFF0A2A5E), Color(0xFF000D22)], [
+      (Icons.bolt_rounded, 'Priority access to top matches (48–72h)'),
+      (Icons.event_seat_rounded, 'Best seats first + matchday upgrades'),
+      (Icons.local_fire_department_rounded, 'Monthly exclusive FOMO drop'),
+    ], 12, 24),
+    _Tier('Ultra', '€19.00', 'The maximum', [Color(0xFF2A1A3E), Color(0xFF0B0616)], [
+      (Icons.diamond_rounded, 'Everything in Super Fan'),
+      (Icons.support_agent_rounded, 'Top priority + personal concierge'),
+      (Icons.workspace_premium_rounded, 'Exclusive drops & money-can’t-buy days'),
+    ], 20, 35),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final t = _tiers[_tab];
     return SubScaffold(
       title: tr('Membership Plans'),
+      bottomBar: Column(mainAxisSize: MainAxisSize.min, children: [
+        SecondaryButton('${tr('Show all')} ${t.moreBenefits}+ ${tr('benefits')}'),
+        const SizedBox(height: 10),
+        PrimaryButton('${tr('Become a')} ${t.name}',
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: t.name, price: t.price)))),
+      ]),
       children: [
-        Text(tr('Every membership pays for itself — Fan Member gets €6+ back a month, Super Fan €14+.'),
-            style: AppText.body2.copyWith(color: AppColors.textNormal, height: 1.5)),
+        // Tabs
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+          child: Row(children: [
+            for (var i = 0; i < _tiers.length; i++)
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() => _tab = i),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: i == _tab ? AppColors.surface : Colors.transparent,
+                      borderRadius: BorderRadius.circular(AppRadii.pill),
+                      boxShadow: i == _tab ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
+                    ),
+                    child: Center(
+                      child: Text(tr(_tiers[i].name),
+                          maxLines: 1, overflow: TextOverflow.ellipsis,
+                          style: AppText.body2.copyWith(color: i == _tab ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
+                    ),
+                  ),
+                ),
+              ),
+          ]),
+        ),
+        const SizedBox(height: 20),
+        // Hero tier card
+        Container(
+          width: double.infinity,
+          clipBehavior: Clip.antiAlias,
+          padding: const EdgeInsets.all(22),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: t.gradient),
+            borderRadius: BorderRadius.circular(AppRadii.card),
+          ),
+          child: Stack(children: [
+            // Decorative membership card, top-right
+            Positioned(
+              right: -18,
+              top: -6,
+              child: Transform.rotate(
+                angle: 0.28,
+                child: Container(
+                  width: 128,
+                  height: 82,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: AppColors.goldGradient),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 16, offset: Offset(0, 6))],
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    const Svg('logo_s04', size: 22),
+                    const Spacer(),
+                    Text(tr(t.name), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                  ]),
+                ),
+              ),
+            ),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(t.tagline), style: AppText.body3.copyWith(color: Colors.white70)),
+              const SizedBox(height: 2),
+              Text(tr(t.name), style: AppText.h2.copyWith(color: Colors.white)),
+              const SizedBox(height: 4),
+              Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+                Text(t.price, style: AppText.h4.copyWith(color: Colors.white)),
+                const SizedBox(width: 4),
+                Text(tr('/ month'), style: AppText.body2.copyWith(color: Colors.white70)),
+              ]),
+              const SizedBox(height: 20),
+              for (final f in t.features) ...[
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Icon(f.$1, color: AppColors.gold, size: 22),
+                  const SizedBox(width: 14),
+                  Expanded(child: Text(tr(f.$2), style: AppText.body1.copyWith(color: Colors.white, fontSize: 15))),
+                ]),
+                const SizedBox(height: 16),
+              ],
+              // Partner perks row
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Icon(Icons.apps_rounded, color: AppColors.gold, size: 22),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('${t.partners} ${tr('partner perks included')}', style: AppText.body1.copyWith(color: Colors.white, fontSize: 15)),
+                  const SizedBox(height: 10),
+                  Row(children: [
+                    for (final s in kSponsors.take(5))
+                      Container(
+                        width: 30, height: 30,
+                        margin: const EdgeInsets.only(right: 6),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: s.color, border: Border.all(color: Colors.white24)),
+                        child: Icon(s.icon, color: Colors.white, size: 15),
+                      ),
+                    Container(
+                      height: 30,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(999)),
+                      child: Text('+${t.partners - 5}', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                    ),
+                  ]),
+                ])),
+              ]),
+            ]),
+          ]),
+        ),
         const SizedBox(height: 16),
-        const _PlanCard(
-          name: 'Free Fan',
-          price: '€0',
-          job: "I'm in",
-          current: true,
-          perks: [
-            'Full app access & club news',
-            'Daily games & 1 free spin',
-            'Earn Fan Points · 100 pts = €1',
-            'Public raffles & supporter streak',
-          ],
-        ),
-        const SizedBox(height: 12),
-        const _PlanCard(
-          name: 'Fan Member',
-          price: '€4.50',
-          job: 'I save',
-          highlight: true,
-          badge: 'Most popular',
-          perks: [
-            'Guaranteed €6+ back every month',
-            '24h ticket presale + discounts',
-            'Sponsor vouchers & offers',
-            '+1 VIP raffle ticket / month',
-            'Streak protection · 2 spins · +50% points',
-          ],
-        ),
-        const SizedBox(height: 12),
-        const _PlanCard(
-          name: 'Super Fan',
-          price: '€9.00',
-          job: "I'm first in line",
-          premium: true,
-          badge: 'Priority',
-          perks: [
-            'Priority access to top matches (48–72h)',
-            'Best seats first + matchday upgrades',
-            'Monthly exclusive FOMO drop',
-            'Superfan Elite badge + name on the big screen',
-            'Guaranteed €14+ back · ad-free · +3 VIP raffles',
-          ],
-        ),
-        const SizedBox(height: 12),
-        const _UltraRow(),
-        const SizedBox(height: 12),
         Row(children: [
           Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.textLight),
           const SizedBox(width: 6),
@@ -71,130 +176,6 @@ class SubscriptionScreen extends StatelessWidget {
               style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],
-    );
-  }
-}
-
-class _PlanCard extends StatelessWidget {
-  final String name;
-  final String price;
-  final String job;
-  final bool highlight;
-  final bool premium;
-  final bool current;
-  final String? badge;
-  final List<String> perks;
-  const _PlanCard({
-    required this.name,
-    required this.price,
-    required this.job,
-    this.highlight = false,
-    this.premium = false,
-    this.current = false,
-    this.badge,
-    required this.perks,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final onColor = highlight ? Colors.white : AppColors.textDarker;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        gradient: highlight ? const LinearGradient(colors: AppColors.pointsGradient) : null,
-        color: highlight ? null : AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.card),
-        border: highlight
-            ? null
-            : Border.all(color: premium ? AppColors.gold : AppColors.borderLightest, width: premium ? 1.5 : 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(name, style: AppText.label1.copyWith(color: onColor)),
-                  Text('“${tr(job)}”', style: AppText.body3.copyWith(color: highlight ? Colors.white70 : AppColors.textLight)),
-                ]),
-              ),
-              if (current)
-                Pill(color: highlight ? Colors.white24 : AppColors.brandLightest, child: Text(tr('Current Plan'), style: AppText.caption1.copyWith(color: highlight ? Colors.white : AppColors.brandPrimary)))
-              else if (badge != null)
-                Pill(
-                  gradient: LinearGradient(colors: premium ? AppColors.goldGradient : (highlight ? AppColors.goldGradient : AppColors.pointsGradient)),
-                  child: Text(tr(badge!), style: AppText.caption1.copyWith(color: premium || highlight ? AppColors.brandDarkest : Colors.white, fontWeight: FontWeight.w700)),
-                ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(price, style: AppText.h2.copyWith(color: onColor)),
-              const SizedBox(width: 4),
-              Text(tr('/ month'), style: AppText.body2.copyWith(color: highlight ? Colors.white70 : AppColors.textLight)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ...perks.asMap().entries.map((e) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(e.key == 0 && premium ? Icons.bolt_rounded : Icons.check_circle_rounded,
-                        size: 18, color: highlight ? AppColors.gold : (premium && e.key == 0 ? AppColors.gold : AppColors.brandPrimary)),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(tr(e.value), style: AppText.body2.copyWith(color: highlight ? Colors.white : AppColors.textNormal))),
-                  ],
-                ),
-              )),
-          if (!current) ...[
-            const SizedBox(height: 8),
-            Builder(
-              builder: (context) => PrimaryButton(
-                '${tr('Upgrade to')} $name',
-                color: premium ? AppColors.gold : (highlight ? AppColors.gold : AppColors.brandPrimary),
-                textColor: premium || highlight ? AppColors.brandDarkest : Colors.white,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => UpgradePlanScreen(plan: name, price: price)),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Optional whale tier — configurable per club.
-class _UltraRow extends StatelessWidget {
-  const _UltraRow();
-  @override
-  Widget build(BuildContext context) {
-    return SurfaceCard(
-      child: Row(children: [
-        Container(
-          width: 40, height: 40,
-          decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(11)),
-          child: const Icon(Icons.diamond_rounded, color: AppColors.gold, size: 20),
-        ),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            Text(tr('Ultra'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-            const SizedBox(width: 6),
-            Pill(color: AppColors.brandLightest, child: Text('~€19', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
-          ]),
-          Text(tr('The maximum — exclusive drops, top priority, concierge'), style: AppText.body3Regular),
-        ])),
-        Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-      ]),
     );
   }
 }

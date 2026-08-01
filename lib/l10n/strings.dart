@@ -759,6 +759,21 @@ const Map<String, String> _de = {
 
   // ── Earn / Redeem screens aligned to hub style ───────────────
   'How you can redeem': 'So kannst du einlösen',
+  'Featured rewards': 'Ausgewählte Belohnungen',
+  'From': 'Ab',
+  'Groceries': 'Lebensmittel',
+  'Fashion': 'Mode',
+  // Membership (Revolut-style tabbed upgrade screen)
+  'Show all': 'Alle',
+  'benefits': 'Vorteile anzeigen',
+  'Become a': 'Werde',
+  'Save every month': 'Spare jeden Monat',
+  'First in line': 'Immer zuerst dran',
+  'The maximum': 'Das Maximum',
+  'partner perks included': 'Partner-Vorteile enthalten',
+  'Everything in Super Fan': 'Alles aus Super Fan',
+  'Top priority + personal concierge': 'Höchste Priorität + persönlicher Concierge',
+  'Exclusive drops & money-can’t-buy days': 'Exklusive Drops & unbezahlbare Erlebnistage',
   'On matchday combos — pay with points': 'Auf Spieltags-Kombis — mit Punkten zahlen',
   'points back on every Fanshop order': 'Punkte zurück bei jeder Fanshop-Bestellung',
   '+100 points per home match': '+100 Punkte pro Heimspiel',
