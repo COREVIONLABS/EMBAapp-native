@@ -18,6 +18,7 @@ import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'matchday_live_screen.dart';
 import 'fanplus_screen.dart';
+import '../widgets/hub_widgets.dart';
 import '../l10n/strings.dart';
 
 void _push(BuildContext context, Widget screen) {
@@ -188,26 +189,21 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         const SizedBox(height: 14),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              _MissionCard(
-                  title: tr('Predict 2 matches'),
-                  reward: tr('+1 Ticket'),
-                  rewardColor: AppColors.brandPrimary,
-                  rewardBg: AppColors.infoBg,
-                  progress: 0.75,
-                  sub: tr('1 / 2 complete')),
-              const SizedBox(height: 8),
-              _MissionCard(
-                  title: tr('Shop at Veltins on matchday'),
-                  reward: tr('Voucher'),
-                  sponsor: 'Veltins',
-                  rewardColor: AppColors.gold,
-                  rewardBg: AppColors.brandLightest,
-                  progress: 0.0,
-                  sub: tr('Win a €10 Veltins voucher')),
-            ],
-          ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+            Expanded(child: FeaturedGoalCard(
+                icon: Icons.sports_soccer_rounded,
+                title: 'Predict 2 matches',
+                sub: '1 / 2 complete',
+                progress: 0.5,
+                reward: '+75')),
+            SizedBox(width: 12),
+            Expanded(child: FeaturedGoalCard(
+                icon: Icons.local_fire_department_rounded,
+                title: '5-day streak',
+                sub: 'Keep it going for +10 pts',
+                progress: 0.71,
+                reward: '+10')),
+          ]),
         ),
       ],
     );
@@ -548,68 +544,6 @@ class _QuickActions extends StatelessWidget {
                 ),
               ),
             ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MissionCard extends StatelessWidget {
-  final String title;
-  final String reward;
-  final Color rewardColor;
-  final Color? rewardBg;
-  final double progress;
-  final String sub;
-  final String? sponsor;
-  const _MissionCard({
-    required this.title,
-    required this.reward,
-    required this.progress,
-    required this.sub,
-    this.sponsor,
-    this.rewardColor = AppColors.success,
-    this.rewardBg,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SurfaceCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker))),
-              const SizedBox(width: 8),
-              Pill(
-                color: rewardBg ?? AppColors.successBg,
-                child: Text(reward,
-                    style: AppText.caption1.copyWith(color: rewardColor, fontWeight: FontWeight.w600, fontSize: 11)),
-              ),
-            ],
-          ),
-          if (sponsor != null) ...[
-            const SizedBox(height: 4),
-            Row(children: [
-              const Icon(Icons.verified_rounded, size: 12, color: AppColors.brandPrimary),
-              const SizedBox(width: 4),
-              Text('${tr('Sponsored by')} $sponsor', style: AppText.caption1.copyWith(color: AppColors.textLight, fontSize: 11)),
-            ]),
-          ],
-          const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 6,
-              backgroundColor: AppColors.surfaceLowContrast,
-              valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(sub, style: AppText.body3Regular),
         ],
       ),
     );

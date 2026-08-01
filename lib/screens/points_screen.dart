@@ -108,29 +108,24 @@ class PointsScreen extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 8),
-        // ── Sponsor promo ──
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Row(children: [
-              const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 26),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Earn points when Schalke wins'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 2),
-                Text('${tr('Redeem for discounts')} · ${tr('Powered by')} Veltins', style: AppText.body3Regular),
-              ])),
-              GestureDetector(
+        // ── Featured sponsor promos (big-card carousel) ──
+        SizedBox(
+          height: 176,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: kSponsors.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final s = kSponsors[i];
+              return BigPromoCard(
+                sponsor: s.name,
+                category: 'Partner offer',
+                headline: s.perk,
+                color: s.color,
                 onTap: () => _push(context, const RedeemScreen()),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
-                  child: Text(tr('Redeem'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                ),
-              ),
-            ]),
+              );
+            },
           ),
         ),
         const SizedBox(height: 20),

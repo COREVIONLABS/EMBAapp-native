@@ -798,6 +798,10 @@ const Map<String, String> _de = {
   'Guaranteed value back': 'Garantierter Gegenwert zurück',
   '€14+ / month': '14 €+ / Monat',
   'Streak protection': 'Serien-Schutz',
+  // Home/Points design elements (featured cards, big promo)
+  'Partner offer': 'Partner-Angebot',
+  'Keep it going for +10 pts': 'Dranbleiben für +10 Pkt.',
+  '1 / 2 complete': '1 / 2 erledigt',
   'On matchday combos — pay with points': 'Auf Spieltags-Kombis — mit Punkten zahlen',
   'points back on every Fanshop order': 'Punkte zurück bei jeder Fanshop-Bestellung',
   '+100 points per home match': '+100 Punkte pro Heimspiel',

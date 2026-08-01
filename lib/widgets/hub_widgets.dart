@@ -44,6 +44,113 @@ class SponsorLogo extends StatelessWidget {
   }
 }
 
+/// Large gradient promo card (Figma Dell 2194:10203 / lounge 2194:10510 style):
+/// sponsor badge + category top-left, a big headline bottom-left, an info
+/// button bottom-right. Used in a horizontal carousel.
+class BigPromoCard extends StatelessWidget {
+  final String sponsor;
+  final String category;
+  final String headline;
+  final Color color;
+  final VoidCallback? onTap;
+  const BigPromoCard({super.key, required this.sponsor, required this.category, required this.headline, required this.color, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 300,
+        height: 176,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [color, Color.lerp(color, Colors.black, 0.45)!],
+          ),
+        ),
+        child: Stack(children: [
+          Positioned(right: -30, top: -30, child: Container(width: 140, height: 140, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.08)))),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                SponsorLogo(name: sponsor, size: 34, bg: Colors.white, fg: color, symbol: sponsorByName(sponsor)?.icon),
+                const SizedBox(width: 10),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(sponsor, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                  Text(tr(category), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: Colors.white70)),
+                ])),
+              ]),
+              const Spacer(),
+              Text(headline, style: AppText.h2.copyWith(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w800)),
+            ]),
+          ),
+          Positioned(
+            right: 12, bottom: 12,
+            child: Container(
+              width: 26, height: 26,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.22)),
+              child: const Icon(Icons.info_outline_rounded, size: 15, color: Colors.white),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Featured reward / goal card (Figma 2194:7856): white card, centred icon,
+/// title, subtitle, a thin progress bar and a reward value.
+class FeaturedGoalCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String sub;
+  final double progress;
+  final String reward;
+  final VoidCallback? onTap;
+  const FeaturedGoalCard({super.key, required this.icon, required this.title, required this.sub, required this.progress, required this.reward, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: AppColors.borderLightest),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            width: 46, height: 46,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.brandLightest),
+            child: Icon(icon, color: AppColors.brandPrimary, size: 24),
+          ),
+          const SizedBox(height: 10),
+          Text(tr(title), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 2),
+          Text(tr(sub), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(value: progress, minHeight: 6, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary)),
+          ),
+          const SizedBox(height: 10),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Icon(Icons.hexagon_rounded, size: 15, color: AppColors.brandPrimary),
+            const SizedBox(width: 5),
+            Text(reward, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
+
 /// Rounded search field used across the Points hub / Earn / Redeem screens
 /// (mirrors Revolut's "Search for a store" pill).
 class HubSearchField extends StatelessWidget {
