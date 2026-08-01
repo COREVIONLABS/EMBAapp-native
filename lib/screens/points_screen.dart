@@ -99,7 +99,7 @@ class PointsScreen extends StatelessWidget {
             ]),
             const SizedBox(height: 22),
             // 4 circle actions
-            Row(children: [
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               _Action(icon: Icons.add_rounded, label: tr('Earn'), onTap: () => _push(context, const EarnPointsScreen())),
               _Action(icon: Icons.savings_rounded, label: tr('Redeem'), onTap: () => _push(context, const RedeemScreen())),
               _Action(icon: Icons.workspace_premium_rounded, label: tr('Membership'), onTap: () => _push(context, const SubscriptionScreen())),

@@ -293,7 +293,7 @@ class _UnlockedCard extends StatelessWidget {
         const SizedBox(height: 4),
         AssetImg(icon, width: 44, height: 44, fallbackIcon: Icons.card_giftcard_rounded),
         const SizedBox(height: 8),
-        Text(label, textAlign: TextAlign.center, style: AppText.body3),
+        Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
       ]),
     );
   }
@@ -325,7 +325,7 @@ class _LockedCard extends StatelessWidget {
           const SizedBox(height: 4),
           AssetImg(icon, width: 44, height: 44, fallbackIcon: Icons.lock_rounded),
           const SizedBox(height: 8),
-          Text(label, textAlign: TextAlign.center, style: AppText.body3),
+          Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
         ],
       ),
     );

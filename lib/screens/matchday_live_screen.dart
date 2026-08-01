@@ -121,7 +121,7 @@ class _ChoiceBtn extends StatelessWidget {
           color: selected ? AppColors.brandPrimary : AppColors.surfaceMinimal,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(label, textAlign: TextAlign.center, style: AppText.body3.copyWith(color: selected ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w700)),
+        child: Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: selected ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w700)),
       ),
     );
   }

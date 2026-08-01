@@ -515,6 +515,7 @@ class _QuickActions extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (final it in _items)
             Expanded(
