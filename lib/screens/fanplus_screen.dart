@@ -4,11 +4,12 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
 import '../widgets/skeleton.dart';
-import '../widgets/action_sheets.dart';
 import '../widgets/hub_widgets.dart';
 import 'subscription_screen.dart';
 import 'fomo_drop_screen.dart';
 import 'exclusive_content_screen.dart';
+import 'fanshop_screen.dart';
+import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
@@ -25,11 +26,11 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
 
   void _push(BuildContext context, Widget s) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
-  // Member-exclusive drops (title, category, old pts, new pts, badge, glyph, colour)
+  // Member deals — real Fanshop products at a members-only price.
   static const _drops = <(String, String, int, int, String, IconData, Color)>[
-    ('Away shirt 24/25', 'Members only', 3200, 2200, 'Members', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
-    ('Hospitality upgrade', 'Matchday', 12000, 9000, '-25%', Icons.wine_bar_rounded, Color(0xFF6A1B9A)),
-    ('Signed poster', 'Collectible', 900, 600, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828)),
+    ('Home Jersey 25/26', 'Members', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
+    ('Home Scarf 25/26', 'Members', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0)),
+    ('Cap Royal Blue', 'Members', 1100, 950, '-15%', Icons.sports_baseball_rounded, Color(0xFF002F63)),
   ];
 
   // Member content (title, subtitle, category, glyph, gradient)
@@ -263,10 +264,47 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ]),
         ),
         const SizedBox(height: 24),
-        // This week's drops (member-exclusive)
+        // The one real monthly drop (Super Fan exclusive)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader('This week’s drops', onAction: () => _push(context, const FomoDropScreen(subscribed: true))),
+          child: SectionHeader('This month’s drop', onAction: () => _push(context, const FomoDropScreen(subscribed: true))),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Tappable(
+            scale: 0.98,
+            onTap: () => _push(context, const FomoDropScreen(subscribed: true)),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                  const Spacer(),
+                  Pill(color: Colors.white24, child: Text(tr('Only 50 made'), style: AppText.caption1.copyWith(color: Colors.white))),
+                ]),
+                const SizedBox(height: 14),
+                const Icon(Icons.local_fire_department_rounded, color: AppColors.gold, size: 36),
+                const SizedBox(height: 10),
+                Text(tr('Signed Retro Shirt — April Drop'), style: AppText.h4.copyWith(color: Colors.white)),
+                const SizedBox(height: 6),
+                Text(tr('A limited signed 1997 UEFA Cup retro shirt — dropped once, never restocked.'), style: AppText.body3.copyWith(color: Colors.white70)),
+                const SizedBox(height: 14),
+                Row(children: [
+                  Text(tr('View this month\'s drop'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                  const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 18),
+                ]),
+              ]),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Member deals — real Fanshop products at a members-only price
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader('Member deals', onAction: () => _push(context, const FanshopScreen())),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -278,7 +316,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) {
               final d = _drops[i];
-              return DealCard(title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, onTap: () => _push(context, const FomoDropScreen(subscribed: true)));
+              return DealCard(title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, onTap: () => _push(context, const FanshopScreen()));
             },
           ),
         ),
@@ -305,67 +343,45 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         const SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text(tr('VIP Experiences'), style: AppText.label1)),
+          child: Align(alignment: Alignment.centerLeft, child: Text(tr('Your Tombola perk'), style: AppText.label1)),
         ),
         const SizedBox(height: 12),
-        for (final r in const [
-          ('Meet the Players', 'Exclusive post-match meet & greet with the team', 'Exclusive Reward', 'Ends in 4:12:30', 'Gazprom'),
-          ('Signed Match Ball', 'Exclusive signed ball by our super stars', 'Limited', '3 Left', 'Veltins'),
-        ])
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-            child: Container(
-              clipBehavior: Clip.antiAlias,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: AppColors.pointsGradient),
-                borderRadius: BorderRadius.circular(AppRadii.card),
-              ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(r.$3, style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
-                  Pill(color: Colors.white24, child: Text(r.$4, style: AppText.caption1.copyWith(color: Colors.white))),
-                ]),
-                const SizedBox(height: 12),
-                Text(r.$1, style: AppText.label1.copyWith(color: Colors.white)),
-                const SizedBox(height: 4),
-                Text(r.$2, style: AppText.body3.copyWith(color: Colors.white70)),
-                const SizedBox(height: 6),
-                Text('${tr('Powered by')} ${r.$5}', style: AppText.caption1.copyWith(color: AppColors.gold, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: Tappable(
-                    onTap: () async {
-                      final ok = await showConfirmDialog(
-                        context,
-                        title: 'Enter this raffle?',
-                        message: 'We’ll use one Super Fan raffle entry — you’ll be notified if you win.',
-                        confirmLabel: 'Enter',
-                      );
-                      if (ok && context.mounted) {
-                        await showSuccessSheet(
-                          context,
-                          title: 'You’re entered!',
-                          message: 'Good luck — winners are announced after the match.',
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
-                      child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text(tr('Enter Raffle'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.white),
-                      ]),
-                    ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan perk'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                const Spacer(),
+                const Icon(Icons.local_activity_rounded, color: AppColors.gold, size: 24),
+              ]),
+              const SizedBox(height: 14),
+              Text(tr('3 free tombola entries every month'), style: AppText.label1.copyWith(color: Colors.white)),
+              const SizedBox(height: 4),
+              Text(tr('Win VIP tickets, signed gear and more — winners drawn each month.'), style: AppText.body3.copyWith(color: Colors.white70)),
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: Tappable(
+                  onTap: () => _push(context, const RafflesScreen()),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
+                    child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(tr('Open Tombola'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.white),
+                    ]),
                   ),
                 ),
-              ]),
-            ),
+              ),
+            ]),
           ),
+        ),
       ],
     );
   }

@@ -1044,6 +1044,16 @@ const Map<String, String> _de = {
   'Top up': 'Aufladen',
   'Vouchers': 'Gutscheine',
   'Ranking': 'Ranking',
+  // ── Fan+ Mitgliedschaft: Drop des Monats, Member-Deals, Tombola-Perk ──
+  'This month’s drop': 'Drop des Monats',
+  'Member deals': 'Mitglieder-Rabatte',
+  'View this month\'s drop': 'Drop des Monats ansehen',
+  'Your Tombola perk': 'Dein Tombola-Vorteil',
+  'Super Fan perk': 'Super-Fan-Vorteil',
+  '3 free tombola entries every month': '3 Gratis-Lose für die Tombola pro Monat',
+  'Win VIP tickets, signed gear and more — winners drawn each month.':
+      'Gewinne VIP-Tickets, signierte Fanartikel und mehr — Ziehung jeden Monat.',
+  'Open Tombola': 'Tombola öffnen',
   // ── Home „Für dich" reale Inhalte ──
   'Stadium Tour VIP': 'Stadiontour VIP',
   'Derby VIP Tombola': 'Derby VIP-Tombola',
