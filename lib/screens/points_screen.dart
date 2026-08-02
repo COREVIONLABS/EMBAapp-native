@@ -111,14 +111,25 @@ class PointsScreen extends StatelessWidget {
               const SizedBox(width: 4),
               Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
             ]),
-            const SizedBox(height: 22),
-            // 4 circle actions
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _Action(icon: Icons.add_rounded, label: tr('Earn'), onTap: () => _push(context, const EarnPointsScreen())),
-              _Action(icon: Icons.savings_rounded, label: tr('Redeem'), onTap: () => _push(context, const RedeemScreen())),
-              _Action(icon: Icons.workspace_premium_rounded, label: tr('Membership'), onTap: () => _push(context, const SubscriptionScreen())),
-              _Action(icon: Icons.more_horiz_rounded, label: tr('More'), onTap: () => _showMore(context)),
-            ]),
+            const SizedBox(height: 20),
+            // Primary quick-access grid — every key hub function on one visible
+            // tap (replaces the old 4 circles + hidden "More" sheet).
+            GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 14,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.92,
+              children: [
+                _Cat(icon: Icons.add_rounded, label: tr('Earn'), color: AppColors.brandPrimary, onTap: () => _push(context, const EarnPointsScreen())),
+                _Cat(icon: Icons.savings_rounded, label: tr('Redeem'), color: const Color(0xFF00897B), onTap: () => _push(context, const RedeemScreen())),
+                _Cat(icon: Icons.account_balance_wallet_rounded, label: tr('Top up'), color: const Color(0xFF1565C0), onTap: () => _push(context, const BuyPointsScreen())),
+                _Cat(icon: Icons.confirmation_number_rounded, label: tr('Vouchers'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const MyVouchersScreen())),
+                _Cat(icon: Icons.leaderboard_rounded, label: tr('Ranking'), color: const Color(0xFFEF6C00), onTap: () => _push(context, const LeaderboardScreen())),
+                _Cat(icon: Icons.grid_view_rounded, label: tr('Collection'), color: const Color(0xFFC62828), onTap: () => _push(context, const CollectionScreen())),
+              ],
+            ),
           ]),
         ),
         const SizedBox(height: 8),
@@ -261,41 +272,6 @@ class PointsScreen extends StatelessWidget {
     );
   }
 
-  void _showMore(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _MoreSheet(onPick: (w) {
-        Navigator.of(context).pop();
-        _push(context, w);
-      }),
-    );
-  }
-}
-
-class _Action extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _Action({required this.icon, required this.label, required this.onTap});
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Tappable(
-        scale: 0.94,
-        onTap: onTap,
-        child: Column(children: [
-          Container(
-            width: 56, height: 56,
-            decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, border: Border.all(color: AppColors.borderLightest)),
-            child: Icon(icon, color: AppColors.brandPrimary, size: 24),
-          ),
-          const SizedBox(height: 8),
-          Text(label, textAlign: TextAlign.center, style: AppText.body3.copyWith(fontSize: 12.5), maxLines: 1, overflow: TextOverflow.ellipsis),
-        ]),
-      ),
-    );
-  }
 }
 
 class _SponsorAvatar extends StatelessWidget {
@@ -370,51 +346,5 @@ class _TxnRow extends StatelessWidget {
       ])),
       Text(pts, style: AppText.body2.copyWith(color: credit ? AppColors.success : AppColors.danger, fontWeight: FontWeight.w700)),
     ]);
-  }
-}
-
-class _MoreSheet extends StatelessWidget {
-  final void Function(Widget) onPick;
-  const _MoreSheet({required this.onPick});
-  @override
-  Widget build(BuildContext context) {
-    final items = <(IconData, String, String, Widget)>[
-      (Icons.confirmation_number_outlined, 'My Vouchers', 'Codes to show in the shop', const MyVouchersScreen()),
-      (Icons.add_circle_outline_rounded, 'Top up points', 'Buy a package · 100 pts = €1', const BuyPointsScreen()),
-      (Icons.leaderboard_rounded, 'Top Supporters', 'Season ranking — earned points only', const LeaderboardScreen()),
-      (Icons.local_fire_department_rounded, "This Month's Drop", 'Super Fan exclusive', const FomoDropScreen(subscribed: true)),
-      (Icons.grid_view_rounded, 'Season Collection', 'Collect player stickers', const CollectionScreen()),
-      (Icons.history_rounded, 'Points History', 'All your transactions', const PointsHistoryScreen()),
-    ];
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.borderLightest, borderRadius: BorderRadius.circular(2))),
-        const SizedBox(height: 12),
-        Align(alignment: Alignment.centerLeft, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Text(tr('More'), style: AppText.label1))),
-        const SizedBox(height: 8),
-        for (final it in items)
-          InkWell(
-            onTap: () => onPick(it.$4),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-              child: Row(children: [
-                Container(
-                  width: 42, height: 42,
-                  decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
-                  child: Icon(it.$1, color: AppColors.brandPrimary, size: 22),
-                ),
-                const SizedBox(width: 14),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(tr(it.$2), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-                  Text(tr(it.$3), style: AppText.body3Regular),
-                ])),
-                Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-              ]),
-            ),
-          ),
-      ]),
-    );
   }
 }

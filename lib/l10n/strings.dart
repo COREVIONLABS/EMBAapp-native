@@ -1038,4 +1038,8 @@ const Map<String, String> _de = {
       'Löse deine Punkte gegen einen Gutschein ein und zeig den Code im Shop.',
   'redeem in the official shop or at the counter.':
       'im offiziellen Shop oder an der Kasse einlösen.',
+  // ── Punkte-Hub Schnellzugriff-Kacheln ──
+  'Top up': 'Aufladen',
+  'Vouchers': 'Gutscheine',
+  'Ranking': 'Ranking',
 };
