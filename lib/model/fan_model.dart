@@ -130,7 +130,5 @@ const kExperiences = [
   FanExperience('Museum Tour', 'May 3', 'VELTINS-Arena', 1000, 'Stadium'),
   FanExperience('Youth Academy Day', 'May 10', 'Knappenschmiede', 2000, 'Family'),
   FanExperience('Legends Dinner', 'May 18', 'VIP Lounge', 10000, 'VIP'),
-  // Ticket raffles — empty & VIP seats turned into fan prizes (pitch pillar)
-  FanExperience('Win 2 VIP Tickets — vs Bayern', 'Draw Apr 4', 'VELTINS-Arena', 500, 'Raffle', raffle: true),
-  FanExperience('Win a Signed Home Shirt', 'Draw Apr 10', 'Fan Zone', 300, 'Raffle', raffle: true),
+  // Ticket & prize draws now live in their own Tombola hub (raffles_screen.dart).
 ];

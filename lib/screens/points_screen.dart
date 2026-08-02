@@ -16,6 +16,7 @@ import 'points_history_screen.dart';
 import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
+import 'raffles_screen.dart';
 import 'voucher_screen.dart';
 import 'my_vouchers_screen.dart';
 import 'search_screen.dart';
@@ -226,7 +227,7 @@ class PointsScreen extends StatelessWidget {
             children: [
               _Cat(icon: Icons.checkroom_rounded, label: tr('Fanshop'), color: const Color(0xFF0A2A5E), onTap: () => _push(context, const FanshopScreen())),
               _Cat(icon: Icons.confirmation_number_rounded, label: tr('Tickets'), color: const Color(0xFF1565C0), onTap: () => _push(context, const TicketsScreen())),
-              _Cat(icon: Icons.storefront_rounded, label: tr('Sponsors'), color: const Color(0xFF00897B), onTap: () => _push(context, const VoucherScreen())),
+              _Cat(icon: Icons.local_activity_rounded, label: tr('Tombola'), color: const Color(0xFFC62828), onTap: () => _push(context, const RafflesScreen())),
               _Cat(icon: Icons.stadium_rounded, label: tr('Experiences'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const ExperiencesScreen())),
             ],
           ),

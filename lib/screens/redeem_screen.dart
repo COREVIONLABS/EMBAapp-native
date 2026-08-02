@@ -11,6 +11,7 @@ import 'buy_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
+import 'raffles_screen.dart';
 import '../l10n/strings.dart';
 
 /// Redeem Points (Figma 2194:10804) — featured sponsor reward cards on top,
@@ -33,7 +34,7 @@ class RedeemScreen extends StatelessWidget {
     (Icons.storefront_rounded, 'Sponsors', 'Partner vouchers & offers', Color(0xFF00897B)),
     (Icons.stadium_rounded, 'Experiences', 'Stadium tours, VIP, players', Color(0xFF6A1B9A)),
     (Icons.fastfood_rounded, 'Food & Drink', 'Matchday combos & kiosks', Color(0xFFE65100)),
-    (Icons.local_activity_rounded, 'Extra Raffle Tickets', 'Boost your odds on draws', Color(0xFFC62828)),
+    (Icons.local_activity_rounded, 'Tombola', 'Monthly ticket & prize draws', Color(0xFFC62828)),
     (Icons.volunteer_activism_rounded, 'Donations', 'Give points to club causes', Color(0xFF2E7D32)),
   ];
 
@@ -87,6 +88,7 @@ class RedeemScreen extends StatelessWidget {
                 'Fanshop' => const FanshopScreen(),
                 'Tickets' => const TicketsScreen(),
                 'Experiences' => const ExperiencesScreen(),
+                'Tombola' => const RafflesScreen(),
                 'Sponsors' => const VoucherScreen(),
                 _ => null,
               };

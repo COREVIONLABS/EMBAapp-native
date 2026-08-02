@@ -21,6 +21,7 @@ import 'leaderboard_screen.dart';
 import 'subscription_screen.dart';
 import 'streak_screen.dart';
 import 'fanplus_screen.dart';
+import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/skeleton.dart';
@@ -130,7 +131,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     // until their photos are added.
     final more = <(String, String, IconData, Color, Widget)>[
       ('Partner', 'img_partner', Icons.handshake_rounded, const Color(0xFF00897B), const DealsHubScreen()),
-      ('Raffles', 'img_raffles', Icons.local_activity_rounded, const Color(0xFF8E24AA), const ExperiencesScreen()),
+      ('Raffles', 'img_raffles', Icons.local_activity_rounded, const Color(0xFF8E24AA), const RafflesScreen()),
       ('Live', 'img_live', Icons.sensors_rounded, const Color(0xFFD32F2F), const MatchdayLiveScreen()),
       ('Specials', 'img_specials', Icons.bolt_rounded, const Color(0xFFF9A825), const MatchdaySpecialsScreen()),
     ];

@@ -1042,4 +1042,25 @@ const Map<String, String> _de = {
   'Top up': 'Aufladen',
   'Vouchers': 'Gutscheine',
   'Ranking': 'Ranking',
+  // ── Tombola / Verlosungen ──
+  'Tombola': 'Tombola',
+  'Monthly ticket & prize draws': 'Monatliche Ticket- & Preis-Verlosungen',
+  'My tickets': 'Meine Lose',
+  'active entries this month': 'aktive Teilnahmen diesen Monat',
+  'Extra tickets': 'Extra-Lose',
+  'Tombola of the month': 'Tombola des Monats',
+  'More draws': 'Weitere Verlosungen',
+  'Draw of the month': 'Verlosung des Monats',
+  'entries': 'Teilnahmen',
+  'Draw in': 'Ziehung in',
+  'Enter this tombola?': 'An dieser Tombola teilnehmen?',
+  'Uses one free Super Fan entry.': 'Nutzt ein kostenloses Super-Fan-Freilos.',
+  'You\'ll be notified if you win.': 'Du wirst benachrichtigt, falls du gewinnst.',
+  'You\'re in!': 'Du bist dabei!',
+  'Your entry is confirmed — the winner is drawn when the timer ends.':
+      'Deine Teilnahme ist bestätigt — der Gewinner wird gezogen, wenn der Timer abläuft.',
+  'You\'re entered': 'Du nimmst teil',
+  'Enter — free with Super Fan': 'Teilnehmen — gratis mit Super Fan',
+  'Winners are drawn automatically when the timer ends and notified in the app.':
+      'Gewinner werden automatisch bei Timer-Ablauf gezogen und in der App benachrichtigt.',
 };

@@ -26,7 +26,7 @@ class ExperiencesScreen extends StatefulWidget {
 
 class _ExperiencesScreenState extends State<ExperiencesScreen> {
   int _cat = 0;
-  static const _cats = ['All', 'Raffle', 'Stadium', 'Players', 'VIP', 'Family'];
+  static const _cats = ['All', 'Stadium', 'Players', 'VIP', 'Family'];
   @override
   Widget build(BuildContext context) {
     final highlights = kExperiences.where((e) => e.featured || e.category == 'VIP' || e.category == 'Players').take(5).toList();
