@@ -53,7 +53,7 @@ const Map<String, String> _de = {
   'Link copied': 'Link kopiert',
   'Shared via': 'Geteilt über',
   'Confirm': 'Bestätigen',
-  // Home: Careem-style hero / status / chips / for-you
+  // Home: hero / status / chips / for-you
   'Presented by VELTINS': 'Präsentiert von VELTINS',
   'Derby Week: Schalke vs Dortmund': 'Derby-Woche: Schalke vs. Dortmund',
   'Fan+ Week: double points on every buy': 'Fan+ Woche: doppelte Punkte auf jeden Kauf',
@@ -118,7 +118,7 @@ const Map<String, String> _de = {
   'VELTINS 6-pack': 'VELTINS 6er-Pack',
   'Sponsor · -15%': 'Sponsor · -15%',
   'Sponsor deal': 'Sponsor-Deal',
-  // Points: Careem-style reward deals + FOMO hero
+  // Points: reward deals + FOMO hero
   'Reward deals': 'Prämien-Deals',
   'adidas home shirt': 'adidas Heimtrikot',
   'Only today': 'Nur heute',
@@ -859,7 +859,7 @@ const Map<String, String> _de = {
   'Try Super Fan free': 'Super Fan gratis testen',
   'Free for the next top match — priority seats included': 'Gratis fürs nächste Top-Spiel — Vorrang-Plätze inklusive',
 
-  // ── Points hub (RevPoints-style rebuild) ─────────────────────
+  // ── Points hub ───────────────────────────────────────────────
   'Search rewards & sponsors': 'Prämien & Sponsoren suchen',
   '1 pt per €1 spent': '1 Pkt. pro 1 € ausgegeben',
   'Earn': 'Verdienen',
@@ -883,7 +883,7 @@ const Map<String, String> _de = {
   'From': 'Ab',
   'Groceries': 'Lebensmittel',
   'Fashion': 'Mode',
-  // Membership (Revolut-style tabbed upgrade screen)
+  // Membership (tabbed upgrade screen)
   'Show all': 'Alle',
   'benefits': 'Vorteile anzeigen',
   'Become a': 'Werde',
@@ -1038,6 +1038,13 @@ const Map<String, String> _de = {
       'Löse deine Punkte gegen einen Gutschein ein und zeig den Code im Shop.',
   'redeem in the official shop or at the counter.':
       'im offiziellen Shop oder an der Kasse einlösen.',
+  // ── Tickets kohärent + Verlauf ──
+  'Earn 100 points': '100 Punkte verdienen',
+  'Check in at the stadium on matchday to earn 100 points. Your entry ticket lives under My Tickets.':
+      'Check dich am Spieltag im Stadion ein und erhalte 100 Punkte. Dein Ticket findest du unter „Meine Tickets".',
+  'Close': 'Schließen',
+  'Voucher: Home Scarf 25/26': 'Gutschein: Heimschal 25/26',
+  'Voucher: Stadium Tour VIP': 'Gutschein: Stadiontour VIP',
   // ── Punkte-Hub Schnellzugriff-Kacheln ──
   'ready to redeem': 'zum Einlösen bereit',
   '2 active · +800 pts': '2 aktiv · +800 Pkt.',

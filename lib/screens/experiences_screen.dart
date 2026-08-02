@@ -13,7 +13,6 @@ import '../l10n/strings.dart';
       'Players' => ([const Color(0xFF6A1B9A), const Color(0xFF311B92)], Icons.sports_soccer_rounded),
       'VIP' => ([const Color(0xFF2A2440), const Color(0xFF0B0616)], Icons.workspace_premium_rounded),
       'Family' => ([const Color(0xFF00897B), const Color(0xFF004D40)], Icons.family_restroom_rounded),
-      'Raffle' => ([const Color(0xFFC62828), const Color(0xFF7F1414)], Icons.local_activity_rounded),
       _ => (AppColors.pointsGradient, Icons.stadium_rounded),
     };
 
@@ -68,7 +67,7 @@ class _ExperiencesScreenState extends State<ExperiencesScreen> {
                 category: e.category,
                 glyph: style.$2,
                 gradient: style.$1,
-                badge: e.featured ? 'Featured' : (e.raffle ? 'Raffle' : null),
+                badge: e.featured ? 'Featured' : null,
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ExperienceDetailScreen(exp: e))),
               );
             },
@@ -95,17 +94,11 @@ class _ExpRow extends StatelessWidget {
         Container(width: 52, height: 52, decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_rounded, color: Colors.white70)),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            Flexible(child: Text(tr(e.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker))),
-            if (e.raffle) ...[
-              const SizedBox(width: 6),
-              Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), child: Text(tr('Raffle'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700, fontSize: 10))),
-            ],
-          ]),
+          Text(tr(e.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker)),
           const SizedBox(height: 2),
           Text('${e.date} · ${e.venue}', style: AppText.body3Regular),
         ])),
-        Text(e.raffle ? tr('Enter') : e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+        Text(e.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
       ]),
     );
   }

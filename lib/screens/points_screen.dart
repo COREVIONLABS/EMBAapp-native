@@ -21,10 +21,9 @@ import 'my_vouchers_screen.dart';
 import 'search_screen.dart';
 import '../l10n/strings.dart';
 
-/// Points tab — RevPoints-style Fan Points hub. Structure follows Revolut's
-/// RevPoints (hero balance → 4 actions → sponsor promo → sponsors → redeem
-/// grid → challenges → transactions), skinned in Schalke blue and filled with
-/// EMBA/S04 content (real club sponsors, fan rewards).
+/// Points tab — the Fan Points hub: hero balance → quick-access grid → sponsor
+/// promos → reward deals → sponsors → redeem grid → challenges → transactions,
+/// in Schalke blue with EMBA/S04 content (real club sponsors, fan rewards).
 class PointsScreen extends StatelessWidget {
   const PointsScreen({super.key});
 
@@ -154,7 +153,7 @@ class PointsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        // ── Reward deals (strikethrough pricing, Careem-style) ──
+        // ── Reward deals (strikethrough pricing) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionHeader('Reward deals', onAction: () => _push(context, const RedeemScreen())),
@@ -266,7 +265,7 @@ class PointsScreen extends StatelessWidget {
         for (final r in const [
           ('adidas Store Purchase', 'Today · 14:30', '+252 pts', true),
           ('Daily Spin Win', 'Today · 09:12', '+50 pts', true),
-          ('Redeemed: Home Jersey', 'Yesterday', '-1,500 pts', false),
+          ('Voucher: Home Scarf 25/26', 'Yesterday', '-900 pts', false),
         ])
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),

@@ -11,7 +11,6 @@ import 'wallet_detail_screens.dart';
 import 'subscription_screen.dart';
 import 'loyalty_tiers_screen.dart';
 import 'fan_profile_screen.dart';
-import 'membership_plan_screen.dart';
 import 'payment_methods_screen.dart';
 import 'points_history_screen.dart';
 import '../widgets/sub_scaffold.dart';
@@ -60,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                 icon: Icons.card_membership_rounded,
                 label: FanModel.membershipTier,
                 sub: 'Your plan',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MembershipPlanScreen())),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
               ),
             ),
             const SizedBox(width: 12),
@@ -153,7 +152,7 @@ Widget? _screenFor(String label) {
     case 'Points History':
       return const PointsHistoryScreen();
     case 'Membership':
-      return const MembershipPlanScreen();
+      return const SubscriptionScreen();
     case 'Payment Methods':
       return const PaymentMethodsScreen();
     case 'Subscription':

@@ -4,7 +4,7 @@ import '../model/fan_model.dart';
 import 'app_widgets.dart';
 import '../l10n/strings.dart';
 
-/// Reward deal card (Careem grocery "3.90 ~~5.70~~" style): a photo/motif with
+/// Reward deal card (strikethrough "3.90 ~~5.70~~" pricing): a photo/motif with
 /// a corner badge, a title, and a points price with the old value struck
 /// through, plus a quick redeem "+" button.
 class DealCard extends StatelessWidget {
@@ -94,7 +94,7 @@ class DealCard extends StatelessWidget {
   }
 }
 
-/// Full-width editorial hero (Careem "Summer Restaurant Week" style): a large
+/// Full-width editorial hero: a large
 /// campaign card with a gradient/photo background, an eyebrow, a big headline
 /// and a text CTA. Shows a real photo (`assets/images/<image>.png`) when one is
 /// bundled, otherwise a branded gradient with a faint motif glyph.
@@ -151,7 +151,7 @@ class HeroBanner extends StatelessWidget {
   }
 }
 
-/// Compact at-a-glance chip (Careem "Balance / SRW / Salik" row): a small card
+/// Compact at-a-glance stat chip: a small card
 /// with a coloured icon badge, a label and a bold value. Used in a horizontal
 /// strip of quick stats.
 class InfoChip extends StatelessWidget {
@@ -193,7 +193,7 @@ class InfoChip extends StatelessWidget {
   }
 }
 
-/// Recommendation card (Careem "For you" restaurant row): a leading brand/motif
+/// Recommendation card ("For you" row): a leading brand/motif
 /// tile, a title, a meta line and a discount pill. Two-per-row on the Home feed.
 class ForYouCard extends StatelessWidget {
   final String title;
@@ -292,7 +292,7 @@ class SponsorLogo extends StatelessWidget {
   }
 }
 
-/// Careem-style tile: a soft card that shows a real product/category photo
+/// Image tile: a soft card that shows a real product/category photo
 /// (`assets/images/<image>.png`) filling the card, with the label underneath.
 /// Until a photo is bundled it falls back to a colourful, category-tinted motif
 /// (a vibrant icon badge on a soft gradient) so the tile already reads as rich
@@ -518,7 +518,7 @@ class FeaturedImageCard extends StatelessWidget {
 }
 
 /// Rounded search field used across the Points hub / Earn / Redeem screens
-/// (mirrors Revolut's "Search for a store" pill).
+/// (a "Search for a store" pill).
 class HubSearchField extends StatelessWidget {
   final String hint;
   final VoidCallback? onTap;
@@ -541,7 +541,7 @@ class HubSearchField extends StatelessWidget {
   }
 }
 
-/// Large sponsor promo card (mirrors Revolut's Dell/Macy's "20% OFF" cards) —
+/// Large sponsor promo card (a "20% OFF" partner-offer card) —
 /// a coloured gradient tile with a sponsor avatar, category, a headline offer
 /// and an info button. Always shown with an EMBA/S04 partner.
 class SponsorPromoCard extends StatelessWidget {

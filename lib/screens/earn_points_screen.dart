@@ -14,7 +14,7 @@ class _Way {
   const _Way(this.icon, this.title, this.sub, this.color);
 }
 
-/// Earn Points — aligned to the RevPoints hub style: search field, a welcome
+/// Earn Points — aligned to the Fan Points hub style: search field, a welcome
 /// bonus, a "ways to earn" list (rate in the subtitle), a sponsor promo and a
 /// top-up shortcut. Content is EMBA/S04.
 class EarnPointsScreen extends StatelessWidget {

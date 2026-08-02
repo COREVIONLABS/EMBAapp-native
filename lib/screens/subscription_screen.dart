@@ -7,9 +7,9 @@ import 'upgrade_plan_screen.dart';
 import 'benefits_screen.dart';
 import '../l10n/strings.dart';
 
-/// Membership plans — Revolut-Metal-style tabbed upgrade screen: pick a tier
-/// tab, see one rich card (price + headline benefits + partner perks), then a
-/// "show all benefits" link and a "become a …" CTA. EMBA/S04 tiers.
+/// Membership plans — tabbed upgrade screen: pick a tier tab, see one rich card
+/// (price + headline benefits + partner perks), then a "show all benefits" link
+/// and a "become a …" CTA. EMBA/S04 tiers.
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
   @override

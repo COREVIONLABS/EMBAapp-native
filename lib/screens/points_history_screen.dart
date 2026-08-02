@@ -7,13 +7,13 @@ import '../l10n/strings.dart';
 class PointsHistoryScreen extends StatelessWidget {
   const PointsHistoryScreen({super.key});
   static const _rows = [
-    ('Adidas Store Purchase', 'Today', '+252', true),
+    ('adidas Store Purchase', 'Today', '+252', true),
     ('Daily Spin Win', 'Today', '+50', true),
     ('Mission Complete: Spend €200', 'Yesterday', '+100', true),
     ('Match Prediction (Correct)', 'Saturday', '+75', true),
-    ('Redeemed: Home Jersey', 'Thursday', '-1,500', false),
+    ('Voucher: Home Scarf 25/26', 'Thursday', '-900', false),
     ('Stadium check-in', 'Last week', '+120', true),
-    ('Redeemed: Stadium Tour', '2 weeks ago', '-2,500', false),
+    ('Voucher: Stadium Tour VIP', '2 weeks ago', '-2,500', false),
   ];
   @override
   Widget build(BuildContext context) {

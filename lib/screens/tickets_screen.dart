@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/voucher_flow.dart';
+import '../widgets/action_sheets.dart';
 import 'my_tickets_screen.dart';
 import '../l10n/strings.dart';
 
@@ -66,9 +67,31 @@ class _TicketsScreenState extends State<TicketsScreen> {
 class _TicketCard extends StatelessWidget {
   final _Ticket t;
   const _TicketCard(this.t);
+
+  Future<void> _onTap(BuildContext context) async {
+    if (t.buy) {
+      await redeemForVoucher(context, title: '${t.home} vs ${t.away}', category: 'Tickets', points: t.points, detail: '${t.when} · ${t.venue}');
+    } else {
+      // Home matches earn points at the turnstile — explain and link to the
+      // wallet where the entry ticket (QR) lives.
+      final go = await showConfirmDialog(
+        context,
+        title: 'Earn 100 points',
+        message: 'Check in at the stadium on matchday to earn 100 points. Your entry ticket lives under My Tickets.',
+        confirmLabel: 'My Tickets',
+        cancelLabel: 'Close',
+      );
+      if (go && context.mounted) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyTicketsScreen()));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    return GestureDetector(
+      onTap: () => _onTap(context),
+      child: ClipRRect(
       borderRadius: BorderRadius.circular(AppRadii.card),
       child: Stack(
         children: [
@@ -91,6 +114,7 @@ class _TicketCard extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
   }
 
@@ -107,11 +131,7 @@ class _TicketCard extends StatelessWidget {
             children: [
               Pill(color: Colors.white24, child: Text(tr(t.isHome ? 'Home Match' : 'Away Match'), style: AppText.caption1.copyWith(color: Colors.white))),
               const Spacer(),
-              GestureDetector(
-                onTap: t.buy
-                    ? () => redeemForVoucher(context, title: '${t.home} vs ${t.away}', category: 'Tickets', points: t.points, detail: '${t.when} · ${t.venue}')
-                    : null,
-                child: Container(
+              Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(color: t.buy ? AppColors.gold : Colors.white24, borderRadius: BorderRadius.circular(999)),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -120,7 +140,6 @@ class _TicketCard extends StatelessWidget {
                     Icon(Icons.arrow_forward_rounded, size: 14, color: t.buy ? AppColors.brandDarkest : Colors.white),
                   ]),
                 ),
-              ),
             ],
           ),
         ],

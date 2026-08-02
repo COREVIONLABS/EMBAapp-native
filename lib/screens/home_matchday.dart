@@ -126,7 +126,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       ('Benefits', 'img_benefits', Icons.redeem_rounded, const Color(0xFFF9A825), const DealsHubScreen()),
       ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
     ];
-    // Extra modules revealed by "Show more" (Revolut-style inline expand).
+    // Extra modules revealed by "Show more" (inline expand).
     // Partner has a real photo; Raffles/Live/Specials still fall back to a motif
     // until their photos are added.
     final more = <(String, String, IconData, Color, Widget)>[
@@ -180,8 +180,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     );
   }
 
-  // Editorial sponsor/campaign hero (Careem "Restaurant Week" style) — kept
-  // deliberately off the fixture so it never duplicates the next-match card.
+  // Editorial sponsor/campaign hero — kept deliberately off the fixture so it
+  // never duplicates the next-match card.
   Widget _heroBanner() => HeroBanner(
         eyebrow: 'Presented by VELTINS',
         title: 'Win matchday jerseys & VIP seats',
@@ -192,8 +192,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         onTap: () => _push(context, const DealsHubScreen()),
       );
 
-  // Dismissible status card (Careem "That was fast!" style) — always a
-  // non-fixture nudge so it doesn't repeat the match card on matchdays.
+  // Dismissible status card — always a non-fixture nudge so it doesn't repeat
+  // the match card on matchdays.
   Widget _statusCard() {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 10, 14),
@@ -228,7 +228,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     );
   }
 
-  // At-a-glance quick-stat chips (Careem "Balance / SRW / Salik" row).
+  // At-a-glance quick-stat chips (Membership / Streak / Rank / Next reward).
   Widget _infoChips() {
     return ValueListenableBuilder<String>(
       valueListenable: tierNotifier,
@@ -253,7 +253,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     );
   }
 
-  // Personalised recommendations (Careem "For you, Günter" row).
+  // Personalised recommendations ("For you" row).
   Widget _forYou() {
     final recs = <(String, String, String, IconData, Color, VoidCallback)>[
       ('Stadium Tour VIP', 'Experience · 2,500 pts', 'Recommended', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
