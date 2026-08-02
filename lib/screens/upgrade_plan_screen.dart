@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import 'fanplus_screen.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// Upgrade Plan checkout (Figma 404:10693 / 404:11074).
@@ -16,10 +17,12 @@ class UpgradePlanScreen extends StatelessWidget {
     return SubScaffold(
       title: tr('Upgrade Plan'),
       bottomBar: PrimaryButton('Confirm & Pay $price', onTap: () {
+        // Reflect the new tier across the app (Home chip + Fan+ hub).
+        tierNotifier.value = plan;
         showModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
-          builder: (_) => const _SuccessSheet(),
+          builder: (_) => _SuccessSheet(plan: plan),
         );
       }),
       children: [
@@ -94,7 +97,8 @@ class UpgradePlanScreen extends StatelessWidget {
 }
 
 class _SuccessSheet extends StatelessWidget {
-  const _SuccessSheet();
+  final String plan;
+  const _SuccessSheet({required this.plan});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -113,7 +117,7 @@ class _SuccessSheet extends StatelessWidget {
             child: const Icon(Icons.check_rounded, color: AppColors.success, size: 40),
           ),
           const SizedBox(height: 18),
-          Text(tr("You're a Super Fan!"), style: AppText.h4),
+          Text("${tr("You're a")} $plan!", style: AppText.h4),
           const SizedBox(height: 8),
           Text(tr('Your plan is active. Enjoy priority access and exclusive perks.'),
               textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),

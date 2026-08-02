@@ -65,6 +65,11 @@ class FanModel {
   ];
 }
 
+/// Live-selected membership tier (prototype state). Set when a fan "becomes" a
+/// tier on the Membership screen; the Home membership chip and the Fan+ hub
+/// listen to it so the choice is reflected instantly across the app.
+final ValueNotifier<String> tierNotifier = ValueNotifier<String>(FanModel.membershipTier);
+
 class FanProduct {
   final String name;
   final double price;

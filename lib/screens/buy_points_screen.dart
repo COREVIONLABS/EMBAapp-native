@@ -17,6 +17,7 @@ class BuyPointsScreen extends StatefulWidget {
 
 class _BuyPointsScreenState extends State<BuyPointsScreen> {
   int _sel = 1;
+  bool _recurring = false;
 
   // (points, price €, bonus %)
   static const _packs = [
@@ -33,8 +34,12 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
     final total = p.$1 + bonus;
     return SubScaffold(
       title: tr('Buy Points'),
-      bottomBar: PrimaryButton('${tr('Pay')} €${p.$2.toStringAsFixed(2)}', onTap: () async {
-        await showSuccessSheet(context, title: 'Points added', message: '$total ${tr('points are now in your balance.')}');
+      bottomBar: PrimaryButton('${tr('Pay')} €${p.$2.toStringAsFixed(2)}${_recurring ? ' / ${tr('mo')}' : ''}', onTap: () async {
+        await showSuccessSheet(context,
+            title: 'Points added',
+            message: _recurring
+                ? '$total ${tr('points added — and topped up automatically every month.')}'
+                : '$total ${tr('points are now in your balance.')}');
         if (context.mounted) Navigator.of(context).pop();
       }),
       children: [
@@ -61,6 +66,19 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
           const SizedBox(height: 10),
         ],
         const SizedBox(height: 6),
+        SurfaceCard(
+          child: Row(children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.autorenew_rounded, color: AppColors.brandPrimary, size: 22)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Auto top-up monthly'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 2),
+              Text(tr('Never run out — recharge this pack every month. Cancel anytime.'), style: AppText.body3Regular),
+            ])),
+            Switch(value: _recurring, onChanged: (v) => setState(() => _recurring = v)),
+          ]),
+        ),
+        const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),

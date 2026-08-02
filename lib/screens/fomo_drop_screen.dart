@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
@@ -9,12 +10,38 @@ import '../l10n/strings.dart';
 /// Monthly FOMO Drop — a single, time-limited exclusive item that only
 /// Super Fan members can claim. Non-members see the drop but hit a paywall,
 /// which is the whole point: scarcity + membership as the key.
-class FomoDropScreen extends StatelessWidget {
+class FomoDropScreen extends StatefulWidget {
   final bool subscribed;
   const FomoDropScreen({super.key, this.subscribed = false});
+  @override
+  State<FomoDropScreen> createState() => _FomoDropScreenState();
+}
+
+class _FomoDropScreenState extends State<FomoDropScreen> {
+  late final DateTime _end = DateTime.now().add(const Duration(days: 2, hours: 14, minutes: 38, seconds: 5));
+  Duration _left = const Duration(days: 2, hours: 14, minutes: 38, seconds: 5);
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      final d = _end.difference(DateTime.now());
+      if (mounted) setState(() => _left = d.isNegative ? Duration.zero : d);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String _two(int n) => n.toString().padLeft(2, '0');
 
   @override
   Widget build(BuildContext context) {
+    final subscribed = widget.subscribed;
     return SubScaffold(
       title: tr('This Month\'s Drop'),
       bottomBar: subscribed
@@ -50,14 +77,14 @@ class FomoDropScreen extends StatelessWidget {
         // Countdown
         Text(tr('Drop closes in'), style: AppText.label2),
         const SizedBox(height: 12),
-        Row(children: const [
-          Expanded(child: _CountBox(value: '02', unit: 'Days')),
-          SizedBox(width: 10),
-          Expanded(child: _CountBox(value: '14', unit: 'Hrs')),
-          SizedBox(width: 10),
-          Expanded(child: _CountBox(value: '38', unit: 'Min')),
-          SizedBox(width: 10),
-          Expanded(child: _CountBox(value: '05', unit: 'Sec')),
+        Row(children: [
+          Expanded(child: _CountBox(value: _two(_left.inDays), unit: 'Days')),
+          const SizedBox(width: 10),
+          Expanded(child: _CountBox(value: _two(_left.inHours % 24), unit: 'Hrs')),
+          const SizedBox(width: 10),
+          Expanded(child: _CountBox(value: _two(_left.inMinutes % 60), unit: 'Min')),
+          const SizedBox(width: 10),
+          Expanded(child: _CountBox(value: _two(_left.inSeconds % 60), unit: 'Sec')),
         ]),
         const SizedBox(height: 20),
         if (!subscribed)

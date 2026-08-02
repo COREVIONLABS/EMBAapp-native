@@ -53,9 +53,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               style: AppText.body3.copyWith(color: AppColors.onAccent))),
         ]),
       ),
-      const SizedBox(height: 16),
+      const SizedBox(height: 8),
+      // Top-3 podium
+      _Podium(_season.take(3).toList()),
+      const SizedBox(height: 18),
     ];
-    for (var i = 0; i < _season.length; i++) {
+    for (var i = 3; i < _season.length; i++) {
       final r = _season[i];
       final you = r.$1 == 'Max Mustermann';
       rows.add(Padding(
@@ -100,6 +103,70 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           ),
         ),
     ];
+  }
+}
+
+/// Top-3 podium: 2nd (left) · 1st (centre, tallest) · 3rd (right).
+class _Podium extends StatelessWidget {
+  final List<(String, int, bool)> top; // rank order: 1, 2, 3
+  const _Podium(this.top);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      Expanded(child: _col(top[1], 2, 84, const Color(0xFFB8C0CC))),
+      const SizedBox(width: 8),
+      Expanded(child: _col(top[0], 1, 116, AppColors.gold)),
+      const SizedBox(width: 8),
+      Expanded(child: _col(top[2], 3, 66, const Color(0xFFCD8B5A))),
+    ]);
+  }
+
+  Widget _col((String, int, bool) e, int place, double h, Color c) {
+    final big = place == 1;
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      SizedBox(height: 24, child: big ? const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 24) : null),
+      const SizedBox(height: 6),
+      SizedBox(
+        height: big ? 62 : 54,
+        child: Stack(clipBehavior: Clip.none, alignment: Alignment.topCenter, children: [
+          Container(
+            width: big ? 56 : 48, height: big ? 56 : 48,
+            decoration: BoxDecoration(shape: BoxShape.circle, gradient: const LinearGradient(colors: AppColors.pointsGradient), border: Border.all(color: c, width: 2.5)),
+            alignment: Alignment.center,
+            child: Text(e.$1.characters.first, style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: big ? 22 : 18)),
+          ),
+          Positioned(
+            bottom: -2,
+            child: Container(
+              width: 20, height: 20,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: c, border: Border.all(color: AppColors.surface, width: 2)),
+              alignment: Alignment.center,
+              child: Text('$place', style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11)),
+            ),
+          ),
+        ]),
+      ),
+      const SizedBox(height: 8),
+      Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+        Flexible(child: Text(e.$1, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700))),
+        if (e.$3) ...[const SizedBox(width: 3), const Icon(Icons.verified_rounded, size: 12, color: AppColors.brandPrimary)],
+      ]),
+      const SizedBox(height: 1),
+      Text(FanModel.fmtPublic(e.$2), style: AppText.caption1.copyWith(color: AppColors.textLight, fontSize: 11)),
+      const SizedBox(height: 8),
+      Container(
+        width: double.infinity,
+        height: h,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [c, Color.lerp(c, Colors.black, 0.18)!]),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        ),
+        alignment: Alignment.topCenter,
+        padding: const EdgeInsets.only(top: 8),
+        child: Text('$place', style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+      ),
+    ]);
   }
 }
 

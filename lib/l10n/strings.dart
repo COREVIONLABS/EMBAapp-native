@@ -976,4 +976,43 @@ const Map<String, String> _de = {
   '1h ago': 'vor 1 Std.',
   '3h ago': 'vor 3 Std.',
   '2d ago': 'vor 2 Tagen',
+  // ── C1+ tier selection ──
+  "You're a": 'Du bist jetzt',
+  // ── B3 Entertainer-PIN redeem flow ──
+  'Redeem now': 'Jetzt einlösen',
+  'Redeem Voucher': 'Gutschein einlösen',
+  'Staff: enter the 4-digit Entertainer PIN': 'Personal: 4-stellige Entertainer-PIN eingeben',
+  'Hand the phone to the kiosk staff to confirm this voucher in person.':
+      'Gib das Handy dem Kiosk-Personal, um diesen Gutschein persönlich zu bestätigen.',
+  'Confirming with the kiosk…': 'Wird am Kiosk bestätigt…',
+  'Verifying the Entertainer PIN.': 'Entertainer-PIN wird geprüft.',
+  'Confirmed by staff — enjoy!': 'Vom Personal bestätigt — viel Spaß!',
+  'Redeemed at': 'Eingelöst am',
+  'Code': 'Code',
+  'Single-use — this code is now spent.': 'Einmalig gültig — dieser Code ist jetzt verbraucht.',
+  // ── C3 streak detail ──
+  'Your Streak': 'Deine Serie',
+  'day streak': 'Tage-Serie',
+  'Level 2 · Fire': 'Level 2 · Feuer',
+  'Next: Level 3 · Gold': 'Nächstes: Level 3 · Gold',
+  'days to go': 'Tage übrig',
+  'Keep your streak going for 2 more days to reach Gold.':
+      'Halte deine Serie noch 2 Tage, um Gold zu erreichen.',
+  'Last 14 days': 'Letzte 14 Tage',
+  'Streak protected — one missed day won\'t reset it (Fan+ perk).':
+      'Serie geschützt — ein verpasster Tag setzt sie nicht zurück (Fan+ Vorteil).',
+  'How streaks work': 'So funktionieren Serien',
+  'Open the app and do one fan action a day — a spin, a prediction, a check-in.':
+      'Öffne die App und mach eine Fan-Aktion pro Tag — ein Dreh, ein Tipp, ein Check-in.',
+  'Every day extends your streak and earns bonus points at each new level.':
+      'Jeder Tag verlängert deine Serie und bringt bei jedem neuen Level Bonuspunkte.',
+  'Super Fan members get one free streak freeze a month so a missed day won\'t reset it.':
+      'Super-Fan-Mitglieder erhalten einmal im Monat einen Serien-Schutz, damit ein verpasster Tag sie nicht zurücksetzt.',
+  // ── B2+ recurring top-up ──
+  'mo': 'Mon.',
+  'Auto top-up monthly': 'Monatlich automatisch aufladen',
+  'Never run out — recharge this pack every month. Cancel anytime.':
+      'Nie leer — lade dieses Paket jeden Monat auf. Jederzeit kündbar.',
+  'points added — and topped up automatically every month.':
+      'Punkte hinzugefügt — und jeden Monat automatisch aufgeladen.',
 };

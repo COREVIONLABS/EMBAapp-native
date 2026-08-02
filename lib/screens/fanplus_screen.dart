@@ -9,6 +9,7 @@ import '../widgets/hub_widgets.dart';
 import 'subscription_screen.dart';
 import 'fomo_drop_screen.dart';
 import 'exclusive_content_screen.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// Fan+ (Figma 2145:8198 Non-Subscriber / 2145:8275 Subscriber).
@@ -212,7 +213,10 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               ),
               const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 36),
               const SizedBox(height: 8),
-              Text(tr('Super Fan'), style: AppText.h4.copyWith(color: Colors.white)),
+              ValueListenableBuilder<String>(
+                valueListenable: tierNotifier,
+                builder: (context, tier, __) => Text(tr(tier), style: AppText.h4.copyWith(color: Colors.white)),
+              ),
               const SizedBox(height: 12),
               Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
                 for (final b in const ['Priority Access', 'Best Seats', '+3 VIP Draws'])

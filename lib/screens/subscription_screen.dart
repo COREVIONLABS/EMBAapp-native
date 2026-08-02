@@ -144,6 +144,17 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               ),
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              if (t.name == 'Super Fan') ...[
+                Pill(
+                  gradient: const LinearGradient(colors: AppColors.goldGradient),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    const Icon(Icons.star_rounded, size: 13, color: AppColors.brandDarkest),
+                    const SizedBox(width: 4),
+                    Text(tr('Most popular'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                  ]),
+                ),
+                const SizedBox(height: 12),
+              ],
               Text(tr(t.tagline), style: AppText.body3.copyWith(color: Colors.white70)),
               const SizedBox(height: 2),
               Text(tr(t.name), style: AppText.h2.copyWith(color: Colors.white)),

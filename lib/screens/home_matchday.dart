@@ -19,7 +19,9 @@ import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'leaderboard_screen.dart';
 import 'subscription_screen.dart';
+import 'streak_screen.dart';
 import 'fanplus_screen.dart';
+import '../model/fan_model.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
@@ -225,21 +227,26 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
 
   // At-a-glance quick-stat chips (Careem "Balance / SRW / Salik" row).
   Widget _infoChips() {
-    final chips = <(IconData, String, String, Color, VoidCallback)>[
-      (Icons.workspace_premium_rounded, 'Membership', 'Super Fan', AppColors.gold, () => _push(context, const FanPlusScreen())),
-      (Icons.local_fire_department_rounded, 'Streak', '5 days', const Color(0xFFEF6C00), () => _push(context, const AchievementsScreen())),
-      (Icons.leaderboard_rounded, 'Rank', '#12', const Color(0xFF1565C0), () => _push(context, const LeaderboardScreen())),
-      (Icons.card_giftcard_rounded, 'Next reward', '900 pts', const Color(0xFF00897B), () => _push(context, const RedeemScreen())),
-    ];
-    return SizedBox(
-      height: 58,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: chips.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (_, i) => InfoChip(icon: chips[i].$1, label: chips[i].$2, value: chips[i].$3, color: chips[i].$4, onTap: chips[i].$5),
-      ),
+    return ValueListenableBuilder<String>(
+      valueListenable: tierNotifier,
+      builder: (context, tier, __) {
+        final chips = <(IconData, String, String, Color, VoidCallback)>[
+          (Icons.workspace_premium_rounded, 'Membership', tier, AppColors.gold, () => _push(context, const FanPlusScreen())),
+          (Icons.local_fire_department_rounded, 'Streak', '5 days', const Color(0xFFEF6C00), () => _push(context, const AchievementsScreen())),
+          (Icons.leaderboard_rounded, 'Rank', '#12', const Color(0xFF1565C0), () => _push(context, const LeaderboardScreen())),
+          (Icons.card_giftcard_rounded, 'Next reward', '900 pts', const Color(0xFF00897B), () => _push(context, const RedeemScreen())),
+        ];
+        return SizedBox(
+          height: 58,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: chips.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            itemBuilder: (_, i) => InfoChip(icon: chips[i].$1, label: chips[i].$2, value: chips[i].$3, color: chips[i].$4, onTap: chips[i].$5),
+          ),
+        );
+      },
     );
   }
 
@@ -440,6 +447,7 @@ class _StreakStrip extends StatelessWidget {
     const done = 5; // days completed this week
     const labels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
     return SurfaceCard(
+      onTap: () => _push(context, const StreakScreen()),
       padding: const EdgeInsets.all(14),
       child: Row(children: [
         Container(
