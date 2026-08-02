@@ -77,16 +77,18 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               ]),
             ),
             const SizedBox(height: 16),
+            // Fan Points wallet is always the first thing on Home.
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
+            const SizedBox(height: 14),
+            _infoChips(),
+            const SizedBox(height: 16),
+            // Sponsor campaign + the open daily-spin nudge sit below the wallet.
             Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _heroBanner()),
             const SizedBox(height: 14),
             if (!_statusDismissed) ...[
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _statusCard()),
               const SizedBox(height: 14),
             ],
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
-            const SizedBox(height: 14),
-            _infoChips(),
-            const SizedBox(height: 16),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _StreakStrip()),
             const SizedBox(height: 20),
             if (_matchday)
