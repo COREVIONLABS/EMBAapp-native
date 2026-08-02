@@ -4,7 +4,9 @@ import '../widgets/sub_scaffold.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
+import '../widgets/voucher_flow.dart';
 import 'voucher_screen.dart';
+import 'my_vouchers_screen.dart';
 import 'buy_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
@@ -43,7 +45,15 @@ class RedeemScreen extends StatelessWidget {
     return SubScaffold(
       title: tr('Redeem Points'),
       children: [
-        SectionHeader('Featured rewards', onAction: () => _push(context, const VoucherScreen())),
+        HubListRow(
+          icon: Icons.confirmation_number_rounded,
+          title: 'My Vouchers',
+          subtitle: 'Codes you redeemed — show them in the shop',
+          iconColor: AppColors.brandPrimary,
+          onTap: () => _push(context, const MyVouchersScreen()),
+        ),
+        const SizedBox(height: 16),
+        SectionHeader('Featured rewards', onAction: () => _push(context, const MyVouchersScreen())),
         const SizedBox(height: 12),
         SizedBox(
           height: 168,
@@ -58,7 +68,7 @@ class RedeemScreen extends StatelessWidget {
                 name: f.$1,
                 category: f.$2,
                 fromPts: f.$3,
-                onTap: () => _push(context, const VoucherScreen()),
+                onTap: () => redeemForVoucher(context, title: '${f.$1} · ${f.$2}', category: f.$2, points: f.$3, sponsor: f.$1),
               );
             },
           ),

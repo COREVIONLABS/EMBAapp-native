@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
-import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/tab_scaffold.dart';
+import '../model/voucher_store.dart';
 import 'product_detail_screen.dart';
-import 'cart_screen.dart';
+import 'my_vouchers_screen.dart';
 import '../l10n/strings.dart';
 
 /// Fanshop Home (Figma 2162:6193) — Shop tab.
@@ -33,7 +33,7 @@ class _FanshopScreenState extends State<FanshopScreen> {
             children: [
               Text(tr('Schalke Fanshop'), style: AppText.h2.copyWith(fontSize: 24)),
               const Spacer(),
-              _CartButton(),
+              _VouchersButton(),
               const SizedBox(width: 8),
               Container(
                 width: 36,
@@ -64,9 +64,9 @@ class _FanshopScreenState extends State<FanshopScreen> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
             child: Row(children: [
-              const Icon(Icons.monetization_on_rounded, color: AppColors.gold, size: 20),
+              const Icon(Icons.confirmation_number_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 10),
-              Expanded(child: Text(tr('Pay with Fan Points — use points at checkout!'), style: AppText.body2.copyWith(color: AppColors.onAccent))),
+              Expanded(child: Text(tr('Redeem points for a voucher — collect your item in the official Fanshop.'), style: AppText.body2.copyWith(color: AppColors.onAccent))),
             ]),
           ),
         ),
@@ -109,13 +109,14 @@ class _FanshopScreenState extends State<FanshopScreen> {
   }
 }
 
-class _CartButton extends StatelessWidget {
+/// Wallet shortcut — opens "My Vouchers" with a badge for open (unredeemed) ones.
+class _VouchersButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: cartStore,
+      animation: voucherStore,
       builder: (context, _) => GestureDetector(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen())),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyVouchersScreen())),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -123,17 +124,17 @@ class _CartButton extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)),
-              child: Icon(Icons.shopping_bag_outlined, size: 20, color: AppColors.textNormal),
+              child: Icon(Icons.confirmation_number_outlined, size: 20, color: AppColors.textNormal),
             ),
-            if (cartStore.count > 0)
+            if (voucherStore.openCount > 0)
               Positioned(
                 right: -2,
                 top: -2,
                 child: Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(color: AppColors.danger, shape: BoxShape.circle),
+                  decoration: const BoxDecoration(color: AppColors.brandPrimary, shape: BoxShape.circle),
                   constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                  child: Text('${cartStore.count}', textAlign: TextAlign.center, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                  child: Text('${voucherStore.openCount}', textAlign: TextAlign.center, style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
                 ),
               ),
           ],
@@ -175,9 +176,9 @@ class _ProductTile extends StatelessWidget {
           Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker)),
           const SizedBox(height: 4),
           Row(children: [
-            Text(p.priceEur, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+            Text(p.pointsLabel, style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
             const SizedBox(width: 6),
-            Text('or ${p.pointsLabel}', style: AppText.body3.copyWith(color: AppColors.brandPrimary)),
+            Flexible(child: Text(p.priceEur, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular)),
           ]),
         ],
       ),

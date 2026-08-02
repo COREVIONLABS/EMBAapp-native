@@ -17,6 +17,7 @@ import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
 import 'voucher_screen.dart';
+import 'my_vouchers_screen.dart';
 import 'search_screen.dart';
 import '../l10n/strings.dart';
 
@@ -378,6 +379,7 @@ class _MoreSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = <(IconData, String, String, Widget)>[
+      (Icons.confirmation_number_outlined, 'My Vouchers', 'Codes to show in the shop', const MyVouchersScreen()),
       (Icons.add_circle_outline_rounded, 'Top up points', 'Buy a package · 100 pts = €1', const BuyPointsScreen()),
       (Icons.leaderboard_rounded, 'Top Supporters', 'Season ranking — earned points only', const LeaderboardScreen()),
       (Icons.local_fire_department_rounded, "This Month's Drop", 'Super Fan exclusive', const FomoDropScreen(subscribed: true)),

@@ -1015,4 +1015,27 @@ const Map<String, String> _de = {
       'Nie leer — lade dieses Paket jeden Monat auf. Jederzeit kündbar.',
   'points added — and topped up automatically every month.':
       'Punkte hinzugefügt — und jeden Monat automatisch aufgeladen.',
+  // ── Gutschein-Modell (Punkte → Gutschein → im echten Shop einlösen) ──
+  'points': 'Punkte',
+  'Size': 'Größe',
+  'Get voucher': 'Gutschein holen',
+  'Get this voucher?': 'Diesen Gutschein holen?',
+  'Store value': 'Ladenwert',
+  'My Vouchers': 'Meine Gutscheine',
+  'Used': 'Eingelöst',
+  'Open': 'Offen',
+  'Already redeemed': 'Bereits eingelöst',
+  'No vouchers yet': 'Noch keine Gutscheine',
+  'Codes you redeemed — show them in the shop': 'Von dir eingelöste Codes — im Shop vorzeigen',
+  'Codes to show in the shop': 'Codes zum Vorzeigen im Shop',
+  'Redeem points for a voucher — collect this item in the official Fanshop.':
+      'Punkte gegen Gutschein einlösen — den Artikel im offiziellen Fanshop abholen.',
+  'Redeem points for a voucher — collect your item in the official Fanshop.':
+      'Punkte gegen Gutschein einlösen — deinen Artikel im offiziellen Fanshop abholen.',
+  'Show the code in the official shop or at the counter to redeem.':
+      'Zeig den Code im offiziellen Shop oder an der Kasse zum Einlösen.',
+  'Redeem your points for a voucher, then show the code in the shop.':
+      'Löse deine Punkte gegen einen Gutschein ein und zeig den Code im Shop.',
+  'redeem in the official shop or at the counter.':
+      'im offiziellen Shop oder an der Kasse einlösen.',
 };

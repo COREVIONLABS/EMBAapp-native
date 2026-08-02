@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../model/fan_model.dart';
-import '../model/cart.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
-import 'cart_screen.dart';
+import '../widgets/voucher_flow.dart';
 import '../l10n/strings.dart';
 
 /// Product Detail (Figma 2162:6304).
@@ -26,9 +25,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final light = p.color.computeLuminance() > 0.6;
     return SubScaffold(
       title: '',
-      bottomBar: PrimaryButton(tr('Add to Cart'), onTap: () {
-        cartStore.add(p, _sizes[_size]);
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen()));
+      bottomBar: PrimaryButton('${tr('Get voucher')} · ${p.pointsLabel}', onTap: () {
+        redeemForVoucher(context, title: p.name, category: 'Fanshop', points: p.points, detail: '${tr('Size')} ${_sizes[_size]}');
       }),
       children: [
         Container(
@@ -42,11 +40,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         const SizedBox(height: 20),
         Text(p.name, style: AppText.h4),
         const SizedBox(height: 6),
-        Row(children: [
-          Text(p.priceEur, style: AppText.label1.copyWith(color: AppColors.textDarker)),
+        Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+          Text(p.pointsLabel, style: AppText.label1.copyWith(color: AppColors.brandPrimary)),
           const SizedBox(width: 8),
-          Text('or ${p.pointsLabel}', style: AppText.body1.copyWith(color: AppColors.brandPrimary, fontSize: 15)),
+          Text('${tr('Store value')} ${p.priceEur}', style: AppText.body3Regular),
         ]),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+          child: Row(children: [
+            Icon(Icons.confirmation_number_rounded, size: 18, color: AppColors.brandPrimary),
+            const SizedBox(width: 10),
+            Expanded(child: Text(tr('Redeem points for a voucher — collect this item in the official Fanshop.'),
+                style: AppText.body3.copyWith(color: AppColors.onAccent))),
+          ]),
+        ),
         const SizedBox(height: 20),
         Text(tr('Select Size'), style: AppText.label2),
         const SizedBox(height: 10),

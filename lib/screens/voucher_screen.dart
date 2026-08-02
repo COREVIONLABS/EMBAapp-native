@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../model/voucher_store.dart';
 import 'redeem_pin_screen.dart';
 import '../l10n/strings.dart';
 
@@ -13,24 +14,51 @@ class VoucherScreen extends StatelessWidget {
   final String sponsor;
   final String code;
   final String expiry;
+
+  /// When opened from the wallet / a fresh redemption, the underlying voucher so
+  /// its status can flip to "used" once the staff PIN confirms it.
+  final IssuedVoucher? issued;
   const VoucherScreen({
     super.key,
     this.title = 'Free Veltins 0.5L',
     this.sponsor = 'Veltins',
     this.code = 'S04-VEL-9F3K',
     this.expiry = 'Valid until 30 Apr 2026',
+    this.issued,
   });
+
+  VoucherScreen.fromIssued(IssuedVoucher v, {super.key})
+      : title = v.title,
+        sponsor = v.sponsor ?? v.category,
+        code = v.code,
+        expiry = 'Valid until 30 Jun 2026',
+        issued = v;
 
   @override
   Widget build(BuildContext context) {
+    final used = issued?.redeemed ?? false;
     return SubScaffold(
       title: tr('Your Voucher'),
-      bottomBar: PrimaryButton(tr('Redeem now'), onTap: () async {
-        final done = await Navigator.of(context).push<bool>(MaterialPageRoute(
-          builder: (_) => RedeemPinScreen(title: title, sponsor: sponsor, code: code),
-        ));
-        if (done == true && context.mounted) Navigator.of(context).pop();
-      }),
+      bottomBar: used
+          ? Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.check_circle_rounded, size: 18, color: AppColors.success),
+                const SizedBox(width: 8),
+                Text(tr('Already redeemed'), style: AppText.label2.copyWith(color: AppColors.textNormal)),
+              ]),
+            )
+          : PrimaryButton(tr('Redeem now'), onTap: () async {
+              final done = await Navigator.of(context).push<bool>(MaterialPageRoute(
+                builder: (_) => RedeemPinScreen(title: title, sponsor: sponsor, code: code),
+              ));
+              if (done == true) {
+                if (issued != null) voucherStore.markRedeemed(issued!);
+                if (context.mounted) Navigator.of(context).pop();
+              }
+            }),
       children: [
         Container(
           width: double.infinity,

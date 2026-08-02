@@ -3,18 +3,20 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/voucher_flow.dart';
 import 'my_tickets_screen.dart';
 import '../l10n/strings.dart';
 
 class _Ticket {
   final String home, away, when, venue;
   final bool isHome, buy;
-  const _Ticket(this.home, this.away, this.when, this.venue, this.isHome, this.buy);
+  final int points; // points for a ticket voucher (buy tickets only)
+  const _Ticket(this.home, this.away, this.when, this.venue, this.isHome, this.buy, [this.points = 0]);
 }
 
 const _tickets = [
   _Ticket('Schalke 04', 'Bayern Munich', 'Sat, Apr 5 · 15:30', 'VELTINS-Arena', true, false),
-  _Ticket('Eintracht HSV', 'Schalke 04', 'Sun, Apr 6 · 18:00', 'Signal Iduna Park', false, true),
+  _Ticket('Eintracht HSV', 'Schalke 04', 'Sun, Apr 6 · 18:00', 'Signal Iduna Park', false, true, 6000),
   _Ticket('Borussia Dortmund', 'Schalke 04', 'Sat, Apr 13 · 15:30', 'Allianz Arena', false, false),
   _Ticket('Schalke 04', 'Eintracht Frankfurt', 'Sun, Apr 14 · 17:30', 'Red Bull Arena', true, false),
   _Ticket('Schalke 04', 'Bayer Leverkusen', 'Sat, Apr 20 · 15:30', 'Volkswagen Arena', true, false),
@@ -85,14 +87,14 @@ class _TicketCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: _content(),
+            child: _content(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _content() {
+  Widget _content(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -105,14 +107,19 @@ class _TicketCard extends StatelessWidget {
             children: [
               Pill(color: Colors.white24, child: Text(tr(t.isHome ? 'Home Match' : 'Away Match'), style: AppText.caption1.copyWith(color: Colors.white))),
               const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(color: t.buy ? AppColors.gold : Colors.white24, borderRadius: BorderRadius.circular(999)),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Text(tr(t.buy ? 'Buy Now' : 'Earn 100 pts'), style: AppText.body3.copyWith(color: t.buy ? AppColors.brandDarkest : Colors.white, fontWeight: FontWeight.w700)),
-                  const SizedBox(width: 4),
-                  Icon(Icons.arrow_forward_rounded, size: 14, color: t.buy ? AppColors.brandDarkest : Colors.white),
-                ]),
+              GestureDetector(
+                onTap: t.buy
+                    ? () => redeemForVoucher(context, title: '${t.home} vs ${t.away}', category: 'Tickets', points: t.points, detail: '${t.when} · ${t.venue}')
+                    : null,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(color: t.buy ? AppColors.gold : Colors.white24, borderRadius: BorderRadius.circular(999)),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Text(tr(t.buy ? 'Get voucher' : 'Earn 100 pts'), style: AppText.body3.copyWith(color: t.buy ? AppColors.brandDarkest : Colors.white, fontWeight: FontWeight.w700)),
+                    const SizedBox(width: 4),
+                    Icon(Icons.arrow_forward_rounded, size: 14, color: t.buy ? AppColors.brandDarkest : Colors.white),
+                  ]),
+                ),
               ),
             ],
           ),
