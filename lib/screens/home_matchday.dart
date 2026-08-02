@@ -256,10 +256,10 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   // Personalised recommendations (Careem "For you, Günter" row).
   Widget _forYou() {
     final recs = <(String, String, String, IconData, Color, VoidCallback)>[
-      ('VIP stadium tour', 'Experience · 2,500 pts', 'Recommended', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
-      ('adidas home shirt 24/25', 'Fanshop · 20% with points', 'Popular', Icons.checkroom_rounded, const Color(0xFF0A2A5E), () => _push(context, const RedeemScreen())),
-      ('Players meet & greet', 'Experience · raffle', 'New', Icons.emoji_events_rounded, const Color(0xFFC62828), () => _push(context, const ExperiencesScreen())),
-      ('VELTINS 6-pack', 'Sponsor · -15%', 'Sponsor deal', Icons.local_offer_rounded, const Color(0xFF00897B), () => _push(context, const DealsHubScreen())),
+      ('Stadium Tour VIP', 'Experience · 2,500 pts', 'Recommended', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
+      ('Home Jersey 25/26', 'Fanshop · 4,500 pts', 'Popular', Icons.checkroom_rounded, const Color(0xFF0A2A5E), () => _push(context, const FanshopScreen())),
+      ('Derby VIP Tombola', 'Tombola · free with Super Fan', 'New', Icons.local_activity_rounded, const Color(0xFFC62828), () => _push(context, const RafflesScreen())),
+      ('VELTINS matchday crate', 'Sponsor · -30%', 'Sponsor deal', Icons.local_offer_rounded, const Color(0xFF00897B), () => _push(context, const DealsHubScreen())),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(

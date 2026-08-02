@@ -1044,6 +1044,12 @@ const Map<String, String> _de = {
   'Top up': 'Aufladen',
   'Vouchers': 'Gutscheine',
   'Ranking': 'Ranking',
+  // ── Home „Für dich" reale Inhalte ──
+  'Stadium Tour VIP': 'Stadiontour VIP',
+  'Derby VIP Tombola': 'Derby VIP-Tombola',
+  'Fanshop · 4,500 pts': 'Fanshop · 4.500 Pkt',
+  'Tombola · free with Super Fan': 'Tombola · gratis mit Super Fan',
+  'Sponsor · -30%': 'Sponsor · -30%',
   // ── Tombola / Verlosungen ──
   'Tombola': 'Tombola',
   'Monthly ticket & prize draws': 'Monatliche Ticket- & Preis-Verlosungen',
