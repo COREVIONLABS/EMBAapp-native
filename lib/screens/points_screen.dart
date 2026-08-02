@@ -14,7 +14,6 @@ import 'collection_screen.dart';
 import 'subscription_screen.dart';
 import 'points_history_screen.dart';
 import 'fanshop_screen.dart';
-import 'tickets_screen.dart';
 import 'experiences_screen.dart';
 import 'raffles_screen.dart';
 import 'voucher_screen.dart';
@@ -29,12 +28,14 @@ import '../l10n/strings.dart';
 class PointsScreen extends StatelessWidget {
   const PointsScreen({super.key});
 
-  // (title, category, old pts, new pts, badge, glyph, colour)
+  // Real offerings from our own catalogue: (title, category, old pts, new pts,
+  // badge, glyph, colour). Fanshop = real products, Tombola = a live draw,
+  // Sponsor = a real partner voucher.
   static const _deals = <(String, String, int, int, String, IconData, Color)>[
-    ('adidas home shirt', 'Fanshop', 3000, 2400, 'Only today', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
+    ('Home Jersey 25/26', 'Fanshop', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
     ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B)),
-    ('Home vs Bayern ticket', 'Tickets', 8000, 6500, 'Hot', Icons.confirmation_number_rounded, Color(0xFF1565C0)),
-    ('Signed ball raffle', 'Experience', 1000, 750, 'Limited', Icons.emoji_events_rounded, Color(0xFFC62828)),
+    ('Derby VIP Tombola', 'Tombola', 500, 350, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828)),
+    ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0)),
   ];
 
   void _push(BuildContext context, Widget s) =>
@@ -56,7 +57,7 @@ class PointsScreen extends StatelessWidget {
               colors: [AppColors.brandLightest, AppColors.surface],
             ),
           ),
-          padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 8, 20, 8),
+          padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 8, 20, 4),
           child: Column(children: [
             // Header
             Row(
@@ -116,24 +117,22 @@ class PointsScreen extends StatelessWidget {
             // Primary quick-access grid — every key hub function on one visible
             // tap (replaces the old 4 circles + hidden "More" sheet).
             GridView.count(
-              crossAxisCount: 3,
+              crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 14,
               crossAxisSpacing: 10,
-              childAspectRatio: 0.92,
+              childAspectRatio: 1.0,
               children: [
                 _Cat(icon: Icons.add_rounded, label: tr('Earn'), color: AppColors.brandPrimary, onTap: () => _push(context, const EarnPointsScreen())),
                 _Cat(icon: Icons.savings_rounded, label: tr('Redeem'), color: const Color(0xFF00897B), onTap: () => _push(context, const RedeemScreen())),
                 _Cat(icon: Icons.account_balance_wallet_rounded, label: tr('Top up'), color: const Color(0xFF1565C0), onTap: () => _push(context, const BuyPointsScreen())),
-                _Cat(icon: Icons.confirmation_number_rounded, label: tr('Vouchers'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const MyVouchersScreen())),
                 _Cat(icon: Icons.leaderboard_rounded, label: tr('Ranking'), color: const Color(0xFFEF6C00), onTap: () => _push(context, const LeaderboardScreen())),
-                _Cat(icon: Icons.grid_view_rounded, label: tr('Collection'), color: const Color(0xFFC62828), onTap: () => _push(context, const CollectionScreen())),
               ],
             ),
           ]),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         // ── Featured sponsor promos (big-card carousel) ──
         SizedBox(
           height: 176,
@@ -172,7 +171,11 @@ class PointsScreen extends StatelessWidget {
               final d = _deals[i];
               return DealCard(
                 title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7,
-                onTap: () => _push(context, const RedeemScreen()),
+                onTap: () => _push(context, switch (d.$2) {
+                  'Fanshop' => const FanshopScreen(),
+                  'Tombola' => const RafflesScreen(),
+                  _ => const RedeemScreen(),
+                }),
               );
             },
           ),
@@ -225,10 +228,10 @@ class PointsScreen extends StatelessWidget {
             crossAxisSpacing: 12,
             childAspectRatio: 0.82,
             children: [
-              _Cat(icon: Icons.checkroom_rounded, label: tr('Fanshop'), color: const Color(0xFF0A2A5E), onTap: () => _push(context, const FanshopScreen())),
-              _Cat(icon: Icons.confirmation_number_rounded, label: tr('Tickets'), color: const Color(0xFF1565C0), onTap: () => _push(context, const TicketsScreen())),
+              _Cat(icon: Icons.confirmation_number_rounded, label: tr('Vouchers'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const MyVouchersScreen())),
               _Cat(icon: Icons.local_activity_rounded, label: tr('Tombola'), color: const Color(0xFFC62828), onTap: () => _push(context, const RafflesScreen())),
-              _Cat(icon: Icons.stadium_rounded, label: tr('Experiences'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const ExperiencesScreen())),
+              _Cat(icon: Icons.stadium_rounded, label: tr('Experiences'), color: const Color(0xFF1565C0), onTap: () => _push(context, const ExperiencesScreen())),
+              _Cat(icon: Icons.grid_view_rounded, label: tr('Collection'), color: const Color(0xFF00897B), onTap: () => _push(context, const CollectionScreen())),
             ],
           ),
         ),

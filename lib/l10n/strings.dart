@@ -1039,6 +1039,8 @@ const Map<String, String> _de = {
   'redeem in the official shop or at the counter.':
       'im offiziellen Shop oder an der Kasse einlösen.',
   // ── Punkte-Hub Schnellzugriff-Kacheln ──
+  'ready to redeem': 'zum Einlösen bereit',
+  '2 active · +800 pts': '2 aktiv · +800 Pkt.',
   'Top up': 'Aufladen',
   'Vouchers': 'Gutscheine',
   'Ranking': 'Ranking',
