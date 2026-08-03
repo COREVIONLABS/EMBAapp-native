@@ -225,7 +225,7 @@ class PointsScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 14,
             crossAxisSpacing: 12,
-            childAspectRatio: 0.82,
+            childAspectRatio: 1.0,
             children: [
               _Cat(icon: Icons.confirmation_number_rounded, label: tr('Vouchers'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const MyVouchersScreen())),
               _Cat(icon: Icons.local_activity_rounded, label: tr('Tombola'), color: const Color(0xFFC62828), onTap: () => _push(context, const RafflesScreen())),
@@ -234,7 +234,7 @@ class PointsScreen extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         // ── Challenges ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -261,16 +261,26 @@ class PointsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionHeader('Transactions', onAction: () => _push(context, const PointsHistoryScreen())),
         ),
-        const SizedBox(height: 8),
-        for (final r in const [
-          ('adidas Store Purchase', 'Today · 14:30', '+252 pts', true),
-          ('Daily Spin Win', 'Today · 09:12', '+50 pts', true),
-          ('Voucher: Home Scarf 25/26', 'Yesterday', '-900 pts', false),
-        ])
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-            child: _TxnRow(title: r.$1, date: r.$2, pts: r.$3, credit: r.$4),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: Column(children: [
+              for (final (i, r) in const [
+                ('adidas Store Purchase', 'Today · 14:30', '+252 pts', true),
+                ('Daily Spin Win', 'Today · 09:12', '+50 pts', true),
+                ('Voucher: Home Scarf 25/26', 'Yesterday', '-900 pts', false),
+              ].indexed) ...[
+                if (i > 0) Divider(height: 1, color: AppColors.borderLightest),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: _TxnRow(title: r.$1, date: r.$2, pts: r.$3, credit: r.$4),
+                ),
+              ],
+            ]),
           ),
+        ),
       ],
     );
   }

@@ -1061,6 +1061,19 @@ const Map<String, String> _de = {
   'Win VIP tickets, signed gear and more — winners drawn each month.':
       'Gewinne VIP-Tickets, signierte Fanartikel und mehr — Ziehung jeden Monat.',
   'Open Tombola': 'Tombola öffnen',
+  // ── Home Redesign: Spieltag-Gamification, Für-dich-Offers, Tab, Verlauf ──
+  'Next match': 'Nächstes Spiel',
+  'Predict the score for +50 points': 'Tippe das Ergebnis für +50 Punkte',
+  'Ticket voucher': 'Ticket-Gutschein',
+  'Fanshop · -15% today': 'Fanshop · heute -15%',
+  'Free tombola ticket': 'Gratis Tombola-Los',
+  'Tombola · Super Fan perk': 'Tombola · Super-Fan-Vorteil',
+  'Double points at REWE': 'Doppelte Punkte bei REWE',
+  'Sponsor · 2× points': 'Sponsor · 2× Punkte',
+  'Experience · -500 pts': 'Erlebnis · -500 Pkt',
+  'Saving': 'Sparen',
+  'Fan+ World': 'Fan+ World',
+  'Current balance': 'Aktueller Punktestand',
   // ── Home „Für dich" reale Inhalte ──
   'Stadium Tour VIP': 'Stadiontour VIP',
   'Derby VIP Tombola': 'Derby VIP-Tombola',

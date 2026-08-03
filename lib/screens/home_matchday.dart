@@ -13,8 +13,6 @@ import 'experiences_screen.dart';
 import 'club_news_screen.dart';
 import 'deals_hub_screen.dart';
 import 'achievements_screen.dart';
-import 'matchday_specials_screen.dart';
-import 'matchday_live_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'leaderboard_screen.dart';
@@ -42,7 +40,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   bool _matchday = true;
   bool _loading = true;
   bool _statusDismissed = false;
-  bool _exploreExpanded = false;
 
   @override
   void initState() {
@@ -114,28 +111,18 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   }
 
   Widget _explore() {
-    // Eight primary shortcuts (label, image asset, motif icon, colour, target).
-    // Row 1 = emotional/interactive, row 2 = content/commercial.
+    // One clean 4×2 grid — the eight things a fan actually comes here for.
+    // (Partner folded into Vorteile; live-score/specials dropped.)
     final items = <(String, String, IconData, Color, Widget)>[
       ('Tickets', 'img_tickets', Icons.confirmation_number_rounded, const Color(0xFF1565C0), const TicketsScreen()),
+      ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
       ('Experiences', 'img_experiences', Icons.stadium_rounded, const Color(0xFF6A1B9A), const ExperiencesScreen()),
-      ('Community', 'img_community', Icons.groups_rounded, const Color(0xFF00897B), const LeaderboardScreen()),
+      ('Tombola', 'img_raffles', Icons.local_activity_rounded, const Color(0xFF8E24AA), const RafflesScreen()),
       ('Challenges', 'img_challenges', Icons.flag_rounded, const Color(0xFFEF6C00), const EarnPointsScreen()),
       ('Content', 'img_content', Icons.play_circle_outline_rounded, const Color(0xFFC62828), const ExclusiveContentScreen()),
       ('News', 'img_news', Icons.newspaper_rounded, const Color(0xFF3949AB), const ClubNewsScreen()),
       ('Benefits', 'img_benefits', Icons.redeem_rounded, const Color(0xFFF9A825), const DealsHubScreen()),
-      ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
     ];
-    // Extra modules revealed by "Show more" (inline expand).
-    // Partner has a real photo; Raffles/Live/Specials still fall back to a motif
-    // until their photos are added.
-    final more = <(String, String, IconData, Color, Widget)>[
-      ('Partner', 'img_partner', Icons.handshake_rounded, const Color(0xFF00897B), const DealsHubScreen()),
-      ('Raffles', 'img_raffles', Icons.local_activity_rounded, const Color(0xFF8E24AA), const RafflesScreen()),
-      ('Live', 'img_live', Icons.sensors_rounded, const Color(0xFFD32F2F), const MatchdayLiveScreen()),
-      ('Specials', 'img_specials', Icons.bolt_rounded, const Color(0xFFF9A825), const MatchdaySpecialsScreen()),
-    ];
-    final shown = [...items, if (_exploreExpanded) ...more];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -143,37 +130,17 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: AnimatedSize(
-            duration: const Duration(milliseconds: 220),
-            curve: Curves.easeOut,
-            alignment: Alignment.topCenter,
-            child: GridView.count(
-              crossAxisCount: 4,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.70,
-              children: [
-                for (final it in shown)
-                  HomeImageTile(label: it.$1, image: it.$2, icon: it.$3, color: it.$4, height: 80, onTap: () => _push(context, it.$5)),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 6),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() => _exploreExpanded = !_exploreExpanded),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Center(
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(_exploreExpanded ? tr('Show less') : tr('Show more'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-                const SizedBox(width: 4),
-                Icon(_exploreExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded, size: 22, color: AppColors.textDarker),
-              ]),
-            ),
+          child: GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 14,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.70,
+            children: [
+              for (final it in items)
+                HomeImageTile(label: it.$1, image: it.$2, icon: it.$3, color: it.$4, height: 80, onTap: () => _push(context, it.$5)),
+            ],
           ),
         ),
       ],
@@ -256,10 +223,10 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   // Personalised recommendations ("For you" row).
   Widget _forYou() {
     final recs = <(String, String, String, IconData, Color, VoidCallback)>[
-      ('Stadium Tour VIP', 'Experience · 2,500 pts', 'Recommended', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
-      ('Home Jersey 25/26', 'Fanshop · 4,500 pts', 'Popular', Icons.checkroom_rounded, const Color(0xFF0A2A5E), () => _push(context, const FanshopScreen())),
-      ('Derby VIP Tombola', 'Tombola · free with Super Fan', 'New', Icons.local_activity_rounded, const Color(0xFFC62828), () => _push(context, const RafflesScreen())),
-      ('VELTINS matchday crate', 'Sponsor · -30%', 'Sponsor deal', Icons.local_offer_rounded, const Color(0xFF00897B), () => _push(context, const DealsHubScreen())),
+      ('Home Jersey 25/26', 'Fanshop · -15% today', 'For you', Icons.checkroom_rounded, const Color(0xFF0A2A5E), () => _push(context, const FanshopScreen())),
+      ('Free tombola ticket', 'Tombola · Super Fan perk', 'Free', Icons.local_activity_rounded, const Color(0xFFC62828), () => _push(context, const RafflesScreen())),
+      ('Double points at REWE', 'Sponsor · 2× points', 'Sponsor', Icons.shopping_cart_rounded, const Color(0xFFC8102E), () => _push(context, const DealsHubScreen())),
+      ('Stadium Tour VIP', 'Experience · -500 pts', 'Saving', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
@@ -515,8 +482,6 @@ class _NonMatchdayCards extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
-        const _LastResultCard(),
-        const SizedBox(height: 12),
         SurfaceCard(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -660,15 +625,14 @@ class _NextMatchCard extends StatelessWidget {
       ),
       child: Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(tr('Bundesliga · Matchday 34'), style: AppText.caption1.copyWith(color: Colors.white70)),
+          Text('${tr('Next match')} · Sat 15:30', style: AppText.caption1.copyWith(color: Colors.white70)),
           Pill(color: Colors.white24, child: Text(tr('Home Match'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
         ]),
         const SizedBox(height: 16),
         Row(children: [
           Expanded(child: _team(const Svg('logo_s04', size: 46), tr('Schalke'))),
           Column(children: [
-            Text(tr('Sat 15:30'), style: AppText.caption1.copyWith(color: Colors.white70)),
-            const SizedBox(height: 2),
+            const SizedBox(height: 6),
             Text(tr('VS'), style: AppText.h4.copyWith(color: AppColors.gold)),
           ]),
           Expanded(child: _team(
@@ -677,23 +641,21 @@ class _NextMatchCard extends StatelessWidget {
           )),
         ]),
         const SizedBox(height: 14),
+        // Gamification hook (not a live scoreboard) — predict for points.
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
           decoration: BoxDecoration(color: AppColors.brandDarkest.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(999)),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.schedule_rounded, size: 14, color: Colors.white70),
+            const Icon(Icons.sports_soccer_rounded, size: 14, color: AppColors.gold),
             const SizedBox(width: 6),
-            Text('${tr('Kickoff in')} 02:14:35', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-            const SizedBox(width: 8),
-            Text('· VELTINS-Arena', style: AppText.body3.copyWith(color: Colors.white70)),
+            Flexible(child: Text(tr('Predict the score for +50 points'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
           ]),
         ),
         const SizedBox(height: 14),
         Row(children: [
-          Expanded(child: _cta(tr('Buy Ticket'), AppColors.gold, AppColors.brandDarkest, onTicket)),
+          Expanded(child: _cta(tr('Predict Score'), AppColors.gold, AppColors.brandDarkest, onPredict)),
           const SizedBox(width: 10),
-          Expanded(child: _cta(tr('Predict Score'), Colors.white24, Colors.white, onPredict)),
+          Expanded(child: _cta(tr('Ticket voucher'), Colors.white24, Colors.white, onTicket)),
         ]),
       ]),
     );
@@ -714,52 +676,6 @@ class _NextMatchCard extends StatelessWidget {
           child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: fg, fontWeight: FontWeight.w800)),
         ),
       );
-}
-
-/// Last-result hero shown on non-matchdays + a teaser for the next fixture.
-class _LastResultCard extends StatelessWidget {
-  const _LastResultCard();
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
-      child: Column(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(tr('Last result'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
-          Text(tr('Bundesliga · Matchday 33'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
-        ]),
-        const SizedBox(height: 12),
-        Row(children: [
-          Expanded(child: Column(children: [
-            const Svg('logo_s04', size: 40),
-            const SizedBox(height: 6),
-            Text(tr('Schalke'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-          ])),
-          Column(children: [
-            Text('3 : 1', style: AppText.h2.copyWith(color: AppColors.textDarker)),
-            Pill(color: AppColors.successBg, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), child: Text(tr('Win'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700, fontSize: 10))),
-          ]),
-          Expanded(child: Column(children: [
-            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.surfaceMinimal, shape: BoxShape.circle), alignment: Alignment.center, child: Icon(Icons.shield_rounded, color: AppColors.textLight, size: 24)),
-            const SizedBox(height: 6),
-            Text(tr('Bremen'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-          ])),
-        ]),
-        const SizedBox(height: 14),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-          child: Row(children: [
-            const Icon(Icons.event_rounded, size: 16, color: AppColors.brandPrimary),
-            const SizedBox(width: 8),
-            Expanded(child: Text('${tr('Next')}: vs Bayern · ${tr('in 5 days')}', style: AppText.body3.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700))),
-            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
-          ]),
-        ),
-      ]),
-    );
-  }
 }
 
 class _QuickActions extends StatelessWidget {
