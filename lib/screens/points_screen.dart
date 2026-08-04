@@ -13,7 +13,6 @@ import 'fomo_drop_screen.dart';
 import 'collection_screen.dart';
 import 'subscription_screen.dart';
 import 'points_history_screen.dart';
-import 'fanshop_screen.dart';
 import 'experiences_screen.dart';
 import 'raffles_screen.dart';
 import 'sponsor_offer_screen.dart';
@@ -26,16 +25,6 @@ import '../l10n/strings.dart';
 /// in Schalke blue with EMBA/S04 content (real club sponsors, fan rewards).
 class PointsScreen extends StatelessWidget {
   const PointsScreen({super.key});
-
-  // Real offerings from our own catalogue: (title, category, old pts, new pts,
-  // badge, glyph, colour). Fanshop = real products, Tombola = a live draw,
-  // Sponsor = a real partner voucher.
-  static const _deals = <(String, String, int, int, String, IconData, Color, String)>[
-    ('Home Jersey 25/26', 'Fanshop', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E), 'img_fanshop'),
-    ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B), 'img_partner'),
-    ('Derby VIP Tombola', 'Tombola', 500, 350, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828), 'img_rewards'),
-    ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0), 'img_fanshop'),
-  ];
 
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
@@ -145,33 +134,6 @@ class PointsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        // ── Reward deals (strikethrough pricing) ──
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader('Reward deals', onAction: () => _push(context, const RedeemScreen())),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 194,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _deals.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final d = _deals[i];
-              return DealCard(
-                title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, image: d.$8,
-                onTap: () => _push(context, switch (d.$2) {
-                  'Fanshop' => const FanshopScreen(),
-                  'Tombola' => const RafflesScreen(),
-                  _ => const RedeemScreen(),
-                }),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 18),
         // ── FOMO drop hero ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
