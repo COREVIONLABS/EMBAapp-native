@@ -19,6 +19,7 @@ import 'subscription_screen.dart';
 import 'streak_screen.dart';
 import 'fanplus_screen.dart';
 import 'fanplus_pay_screen.dart';
+import 'matchday_quiz_screen.dart';
 import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../widgets/hub_widgets.dart';
@@ -114,7 +115,36 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             ValueListenableBuilder<bool>(
               valueListenable: matchdayNotifier,
               builder: (context, md, __) => md
-                  ? Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen())))
+                  ? Column(children: [
+                      Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen()))),
+                      const SizedBox(height: 12),
+                      // Live matchday quiz (AFL fan-zone style) — only on matchday.
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Tappable(
+                          scale: 0.98,
+                          onTap: () => _push(context, const MatchdayQuizScreen()),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFFC62828), Color(0xFF7F1414)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+                            child: Row(children: [
+                              Container(width: 46, height: 46, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(13)), child: const Icon(Icons.quiz_rounded, color: Colors.white, size: 24)),
+                              const SizedBox(width: 14),
+                              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                Row(children: [
+                                  Container(width: 7, height: 7, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
+                                  const SizedBox(width: 6),
+                                  Text(tr('LIVE · Matchday Quiz'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                                ]),
+                                const SizedBox(height: 4),
+                                Text(tr('Answer live for up to +250 points'), style: AppText.body3.copyWith(color: Colors.white70)),
+                              ])),
+                              const Icon(Icons.chevron_right_rounded, color: Colors.white54),
+                            ]),
+                          ),
+                        ),
+                      ),
+                    ])
                   : const _NonMatchdayCards(),
             ),
             const SizedBox(height: 20),
