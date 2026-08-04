@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/ios_chrome.dart';
 import '../widgets/text_field.dart';
 import '../main_shell.dart';
 import 'signup_screen.dart';
@@ -87,7 +86,6 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const HomeIndicator(),
           ],
         ),
       ),

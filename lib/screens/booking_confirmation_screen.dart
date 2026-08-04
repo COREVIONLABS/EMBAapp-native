@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/ios_chrome.dart';
 import '../l10n/strings.dart';
 
 /// Booking Confirmation (Figma 2162:6427/7547).
@@ -22,7 +21,6 @@ class BookingConfirmationScreen extends StatelessWidget {
           Padding(padding: const EdgeInsets.symmetric(horizontal: 40), child: Text('$title is booked. Details are in My Bookings — see you there!', textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight))),
           const Spacer(),
           Padding(padding: const EdgeInsets.all(20), child: PrimaryButton(tr('Done'), onTap: () => Navigator.of(context).popUntil((r) => r.isFirst))),
-          const HomeIndicator(),
         ]),
       ),
     );

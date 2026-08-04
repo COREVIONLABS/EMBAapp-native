@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/ios_chrome.dart';
 import '../widgets/text_field.dart';
 import '../l10n/strings.dart';
 
@@ -58,7 +57,6 @@ class PasswordResetScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const HomeIndicator(),
           ],
         ),
       ),

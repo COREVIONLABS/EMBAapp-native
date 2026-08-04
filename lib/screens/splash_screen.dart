@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/ios_chrome.dart';
 import 'onboarding_screen.dart';
 import '../l10n/strings.dart';
 
@@ -63,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            const HomeIndicator(color: Colors.white),
           ],
         ),
       ),
