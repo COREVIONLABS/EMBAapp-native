@@ -12,7 +12,6 @@ import 'tickets_screen.dart';
 import 'experiences_screen.dart';
 import 'club_news_screen.dart';
 import 'deals_hub_screen.dart';
-import 'achievements_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'leaderboard_screen.dart';
@@ -38,7 +37,6 @@ class HomeMatchdayScreen extends StatefulWidget {
 
 class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   bool _loading = true;
-  bool _statusDismissed = false;
 
   @override
   void initState() {
@@ -79,14 +77,10 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             const SizedBox(height: 14),
             _infoChips(),
             const SizedBox(height: 16),
-            // Sponsor campaign + the open daily-spin nudge sit below the wallet.
+            // Sponsor campaign below the wallet (the daily-spin nudge and the
+            // separate streak strip were dropped — both already live one tap
+            // away in Quick Actions and the Streak chip).
             Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _heroBanner()),
-            const SizedBox(height: 14),
-            if (!_statusDismissed) ...[
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _statusCard()),
-              const SizedBox(height: 14),
-            ],
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _StreakStrip()),
             const SizedBox(height: 20),
             ValueListenableBuilder<bool>(
               valueListenable: matchdayNotifier,
@@ -159,41 +153,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         onTap: () => _push(context, const DealsHubScreen()),
       );
 
-  // Dismissible status card — always a non-fixture nudge so it doesn't repeat
-  // the match card on matchdays.
-  Widget _statusCard() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 14, 10, 14),
-      decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(AppRadii.card)),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          width: 46, height: 46,
-          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
-          child: const Icon(Icons.casino_rounded, color: AppColors.gold),
-        ),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(tr('Your daily spin is still open'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 2),
-          Text(tr('Spin now for bonus points'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
-          const SizedBox(height: 10),
-          Tappable(
-            onTap: () => showDailySpin(context),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-              decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
-              child: Text(tr('Spin now'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
-            ),
-          ),
-        ])),
-        GestureDetector(
-          onTap: () => setState(() => _statusDismissed = true),
-          behavior: HitTestBehavior.opaque,
-          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.close_rounded, color: Colors.white54, size: 20)),
-        ),
-      ]),
-    );
-  }
 
   // At-a-glance quick-stat chips (Membership / Streak / Rank / Next reward).
   Widget _infoChips() {
@@ -202,7 +161,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       builder: (context, tier, __) {
         final chips = <(IconData, String, String, Color, VoidCallback)>[
           (Icons.workspace_premium_rounded, 'Membership', tier, AppColors.gold, () => _push(context, const FanPlusScreen())),
-          (Icons.local_fire_department_rounded, 'Streak', '5 days', const Color(0xFFEF6C00), () => _push(context, const AchievementsScreen())),
+          (Icons.local_fire_department_rounded, 'Streak', '5 days', const Color(0xFFEF6C00), () => _push(context, const StreakScreen())),
           (Icons.leaderboard_rounded, 'Rank', '#12', const Color(0xFF1565C0), () => _push(context, const LeaderboardScreen())),
           (Icons.card_giftcard_rounded, 'Next reward', '900 pts', const Color(0xFF00897B), () => _push(context, const RedeemScreen())),
         ];
@@ -387,71 +346,6 @@ class _FanPlusCta extends StatelessWidget {
           ),
         ]),
       ),
-    );
-  }
-}
-
-/// Daily streak strip — season-long engagement mechanic from the Fan+ pitch.
-class _StreakStrip extends StatelessWidget {
-  const _StreakStrip();
-  @override
-  Widget build(BuildContext context) {
-    const done = 5; // days completed this week
-    const labels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    return SurfaceCard(
-      onTap: () => _push(context, const StreakScreen()),
-      padding: const EdgeInsets.all(14),
-      child: Row(children: [
-        Container(
-          width: 40, height: 40,
-          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(12)),
-          alignment: Alignment.center,
-          child: const Icon(Icons.local_fire_department_rounded, color: AppColors.brandDarkest, size: 24),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Expanded(child: Row(children: [
-                Flexible(child: Text(tr('5-day streak'), overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700))),
-                const SizedBox(width: 6),
-                Flexible(child: Text(tr('· keep it going for +10 pts'), overflow: TextOverflow.ellipsis, style: AppText.body3Regular)),
-              ])),
-              // Streak protection — a Fan Member / Super Fan perk: one missed day
-              // won't reset the streak.
-              Pill(
-                color: AppColors.successBg,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.shield_rounded, size: 11, color: AppColors.success),
-                  const SizedBox(width: 3),
-                  Text(tr('Protected'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700, fontSize: 10)),
-                ]),
-              ),
-            ]),
-            const SizedBox(height: 8),
-            Row(children: [
-              for (var i = 0; i < 7; i++) ...[
-                Expanded(
-                  child: Column(children: [
-                    Container(
-                      height: 22,
-                      decoration: BoxDecoration(
-                        color: i < done ? AppColors.brandPrimary : AppColors.surfaceMinimal,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: i < done ? const Icon(Icons.check_rounded, size: 13, color: Colors.white) : null,
-                    ),
-                    const SizedBox(height: 3),
-                    Text(labels[i], style: AppText.caption1.copyWith(color: AppColors.textLight, fontSize: 10)),
-                  ]),
-                ),
-                if (i < 6) const SizedBox(width: 5),
-              ],
-            ]),
-          ]),
-        ),
-      ]),
     );
   }
 }
