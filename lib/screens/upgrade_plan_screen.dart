@@ -21,7 +21,7 @@ class UpgradePlanScreen extends StatelessWidget {
 
   List<String> _benefits(String plan) => switch (plan) {
         'Fan Member' => const [
-            'Guaranteed €6+ back every month',
+            'Double Fan Points on every purchase',
             '24h ticket presale + member discounts',
             'Sponsor vouchers & offers',
             '8 partner perks included',
@@ -36,7 +36,7 @@ class UpgradePlanScreen extends StatelessWidget {
             'Priority access to top matches (48–72h)',
             'Best seats first + matchday upgrades',
             'Monthly exclusive FOMO drop',
-            'Guaranteed €14+ back every month',
+            'Triple Fan Points on every purchase',
             '12 partner perks included',
           ],
       };

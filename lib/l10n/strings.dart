@@ -1264,4 +1264,21 @@ const Map<String, String> _de = {
   'What is the VELTINS-Arena\'s nickname?': 'Wie lautet der Spitzname der VELTINS-Arena?',
   'How many German championships has S04 won?': 'Wie viele deutsche Meisterschaften hat S04 gewonnen?',
   'Who does Schalke meet in the Revierderby?': 'Gegen wen spielt Schalke im Revierderby?',
+  // ── P0: clear value model (points vs real cashback) ──
+  'in vouchers': 'in Gutscheinen',
+  'How Fan+ works': 'So funktioniert Fan+',
+  'Earn points': 'Punkte sammeln',
+  'On tickets, shop, games & check-ins': 'Bei Tickets, Shop, Spielen & Check-ins',
+  'Redeem for vouchers': 'In Gutscheine einlösen',
+  'Swap points for real club & sponsor vouchers': 'Punkte gegen echte Club- & Sponsor-Gutscheine tauschen',
+  'Get real cashback': 'Echtes Cashback holen',
+  'With Fan+ Pay — actual money back at partners': 'Mit Fan+ Pay — echtes Geld zurück bei Partnern',
+  // ── P0: membership reframe (points + access, no euro-cashback claim) ──
+  'Members earn extra points on everything — plus priority access, exclusive drops and VIP draws.':
+      'Mitglieder sammeln mehr Punkte auf alles — plus Priority-Zugang, exklusive Drops und VIP-Lose.',
+  'Your membership is working for you': 'Deine Mitgliedschaft arbeitet für dich',
+  '+820 bonus points & priority access this month': '+820 Bonus-Punkte & Priority-Zugang diesen Monat',
+  'More points, more perks': 'Mehr Punkte, mehr Vorteile',
+  'Double Fan Points on every purchase': 'Doppelte Fan-Punkte bei jedem Kauf',
+  'Triple Fan Points on every purchase': 'Dreifache Fan-Punkte bei jedem Kauf',
 };

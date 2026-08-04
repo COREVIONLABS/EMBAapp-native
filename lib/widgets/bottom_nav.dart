@@ -14,7 +14,7 @@ class NavDest {
 const kNavDestinations = [
   NavDest('nav_home', 'Home'),
   NavDest(null, 'Fan+ World', iconData: Icons.workspace_premium_outlined),
-  NavDest('nav_cup', 'Points'),
+  NavDest(null, 'Points', iconData: Icons.toll_rounded),
   NavDest('nav_profile', 'Profile'),
 ];
 

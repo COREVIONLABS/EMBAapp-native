@@ -39,8 +39,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       (Icons.casino_rounded, 'Daily games & 1 free spin'),
       (Icons.savings_rounded, 'Earn Fan Points · 100 pts = €1'),
     ], 0, 0),
-    _Tier('Fan Member', 'Member', '€4.50', 'Save every month', AppColors.pointsGradient, [
-      (Icons.savings_rounded, 'Guaranteed €6+ back every month'),
+    _Tier('Fan Member', 'Member', '€4.50', 'More points, more perks', AppColors.pointsGradient, [
+      (Icons.bolt_rounded, 'Double Fan Points on every purchase'),
       (Icons.confirmation_number_rounded, '24h ticket presale + discounts'),
       (Icons.card_giftcard_rounded, 'Sponsor vouchers & offers'),
     ], 8, 12),

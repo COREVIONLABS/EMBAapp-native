@@ -84,23 +84,17 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               builder: (context, active, __) => active
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
-                      child: Tappable(
-                        scale: 0.98,
+                      child: SurfaceCard(
                         onTap: () => _push(context, const FanPlusPayScreen()),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0055AA), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
-                          child: Row(children: [
-                            Container(width: 46, height: 46, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(13)), child: const Icon(Icons.credit_card_rounded, color: AppColors.gold, size: 24)),
-                            const SizedBox(width: 14),
-                            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              Text(tr('Fan+ Pay'), style: AppText.label2.copyWith(color: Colors.white)),
-                              const SizedBox(height: 2),
-                              Text(tr('Real cashback at S04 partners'), style: AppText.body3.copyWith(color: Colors.white70)),
-                            ])),
-                            const Icon(Icons.chevron_right_rounded, color: Colors.white54),
-                          ]),
-                        ),
+                        child: Row(children: [
+                          Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.euro_rounded, color: AppColors.success, size: 22)),
+                          const SizedBox(width: 14),
+                          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            Text(tr('Fan+ Pay'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                            Text(tr('Real cashback at S04 partners'), style: AppText.body3Regular),
+                          ])),
+                          Pill(color: AppColors.successBg, child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800))),
+                        ]),
                       ),
                     )
                   : const SizedBox.shrink(),

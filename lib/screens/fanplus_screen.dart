@@ -104,9 +104,9 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           child: SurfaceCard(
             color: AppColors.brandLightest,
             child: Row(children: [
-              const Icon(Icons.savings_rounded, color: AppColors.gold),
+              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold),
               const SizedBox(width: 12),
-              Expanded(child: Text(tr('Your membership pays for itself — Fan Member gets €6+ back a month, Super Fan €14+.'),
+              Expanded(child: Text(tr('Members earn extra points on everything — plus priority access, exclusive drops and VIP draws.'),
                   style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
             ]),
           ),
@@ -216,7 +216,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               const SizedBox(height: 12),
               Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
                 for (final b in const ['Priority Access', 'Best Seats', '+3 VIP Draws'])
-                  Pill(color: Colors.white24, child: Text(b, style: AppText.caption1.copyWith(color: Colors.white))),
+                  Pill(color: Colors.white24, child: Text(tr(b), style: AppText.caption1.copyWith(color: Colors.white))),
               ]),
               const SizedBox(height: 16),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -237,13 +237,13 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SurfaceCard(
-            color: AppColors.successBg,
+            color: AppColors.brandLightest,
             child: Row(children: [
-              const Icon(Icons.savings_rounded, color: AppColors.success),
+              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('€14 back this month'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-                Text(tr('Your Super Fan membership already paid for itself'), style: AppText.body3Regular),
+                Text(tr('Your membership is working for you'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                Text(tr('+820 bonus points & priority access this month'), style: AppText.body3Regular),
               ])),
             ]),
           ),

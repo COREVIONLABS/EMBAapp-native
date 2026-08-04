@@ -26,10 +26,10 @@ class PlayerVoteScreen extends StatefulWidget {
 
 class _PlayerVoteScreenState extends State<PlayerVoteScreen> {
   static const _candidates = <_Candidate>[
-    _Candidate(7, 'Nr. 7 · Flügelspieler', 'Winger', 38),
-    _Candidate(10, 'Nr. 10 · Spielmacher', 'Playmaker', 27),
-    _Candidate(9, 'Nr. 9 · Mittelstürmer', 'Striker', 21),
-    _Candidate(1, 'Nr. 1 · Torwart', 'Keeper', 14),
+    _Candidate(7, 'Luca Brandt', 'Winger', 38),
+    _Candidate(10, 'Deniz Aydin', 'Playmaker', 27),
+    _Candidate(9, 'Malik Osei', 'Striker', 21),
+    _Candidate(1, 'Jonas Vogt', 'Keeper', 14),
   ];
 
   int? _selected;
@@ -102,6 +102,12 @@ class _CandidateRow extends StatelessWidget {
   final VoidCallback? onTap;
   const _CandidateRow({required this.c, required this.selected, required this.voted, required this.onTap});
 
+  String _initials(String name) {
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
+    return (parts.first.substring(0, 1) + parts.last.substring(0, 1)).toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Tappable(
@@ -116,17 +122,31 @@ class _CandidateRow extends StatelessWidget {
         ),
         child: Column(children: [
           Row(children: [
-            // Squad number badge
-            Container(
-              width: 44, height: 44,
-              decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)),
-              alignment: Alignment.center,
-              child: Text('${c.number}', style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+            // Player avatar (initials) with a squad-number chip
+            SizedBox(
+              width: 48, height: 48,
+              child: Stack(clipBehavior: Clip.none, children: [
+                Container(
+                  width: 48, height: 48,
+                  decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), shape: BoxShape.circle),
+                  alignment: Alignment.center,
+                  child: Text(_initials(c.name), style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+                ),
+                Positioned(
+                  right: -2, bottom: -2,
+                  child: Container(
+                    width: 20, height: 20,
+                    decoration: BoxDecoration(color: AppColors.gold, shape: BoxShape.circle, border: Border.all(color: AppColors.surface, width: 2)),
+                    alignment: Alignment.center,
+                    child: Text('${c.number}', style: const TextStyle(fontFamily: 'Urbanist', color: AppColors.brandDarkest, fontSize: 10, fontWeight: FontWeight.w800)),
+                  ),
+                ),
+              ]),
             ),
             const SizedBox(width: 14),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr(c.name), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-              Text(tr(c.position), style: AppText.body3Regular),
+              Text(c.name, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              Text('${tr('No.')} ${c.number} · ${tr(c.position)}', style: AppText.body3Regular),
             ])),
             if (voted)
               Text('${c.share}%', style: AppText.label2.copyWith(color: AppColors.brandPrimary))

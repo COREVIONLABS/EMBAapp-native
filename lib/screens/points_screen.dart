@@ -9,7 +9,6 @@ import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
 import 'buy_points_screen.dart';
 import 'leaderboard_screen.dart';
-import 'fomo_drop_screen.dart';
 import 'collection_screen.dart';
 import 'subscription_screen.dart';
 import 'points_history_screen.dart';
@@ -98,7 +97,7 @@ class PointsScreen extends StatelessWidget {
             ]),
             const SizedBox(height: 6),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text('≈ ${FanModel.balanceEuro} · ${tr('1 pt per €1 spent')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+              Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
               const SizedBox(width: 4),
               Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
             ]),
@@ -165,16 +164,17 @@ class PointsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        // ── FOMO drop hero ──
+        // ── How Fan+ works (clear value model: points vs real cashback) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: HeroBanner(
-            eyebrow: 'Only today',
-            title: 'Reward drop: prices cut for 24h',
-            cta: 'See all deals',
-            glyph: Icons.local_fire_department_rounded,
-            gradient: const [Color(0xFFC62828), Color(0xFF7F1414)],
-            onTap: () => _push(context, const FomoDropScreen()),
+          child: SurfaceCard(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('How Fan+ works'), style: AppText.label2.copyWith(color: AppColors.textDarker)),
+              const SizedBox(height: 12),
+              _HowStep(icon: Icons.add_circle_outline_rounded, color: AppColors.brandPrimary, title: tr('Earn points'), sub: tr('On tickets, shop, games & check-ins')),
+              _HowStep(icon: Icons.card_giftcard_rounded, color: const Color(0xFF6A1B9A), title: tr('Redeem for vouchers'), sub: tr('Swap points for real club & sponsor vouchers')),
+              _HowStep(icon: Icons.euro_rounded, color: AppColors.success, title: tr('Get real cashback'), sub: tr('With Fan+ Pay — actual money back at partners'), last: true),
+            ]),
           ),
         ),
         const SizedBox(height: 20),
@@ -265,6 +265,37 @@ class _Cat extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(label, style: AppText.body3.copyWith(fontSize: 12), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+      ]),
+    );
+  }
+}
+
+/// One row of the "How Fan+ works" explainer (icon + title + sub, with a
+/// connector rail so points → vouchers → real cashback reads as a flow).
+class _HowStep extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String sub;
+  final bool last;
+  const _HowStep({required this.icon, required this.color, required this.title, required this.sub, this.last = false});
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Column(children: [
+          Container(width: 34, height: 34, decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: color, size: 18)),
+          if (!last) Expanded(child: Container(width: 2, color: AppColors.borderLightest)),
+        ]),
+        const SizedBox(width: 12),
+        Expanded(child: Padding(
+          padding: EdgeInsets.only(bottom: last ? 0 : 14),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 1),
+            Text(sub, style: AppText.body3Regular),
+          ]),
+        )),
       ]),
     );
   }
