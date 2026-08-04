@@ -273,7 +273,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+              decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFFC62828), Color(0xFF7F1414)]), borderRadius: BorderRadius.circular(AppRadii.card)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
@@ -346,7 +346,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           child: Container(
             clipBehavior: Clip.antiAlias,
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF6A1B9A), Color(0xFF311B92)]), borderRadius: BorderRadius.circular(AppRadii.card)),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan perk'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
