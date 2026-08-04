@@ -1074,6 +1074,22 @@ const Map<String, String> _de = {
   'Saving': 'Sparen',
   'Fan+ World': 'Fan+ World',
   'Current balance': 'Aktueller Punktestand',
+  // ── Sponsor-Angebot Detailseite ──
+  'Secure this offer': 'Angebot sichern',
+  'What you get': 'Das bekommst du',
+  'Secure the offer — the code lands in My Vouchers.': 'Angebot sichern — der Code landet in „Meine Gutscheine".',
+  'Show the code at the partner or at checkout.': 'Zeig den Code beim Partner oder an der Kasse.',
+  'Get your points or discount instantly.': 'Erhalte sofort deine Punkte oder deinen Rabatt.',
+  'Valid until 30 Jun 2026 · one per fan.': 'Gültig bis 30. Juni 2026 · einmal pro Fan.',
+  'Double Fan Points on every Veltins purchase at the stadium and at participating partners.':
+      'Doppelte Fan-Punkte auf jeden Veltins-Kauf im Stadion und bei teilnehmenden Partnern.',
+  '10% off selected Vivawest offers for S04 fans.': '10% Rabatt auf ausgewählte Vivawest-Angebote für S04-Fans.',
+  '5% of your spend back as Fan Points in the official Fanshop.':
+      '5% deines Einkaufs zurück als Fan-Punkte im offiziellen Fanshop.',
+  'A €5 voucher at Ernsting\'s family from €25 spend.': '5-€-Gutschein bei Ernsting\'s family ab 25 € Einkauf.',
+  '3× Fan Points on your REWE shop when you show your fan code.':
+      '3× Fan-Punkte auf deinen REWE-Einkauf, wenn du deinen Fan-Code zeigst.',
+  'An exclusive partner offer for S04 fans.': 'Ein exklusives Partner-Angebot für S04-Fans.',
   // ── Punkte einlösen (Redesign) ──
   'Your balance': 'Dein Guthaben',
   'You\'re close to': 'Fast geschafft für',

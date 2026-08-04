@@ -16,7 +16,7 @@ import 'points_history_screen.dart';
 import 'fanshop_screen.dart';
 import 'experiences_screen.dart';
 import 'raffles_screen.dart';
-import 'voucher_screen.dart';
+import 'sponsor_offer_screen.dart';
 import 'my_vouchers_screen.dart';
 import 'search_screen.dart';
 import '../l10n/strings.dart';
@@ -30,11 +30,11 @@ class PointsScreen extends StatelessWidget {
   // Real offerings from our own catalogue: (title, category, old pts, new pts,
   // badge, glyph, colour). Fanshop = real products, Tombola = a live draw,
   // Sponsor = a real partner voucher.
-  static const _deals = <(String, String, int, int, String, IconData, Color)>[
-    ('Home Jersey 25/26', 'Fanshop', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
-    ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B)),
-    ('Derby VIP Tombola', 'Tombola', 500, 350, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828)),
-    ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0)),
+  static const _deals = <(String, String, int, int, String, IconData, Color, String)>[
+    ('Home Jersey 25/26', 'Fanshop', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E), 'img_fanshop'),
+    ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B), 'img_partner'),
+    ('Derby VIP Tombola', 'Tombola', 500, 350, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828), 'img_rewards'),
+    ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0), 'img_fanshop'),
   ];
 
   void _push(BuildContext context, Widget s) =>
@@ -139,7 +139,7 @@ class PointsScreen extends StatelessWidget {
                 category: 'Partner offer',
                 headline: s.perk,
                 color: s.color,
-                onTap: () => _push(context, const RedeemScreen()),
+                onTap: () => _push(context, SponsorOfferScreen(sponsor: s)),
               );
             },
           ),
@@ -161,7 +161,7 @@ class PointsScreen extends StatelessWidget {
             itemBuilder: (_, i) {
               final d = _deals[i];
               return DealCard(
-                title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7,
+                title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, image: d.$8,
                 onTap: () => _push(context, switch (d.$2) {
                   'Fanshop' => const FanshopScreen(),
                   'Tombola' => const RafflesScreen(),
@@ -198,7 +198,7 @@ class PointsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             children: [
               for (final s in kSponsors)
-                _SponsorAvatar(name: s.name, perk: s.perk, color: s.color, symbol: s.icon, onTap: () => _push(context, const VoucherScreen())),
+                _SponsorAvatar(name: s.name, perk: s.perk, color: s.color, symbol: s.icon, onTap: () => _push(context, SponsorOfferScreen(sponsor: s))),
             ],
           ),
         ),
