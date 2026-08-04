@@ -12,6 +12,35 @@ class UpgradePlanScreen extends StatelessWidget {
   final String price;
   const UpgradePlanScreen({super.key, this.plan = 'Super Fan', this.price = '€9.00'});
 
+  // Benefits + badge for the actually-chosen tier (not always Super Fan).
+  String _badge(String plan) => switch (plan) {
+        'Fan Member' => 'POPULAR',
+        'Ultra' => 'MAXIMUM',
+        _ => 'BEST VALUE',
+      };
+
+  List<String> _benefits(String plan) => switch (plan) {
+        'Fan Member' => const [
+            'Guaranteed €6+ back every month',
+            '24h ticket presale + member discounts',
+            'Sponsor vouchers & offers',
+            '8 partner perks included',
+          ],
+        'Ultra' => const [
+            'Everything in Super Fan',
+            'Top priority + personal concierge',
+            'Exclusive drops & money-can\'t-buy days',
+            '20 partner perks included',
+          ],
+        _ => const [
+            'Priority access to top matches (48–72h)',
+            'Best seats first + matchday upgrades',
+            'Monthly exclusive FOMO drop',
+            'Guaranteed €14+ back every month',
+            '12 partner perks included',
+          ],
+      };
+
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
@@ -41,7 +70,7 @@ class UpgradePlanScreen extends StatelessWidget {
                   Text('$plan plan', style: AppText.label1.copyWith(color: Colors.white)),
                   Pill(
                     gradient: const LinearGradient(colors: AppColors.goldGradient),
-                    child: Text(tr('BEST VALUE'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
+                    child: Text(tr(_badge(plan)), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
                   ),
                 ],
               ),
@@ -61,13 +90,7 @@ class UpgradePlanScreen extends StatelessWidget {
         const SizedBox(height: 20),
         Text(tr("What's included"), style: AppText.label2),
         const SizedBox(height: 12),
-        for (final b in const [
-          'Priority access to top matches (48–72h)',
-          'Best seats first + matchday upgrades',
-          'Monthly exclusive FOMO drop',
-          'Guaranteed €14+ back · ad-free · +3 VIP raffles',
-          'Superfan Elite badge + name on the big screen',
-        ])
+        for (final b in _benefits(plan))
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Row(

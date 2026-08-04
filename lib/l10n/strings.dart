@@ -1074,6 +1074,14 @@ const Map<String, String> _de = {
   'Saving': 'Sparen',
   'Fan+ World': 'Fan+ World',
   'Current balance': 'Aktueller Punktestand',
+  // ── Upgrade-Plan: tarif-spezifische Inhalte ──
+  'MAXIMUM': 'MAXIMUM',
+  '24h ticket presale + member discounts': '24h Ticket-Vorverkauf + Mitglieder-Rabatte',
+  '8 partner perks included': '8 Partner-Vorteile inklusive',
+  '12 partner perks included': '12 Partner-Vorteile inklusive',
+  '20 partner perks included': '20 Partner-Vorteile inklusive',
+  'Exclusive drops & money-can\'t-buy days': 'Exklusive Drops & unbezahlbare Erlebnisse',
+  'Guaranteed €14+ back every month': 'Garantiert €14+ zurück pro Monat',
   // ── Demo/Vorschau-Schalter (Profil) ──
   'Demo / Preview': 'Demo / Vorschau',
   'Matchday state': 'Spieltag-Zustand',
