@@ -49,33 +49,33 @@ class EarnPointsScreen extends StatelessWidget {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              Text(tr('This week'), style: AppText.body2.copyWith(color: Colors.white70)),
+              Text(tr('This week'), style: AppText.body2.copyWith(color: AppColors.textLight)),
               const Spacer(),
-              Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                const Icon(Icons.local_fire_department_rounded, size: 13, color: AppColors.brandDarkest),
+              Pill(color: const Color(0x1AEF6C00), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.local_fire_department_rounded, size: 13, color: Color(0xFFEF6C00)),
                 const SizedBox(width: 3),
-                Text(tr('5-day streak'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                Text(tr('5-day streak'), style: AppText.caption1.copyWith(color: const Color(0xFFEF6C00), fontWeight: FontWeight.w800)),
               ])),
             ]),
             const SizedBox(height: 12),
             Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-              Text('320', style: AppText.h1.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+              Text('320', style: AppText.h1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
               const SizedBox(width: 6),
-              Text('/ 500 ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white70)),
+              Text('/ 500 ${tr('pts')}', style: AppText.body2.copyWith(color: AppColors.textLight)),
             ]),
             const SizedBox(height: 12),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: const LinearProgressIndicator(value: 0.64, minHeight: 8, backgroundColor: Colors.white24, valueColor: AlwaysStoppedAnimation(AppColors.gold)),
+              child: LinearProgressIndicator(value: 0.64, minHeight: 8, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.brandPrimary)),
             ),
             const SizedBox(height: 12),
             Row(children: [
-              const Icon(Icons.card_giftcard_rounded, size: 16, color: AppColors.gold),
+              Icon(Icons.card_giftcard_rounded, size: 16, color: AppColors.brandPrimary),
               const SizedBox(width: 8),
-              Expanded(child: Text(tr('Reach 500 this week to unlock a +100 bonus.'), style: AppText.body3.copyWith(color: Colors.white))),
+              Expanded(child: Text(tr('Reach 500 this week to unlock a +100 bonus.'), style: AppText.body3.copyWith(color: AppColors.textNormal))),
             ]),
           ]),
         ),
@@ -249,8 +249,8 @@ class _EarnRow extends StatelessWidget {
           ])),
           const SizedBox(width: 10),
           Pill(
-            gradient: const LinearGradient(colors: AppColors.goldGradient),
-            child: Text(tr(reward), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+            color: AppColors.brandLightest,
+            child: Text(tr(reward), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
           ),
         ]),
       ),
