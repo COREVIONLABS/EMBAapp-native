@@ -1293,4 +1293,13 @@ const Map<String, String> _de = {
   'A co-branded S04 card that earns real cashback at club partners. Preview it now via Profile → Demo / Preview.':
       'Eine S04-Karte, die echtes Cashback bei Club-Partnern bringt. Jetzt unter Profil → Demo / Vorschau ansehen.',
   'Got it': 'Verstanden',
+  // ── Road to Gold: decoupled as a season journey (vs lifetime loyalty) ──
+  'This season': 'Diese Saison',
+  'season pts': 'Saison-Punkte',
+  'Season points reset each season. Your Fan Level (Schalker …) is your lifetime status and never resets.':
+      'Saison-Punkte werden jede Saison zurückgesetzt. Dein Fan-Level (Schalker …) ist dein lebenslanger Status und bleibt.',
+  'A journey through S04 history': 'Eine Reise durch die S04-Geschichte',
+  'Next: Meisterjahr': 'Nächstes: Meisterjahr',
+  'Your season journey through S04 history — resets each season.':
+      'Deine Saison-Reise durch die S04-Geschichte — jede Saison neu.',
 };

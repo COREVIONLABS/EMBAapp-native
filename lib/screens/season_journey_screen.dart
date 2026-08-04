@@ -23,18 +23,21 @@ class _Milestone {
 class SeasonJourneyScreen extends StatelessWidget {
   const SeasonJourneyScreen({super.key});
 
+  // Season-only thresholds & names — deliberately distinct from the lifetime
+  // loyalty ladder (Nordkurve … Legende) so the two never look like the same
+  // system. Each stop is an S04-history chapter; rewards are season perks.
   static const _stops = <_Milestone>[
-    _Milestone(1904, '1904', 'Die Gründung', 'Glückauf welcome badge', Icons.flag_rounded),
-    _Milestone(3000, '1934', 'Erste Meisterschaft', 'Digital sticker pack', Icons.emoji_events_outlined),
-    _Milestone(5800, '1958', '7× Deutscher Meister', 'Double-points weekend', Icons.stars_rounded),
-    _Milestone(9700, '1997', 'UEFA-Cup Legende', 'VIP Arena upgrade', Icons.military_tech_rounded),
-    _Milestone(15000, 'Heute', 'Ehrenmitglied', 'Signed shirt raffle entry', Icons.workspace_premium_rounded),
-    _Milestone(25000, 'Gold', 'S04-Legende', 'Money-can\'t-buy legend day', Icons.diamond_rounded),
+    _Milestone(600, '1904', 'Vereinsgründung', 'Glückauf welcome badge', Icons.flag_rounded),
+    _Milestone(1800, '1937', 'Das goldene Jahrzehnt', 'Digital sticker pack', Icons.emoji_events_outlined),
+    _Milestone(3200, '1958', 'Meisterjahr', 'Double-points weekend', Icons.stars_rounded),
+    _Milestone(5400, '1972', 'Pokalnacht', 'VIP Arena upgrade', Icons.military_tech_rounded),
+    _Milestone(8500, '1997', 'Europapokal-Nacht', 'Signed shirt raffle entry', Icons.public_rounded),
+    _Milestone(12000, 'Gold', 'Saison-Held', 'Money-can\'t-buy legend day', Icons.diamond_rounded),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final pts = FanModel.fanPoints;
+    final pts = FanModel.seasonPoints;
     // Next locked milestone (for the hero progress).
     final next = _stops.firstWhere((m) => m.points > pts, orElse: () => _stops.last);
     final prevPoints = _stops.where((m) => m.points <= pts).fold<int>(0, (a, m) => m.points > a ? m.points : a);
@@ -56,7 +59,7 @@ class SeasonJourneyScreen extends StatelessWidget {
             Row(children: [
               const Icon(Icons.route_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 8),
-              Text(tr('Your season journey'), style: AppText.body2.copyWith(color: Colors.white)),
+              Text(tr('This season'), style: AppText.body2.copyWith(color: Colors.white)),
               const Spacer(),
               Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text('$unlockedCount / ${_stops.length}', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
             ]),
@@ -71,14 +74,21 @@ class SeasonJourneyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Row(children: [
-              Text('${FanModel.pointsFormatted} ${tr('pts')}', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+              Text('${FanModel.fmtPublic(pts)} ${tr('season pts')}', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
               const Spacer(),
               Text('${FanModel.fmtPublic(remaining)} ${tr('pts to go')}', style: AppText.body3.copyWith(color: Colors.white70)),
             ]),
           ]),
         ),
+        const SizedBox(height: 12),
+        // Make the distinction from lifetime loyalty levels explicit.
+        Row(children: [
+          Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+          const SizedBox(width: 6),
+          Expanded(child: Text(tr('Season points reset each season. Your Fan Level (Schalker …) is your lifetime status and never resets.'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
+        ]),
         const SizedBox(height: 20),
-        Align(alignment: Alignment.centerLeft, child: Text(tr('120 years of blue & white'), style: AppText.label1)),
+        Align(alignment: Alignment.centerLeft, child: Text(tr('A journey through S04 history'), style: AppText.label1)),
         const SizedBox(height: 4),
         Padding(
           padding: const EdgeInsets.only(bottom: 14),

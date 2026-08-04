@@ -13,6 +13,12 @@ class FanModel {
   static const int fanPoints = 4820;
   static const int raffleTickets = 3;
 
+  /// Points earned in the *current season only* — the metric behind the
+  /// "Road to Gold" season journey. Kept separate from [fanPoints] (the
+  /// lifetime balance) and from the lifetime loyalty levels, so the season
+  /// journey and the loyalty ladder are clearly two different things.
+  static const int seasonPoints = 2140;
+
   // Schalke-culture loyalty ladder (ascending).
   static const tiers = [
     FanTier('Nordkurve', 0),
