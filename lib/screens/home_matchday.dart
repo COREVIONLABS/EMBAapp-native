@@ -95,9 +95,9 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               const _NonMatchdayCards(),
             const SizedBox(height: 20),
             const _QuickActions(),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             _explore(),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             _forYou(),
             const SizedBox(height: 24),
             _missions(),
@@ -128,23 +128,22 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
       children: [
         const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Explore', action: null)),
         const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: GridView.count(
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 14,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.70,
-            children: [
-              for (final it in items)
-                HomeImageTile(label: it.$1, image: it.$2, icon: it.$3, color: it.$4, height: 80, onTap: () => _push(context, it.$5)),
-            ],
-          ),
-        ),
+        // Two explicit rows (not a GridView) so the height is exactly the tiles —
+        // no square-cell slack, no dead space above/below the grid.
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _tileRow(items.sublist(0, 4))),
+        const SizedBox(height: 14),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _tileRow(items.sublist(4, 8))),
       ],
     );
+  }
+
+  Widget _tileRow(List<(String, String, IconData, Color, Widget)> row) {
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      for (var i = 0; i < row.length; i++) ...[
+        if (i > 0) const SizedBox(width: 12),
+        Expanded(child: HomeImageTile(label: row[i].$1, image: row[i].$2, icon: row[i].$3, color: row[i].$4, height: 80, onTap: () => _push(context, row[i].$5))),
+      ],
+    ]);
   }
 
   // Editorial sponsor/campaign hero — kept deliberately off the fixture so it
@@ -222,11 +221,11 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
 
   // Personalised recommendations ("For you" row).
   Widget _forYou() {
-    final recs = <(String, String, String, IconData, Color, VoidCallback)>[
-      ('Home Jersey 25/26', 'Fanshop · -15% today', 'For you', Icons.checkroom_rounded, const Color(0xFF0A2A5E), () => _push(context, const FanshopScreen())),
-      ('Free tombola ticket', 'Tombola · Super Fan perk', 'Free', Icons.local_activity_rounded, const Color(0xFFC62828), () => _push(context, const RafflesScreen())),
-      ('Double points at REWE', 'Sponsor · 2× points', 'Sponsor', Icons.shopping_cart_rounded, const Color(0xFFC8102E), () => _push(context, const DealsHubScreen())),
-      ('Stadium Tour VIP', 'Experience · -500 pts', 'Saving', Icons.stadium_rounded, const Color(0xFF6A1B9A), () => _push(context, const ExperiencesScreen())),
+    final recs = <(String, String, String, IconData, Color, String, VoidCallback)>[
+      ('Home Jersey 25/26', 'Fanshop · -15% today', 'For you', Icons.checkroom_rounded, const Color(0xFF0A2A5E), 'img_fanshop', () => _push(context, const FanshopScreen())),
+      ('Free tombola ticket', 'Tombola · Super Fan perk', 'Free', Icons.local_activity_rounded, const Color(0xFFC62828), 'img_rewards', () => _push(context, const RafflesScreen())),
+      ('Double points at REWE', 'Sponsor · 2× points', 'Sponsor', Icons.shopping_cart_rounded, const Color(0xFFC8102E), 'img_partner', () => _push(context, const DealsHubScreen())),
+      ('Stadium Tour VIP', 'Experience · -500 pts', 'Saving', Icons.stadium_rounded, const Color(0xFF6A1B9A), 'img_experiences', () => _push(context, const ExperiencesScreen())),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
@@ -245,7 +244,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           itemCount: recs.length,
           separatorBuilder: (_, __) => const SizedBox(width: 12),
-          itemBuilder: (_, i) => ForYouCard(title: recs[i].$1, meta: recs[i].$2, badge: recs[i].$3, glyph: recs[i].$4, color: recs[i].$5, onTap: recs[i].$6),
+          itemBuilder: (_, i) => ForYouCard(title: recs[i].$1, meta: recs[i].$2, badge: recs[i].$3, glyph: recs[i].$4, color: recs[i].$5, image: recs[i].$6, onTap: recs[i].$7),
         ),
       ),
     ]);
