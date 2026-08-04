@@ -70,6 +70,11 @@ class FanModel {
 /// listen to it so the choice is reflected instantly across the app.
 final ValueNotifier<String> tierNotifier = ValueNotifier<String>(FanModel.membershipTier);
 
+/// Demo/preview switches (moved out of the app headers into Profile → Demo).
+/// Let a presenter show both states without a control living in the shipping UI.
+final ValueNotifier<bool> matchdayNotifier = ValueNotifier<bool>(true);
+final ValueNotifier<bool> memberPreviewNotifier = ValueNotifier<bool>(true);
+
 class FanProduct {
   final String name;
   final double price;

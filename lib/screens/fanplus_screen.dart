@@ -22,7 +22,12 @@ class FanPlusScreen extends StatefulWidget {
 }
 
 class _FanPlusScreenState extends State<FanPlusScreen> {
-  late bool _member = widget.subscribed;
+  @override
+  void initState() {
+    super.initState();
+    // Becoming a member (via the upgrade flow) flips the preview to the lounge.
+    if (widget.subscribed) memberPreviewNotifier.value = true;
+  }
 
   void _push(BuildContext context, Widget s) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
@@ -41,26 +46,16 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) => _member ? _lounge(context) : _pitch(context);
+  Widget build(BuildContext context) => ValueListenableBuilder<bool>(
+        valueListenable: memberPreviewNotifier,
+        builder: (context, member, __) => member ? _lounge(context) : _pitch(context),
+      );
 
-  // Shared header with a Guest ↔ Member preview toggle.
   Widget _header() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         const Svg('logo_s04', size: 36),
-        GestureDetector(
-          onTap: () => setState(() => _member = !_member),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-            decoration: BoxDecoration(color: _member ? AppColors.brandLightest : AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Icon(_member ? Icons.workspace_premium_rounded : Icons.person_outline_rounded, size: 14, color: _member ? AppColors.brandPrimary : AppColors.textLight),
-              const SizedBox(width: 6),
-              Text(_member ? tr('Member') : tr('Guest'), style: AppText.caption1.copyWith(color: _member ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
-            ]),
-          ),
-        ),
         Container(width: 36, height: 36, decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)), child: const Center(child: Svg('bell_dot', size: 20))),
       ]),
     );

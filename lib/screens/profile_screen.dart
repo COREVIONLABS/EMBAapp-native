@@ -123,6 +123,11 @@ class ProfileScreen extends StatelessWidget {
           (Icons.description_outlined, 'Terms & Conditions', ''),
         ]),
         const SizedBox(height: 16),
+        _group(context, 'Demo / Preview', const [
+          (Icons.sports_soccer_rounded, 'Matchday state', 'matchdaytoggle'),
+          (Icons.workspace_premium_outlined, 'Fan+ member (preview)', 'membertoggle'),
+        ]),
+        const SizedBox(height: 16),
         const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _LogoutTile()),
         const SizedBox(height: 20),
         Center(
@@ -216,8 +221,11 @@ class _MenuRowState extends State<_MenuRow> {
   Widget build(BuildContext context) {
     final isToggle = widget.value == 'toggle';
     final isDarkToggle = widget.value == 'darktoggle';
+    final isMatchdayToggle = widget.value == 'matchdaytoggle';
+    final isMemberToggle = widget.value == 'membertoggle';
+    final anyToggle = isToggle || isDarkToggle || isMatchdayToggle || isMemberToggle;
     return InkWell(
-      onTap: (isToggle || isDarkToggle)
+      onTap: anyToggle
           ? null
           : () {
               final s = _screenFor(widget.label);
@@ -243,6 +251,20 @@ class _MenuRowState extends State<_MenuRow> {
                 activeThumbColor: Colors.white,
                 activeTrackColor: AppColors.brandPrimary,
                 onChanged: (v) => setState(() => _bio = v),
+              )
+            else if (isMatchdayToggle)
+              Switch(
+                value: matchdayNotifier.value,
+                activeThumbColor: Colors.white,
+                activeTrackColor: AppColors.brandPrimary,
+                onChanged: (v) => setState(() => matchdayNotifier.value = v),
+              )
+            else if (isMemberToggle)
+              Switch(
+                value: memberPreviewNotifier.value,
+                activeThumbColor: Colors.white,
+                activeTrackColor: AppColors.brandPrimary,
+                onChanged: (v) => setState(() => memberPreviewNotifier.value = v),
               )
             else ...[
               if (widget.value.isNotEmpty)

@@ -1074,6 +1074,10 @@ const Map<String, String> _de = {
   'Saving': 'Sparen',
   'Fan+ World': 'Fan+ World',
   'Current balance': 'Aktueller Punktestand',
+  // ── Demo/Vorschau-Schalter (Profil) ──
+  'Demo / Preview': 'Demo / Vorschau',
+  'Matchday state': 'Spieltag-Zustand',
+  'Fan+ member (preview)': 'Fan+ Mitglied (Vorschau)',
   // ── Wallet „Meine Sachen" ──
   'My Wallet': 'Meine Sachen',
   'Everything you hold': 'Alles, was du hast',

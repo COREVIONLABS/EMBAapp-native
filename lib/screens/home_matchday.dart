@@ -37,7 +37,6 @@ class HomeMatchdayScreen extends StatefulWidget {
 }
 
 class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
-  bool _matchday = true;
   bool _loading = true;
   bool _statusDismissed = false;
 
@@ -89,10 +88,12 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             ],
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _StreakStrip()),
             const SizedBox(height: 20),
-            if (_matchday)
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen())))
-            else
-              const _NonMatchdayCards(),
+            ValueListenableBuilder<bool>(
+              valueListenable: matchdayNotifier,
+              builder: (context, md, __) => md
+                  ? Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _NextMatchCard(onTicket: () => _push(context, const TicketsScreen()), onPredict: () => _push(context, const PredictionsScreen())))
+                  : const _NonMatchdayCards(),
+            ),
             const SizedBox(height: 20),
             const _QuickActions(),
             const SizedBox(height: 20),
@@ -257,24 +258,6 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Svg('logo_s04', size: 36),
-          GestureDetector(
-            onTap: () => setState(() => _matchday = !_matchday),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              decoration: BoxDecoration(
-                color: _matchday ? AppColors.brandLightest : AppColors.surfaceMinimal,
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(_matchday ? Icons.sports_soccer_rounded : Icons.calendar_today_rounded,
-                    size: 14, color: _matchday ? AppColors.brandPrimary : AppColors.textLight),
-                const SizedBox(width: 6),
-                Text(_matchday ? tr('Matchday') : tr('Non-Matchday'),
-                    style: AppText.caption1.copyWith(
-                        color: _matchday ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
-              ]),
-            ),
-          ),
           Builder(
             builder: (context) => Row(children: [
               GestureDetector(
