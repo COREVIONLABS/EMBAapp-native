@@ -8,6 +8,7 @@ import 'login_screen.dart';
 import 'settings_screens.dart';
 import 'password_reset_screen.dart';
 import 'wallet_detail_screens.dart';
+import 'wallet_screen.dart';
 import 'subscription_screen.dart';
 import 'loyalty_tiers_screen.dart';
 import 'fan_profile_screen.dart';
@@ -50,6 +51,23 @@ class ProfileScreen extends StatelessWidget {
           Text(tr('@maxmuster · Member #0042'), style: AppText.body2.copyWith(color: AppColors.textLight)),
         ]),
         const SizedBox(height: 18),
+        // One place for everything the fan holds.
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WalletScreen())),
+            child: Row(children: [
+              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.account_balance_wallet_rounded, color: AppColors.brandPrimary, size: 22)),
+              const SizedBox(width: 14),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('My Wallet'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                Text(tr('Tickets, vouchers, bookings & collection'), style: AppText.body3Regular),
+              ])),
+              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 12),
         // Two quick boxes: membership plan + invite friends
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

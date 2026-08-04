@@ -140,7 +140,7 @@ class RedeemScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        SectionHeader('Featured rewards', onAction: () => _push(context, const MyVouchersScreen())),
+        SectionHeader('Featured rewards', action: null),
         const SizedBox(height: 12),
         SizedBox(
           height: 168,

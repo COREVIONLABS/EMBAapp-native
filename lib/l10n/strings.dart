@@ -1074,6 +1074,13 @@ const Map<String, String> _de = {
   'Saving': 'Sparen',
   'Fan+ World': 'Fan+ World',
   'Current balance': 'Aktueller Punktestand',
+  // ── Wallet „Meine Sachen" ──
+  'My Wallet': 'Meine Sachen',
+  'Everything you hold': 'Alles, was du hast',
+  'View history': 'Verlauf ansehen',
+  'Tickets, vouchers, bookings & collection': 'Tickets, Gutscheine, Buchungen & Sammlung',
+  'Player stickers & badges': 'Spieler-Sticker & Abzeichen',
+  'Experiences you reserved': 'Von dir reservierte Erlebnisse',
   // ── Sponsor-Angebot Detailseite ──
   'Secure this offer': 'Angebot sichern',
   'What you get': 'Das bekommst du',
