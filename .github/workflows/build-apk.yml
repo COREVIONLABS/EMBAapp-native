@@ -46,8 +46,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp build/app/outputs/flutter-apk/app-release.apk emba-app.apk
-          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
-          gh release create latest emba-app.apk \
-            --title "FC Schalke Club App — neuester Build" \
-            --notes "Automatischer Build von Commit ${{ github.sha }} (Branch ${{ github.ref_name }})." \
-            --target "${{ github.sha }}"
+          NOTES="Automatischer Build von Commit ${{ github.sha }} (Branch ${{ github.ref_name }})."
+          TITLE="FC Schalke Club App — neuester Build"
+          # Idempotent publish: if the "latest" release already exists (the
+          # delete+create race previously failed here), just overwrite the
+          # asset instead of failing the job.
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest emba-app.apk --clobber
+            gh release edit latest --title "$TITLE" --notes "$NOTES" --target "${{ github.sha }}"
+          else
+            gh release create latest emba-app.apk --title "$TITLE" --notes "$NOTES" --target "${{ github.sha }}"
+          fi
