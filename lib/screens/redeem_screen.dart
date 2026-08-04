@@ -4,6 +4,7 @@ import '../widgets/sub_scaffold.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
+import '../model/voucher_store.dart';
 import '../widgets/voucher_flow.dart';
 import 'voucher_screen.dart';
 import 'my_vouchers_screen.dart';
@@ -28,6 +29,18 @@ class RedeemScreen extends StatelessWidget {
     ("Ernsting's", 'Fashion', 600),
   ];
 
+  // Real reward deals with strikethrough pricing (title, category, old, new, badge, glyph, colour)
+  static const _deals = <(String, String, int, int, String, IconData, Color)>[
+    ('Home Jersey 25/26', 'Fanshop', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
+    ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B)),
+    ('Derby VIP Tombola', 'Tombola', 500, 350, 'Limited', Icons.local_activity_rounded, Color(0xFFC62828)),
+    ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0)),
+  ];
+
+  // An aspirational reward to nudge toward (real experience from the catalogue).
+  static const _goalReward = 'On the Team Photo';
+  static const _goalPts = 15000;
+
   static const _cats = [
     (Icons.checkroom_rounded, 'Fanshop', 'Jerseys, scarves & more', Color(0xFF0A2A5E)),
     (Icons.confirmation_number_rounded, 'Tickets', 'Matchday & presale access', Color(0xFF1565C0)),
@@ -43,17 +56,90 @@ class RedeemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final remaining = (_goalPts - FanModel.fanPoints).clamp(0, _goalPts);
+    final goalProgress = (FanModel.fanPoints / _goalPts).clamp(0.0, 1.0);
     return SubScaffold(
       title: tr('Redeem Points'),
       children: [
-        HubListRow(
-          icon: Icons.confirmation_number_rounded,
-          title: 'My Vouchers',
-          subtitle: 'Codes you redeemed — show them in the shop',
-          iconColor: AppColors.brandPrimary,
-          onTap: () => _push(context, const MyVouchersScreen()),
+        // ── Balance hero with a goal to redeem toward ──
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Text(tr('Your balance'), style: AppText.body2.copyWith(color: Colors.white70)),
+              const Spacer(),
+              Pill(color: Colors.white24, child: Text('≈ ${FanModel.balanceEuro}', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
+            ]),
+            const SizedBox(height: 8),
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              const Icon(Icons.hexagon_rounded, color: AppColors.gold, size: 24),
+              const SizedBox(width: 8),
+              Text('${FanModel.pointsFormatted} ${tr('pts')}', style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+            ]),
+            const SizedBox(height: 16),
+            Text('${tr('You\'re close to')}: ${tr(_goalReward)}', style: AppText.body3.copyWith(color: Colors.white70)),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(value: goalProgress, minHeight: 8, backgroundColor: Colors.white24, valueColor: const AlwaysStoppedAnimation(AppColors.gold)),
+            ),
+            const SizedBox(height: 8),
+            Text('${FanModel.fmtPublic(remaining)} ${tr('pts to go')}', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+          ]),
         ),
         const SizedBox(height: 16),
+        // ── My Vouchers (reactive open count) ──
+        AnimatedBuilder(
+          animation: voucherStore,
+          builder: (context, _) {
+            final open = voucherStore.openCount;
+            return SurfaceCard(
+              onTap: () => _push(context, const MyVouchersScreen()),
+              child: Row(children: [
+                Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.confirmation_number_rounded, color: AppColors.brandPrimary, size: 22)),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(tr('My Vouchers'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                  Text(open > 0 ? '$open ${tr('ready to redeem')}' : tr('Codes you redeemed — show them in the shop'), style: AppText.body3Regular),
+                ])),
+                if (open > 0) Pill(color: AppColors.successBg, child: Text('$open', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800))),
+                const SizedBox(width: 6),
+                Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+              ]),
+            );
+          },
+        ),
+        const SizedBox(height: 22),
+        // ── Reward deals (strikethrough pricing, urgency) ──
+        SectionHeader('Reward deals', action: null),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 194,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _deals.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final d = _deals[i];
+              return DealCard(
+                title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7,
+                onTap: () {
+                  switch (d.$2) {
+                    case 'Fanshop':
+                      _push(context, const FanshopScreen());
+                    case 'Tombola':
+                      _push(context, const RafflesScreen());
+                    default:
+                      redeemForVoucher(context, title: d.$1, category: d.$2, points: d.$4, sponsor: 'Veltins');
+                  }
+                },
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 24),
         SectionHeader('Featured rewards', onAction: () => _push(context, const MyVouchersScreen())),
         const SizedBox(height: 12),
         SizedBox(

@@ -1074,6 +1074,10 @@ const Map<String, String> _de = {
   'Saving': 'Sparen',
   'Fan+ World': 'Fan+ World',
   'Current balance': 'Aktueller Punktestand',
+  // ── Punkte einlösen (Redesign) ──
+  'Your balance': 'Dein Guthaben',
+  'You\'re close to': 'Fast geschafft für',
+  'pts to go': 'Pkt fehlen noch',
   // ── Punkte sammeln (Redesign) ──
   'This week': 'Diese Woche',
   'Reach 500 this week to unlock a +100 bonus.': 'Erreiche diese Woche 500 für +100 Bonus.',
