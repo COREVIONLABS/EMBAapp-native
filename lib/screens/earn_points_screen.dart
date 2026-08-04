@@ -3,32 +3,35 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/hub_widgets.dart';
+import '../widgets/action_sheets.dart';
 import 'buy_points_screen.dart';
 import 'search_screen.dart';
+import 'daily_spin_screen.dart';
+import 'scratch_card_screen.dart';
+import 'predictions_screen.dart';
+import 'leaderboard_screen.dart';
 import '../l10n/strings.dart';
 
-class _Way {
-  final IconData icon;
-  final String title, sub;
-  final Color color;
-  const _Way(this.icon, this.title, this.sub, this.color);
-}
-
-/// Earn Points — aligned to the Fan Points hub style: search field, a welcome
-/// bonus, a "ways to earn" list (rate in the subtitle), a sponsor promo and a
-/// top-up shortcut. Content is EMBA/S04.
+/// Earn Points — a motivating fan hub (not a flat list): a weekly points goal
+/// with a streak, one-tap daily actions, active challenges with progress, ways
+/// to earn shown with their reward, a referral promo and a leaderboard nudge.
 class EarnPointsScreen extends StatelessWidget {
   const EarnPointsScreen({super.key});
 
-  static const _ways = [
-    _Way(Icons.confirmation_number_outlined, 'Attend a Match', '+100 points per home match', Color(0xFF1565C0)),
-    _Way(Icons.shopping_bag_outlined, 'Fanshop Purchase', '1 point per €1 spent', Color(0xFF0A2A5E)),
-    _Way(Icons.play_circle_outline_rounded, 'Watch a Short Ad', '+15 points per sponsor clip', Color(0xFFE65100)),
-    _Way(Icons.sports_soccer_outlined, 'Live Predictions', '+50 points on matchday', Color(0xFF6A1B9A)),
-    _Way(Icons.share_outlined, 'Share on Social', '+25 points per share', Color(0xFF00897B)),
-    _Way(Icons.group_add_outlined, 'Refer a Friend', '+200 points per friend', Color(0xFFC62828)),
-    _Way(Icons.calendar_today_outlined, 'Daily Check-in', '+10 points every day', Color(0xFF2E7D32)),
-    _Way(Icons.person_outline_rounded, 'Complete Profile', '+50 points, one-off', Color(0xFF1565C0)),
+  // Ways to earn: (icon, title, subtitle, reward pill, colour)
+  static const _ways = <(IconData, String, String, String, Color)>[
+    (Icons.confirmation_number_outlined, 'Attend a Match', 'Check in at the stadium', '+100', Color(0xFF1565C0)),
+    (Icons.shopping_bag_outlined, 'Fanshop Purchase', 'Earn on every order', '1 / €1', Color(0xFF0A2A5E)),
+    (Icons.play_circle_outline_rounded, 'Watch a Short Ad', 'A quick sponsor clip', '+15', Color(0xFFE65100)),
+    (Icons.share_outlined, 'Share on Social', 'Spread the blue & white', '+25', Color(0xFF00897B)),
+    (Icons.person_outline_rounded, 'Complete Profile', 'One-off — takes a minute', '+50', Color(0xFF6A1B9A)),
+  ];
+
+  // Active challenges: (icon, title, sub, progress, reward)
+  static const _challenges = <(IconData, String, String, double, String)>[
+    (Icons.euro_rounded, 'Spend €50 this week', '€32.50 of €50', 0.65, '+50'),
+    (Icons.sports_soccer_rounded, 'Predict 3 matches', '1 of 3 done', 0.33, '+120'),
+    (Icons.local_fire_department_rounded, 'Attend the derby', 'Check in vs Dortmund', 0.0, '+150'),
   ];
 
   void _push(BuildContext context, Widget s) =>
@@ -41,25 +44,129 @@ class EarnPointsScreen extends StatelessWidget {
       children: [
         HubSearchField(hint: 'Search rewards & sponsors', onTap: () => _push(context, const SearchScreen())),
         const SizedBox(height: 16),
-        // Welcome bonus
-        SurfaceCard(
-          color: AppColors.brandLightest,
-          child: Row(children: [
-            const Icon(Icons.card_giftcard_rounded, color: AppColors.gold),
-            const SizedBox(width: 12),
-            Expanded(child: Text(tr('Welcome bonus: +500 points to start — annual members get +1,500.'),
-                style: AppText.body3.copyWith(color: AppColors.onAccent))),
+
+        // ── Weekly goal hero (gamified progress + streak) ──
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Text(tr('This week'), style: AppText.body2.copyWith(color: Colors.white70)),
+              const Spacer(),
+              Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.local_fire_department_rounded, size: 13, color: AppColors.brandDarkest),
+                const SizedBox(width: 3),
+                Text(tr('5-day streak'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+              ])),
+            ]),
+            const SizedBox(height: 12),
+            Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+              Text('320', style: AppText.h1.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+              const SizedBox(width: 6),
+              Text('/ 500 ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white70)),
+            ]),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: const LinearProgressIndicator(value: 0.64, minHeight: 8, backgroundColor: Colors.white24, valueColor: AlwaysStoppedAnimation(AppColors.gold)),
+            ),
+            const SizedBox(height: 12),
+            Row(children: [
+              const Icon(Icons.card_giftcard_rounded, size: 16, color: AppColors.gold),
+              const SizedBox(width: 8),
+              Expanded(child: Text(tr('Reach 500 this week to unlock a +100 bonus.'), style: AppText.body3.copyWith(color: Colors.white))),
+            ]),
           ]),
         ),
-        const SizedBox(height: 20),
-        Align(alignment: Alignment.centerLeft, child: Text(tr('Ways to Earn'), style: AppText.label1)),
+        const SizedBox(height: 22),
+
+        // ── Do it today (one-tap daily actions) ──
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Do it today'), style: AppText.label1)),
+        const SizedBox(height: 12),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(child: _DailyAction(icon: Icons.event_available_rounded, label: tr('Check-in'), reward: '+10', color: const Color(0xFF2E7D32),
+              onTap: () => showSuccessSheet(context, title: 'Checked in!', message: '+10 points added — come back tomorrow to keep your streak.'))),
+          const SizedBox(width: 10),
+          Expanded(child: _DailyAction(icon: Icons.casino_rounded, label: tr('Spin'), reward: tr('Play'), color: const Color(0xFF6A1B9A), onTap: () => showDailySpin(context))),
+          const SizedBox(width: 10),
+          Expanded(child: _DailyAction(icon: Icons.style_rounded, label: tr('Scratch'), reward: tr('Play'), color: const Color(0xFFB8860B), onTap: () => showScratchCard(context))),
+          const SizedBox(width: 10),
+          Expanded(child: _DailyAction(icon: Icons.sports_soccer_rounded, label: tr('Predict'), reward: '+50', color: const Color(0xFF1B7A3D), onTap: () => _push(context, const PredictionsScreen()))),
+        ]),
+        const SizedBox(height: 24),
+
+        // ── Active challenges (progress + reward) ──
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Active challenges'), style: AppText.label1)),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 176,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _challenges.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final c = _challenges[i];
+              return SizedBox(
+                width: 210,
+                child: FeaturedGoalCard(icon: c.$1, title: c.$2, sub: c.$3, progress: c.$4, reward: c.$5, onTap: () {}),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // ── Ways to earn (reward shown as a pill) ──
+        Align(alignment: Alignment.centerLeft, child: Text(tr('More ways to earn'), style: AppText.label1)),
         const SizedBox(height: 12),
         for (final w in _ways) ...[
-          HubListRow(icon: w.icon, title: w.title, subtitle: w.sub, iconColor: w.color),
+          _EarnRow(icon: w.$1, title: w.$2, sub: w.$3, reward: w.$4, color: w.$5),
           const SizedBox(height: 10),
         ],
-        const SizedBox(height: 6),
-        // Sponsor promo
+        const SizedBox(height: 8),
+
+        // ── Referral promo (big incentive) ──
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Row(children: [
+            Container(width: 48, height: 48, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.group_add_rounded, color: AppColors.gold, size: 26)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Bring a friend'), style: AppText.label2.copyWith(color: Colors.white)),
+              const SizedBox(height: 2),
+              Text(tr('You both get +200 points'), style: AppText.body3.copyWith(color: Colors.white70)),
+            ])),
+            const SizedBox(width: 10),
+            Tappable(
+              onTap: () => showShareSheet(context, subject: tr('Join me on the S04 Fan App')),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
+                child: Text(tr('Invite'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+              ),
+            ),
+          ]),
+        ),
+        const SizedBox(height: 16),
+
+        // ── Leaderboard nudge (competition) ──
+        SurfaceCard(
+          onTap: () => _push(context, const LeaderboardScreen()),
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.leaderboard_rounded, color: AppColors.brandPrimary, size: 22)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('You\'re #12 this season'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              Text(tr('Earn 2,000 pts to break into the Top 10'), style: AppText.body3Regular),
+            ])),
+            Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          ]),
+        ),
+        const SizedBox(height: 16),
+
+        // ── Sponsor promo + top up ──
         SponsorPromoCard(
           sponsor: 'adidas',
           category: 'Fanshop',
@@ -68,14 +175,85 @@ class EarnPointsScreen extends StatelessWidget {
           color: const Color(0xFF111111),
         ),
         const SizedBox(height: 12),
-        HubListRow(
+        _EarnRow(
           icon: Icons.add_rounded,
           title: 'Top up points',
-          subtitle: 'Buy a package · 100 pts = €1',
-          iconColor: AppColors.brandDarkest,
+          sub: 'Buy a package · 100 pts = €1',
+          reward: 'Buy',
+          color: AppColors.brandDarkest,
           onTap: () => _push(context, const BuyPointsScreen()),
         ),
+        const SizedBox(height: 6),
+        Row(children: [
+          Icon(Icons.card_giftcard_rounded, size: 14, color: AppColors.textLight),
+          const SizedBox(width: 6),
+          Expanded(child: Text(tr('Welcome bonus: +500 points to start — annual members get +1,500.'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
+        ]),
       ],
+    );
+  }
+}
+
+/// One-tap daily action card (icon, label, a reward/CTA pill).
+class _DailyAction extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String reward;
+  final Color color;
+  final VoidCallback onTap;
+  const _DailyAction({required this.icon, required this.label, required this.reward, required this.color, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.96,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.tile), border: Border.all(color: AppColors.borderLightest)),
+        child: Column(children: [
+          Container(width: 44, height: 44, decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 22)),
+          const SizedBox(height: 8),
+          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(fontSize: 11.5)),
+          const SizedBox(height: 6),
+          Pill(color: AppColors.successBg, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), child: Text(reward, style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 10))),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Way-to-earn row with the reward shown as a gold pill on the right.
+class _EarnRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String sub;
+  final String reward;
+  final Color color;
+  final VoidCallback? onTap;
+  const _EarnRow({required this.icon, required this.title, required this.sub, required this.reward, required this.color, this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.99,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.tile), border: Border.all(color: AppColors.borderLightest)),
+        child: Row(children: [
+          Container(width: 44, height: 44, decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 22)),
+          const SizedBox(width: 14),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr(title), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 2),
+            Text(tr(sub), style: AppText.body3Regular),
+          ])),
+          const SizedBox(width: 10),
+          Pill(
+            gradient: const LinearGradient(colors: AppColors.goldGradient),
+            child: Text(tr(reward), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+          ),
+        ]),
+      ),
     );
   }
 }
