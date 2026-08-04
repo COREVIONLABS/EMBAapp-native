@@ -100,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.history_rounded, 'Points History', ''),
           (Icons.account_balance_outlined, 'Bank Account', ''),
           (Icons.credit_card_rounded, 'Payment Methods', ''),
-          (Icons.style_rounded, 'Manage Card', 'Season 2'),
+          (Icons.style_rounded, 'Fan+ Pay card', 'Season 2'),
         ]),
         const SizedBox(height: 16),
         _group(context, 'Settings', const [
@@ -185,6 +185,8 @@ Widget? _screenFor(String label) {
       return const BankAccountScreen();
     case 'Manage Card':
       return const ManageCardsScreen();
+    // 'Fan+ Pay card' is intentionally not routed here — it's a Season-2
+    // teaser handled with an info sheet in _MenuRow (no card exists in V1).
     case 'Notification Preferences':
       return const NotificationPrefsScreen();
     case 'Device Management':
@@ -205,6 +207,34 @@ Widget? _screenFor(String label) {
       return const TermsScreen();
   }
   return null;
+}
+
+/// Season-2 teaser for the Fan+ Pay card (no card exists in V1). Explains it's
+/// coming and can be previewed via the Demo toggle — instead of dead-ending in
+/// a card-management screen with nothing to manage.
+void _showSeason2Teaser(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (_) => Container(
+      padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Container(
+          width: 72, height: 72,
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0055AA), Color(0xFF000D22)]), shape: BoxShape.circle),
+          child: const Icon(Icons.credit_card_rounded, color: AppColors.gold, size: 34),
+        ),
+        const SizedBox(height: 18),
+        Text(tr('Fan+ Pay — coming in Season 2'), textAlign: TextAlign.center, style: AppText.h4),
+        const SizedBox(height: 8),
+        Text(tr('A co-branded S04 card that earns real cashback at club partners. Preview it now via Profile → Demo / Preview.'),
+            textAlign: TextAlign.center, style: AppText.body1.copyWith(color: AppColors.textLight)),
+        const SizedBox(height: 24),
+        PrimaryButton(tr('Got it'), onTap: () => Navigator.of(context).pop()),
+      ]),
+    ),
+  );
 }
 
 class _MenuRow extends StatefulWidget {
@@ -230,6 +260,10 @@ class _MenuRowState extends State<_MenuRow> {
       onTap: anyToggle
           ? null
           : () {
+              if (widget.label == 'Fan+ Pay card') {
+                _showSeason2Teaser(context);
+                return;
+              }
               final s = _screenFor(widget.label);
               if (s != null) Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
             },

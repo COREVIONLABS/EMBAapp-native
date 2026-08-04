@@ -628,35 +628,46 @@ class _QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var i = 0; i < _items.length; i++) ...[
-            if (i > 0) const SizedBox(width: 12),
-            Expanded(
-              child: HomeImageTile(
-                image: _items[i].$1,
-                label: _items[i].$2,
-                icon: _items[i].$3,
-                color: _items[i].$4,
-                height: 84,
-                onTap: () {
-                  final label = _items[i].$2;
-                  if (label == 'Daily Spin') {
-                    showDailySpin(context);
-                  } else if (label == 'Scratch Card') {
-                    showScratchCard(context);
-                  } else {
-                    _push(context, _routeFor(label));
-                  }
-                },
-              ),
-            ),
-          ],
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Framed as a shortcut into the full Earn hub — not a parallel system.
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SectionHeader('Quick actions', action: 'All ways to earn', onAction: () => _push(context, const EarnPointsScreen())),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var i = 0; i < _items.length; i++) ...[
+                if (i > 0) const SizedBox(width: 12),
+                Expanded(
+                  child: HomeImageTile(
+                    image: _items[i].$1,
+                    label: _items[i].$2,
+                    icon: _items[i].$3,
+                    color: _items[i].$4,
+                    height: 84,
+                    onTap: () {
+                      final label = _items[i].$2;
+                      if (label == 'Daily Spin') {
+                        showDailySpin(context);
+                      } else if (label == 'Scratch Card') {
+                        showScratchCard(context);
+                      } else {
+                        _push(context, _routeFor(label));
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

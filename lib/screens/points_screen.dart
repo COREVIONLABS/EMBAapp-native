@@ -173,7 +173,14 @@ class PointsScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _HowStep(icon: Icons.add_circle_outline_rounded, color: AppColors.brandPrimary, title: tr('Earn points'), sub: tr('On tickets, shop, games & check-ins')),
               _HowStep(icon: Icons.card_giftcard_rounded, color: const Color(0xFF6A1B9A), title: tr('Redeem for vouchers'), sub: tr('Swap points for real club & sponsor vouchers')),
-              _HowStep(icon: Icons.euro_rounded, color: AppColors.success, title: tr('Get real cashback'), sub: tr('With Fan+ Pay — actual money back at partners'), last: true),
+              // Third step adapts: V1 (no card) shows a real V1 benefit; the
+              // Phase-2 cashback step only appears once the Fan+ Pay card is on.
+              ValueListenableBuilder<bool>(
+                valueListenable: cardActiveNotifier,
+                builder: (context, card, __) => card
+                    ? _HowStep(icon: Icons.euro_rounded, color: AppColors.success, title: tr('Get real cashback'), sub: tr('With Fan+ Pay — actual money back at partners'), last: true)
+                    : _HowStep(icon: Icons.local_activity_rounded, color: const Color(0xFFC62828), title: tr('Win experiences'), sub: tr('Enter tombolas & unlock VIP moments'), last: true),
+              ),
             ]),
           ),
         ),

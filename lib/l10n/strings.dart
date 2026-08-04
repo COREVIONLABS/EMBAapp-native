@@ -1281,4 +1281,16 @@ const Map<String, String> _de = {
   'More points, more perks': 'Mehr Punkte, mehr Vorteile',
   'Double Fan Points on every purchase': 'Doppelte Fan-Punkte bei jedem Kauf',
   'Triple Fan Points on every purchase': 'Dreifache Fan-Punkte bei jedem Kauf',
+  // ── V1 coherence fixes (no card in Version 1) ──
+  'Win experiences': 'Erlebnisse gewinnen',
+  'Enter tombolas & unlock VIP moments': 'An Tombolas teilnehmen & VIP-Momente freischalten',
+  'Best seats first, exclusive drops, and extra points on everything':
+      'Zuerst die besten Plätze, exklusive Drops und Extra-Punkte auf alles',
+  'Quick actions': 'Schnellaktionen',
+  'All ways to earn': 'Alle Verdienst-Wege',
+  'Reach your next reward faster · optional': 'Schneller zur nächsten Belohnung · optional',
+  'Fan+ Pay — coming in Season 2': 'Fan+ Pay — kommt in Saison 2',
+  'A co-branded S04 card that earns real cashback at club partners. Preview it now via Profile → Demo / Preview.':
+      'Eine S04-Karte, die echtes Cashback bei Club-Partnern bringt. Jetzt unter Profil → Demo / Vorschau ansehen.',
+  'Got it': 'Verstanden',
 };

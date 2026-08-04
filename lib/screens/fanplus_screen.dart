@@ -85,7 +85,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
                 Text(tr('Priority access to what fans want most'),
                     textAlign: TextAlign.center, style: AppText.label1.copyWith(color: Colors.white)),
                 const SizedBox(height: 6),
-                Text(tr('Best seats first, exclusive drops, and rewards that pay you back'),
+                Text(tr('Best seats first, exclusive drops, and extra points on everything'),
                     textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
                 const SizedBox(height: 10),
                 Pill(

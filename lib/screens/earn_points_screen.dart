@@ -205,7 +205,7 @@ class EarnPointsScreen extends StatelessWidget {
         _EarnRow(
           icon: Icons.add_rounded,
           title: 'Top up points',
-          sub: 'Buy a package · 100 pts = €1',
+          sub: 'Reach your next reward faster · optional',
           reward: 'Buy',
           color: AppColors.brandDarkest,
           onTap: () => _push(context, const BuyPointsScreen()),
