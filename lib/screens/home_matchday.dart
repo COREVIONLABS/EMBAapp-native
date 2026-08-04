@@ -564,14 +564,14 @@ class _PointsCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              Text(tr('12,450'),
+              Text(FanModel.pointsFormatted,
                   style: AppText.h1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Pill(
                     color: AppColors.brandDark,
-                    child: Text(tr('12 Raffle Tickets'),
+                    child: Text('${FanModel.raffleTickets} ${tr('Raffle Tickets')}',
                         style: AppText.caption1.copyWith(color: AppColors.textLightest)),
                   ),
                   const SizedBox(width: 8),

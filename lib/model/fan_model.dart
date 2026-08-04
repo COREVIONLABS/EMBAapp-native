@@ -10,8 +10,8 @@ class FanTier {
 }
 
 class FanModel {
-  static const int fanPoints = 12450;
-  static const int raffleTickets = 12;
+  static const int fanPoints = 4820;
+  static const int raffleTickets = 3;
 
   // Schalke-culture loyalty ladder (ascending).
   static const tiers = [

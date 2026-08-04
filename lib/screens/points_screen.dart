@@ -185,24 +185,6 @@ class PointsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        // ── Top Sponsors ──
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader('Top Sponsors', onAction: () => _push(context, const RedeemScreen())),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 92,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            children: [
-              for (final s in kSponsors)
-                _SponsorAvatar(name: s.name, perk: s.perk, color: s.color, symbol: s.icon, onTap: () => _push(context, SponsorOfferScreen(sponsor: s))),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
         // ── Redeem categories (quick grid) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -269,32 +251,6 @@ class PointsScreen extends StatelessWidget {
     );
   }
 
-}
-
-class _SponsorAvatar extends StatelessWidget {
-  final String name;
-  final String perk;
-  final Color color;
-  final IconData? symbol;
-  final VoidCallback onTap;
-  const _SponsorAvatar({required this.name, required this.perk, required this.color, this.symbol, required this.onTap});
-  @override
-  Widget build(BuildContext context) {
-    return Tappable(
-      scale: 0.94,
-      onTap: onTap,
-      child: Container(
-        width: 78,
-        margin: const EdgeInsets.only(right: 12),
-        child: Column(children: [
-          SponsorLogo(name: name, size: 52, bg: color, symbol: symbol),
-          const SizedBox(height: 6),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 11)),
-          Text(perk, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 10)),
-        ]),
-      ),
-    );
-  }
 }
 
 class _Cat extends StatelessWidget {

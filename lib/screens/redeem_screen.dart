@@ -6,13 +6,13 @@ import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import '../widgets/voucher_flow.dart';
-import 'voucher_screen.dart';
 import 'my_vouchers_screen.dart';
 import 'buy_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'tickets_screen.dart';
 import 'experiences_screen.dart';
 import 'raffles_screen.dart';
+import 'deals_hub_screen.dart';
 import '../l10n/strings.dart';
 
 /// Redeem Points (Figma 2194:10804) — featured sponsor reward cards on top,
@@ -175,7 +175,7 @@ class RedeemScreen extends StatelessWidget {
                 'Tickets' => const TicketsScreen(),
                 'Experiences' => const ExperiencesScreen(),
                 'Tombola' => const RafflesScreen(),
-                'Sponsors' => const VoucherScreen(),
+                'Sponsors' => const DealsHubScreen(),
                 _ => null,
               };
               if (dest != null) _push(context, dest);
