@@ -126,6 +126,7 @@ class ProfileScreen extends StatelessWidget {
         _group(context, 'Demo / Preview', const [
           (Icons.sports_soccer_rounded, 'Matchday state', 'matchdaytoggle'),
           (Icons.workspace_premium_outlined, 'Fan+ member (preview)', 'membertoggle'),
+          (Icons.credit_card_rounded, 'Fan+ Pay card (Phase 2)', 'cardtoggle'),
         ]),
         const SizedBox(height: 16),
         const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _LogoutTile()),
@@ -223,7 +224,8 @@ class _MenuRowState extends State<_MenuRow> {
     final isDarkToggle = widget.value == 'darktoggle';
     final isMatchdayToggle = widget.value == 'matchdaytoggle';
     final isMemberToggle = widget.value == 'membertoggle';
-    final anyToggle = isToggle || isDarkToggle || isMatchdayToggle || isMemberToggle;
+    final isCardToggle = widget.value == 'cardtoggle';
+    final anyToggle = isToggle || isDarkToggle || isMatchdayToggle || isMemberToggle || isCardToggle;
     return InkWell(
       onTap: anyToggle
           ? null
@@ -265,6 +267,13 @@ class _MenuRowState extends State<_MenuRow> {
                 activeThumbColor: Colors.white,
                 activeTrackColor: AppColors.brandPrimary,
                 onChanged: (v) => setState(() => memberPreviewNotifier.value = v),
+              )
+            else if (isCardToggle)
+              Switch(
+                value: cardActiveNotifier.value,
+                activeThumbColor: Colors.white,
+                activeTrackColor: AppColors.brandPrimary,
+                onChanged: (v) => setState(() => cardActiveNotifier.value = v),
               )
             else ...[
               if (widget.value.isNotEmpty)

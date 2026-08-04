@@ -10,6 +10,7 @@ import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
 import 'leaderboard_screen.dart';
+import 'player_vote_screen.dart';
 import '../l10n/strings.dart';
 
 /// Earn Points — a motivating fan hub (not a flat list): a weekly points goal
@@ -78,6 +79,32 @@ class EarnPointsScreen extends StatelessWidget {
               Expanded(child: Text(tr('Reach 500 this week to unlock a +100 bonus.'), style: AppText.body3.copyWith(color: AppColors.textNormal))),
             ]),
           ]),
+        ),
+        const SizedBox(height: 16),
+
+        // ── Player of the Month (club-emotional monthly vote) ──
+        Tappable(
+          scale: 0.98,
+          onTap: () => _push(context, const PlayerVoteScreen()),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Row(children: [
+              Container(width: 48, height: 48, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 26)),
+              const SizedBox(width: 14),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('Vote: Player of the Month'), style: AppText.label2.copyWith(color: Colors.white)),
+                const SizedBox(height: 2),
+                Text(tr('Back your Knappe — earn +50 points'), style: AppText.body3.copyWith(color: Colors.white70)),
+              ])),
+              const SizedBox(width: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
+                child: Text(tr('Vote'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+              ),
+            ]),
+          ),
         ),
         const SizedBox(height: 22),
 

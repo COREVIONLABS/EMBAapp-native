@@ -18,6 +18,7 @@ import 'raffles_screen.dart';
 import 'sponsor_offer_screen.dart';
 import 'my_vouchers_screen.dart';
 import 'search_screen.dart';
+import 'season_journey_screen.dart';
 import '../l10n/strings.dart';
 
 /// Points tab — the Fan Points hub: hero balance → quick-access grid → sponsor
@@ -112,7 +113,37 @@ class PointsScreen extends StatelessWidget {
             ]),
           ]),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 16),
+        // ── Road to Gold season journey (Schalke-history milestones) ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Tappable(
+            scale: 0.98,
+            onTap: () => _push(context, const SeasonJourneyScreen()),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  const Icon(Icons.route_rounded, color: AppColors.gold, size: 20),
+                  const SizedBox(width: 8),
+                  Text(tr('Road to Gold'), style: AppText.label2.copyWith(color: Colors.white)),
+                  const Spacer(),
+                  Text(tr('Next: 7× Meister'), style: AppText.caption1.copyWith(color: Colors.white70)),
+                  const Icon(Icons.chevron_right_rounded, color: Colors.white54, size: 18),
+                ]),
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(value: 0.66, minHeight: 7, backgroundColor: Colors.white24, valueColor: const AlwaysStoppedAnimation(AppColors.gold)),
+                ),
+                const SizedBox(height: 8),
+                Text(tr('Your season journey through 120 years of S04.'), style: AppText.body3.copyWith(color: Colors.white70)),
+              ]),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
         // ── Featured sponsor promos (big-card carousel) ──
         SizedBox(
           height: 176,

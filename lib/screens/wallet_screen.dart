@@ -10,6 +10,7 @@ import 'my_bookings_screen.dart';
 import 'collection_screen.dart';
 import 'subscription_screen.dart';
 import 'points_history_screen.dart';
+import 'fanplus_pay_screen.dart';
 import '../l10n/strings.dart';
 
 /// One place for everything a fan "owns": membership card, points balance,
@@ -64,6 +65,27 @@ class WalletScreen extends StatelessWidget {
             ])),
             Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
           ]),
+        ),
+        // Fan+ Pay card (Phase-2 feature — only when switched on in Demo).
+        ValueListenableBuilder<bool>(
+          valueListenable: cardActiveNotifier,
+          builder: (context, active, __) => active
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: SurfaceCard(
+                    onTap: () => _push(context, const FanPlusPayScreen()),
+                    child: Row(children: [
+                      Container(width: 44, height: 44, decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0055AA), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.credit_card_rounded, color: AppColors.gold, size: 22)),
+                      const SizedBox(width: 14),
+                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(tr('Fan+ Pay card'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                        Text(tr('Cashback at club partners'), style: AppText.body3Regular),
+                      ])),
+                      Pill(color: AppColors.successBg, child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800))),
+                    ]),
+                  ),
+                )
+              : const SizedBox.shrink(),
         ),
         const SizedBox(height: 20),
         Align(alignment: Alignment.centerLeft, child: Text(tr('Everything you hold'), style: AppText.label1)),

@@ -75,6 +75,32 @@ final ValueNotifier<String> tierNotifier = ValueNotifier<String>(FanModel.member
 final ValueNotifier<bool> matchdayNotifier = ValueNotifier<bool>(true);
 final ValueNotifier<bool> memberPreviewNotifier = ValueNotifier<bool>(true);
 
+/// Phase-2 feature flag: the co-branded "Fan+ Pay" card programme. OFF by
+/// default so the shipping app tells the current, focused loyalty story; a
+/// presenter can flip it on (Profile → Demo) to show the roadmap state where
+/// fans hold a Fan+ Pay card and earn cashback at partners.
+final ValueNotifier<bool> cardActiveNotifier = ValueNotifier<bool>(false);
+
+/// A Fan+ Pay partner: where the card earns real-money cashback, with a
+/// playful, on-brand line (Club Brugge "Club Pay" style). Real S04 partners.
+class PayPartner {
+  final String name;
+  final IconData icon;
+  final Color color;
+  final String cashback; // e.g. "5%"
+  final String tagline; // playful German line
+  const PayPartner(this.name, this.icon, this.color, this.cashback, this.tagline);
+}
+
+const kPayPartners = [
+  PayPartner('Veltins', Icons.sports_bar_rounded, Color(0xFF00623A), '5%', 'Aufs Bier nach dem Sieg.'),
+  PayPartner('REWE', Icons.shopping_cart_rounded, Color(0xFFC8102E), '3%', 'Der Wocheneinkauf zahlt sich aus.'),
+  PayPartner('adidas', Icons.sports_soccer_rounded, Color(0xFF111111), '5%', 'Neues Trikot, echtes Geld zurück.'),
+  PayPartner('Vivawest', Icons.apartment_rounded, Color(0xFF6A1B9A), '2.5%', 'Sogar die Miete bringt was.'),
+  PayPartner("Ernsting's family", Icons.checkroom_rounded, Color(0xFFE30613), '4%', 'Für die ganze Knappen-Familie.'),
+  PayPartner('VELTINS-Arena', Icons.stadium_rounded, Color(0xFF004B9C), '10%', 'Am Spieltag am meisten zurück.'),
+];
+
 class FanProduct {
   final String name;
   final double price;

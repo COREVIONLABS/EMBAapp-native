@@ -18,6 +18,7 @@ import 'leaderboard_screen.dart';
 import 'subscription_screen.dart';
 import 'streak_screen.dart';
 import 'fanplus_screen.dart';
+import 'fanplus_pay_screen.dart';
 import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../widgets/hub_widgets.dart';
@@ -75,6 +76,34 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             // Fan Points wallet is always the first thing on Home.
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
             const SizedBox(height: 14),
+            // Fan+ Pay card promo — Phase-2 only (Demo toggle). Sits right under
+            // the wallet so the "with card" state reads instantly when presenting.
+            ValueListenableBuilder<bool>(
+              valueListenable: cardActiveNotifier,
+              builder: (context, active, __) => active
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+                      child: Tappable(
+                        scale: 0.98,
+                        onTap: () => _push(context, const FanPlusPayScreen()),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0055AA), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+                          child: Row(children: [
+                            Container(width: 46, height: 46, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(13)), child: const Icon(Icons.credit_card_rounded, color: AppColors.gold, size: 24)),
+                            const SizedBox(width: 14),
+                            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              Text(tr('Fan+ Pay'), style: AppText.label2.copyWith(color: Colors.white)),
+                              const SizedBox(height: 2),
+                              Text(tr('Real cashback at S04 partners'), style: AppText.body3.copyWith(color: Colors.white70)),
+                            ])),
+                            const Icon(Icons.chevron_right_rounded, color: Colors.white54),
+                          ]),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
             _infoChips(),
             const SizedBox(height: 16),
             // Sponsor campaign below the wallet (the daily-spin nudge and the
