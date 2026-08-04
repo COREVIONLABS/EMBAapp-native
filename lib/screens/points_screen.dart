@@ -113,22 +113,14 @@ class PointsScreen extends StatelessWidget {
               Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
             ]),
             const SizedBox(height: 20),
-            // Primary quick-access grid — every key hub function on one visible
-            // tap (replaces the old 4 circles + hidden "More" sheet).
-            GridView.count(
-              crossAxisCount: 4,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 10,
-              childAspectRatio: 1.0,
-              children: [
-                _Cat(icon: Icons.add_rounded, label: tr('Earn'), color: AppColors.brandPrimary, onTap: () => _push(context, const EarnPointsScreen())),
-                _Cat(icon: Icons.savings_rounded, label: tr('Redeem'), color: const Color(0xFF00897B), onTap: () => _push(context, const RedeemScreen())),
-                _Cat(icon: Icons.account_balance_wallet_rounded, label: tr('Top up'), color: const Color(0xFF1565C0), onTap: () => _push(context, const BuyPointsScreen())),
-                _Cat(icon: Icons.leaderboard_rounded, label: tr('Ranking'), color: const Color(0xFFEF6C00), onTap: () => _push(context, const LeaderboardScreen())),
-              ],
-            ),
+            // Primary quick-access — every key hub function on one visible tap
+            // (replaces the old 4 circles + hidden "More" sheet).
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(child: _Cat(icon: Icons.add_rounded, label: tr('Earn'), color: AppColors.brandPrimary, onTap: () => _push(context, const EarnPointsScreen()))),
+              Expanded(child: _Cat(icon: Icons.savings_rounded, label: tr('Redeem'), color: const Color(0xFF00897B), onTap: () => _push(context, const RedeemScreen()))),
+              Expanded(child: _Cat(icon: Icons.account_balance_wallet_rounded, label: tr('Top up'), color: const Color(0xFF1565C0), onTap: () => _push(context, const BuyPointsScreen()))),
+              Expanded(child: _Cat(icon: Icons.leaderboard_rounded, label: tr('Ranking'), color: const Color(0xFFEF6C00), onTap: () => _push(context, const LeaderboardScreen()))),
+            ]),
           ]),
         ),
         const SizedBox(height: 4),
@@ -219,22 +211,14 @@ class PointsScreen extends StatelessWidget {
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: GridView.count(
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 14,
-            crossAxisSpacing: 12,
-            childAspectRatio: 1.0,
-            children: [
-              _Cat(icon: Icons.confirmation_number_rounded, label: tr('Vouchers'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const MyVouchersScreen())),
-              _Cat(icon: Icons.local_activity_rounded, label: tr('Tombola'), color: const Color(0xFFC62828), onTap: () => _push(context, const RafflesScreen())),
-              _Cat(icon: Icons.stadium_rounded, label: tr('Experiences'), color: const Color(0xFF1565C0), onTap: () => _push(context, const ExperiencesScreen())),
-              _Cat(icon: Icons.grid_view_rounded, label: tr('Collection'), color: const Color(0xFF00897B), onTap: () => _push(context, const CollectionScreen())),
-            ],
-          ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(child: _Cat(icon: Icons.confirmation_number_rounded, label: tr('Vouchers'), color: const Color(0xFF6A1B9A), onTap: () => _push(context, const MyVouchersScreen()))),
+            Expanded(child: _Cat(icon: Icons.local_activity_rounded, label: tr('Tombola'), color: const Color(0xFFC62828), onTap: () => _push(context, const RafflesScreen()))),
+            Expanded(child: _Cat(icon: Icons.stadium_rounded, label: tr('Experiences'), color: const Color(0xFF1565C0), onTap: () => _push(context, const ExperiencesScreen()))),
+            Expanded(child: _Cat(icon: Icons.grid_view_rounded, label: tr('Collection'), color: const Color(0xFF00897B), onTap: () => _push(context, const CollectionScreen()))),
+          ]),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         // ── Challenges ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
