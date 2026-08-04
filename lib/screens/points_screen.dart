@@ -332,7 +332,7 @@ class _TxnRow extends StatelessWidget {
     return Row(children: [
       Container(
         width: 40, height: 40,
-        decoration: BoxDecoration(color: credit ? AppColors.successBg : const Color(0xFFFDE7E7), borderRadius: BorderRadius.circular(11)),
+        decoration: BoxDecoration(color: credit ? AppColors.successBg : AppColors.dangerBg, borderRadius: BorderRadius.circular(11)),
         child: Icon(credit ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: credit ? AppColors.success : AppColors.danger, size: 18),
       ),
       const SizedBox(width: 12),

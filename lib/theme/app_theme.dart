@@ -41,6 +41,7 @@ class AppColors {
   // Tinted accent backgrounds
   static Color get brandLightest => _dark ? const Color(0xFF16263F) : const Color(0xFFE6F0FF);
   static Color get successBg => _dark ? const Color(0xFF14271C) : const Color(0xFFE6FAEC);
+  static Color get dangerBg => _dark ? const Color(0xFF2A1416) : const Color(0xFFFDE7E7);
   static Color get infoBg => _dark ? const Color(0xFF16263F) : const Color(0xFFE5F0FF);
 
   // Text (dark text on light in light-mode; light text on dark in dark-mode)

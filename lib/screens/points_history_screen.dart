@@ -52,7 +52,7 @@ class PointsHistoryScreen extends StatelessWidget {
                 child: Row(children: [
                   Container(
                     width: 38, height: 38,
-                    decoration: BoxDecoration(color: r.$5 ? AppColors.successBg : const Color(0xFFFDE7E7), borderRadius: BorderRadius.circular(11)),
+                    decoration: BoxDecoration(color: r.$5 ? AppColors.successBg : AppColors.dangerBg, borderRadius: BorderRadius.circular(11)),
                     child: Icon(r.$1, color: r.$5 ? AppColors.success : AppColors.danger, size: 19),
                   ),
                   const SizedBox(width: 12),
@@ -63,7 +63,7 @@ class PointsHistoryScreen extends StatelessWidget {
                   ])),
                   const SizedBox(width: 8),
                   Pill(
-                    color: r.$5 ? AppColors.successBg : const Color(0xFFFDE7E7),
+                    color: r.$5 ? AppColors.successBg : AppColors.dangerBg,
                     child: Text('${r.$4} ${tr('pts')}', style: AppText.caption1.copyWith(color: r.$5 ? AppColors.success : AppColors.danger, fontWeight: FontWeight.w800)),
                   ),
                 ]),

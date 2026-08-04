@@ -3,8 +3,10 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
+import '../model/fan_model.dart';
 import 'deal_detail_screen.dart';
 import 'category_detail_screen.dart';
+import 'sponsor_offer_screen.dart';
 import 'search_screen.dart';
 import '../l10n/strings.dart';
 
@@ -28,11 +30,13 @@ class _Brand {
   const _Brand(this.imageKey, this.name, this.discount);
 }
 
+// Our real club partners (mirrors kSponsors so tapping opens the sponsor offer).
 const _brands = [
-  _Brand('brand_nike', 'Nike', '16% Off'),
-  _Brand('brand_puma', 'Puma', '16% Off'),
-  _Brand('brand_levis', 'Levis', '16% Off'),
-  _Brand('brand_adidas', 'Adidas', '15% Off'),
+  _Brand('brand_veltins', 'Veltins', '2× pts'),
+  _Brand('brand_adidas', 'adidas', '5% back'),
+  _Brand('brand_rewe', 'REWE', '3× pts'),
+  _Brand('brand_vivawest', 'Vivawest', '10% off'),
+  _Brand('brand_ernstings', "Ernsting's", '€5 voucher'),
 ];
 
 class _Featured {
@@ -149,9 +153,12 @@ class _BrandCard extends StatelessWidget {
   const _BrandCard(this.b);
   @override
   Widget build(BuildContext context) {
+    final s = sponsorByName(b.name);
     return Tappable(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => DealDetailScreen(brand: b.name, offer: b.discount, category: tr('Partner offer'), color: AppColors.brandDarkest))),
+          builder: (_) => s != null
+              ? SponsorOfferScreen(sponsor: s)
+              : DealDetailScreen(brand: b.name, offer: b.discount, category: tr('Partner offer'), color: AppColors.brandDarkest))),
       child: Container(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
       decoration: BoxDecoration(
