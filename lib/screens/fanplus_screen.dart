@@ -243,7 +243,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(tr('Your membership is working for you'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-                Text(tr('+820 bonus points & priority access this month'), style: AppText.body3Regular),
+                Text('${FanModel.perks.freeLots} ${tr('free lots')} + ${FanModel.fmtPublic(FanModel.perks.monthlyPoints)} ${tr('pts / month')}', style: AppText.body3Regular),
               ])),
             ]),
           ),
@@ -354,7 +354,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
                 const Icon(Icons.local_activity_rounded, color: AppColors.gold, size: 24),
               ]),
               const SizedBox(height: 14),
-              Text(tr('3 free tombola entries every month'), style: AppText.label1.copyWith(color: Colors.white)),
+              Text('${FanModel.perks.freeLots} ${tr('free tombola lots every month')}', style: AppText.label1.copyWith(color: Colors.white)),
               const SizedBox(height: 4),
               Text(tr('Win VIP tickets, signed gear and more — winners drawn each month.'), style: AppText.body3.copyWith(color: Colors.white70)),
               const SizedBox(height: 14),

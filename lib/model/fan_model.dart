@@ -50,6 +50,9 @@ class FanModel {
   // Subscription tiers (final concept: Free Fan / Fan Member / Super Fan).
   static const String membershipTier = 'Super Fan';
 
+  /// Current member's monthly perks, tied to the core loop.
+  static MembershipPerks get perks => perksFor(membershipTier);
+
   static String _fmt(int n) {
     final s = n.toString();
     final b = StringBuffer();
@@ -70,6 +73,23 @@ class FanModel {
     FanProduct('Cap Royal Blue', 22.99, 1100, 'Accessories', Color(0xFF002F63)),
   ];
 }
+
+/// Membership value tied to the core loop: free tombola lots + monthly bonus
+/// points, scaling by subscription tier. This is the concrete "why upgrade".
+class MembershipPerks {
+  final int freeLots;      // free tombola lots per month
+  final int monthlyPoints; // bonus points credited to your balance monthly
+  const MembershipPerks(this.freeLots, this.monthlyPoints);
+}
+
+const Map<String, MembershipPerks> kMembershipPerks = {
+  'Free Fan': MembershipPerks(0, 0),
+  'Fan Member': MembershipPerks(3, 500),
+  'Super Fan': MembershipPerks(8, 1200),
+  'Ultra': MembershipPerks(20, 3000),
+};
+
+MembershipPerks perksFor(String tier) => kMembershipPerks[tier] ?? const MembershipPerks(0, 0);
 
 /// Live-selected membership tier (prototype state). Set when a fan "becomes" a
 /// tier on the Membership screen; the Home membership chip and the Fan+ hub

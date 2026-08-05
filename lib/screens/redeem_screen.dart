@@ -187,7 +187,7 @@ class RedeemScreen extends StatelessWidget {
         HubListRow(
           icon: Icons.add_rounded,
           title: 'Top up points',
-          subtitle: 'Buy a package · 100 pts = €1',
+          subtitle: 'Reach your reward faster · optional',
           iconColor: AppColors.brandDarkest,
           onTap: () => _push(context, const BuyPointsScreen()),
         ),

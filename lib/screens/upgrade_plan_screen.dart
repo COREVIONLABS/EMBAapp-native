@@ -21,23 +21,22 @@ class UpgradePlanScreen extends StatelessWidget {
 
   List<String> _benefits(String plan) => switch (plan) {
         'Fan Member' => const [
+            '3 free tombola lots every month',
+            '+500 bonus points every month',
             'Double Fan Points on every purchase',
             '24h ticket presale + member discounts',
-            'Sponsor vouchers & offers',
-            '8 partner perks included',
           ],
         'Ultra' => const [
+            '20 free tombola lots every month',
+            '+3,000 bonus points every month',
             'Everything in Super Fan',
             'Top priority + personal concierge',
-            'Exclusive drops & money-can\'t-buy days',
-            '20 partner perks included',
           ],
         _ => const [
+            '8 free tombola lots every month',
+            '+1,200 bonus points every month',
             'Priority access to top matches (48–72h)',
             'Best seats first + matchday upgrades',
-            'Monthly exclusive FOMO drop',
-            'Triple Fan Points on every purchase',
-            '12 partner perks included',
           ],
       };
 

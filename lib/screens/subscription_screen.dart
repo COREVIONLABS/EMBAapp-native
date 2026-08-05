@@ -39,20 +39,23 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       (Icons.casino_rounded, 'Daily games & 1 free spin'),
       (Icons.savings_rounded, 'Earn Fan Points · 100 pts = €1'),
     ], 0, 0),
-    _Tier('Fan Member', 'Member', '€4.50', 'More points, more perks', AppColors.pointsGradient, [
+    _Tier('Fan Member', 'Member', '€4.50', 'More lots, more points', AppColors.pointsGradient, [
+      (Icons.local_activity_rounded, '3 free tombola lots every month'),
+      (Icons.savings_rounded, '+500 bonus points every month'),
       (Icons.bolt_rounded, 'Double Fan Points on every purchase'),
       (Icons.confirmation_number_rounded, '24h ticket presale + discounts'),
-      (Icons.card_giftcard_rounded, 'Sponsor vouchers & offers'),
     ], 8, 12),
     _Tier('Super Fan', 'Super', '€9.00', 'First in line', [Color(0xFF0A2A5E), Color(0xFF000D22)], [
+      (Icons.local_activity_rounded, '8 free tombola lots every month'),
+      (Icons.savings_rounded, '+1,200 bonus points every month'),
       (Icons.bolt_rounded, 'Priority access to top matches (48–72h)'),
       (Icons.event_seat_rounded, 'Best seats first + matchday upgrades'),
-      (Icons.local_fire_department_rounded, 'Monthly exclusive FOMO drop'),
     ], 12, 24),
     _Tier('Ultra', 'Ultra', '€19.00', 'The maximum', [Color(0xFF2A1A3E), Color(0xFF0B0616)], [
+      (Icons.local_activity_rounded, '20 free tombola lots every month'),
+      (Icons.savings_rounded, '+3,000 bonus points every month'),
       (Icons.diamond_rounded, 'Everything in Super Fan'),
       (Icons.support_agent_rounded, 'Top priority + personal concierge'),
-      (Icons.workspace_premium_rounded, 'Exclusive drops & money-can’t-buy days'),
     ], 20, 35),
   ];
 

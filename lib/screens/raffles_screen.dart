@@ -6,6 +6,7 @@ import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import 'buy_points_screen.dart';
+import 'subscription_screen.dart';
 import '../l10n/strings.dart';
 
 /// Monthly Tombola hub — luck-based prize draws (VIP tickets, signed gear …),
@@ -95,7 +96,7 @@ class _RafflesScreenState extends State<RafflesScreen> {
     return SubScaffold(
       title: tr('Tombola'),
       children: [
-        // My tickets / entries strip
+        // Membership free-lots strip — the core "why upgrade" for tombola.
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
@@ -103,13 +104,25 @@ class _RafflesScreenState extends State<RafflesScreen> {
             const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${tr('My tickets')}: $_myTickets', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700)),
-              Text('$enteredCount ${tr('active entries this month')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
+              Text('${FanModel.perks.freeLots} ${tr('free lots this month')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700)),
+              Text('${tr(FanModel.membershipTier)} · ${_myTickets + enteredCount} ${tr('lots in total')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
             ])),
             Tappable(
               onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
-              child: Pill(color: AppColors.surface, child: Text(tr('Extra tickets'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+              child: Pill(color: AppColors.surface, child: Text(tr('Buy lots'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
             ),
+          ]),
+        ),
+        const SizedBox(height: 10),
+        // Upgrade nudge — higher tier = more free lots each month.
+        Tappable(
+          scale: 0.99,
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+          child: Row(children: [
+            Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
+            const SizedBox(width: 6),
+            Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
+            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
           ]),
         ),
         const SizedBox(height: 18),
