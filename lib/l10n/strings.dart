@@ -1328,4 +1328,16 @@ const Map<String, String> _de = {
   '+500 bonus points every month': '+500 Bonus-Punkte jeden Monat',
   '+1,200 bonus points every month': '+1.200 Bonus-Punkte jeden Monat',
   '+3,000 bonus points every month': '+3.000 Bonus-Punkte jeden Monat',
+  // ── Pricing: 3 tiers, annual toggle, 7-day trial ──
+  'The one every fan takes': 'Das nimmt jeder Fan',
+  'Best value': 'Bester Wert',
+  '/ year': '/ Jahr',
+  'Monthly': 'Monatlich',
+  'Yearly · 2 months free': 'Jährlich · 2 Monate gratis',
+  '2 months free': '2 Monate gratis',
+  'Start 7-day free trial': '7 Tage kostenlos testen',
+  '7 days free, then': '7 Tage gratis, danach',
+  'cancel anytime': 'jederzeit kündbar',
+  'Start your 7-day free trial': 'Starte deine 7-Tage-Testphase',
+  'Free for 7 days — cancel anytime': '7 Tage gratis — jederzeit kündbar',
 };

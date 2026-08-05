@@ -164,8 +164,8 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               const Icon(Icons.lock_open_rounded, color: AppColors.success),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Try Super Fan free'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-                Text(tr('Free for the next top match — priority seats included'), style: AppText.body3Regular),
+                Text(tr('Start your 7-day free trial'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                Text(tr('Free for 7 days — cancel anytime'), style: AppText.body3Regular),
               ])),
             ]),
           ),

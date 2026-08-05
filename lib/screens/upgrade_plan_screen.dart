@@ -10,7 +10,8 @@ import '../l10n/strings.dart';
 class UpgradePlanScreen extends StatelessWidget {
   final String plan;
   final String price;
-  const UpgradePlanScreen({super.key, this.plan = 'Super Fan', this.price = '€9.00'});
+  final String period;
+  const UpgradePlanScreen({super.key, this.plan = 'Super Fan', this.price = '€9.99', this.period = '/ month'});
 
   // Benefits + badge for the actually-chosen tier (not always Super Fan).
   String _badge(String plan) => switch (plan) {
@@ -44,15 +45,20 @@ class UpgradePlanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Upgrade Plan'),
-      bottomBar: PrimaryButton('Confirm & Pay $price', onTap: () {
-        // Reflect the new tier across the app (Home chip + Fan+ hub).
-        tierNotifier.value = plan;
-        showModalBottomSheet(
-          context: context,
-          backgroundColor: Colors.transparent,
-          builder: (_) => _SuccessSheet(plan: plan),
-        );
-      }),
+      bottomBar: Column(mainAxisSize: MainAxisSize.min, children: [
+        PrimaryButton(tr('Start 7-day free trial'), onTap: () {
+          // Reflect the new tier across the app (Home chip + Fan+ hub).
+          tierNotifier.value = plan;
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (_) => _SuccessSheet(plan: plan),
+          );
+        }),
+        const SizedBox(height: 8),
+        Text('${tr('7 days free, then')} $price $period · ${tr('cancel anytime')}',
+            textAlign: TextAlign.center, style: AppText.caption1.copyWith(color: AppColors.textLight)),
+      ]),
       children: [
         Container(
           padding: const EdgeInsets.all(20),
@@ -80,7 +86,7 @@ class UpgradePlanScreen extends StatelessWidget {
                 children: [
                   Text(price, style: AppText.h1.copyWith(color: Colors.white)),
                   const SizedBox(width: 4),
-                  Text(tr('/ month'), style: AppText.body2.copyWith(color: Colors.white70)),
+                  Text(period, style: AppText.body2.copyWith(color: Colors.white70)),
                 ],
               ),
             ],
