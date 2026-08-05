@@ -8,9 +8,14 @@ import 'fanshop_screen.dart';
 import 'notifications_screen.dart';
 import 'tickets_screen.dart';
 import 'club_news_screen.dart';
+import 'experiences_screen.dart';
+import 'leaderboard_screen.dart';
+import 'collection_screen.dart';
+import 'deals_hub_screen.dart';
 import 'search_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'subscription_screen.dart';
+import '../widgets/sub_scaffold.dart';
 import 'fanplus_screen.dart';
 import 'fanplus_pay_screen.dart';
 import 'matchday_quiz_screen.dart';
@@ -113,20 +118,19 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                   )),
                 ]),
               ),
+              const SizedBox(height: 16),
+              // 3) One consolidated shortcut row — max 4 icons (Collect + the
+              //    top destinations), with "More" holding everything else.
+              _shortcuts(),
               const SizedBox(height: 20),
-              // 3) Matchday context — the one contextual zone (matchday only).
+              // 4) Matchday context — the one contextual zone (matchday only).
               ValueListenableBuilder<bool>(
                 valueListenable: matchdayNotifier,
                 builder: (context, md, __) => md ? _matchdayZone(context) : const SizedBox.shrink(),
               ),
-              // 4) The engagement motor — one entry to all games/tasks.
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _CollectCard(onTap: () => _push(context, const EarnPointsScreen()))),
-              const SizedBox(height: 16),
               // 5) Membership — value tied to the loop (lots + monthly points).
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _MembershipCard(onTap: () => _push(context, const FanPlusScreen()))),
               const SizedBox(height: 22),
-              // 6) Discover — secondary, kept small and last.
-              _discover(),
             ],
           ],
         ),
@@ -168,28 +172,24 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     ]);
   }
 
-  Widget _discover() {
+  // One consolidated shortcut row — Collect (the engagement engine) + the two
+  // top destinations + "More" (everything else). Max 4 icons, so a fan is
+  // never overwhelmed but can still reach the whole app.
+  Widget _shortcuts() {
     final items = <(String, String, IconData, Color, Widget)>[
+      ('Collect', 'img_challenges', Icons.bolt_rounded, const Color(0xFF1B7A3D), const EarnPointsScreen()),
       ('Tickets', 'img_tickets', Icons.confirmation_number_rounded, const Color(0xFF1565C0), const TicketsScreen()),
       ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
-      ('News', 'img_news', Icons.newspaper_rounded, const Color(0xFF3949AB), const ClubNewsScreen()),
-      ('Content', 'img_content', Icons.play_circle_outline_rounded, const Color(0xFFC62828), const ExclusiveContentScreen()),
+      ('More', 'img_content', Icons.grid_view_rounded, const Color(0xFF6A1B9A), const _MoreScreen()),
     ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Discover', action: null)),
-        const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            for (var i = 0; i < items.length; i++) ...[
-              if (i > 0) const SizedBox(width: 12),
-              Expanded(child: HomeImageTile(label: items[i].$1, image: items[i].$2, icon: items[i].$3, color: items[i].$4, height: 80, onTap: () => _push(context, items[i].$5))),
-            ],
-          ]),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        for (var i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(width: 12),
+          Expanded(child: HomeImageTile(label: items[i].$1, image: items[i].$2, icon: items[i].$3, color: items[i].$4, height: 84, onTap: () => _push(context, items[i].$5))),
+        ],
+      ]),
     );
   }
 
@@ -259,23 +259,40 @@ class _StarCard extends StatelessWidget {
   }
 }
 
-/// The engagement motor — one entry to every way to earn points.
-class _CollectCard extends StatelessWidget {
-  final VoidCallback onTap;
-  const _CollectCard({required this.onTap});
+/// "More" — everything that isn't a Home headline, in one tidy list so Home can
+/// stay at four icons without hiding features.
+class _MoreScreen extends StatelessWidget {
+  const _MoreScreen();
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      onTap: onTap,
-      child: Row(children: [
-        Container(width: 46, height: 46, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(13)), child: const Icon(Icons.bolt_rounded, color: AppColors.brandPrimary, size: 24)),
-        const SizedBox(width: 14),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(tr('Collect points'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-          Text(tr('Games, predictions, check-ins & challenges'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
-        ])),
-        Pill(color: AppColors.successBg, child: Text('+250 ${tr('today')}', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800))),
-      ]),
+    final items = <(IconData, String, String, Color, Widget)>[
+      (Icons.bolt_rounded, 'Collect points', 'Games, predictions & challenges', const Color(0xFF1B7A3D), const EarnPointsScreen()),
+      (Icons.stadium_rounded, 'Experiences', 'Stadium tours, VIP & players', const Color(0xFF6A1B9A), const ExperiencesScreen()),
+      (Icons.newspaper_rounded, 'Club News', 'Latest from S04', const Color(0xFF3949AB), const ClubNewsScreen()),
+      (Icons.play_circle_outline_rounded, 'Exclusive Content', 'Members-only clips', const Color(0xFFC62828), const ExclusiveContentScreen()),
+      (Icons.leaderboard_rounded, 'Leaderboard', 'Your rank this season', const Color(0xFF1565C0), const LeaderboardScreen()),
+      (Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', const Color(0xFF00897B), const CollectionScreen()),
+      (Icons.redeem_rounded, 'Sponsor benefits', 'Partner offers & vouchers', const Color(0xFFF9A825), const DealsHubScreen()),
+    ];
+    return SubScaffold(
+      title: tr('More'),
+      children: [
+        for (final it in items) ...[
+          SurfaceCard(
+            onTap: () => _push(context, it.$5),
+            child: Row(children: [
+              Container(width: 44, height: 44, decoration: BoxDecoration(color: it.$4.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: Icon(it.$1, color: it.$4, size: 22)),
+              const SizedBox(width: 14),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr(it.$2), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                Text(tr(it.$3), style: AppText.body3Regular),
+              ])),
+              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+            ]),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ],
     );
   }
 }

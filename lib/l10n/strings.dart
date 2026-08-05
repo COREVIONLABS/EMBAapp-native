@@ -1340,4 +1340,14 @@ const Map<String, String> _de = {
   'cancel anytime': 'jederzeit kündbar',
   'Start your 7-day free trial': 'Starte deine 7-Tage-Testphase',
   'Free for 7 days — cancel anytime': '7 Tage gratis — jederzeit kündbar',
+  // ── Home: consolidated 4-icon shortcuts + "More" hub ──
+  'Collect': 'Sammeln',
+  'Games, predictions & challenges': 'Spiele, Tipps & Challenges',
+  'Stadium tours, VIP & players': 'Stadiontouren, VIP & Spieler',
+  'Latest from S04': 'Neues von S04',
+  'Members-only clips': 'Clips nur für Mitglieder',
+  'Leaderboard': 'Rangliste',
+  'Your rank this season': 'Dein Rang diese Saison',
+  'Sponsor benefits': 'Sponsor-Vorteile',
+  'Partner offers & vouchers': 'Partner-Angebote & Gutscheine',
 };
