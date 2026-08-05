@@ -101,6 +101,11 @@ final ValueNotifier<String> tierNotifier = ValueNotifier<String>(FanModel.member
 final ValueNotifier<bool> matchdayNotifier = ValueNotifier<bool>(true);
 final ValueNotifier<bool> memberPreviewNotifier = ValueNotifier<bool>(true);
 
+/// Onboarding: show the first-run "starter tasks" activation card on Home.
+/// ON by default so a new fan is guided into the core loop; a returning fan
+/// (or a presenter) can switch it off to see the clean Home.
+final ValueNotifier<bool> starterNotifier = ValueNotifier<bool>(true);
+
 /// Phase-2 feature flag: the co-branded "Fan+ Pay" card programme. OFF by
 /// default so the shipping app tells the current, focused loyalty story; a
 /// presenter can flip it on (Profile → Demo) to show the roadmap state where

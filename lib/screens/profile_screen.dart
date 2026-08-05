@@ -127,6 +127,7 @@ class ProfileScreen extends StatelessWidget {
           (Icons.sports_soccer_rounded, 'Matchday state', 'matchdaytoggle'),
           (Icons.workspace_premium_outlined, 'Fan+ member (preview)', 'membertoggle'),
           (Icons.credit_card_rounded, 'Fan+ Pay card (Phase 2)', 'cardtoggle'),
+          (Icons.rocket_launch_outlined, 'New-fan starter tasks', 'startertoggle'),
         ]),
         const SizedBox(height: 16),
         const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _LogoutTile()),
@@ -255,7 +256,8 @@ class _MenuRowState extends State<_MenuRow> {
     final isMatchdayToggle = widget.value == 'matchdaytoggle';
     final isMemberToggle = widget.value == 'membertoggle';
     final isCardToggle = widget.value == 'cardtoggle';
-    final anyToggle = isToggle || isDarkToggle || isMatchdayToggle || isMemberToggle || isCardToggle;
+    final isStarterToggle = widget.value == 'startertoggle';
+    final anyToggle = isToggle || isDarkToggle || isMatchdayToggle || isMemberToggle || isCardToggle || isStarterToggle;
     return InkWell(
       onTap: anyToggle
           ? null
@@ -308,6 +310,13 @@ class _MenuRowState extends State<_MenuRow> {
                 activeThumbColor: Colors.white,
                 activeTrackColor: AppColors.brandPrimary,
                 onChanged: (v) => setState(() => cardActiveNotifier.value = v),
+              )
+            else if (isStarterToggle)
+              Switch(
+                value: starterNotifier.value,
+                activeThumbColor: Colors.white,
+                activeTrackColor: AppColors.brandPrimary,
+                onChanged: (v) => setState(() => starterNotifier.value = v),
               )
             else ...[
               if (widget.value.isNotEmpty)

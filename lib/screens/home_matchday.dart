@@ -97,33 +97,33 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                       )
                     : const SizedBox.shrink(),
               ),
-              // 2) The two things you do with points — the stars.
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(children: [
-                  Expanded(child: _StarCard(
-                    title: tr('Redeem'),
-                    sub: tr('Vouchers & sponsors'),
-                    icon: Icons.card_giftcard_rounded,
-                    gradient: const [Color(0xFF0055AA), Color(0xFF001B44)],
-                    onTap: () => _push(context, const RedeemScreen()),
-                  )),
-                  const SizedBox(width: 12),
-                  Expanded(child: _StarCard(
-                    title: tr('Tombola'),
-                    sub: tr('Play lots & win big'),
-                    icon: Icons.local_activity_rounded,
-                    gradient: const [Color(0xFF6A1B9A), Color(0xFF311B92)],
-                    onTap: () => _push(context, const RafflesScreen()),
-                  )),
-                ]),
+              // First-run activation: guide the new fan into the loop. Hidden
+              // once switched off (returning fan / presenter).
+              ValueListenableBuilder<bool>(
+                valueListenable: starterNotifier,
+                builder: (context, show, __) => show
+                    ? const Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 14), child: _StarterCard())
+                    : const SizedBox.shrink(),
               ),
-              const SizedBox(height: 16),
-              // 3) One consolidated shortcut row — max 4 icons (Collect + the
-              //    top destinations), with "More" holding everything else.
+              // 2) The four core actions — the whole app in one clear row:
+              //    Collect · Redeem · Win · Benefits. Simple and self-explanatory.
               _shortcuts(),
-              const SizedBox(height: 20),
-              // 4) Matchday context — the one contextual zone (matchday only).
+              const SizedBox(height: 10),
+              // Quiet link to everything else — keeps Home at four icons.
+              Center(
+                child: GestureDetector(
+                  onTap: () => _push(context, const _MoreScreen()),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Text(tr('More in the app'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+                      Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
+                    ]),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              // 3) Matchday context — the one contextual zone (matchday only).
               ValueListenableBuilder<bool>(
                 valueListenable: matchdayNotifier,
                 builder: (context, md, __) => md ? _matchdayZone(context) : const SizedBox.shrink(),
@@ -172,22 +172,21 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     ]);
   }
 
-  // One consolidated shortcut row — Collect (the engagement engine) + the two
-  // top destinations + "More" (everything else). Max 4 icons, so a fan is
-  // never overwhelmed but can still reach the whole app.
+  // The four core actions, in the fan's own mental order:
+  // Collect points → Redeem them → Win (Tombola) → Benefits (sponsor % + codes).
   Widget _shortcuts() {
     final items = <(String, String, IconData, Color, Widget)>[
       ('Collect', 'img_challenges', Icons.bolt_rounded, const Color(0xFF1B7A3D), const EarnPointsScreen()),
-      ('Tickets', 'img_tickets', Icons.confirmation_number_rounded, const Color(0xFF1565C0), const TicketsScreen()),
-      ('Fanshop', 'img_fanshop', Icons.storefront_rounded, const Color(0xFF0A2A5E), const FanshopScreen()),
-      ('More', 'img_content', Icons.grid_view_rounded, const Color(0xFF6A1B9A), const _MoreScreen()),
+      ('Redeem', 'img_rewards', Icons.card_giftcard_rounded, const Color(0xFF0A2A5E), const RedeemScreen()),
+      ('Prizes', 'img_raffles', Icons.emoji_events_rounded, const Color(0xFF6A1B9A), const RafflesScreen()),
+      ('Deals %', 'img_partner', Icons.percent_rounded, const Color(0xFFEF6C00), const DealsHubScreen()),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         for (var i = 0; i < items.length; i++) ...[
           if (i > 0) const SizedBox(width: 12),
-          Expanded(child: HomeImageTile(label: items[i].$1, image: items[i].$2, icon: items[i].$3, color: items[i].$4, height: 84, onTap: () => _push(context, items[i].$5))),
+          Expanded(child: HomeImageTile(label: items[i].$1, image: items[i].$2, icon: items[i].$3, color: items[i].$4, height: 88, onTap: () => _push(context, items[i].$5))),
         ],
       ]),
     );
@@ -229,32 +228,77 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   }
 }
 
-/// One of the two big "stars" on Home — the actions points exist for.
-class _StarCard extends StatelessWidget {
-  final String title;
-  final String sub;
-  final IconData icon;
-  final List<Color> gradient;
-  final VoidCallback onTap;
-  const _StarCard({required this.title, required this.sub, required this.icon, required this.gradient, required this.onTap});
+/// First-run activation checklist — three quick tasks that pull a new fan into
+/// the core loop and unlock a welcome bonus. Auto-dismisses when all are done.
+class _StarterCard extends StatefulWidget {
+  const _StarterCard();
+  @override
+  State<_StarterCard> createState() => _StarterCardState();
+}
+
+class _StarterCardState extends State<_StarterCard> {
+  // (icon, title, reward, destination-or-null)
+  static const _tasks = <(IconData, String, String)>[
+    (Icons.person_outline_rounded, 'Complete your profile', '+50'),
+    (Icons.sports_soccer_rounded, 'Make your first prediction', '+50'),
+    (Icons.event_available_rounded, 'Check in today', '+10'),
+  ];
+  final Set<int> _done = {};
+
   @override
   Widget build(BuildContext context) {
-    return Tappable(
-      scale: 0.97,
-      onTap: onTap,
-      child: Container(
-        height: 128,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(width: 44, height: 44, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(13)), child: Icon(icon, color: AppColors.gold, size: 24)),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: AppText.label1.copyWith(color: Colors.white)),
-            const SizedBox(height: 2),
-            Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
-          ]),
-        ]),
+    final allDone = _done.length == _tasks.length;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.brandLightest,
+        borderRadius: BorderRadius.circular(AppRadii.card),
+        border: Border.all(color: AppColors.brandPrimary.withValues(alpha: 0.25)),
       ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          const Icon(Icons.rocket_launch_rounded, color: AppColors.brandPrimary, size: 20),
+          const SizedBox(width: 8),
+          Expanded(child: Text(tr('Get your first 500 points'), style: AppText.label2.copyWith(color: AppColors.textDarker))),
+          if (allDone)
+            GestureDetector(
+              onTap: () => starterNotifier.value = false,
+              child: Text(tr('Dismiss'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+            )
+          else
+            Text('${_done.length}/${_tasks.length}', style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+        ]),
+        const SizedBox(height: 4),
+        Text(tr('Finish these 3 steps to unlock a +500 welcome bonus.'), style: AppText.body3Regular),
+        const SizedBox(height: 12),
+        for (var i = 0; i < _tasks.length; i++) ...[
+          if (i > 0) const SizedBox(height: 8),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => setState(() => _done.contains(i) ? _done.remove(i) : _done.add(i)),
+            child: Row(children: [
+              Icon(_done.contains(i) ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+                  color: _done.contains(i) ? AppColors.success : AppColors.textLight, size: 22),
+              const SizedBox(width: 12),
+              Expanded(child: Text(tr(_tasks[i].$2),
+                  style: AppText.body2.copyWith(
+                      color: _done.contains(i) ? AppColors.textLight : AppColors.textDarker,
+                      decoration: _done.contains(i) ? TextDecoration.lineThrough : null))),
+              Pill(color: AppColors.successBg, child: Text(_tasks[i].$3, style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800))),
+            ]),
+          ),
+        ],
+        if (allDone) ...[
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.pill)),
+            child: Text(tr('+500 welcome bonus unlocked! 🎉'), style: AppText.body3.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ]),
     );
   }
 }
@@ -266,13 +310,13 @@ class _MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = <(IconData, String, String, Color, Widget)>[
-      (Icons.bolt_rounded, 'Collect points', 'Games, predictions & challenges', const Color(0xFF1B7A3D), const EarnPointsScreen()),
+      (Icons.confirmation_number_rounded, 'Tickets', 'Matchday & presale access', const Color(0xFF1565C0), const TicketsScreen()),
+      (Icons.storefront_rounded, 'Fanshop', 'Jerseys, scarves & more', const Color(0xFF0A2A5E), const FanshopScreen()),
       (Icons.stadium_rounded, 'Experiences', 'Stadium tours, VIP & players', const Color(0xFF6A1B9A), const ExperiencesScreen()),
       (Icons.newspaper_rounded, 'Club News', 'Latest from S04', const Color(0xFF3949AB), const ClubNewsScreen()),
       (Icons.play_circle_outline_rounded, 'Exclusive Content', 'Members-only clips', const Color(0xFFC62828), const ExclusiveContentScreen()),
       (Icons.leaderboard_rounded, 'Leaderboard', 'Your rank this season', const Color(0xFF1565C0), const LeaderboardScreen()),
       (Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', const Color(0xFF00897B), const CollectionScreen()),
-      (Icons.redeem_rounded, 'Sponsor benefits', 'Partner offers & vouchers', const Color(0xFFF9A825), const DealsHubScreen()),
     ];
     return SubScaffold(
       title: tr('More'),

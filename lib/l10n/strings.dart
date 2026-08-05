@@ -1350,4 +1350,17 @@ const Map<String, String> _de = {
   'Your rank this season': 'Dein Rang diese Saison',
   'Sponsor benefits': 'Sponsor-Vorteile',
   'Partner offers & vouchers': 'Partner-Angebote & Gutscheine',
+  // ── Activation: first-run starter tasks ──
+  'New-fan starter tasks': 'Neu-Fan Starter-Aufgaben',
+  'Get your first 500 points': 'Hol dir deine ersten 500 Punkte',
+  'Finish these 3 steps to unlock a +500 welcome bonus.': 'Erledige diese 3 Schritte für +500 Willkommensbonus.',
+  'Complete your profile': 'Profil vervollständigen',
+  'Make your first prediction': 'Ersten Tipp abgeben',
+  'Check in today': 'Heute einchecken',
+  'Dismiss': 'Ausblenden',
+  '+500 welcome bonus unlocked! 🎉': '+500 Willkommensbonus freigeschaltet! 🎉',
+  // ── Home: four core-action icons ──
+  'Prizes': 'Gewinne',
+  'Deals %': 'Vorteile %',
+  'More in the app': 'Mehr in der App',
 };
