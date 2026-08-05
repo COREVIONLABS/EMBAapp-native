@@ -102,13 +102,13 @@ class PointsScreen extends StatelessWidget {
               Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
             ]),
             const SizedBox(height: 20),
-            // Primary quick-access — every key hub function on one visible tap
-            // (replaces the old 4 circles + hidden "More" sheet).
+            // Primary quick-access — clean round wallet actions (Socios-style).
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(child: _Cat(icon: Icons.add_rounded, label: tr('Earn'), color: AppColors.brandPrimary, onTap: () => _push(context, const EarnPointsScreen()))),
-              Expanded(child: _Cat(icon: Icons.savings_rounded, label: tr('Redeem'), color: const Color(0xFF00897B), onTap: () => _push(context, const RedeemScreen()))),
-              Expanded(child: _Cat(icon: Icons.account_balance_wallet_rounded, label: tr('Top up'), color: const Color(0xFF1565C0), onTap: () => _push(context, const BuyPointsScreen()))),
-              Expanded(child: _Cat(icon: Icons.leaderboard_rounded, label: tr('Ranking'), color: const Color(0xFFEF6C00), onTap: () => _push(context, const LeaderboardScreen()))),
+              Expanded(child: _RoundAction(icon: Icons.bolt_rounded, label: tr('Earn'), onTap: () => _push(context, const EarnPointsScreen()))),
+              Expanded(child: _RoundAction(icon: Icons.card_giftcard_rounded, label: tr('Redeem'), onTap: () => _push(context, const RedeemScreen()))),
+              Expanded(child: _RoundAction(icon: Icons.add_rounded, label: tr('Top up'), onTap: () => _push(context, const BuyPointsScreen()))),
+              Expanded(child: _RoundAction(icon: Icons.history_rounded, label: tr('History'), onTap: () => _push(context, const PointsHistoryScreen()))),
+              Expanded(child: _RoundAction(icon: Icons.leaderboard_rounded, label: tr('Ranking'), onTap: () => _push(context, const LeaderboardScreen()))),
             ]),
           ]),
         ),
@@ -251,6 +251,31 @@ class PointsScreen extends StatelessWidget {
     );
   }
 
+}
+
+/// Round wallet action (Socios-style): a solid brand circle with a white icon
+/// and a small label — the clean primary-action row under the balance.
+class _RoundAction extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _RoundAction({required this.icon, required this.label, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.92,
+      onTap: onTap,
+      child: Column(children: [
+        Container(
+          width: 50, height: 50,
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), shape: BoxShape.circle),
+          child: Icon(icon, color: Colors.white, size: 23),
+        ),
+        const SizedBox(height: 6),
+        Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(fontSize: 11.5, fontWeight: FontWeight.w700)),
+      ]),
+    );
+  }
 }
 
 class _Cat extends StatelessWidget {

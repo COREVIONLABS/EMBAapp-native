@@ -1363,4 +1363,18 @@ const Map<String, String> _de = {
   'Prizes': 'Gewinne',
   'Deals %': 'Vorteile %',
   'More in the app': 'Mehr in der App',
+  // ── Socios-inspired: exclusive rewards, fan polls ──
+  'Exclusive for fans': 'Exklusiv für Fans',
+  'Money-can\'t-buy': 'Unbezahlbar',
+  'Experiences you can\'t get anywhere else.': 'Erlebnisse, die es sonst nirgends gibt.',
+  'Fans only': 'Nur für Fans',
+  'Fan votes': 'Fan-Abstimmungen',
+  'Your vote counts': 'Deine Stimme zählt',
+  'Shape real club decisions': 'Bestimme echte Club-Entscheidungen mit',
+  'Vote on the captain, the kit and more — and earn points.': 'Stimme über Kapitän, Trikot & mehr ab — und sammle Punkte.',
+  'Featured vote': 'Top-Abstimmung',
+  'Captain, kit, Player of the Month — you decide': 'Kapitän, Trikot, Spieler des Monats — du entscheidest',
+  'Open polls': 'Laufende Abstimmungen',
+  'Ends in': 'Endet in',
+  'One vote per fan per poll. Results are shared with the club.': 'Eine Stimme pro Fan pro Abstimmung. Ergebnisse gehen an den Club.',
 };

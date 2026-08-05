@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
+import '../widgets/asset_img.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import '../widgets/voucher_flow.dart';
@@ -20,6 +21,13 @@ import '../l10n/strings.dart';
 /// sponsors and symbolic category icons.
 class RedeemScreen extends StatelessWidget {
   const RedeemScreen({super.key});
+
+  // Money-can't-buy experiences (title, subtitle, image, points).
+  static const _exclusive = <(String, String, String, int)>[
+    ('Auf dem Rasen spielen', 'Spiele in der VELTINS-Arena', 'img_experiences', 12000),
+    ('Triff die Mannschaft', 'Meet & Greet vor dem Spiel', 'img_rewards', 5000),
+    ('VIP-Loge am Spieltag', 'Logenplatz inkl. Catering', 'img_tickets', 8000),
+  ];
 
   // Featured sponsor rewards: (sponsor, category, from-points)
   static const _featured = [
@@ -89,7 +97,32 @@ class RedeemScreen extends StatelessWidget {
             Text('${FanModel.fmtPublic(remaining)} ${tr('pts to go')}', style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
           ]),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 22),
+        // ── Exclusive, money-can't-buy experiences (the emotional heart) ──
+        Row(children: [
+          Text(tr('Exclusive for fans'), style: AppText.label1),
+          const SizedBox(width: 8),
+          Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Money-can\'t-buy'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+        ]),
+        const SizedBox(height: 4),
+        Text(tr('Experiences you can\'t get anywhere else.'), style: AppText.body3Regular),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 224,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _exclusive.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final e = _exclusive[i];
+              return _ExclusiveCard(
+                title: e.$1, sub: e.$2, image: e.$3, points: e.$4,
+                onTap: () => redeemForVoucher(context, title: e.$1, category: 'Experience', points: e.$4, sponsor: 'FC Schalke 04'),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 22),
         // ── My Vouchers (reactive open count) ──
         AnimatedBuilder(
           animation: voucherStore,
@@ -199,6 +232,67 @@ class RedeemScreen extends StatelessWidget {
               style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],
+    );
+  }
+}
+
+/// Exclusive experience card — full-bleed photo, dark gradient scrim, a gold
+/// "fans only" badge, title and points. The aspirational, money-can't-buy tier.
+class _ExclusiveCard extends StatelessWidget {
+  final String title;
+  final String sub;
+  final String image;
+  final int points;
+  final VoidCallback onTap;
+  const _ExclusiveCard({required this.title, required this.sub, required this.image, required this.points, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 250,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Stack(fit: StackFit.expand, children: [
+          AssetImg(image, fit: BoxFit.cover, fallbackIcon: Icons.stadium_rounded),
+          // Dark scrim for legibility.
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                colors: [Color(0x22000000), Color(0x00000000), Color(0xE6000B18)],
+                stops: [0, 0.35, 1],
+              ),
+            ),
+          ),
+          Positioned(top: 12, left: 12, child: Pill(
+            gradient: const LinearGradient(colors: AppColors.goldGradient),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              const Icon(Icons.lock_open_rounded, size: 11, color: AppColors.brandDarkest),
+              const SizedBox(width: 4),
+              Text(tr('Fans only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+            ]),
+          )),
+          Positioned(left: 14, right: 14, bottom: 14, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr(title), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label1.copyWith(color: Colors.white, fontSize: 17)),
+            const SizedBox(height: 2),
+            Text(tr(sub), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+            const SizedBox(height: 10),
+            Row(children: [
+              const Icon(Icons.hexagon_rounded, size: 14, color: AppColors.gold),
+              const SizedBox(width: 5),
+              Text('${FanModel.fmtPublic(points)} ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
+                child: Text(tr('Redeem'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+              ),
+            ]),
+          ])),
+        ]),
+      ),
     );
   }
 }
