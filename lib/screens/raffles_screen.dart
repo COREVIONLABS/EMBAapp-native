@@ -35,12 +35,14 @@ class _RafflesScreenState extends State<RafflesScreen> {
   static const _raffles = <_Raffle>[
     _Raffle('Derby Tombola', '2× VIP tickets — vs Dortmund', Icons.confirmation_number_rounded,
         [Color(0xFF0A2A5E), Color(0xFF000D22)], 500, Duration(days: 3, hours: 6, minutes: 12), 1840, superFanFree: true),
+    _Raffle('Play on the pitch', 'Play a match in the VELTINS-Arena', Icons.sports_soccer_rounded,
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], 800, Duration(days: 5, hours: 8), 1290),
+    _Raffle('VIP box on matchday', 'Private box incl. catering', Icons.stadium_rounded,
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], 700, Duration(days: 6, hours: 2), 970),
     _Raffle('Signed Home Shirt', 'Match-worn, signed by the squad', Icons.checkroom_rounded,
-        [Color(0xFF6A1B9A), Color(0xFF311B92)], 300, Duration(days: 6, hours: 2), 970),
-    _Raffle('Matchball Draw', 'The signed matchball vs Bayern', Icons.sports_soccer_rounded,
-        [Color(0xFFC62828), Color(0xFF7F1414)], 250, Duration(days: 9, hours: 20), 640),
-    _Raffle('Meet & Greet', 'Two players, backstage before kickoff', Icons.groups_rounded,
-        [Color(0xFF00897B), Color(0xFF004D40)], 800, Duration(days: 12, hours: 4), 410),
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], 300, Duration(days: 8, hours: 14), 860),
+    _Raffle('Meet the team', 'Meet & Greet backstage before kickoff', Icons.groups_rounded,
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], 400, Duration(days: 12, hours: 4), 410),
   ];
 
   final Set<int> _entered = {};
@@ -219,8 +221,8 @@ class _RafflesScreenState extends State<RafflesScreen> {
       child: Row(children: [
         Container(
           width: 52, height: 52,
-          decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient), borderRadius: BorderRadius.circular(12)),
-          child: Icon(r.glyph, color: Colors.white, size: 24),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
+          child: Icon(r.glyph, color: AppColors.brandPrimary, size: 24),
         ),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

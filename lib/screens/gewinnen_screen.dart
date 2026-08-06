@@ -7,6 +7,8 @@ import '../widgets/asset_img.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import 'raffles_screen.dart';
+import 'my_wins_screen.dart';
+import 'past_tombolas_screen.dart';
 import 'collection_screen.dart';
 import 'subscription_screen.dart';
 import 'buy_points_screen.dart';
@@ -93,7 +95,8 @@ class GewinnenScreen extends StatelessWidget {
         ),
         const SizedBox(height: 22),
 
-        // ── 3) Tombola of the month (featured, photo hero) ──
+        // ── 3) Tombola of the month — clean card: photo on top, all text on a
+        //    solid panel below (no wild text-over-busy-photo) ──
         SectionHeader('Tombola of the month', action: 'See all', onAction: () => _push(context, const RafflesScreen())),
         const SizedBox(height: 12),
         Tappable(
@@ -101,39 +104,45 @@ class GewinnenScreen extends StatelessWidget {
           onTap: () => _push(context, const RafflesScreen()),
           child: Container(
             width: double.infinity,
-            height: 216,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Stack(fit: StackFit.expand, children: [
-              const AssetImg('img_tickets', fit: BoxFit.cover, fallbackIcon: Icons.emoji_events_rounded),
-              const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                    colors: [Color(0x99000D22), Color(0x22000D22), Color(0xF2000D22)], stops: [0, 0.35, 1],
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              // Photo strip with just the two small badges over a light scrim.
+              SizedBox(
+                height: 132,
+                child: Stack(fit: StackFit.expand, children: [
+                  const AssetImg('img_tickets', fit: BoxFit.cover, fallbackIcon: Icons.emoji_events_rounded),
+                  const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x55000D22), Color(0x11000D22)]))),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(children: [
+                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                      const Spacer(),
+                      Pill(color: Colors.black.withValues(alpha: 0.5), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
+                        const SizedBox(width: 4),
+                        Text(tr('Ends in 3d 6h'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                      ])),
+                    ]),
                   ),
-                ),
+                ]),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
+              // Solid info panel — clean, legible text.
+              Container(
+                color: AppColors.brandDarkest,
+                padding: const EdgeInsets.all(18),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(children: [
-                    Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
-                    const Spacer(),
-                    Pill(color: Colors.black.withValues(alpha: 0.5), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
-                      const SizedBox(width: 4),
-                      Text(tr('Ends in 3d 6h'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                    ])),
-                  ]),
-                  const Spacer(),
-                  Text(tr('2× VIP tickets — vs Dortmund'), style: AppText.h4.copyWith(color: Colors.white)),
+                  Text(tr('2× VIP tickets — vs Dortmund'), style: AppText.label1.copyWith(color: Colors.white)),
                   const SizedBox(height: 4),
                   Text(tr('You\'re automatically entered every month.'), style: AppText.body3.copyWith(color: Colors.white70)),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   Row(children: [
-                    Text(tr('See all prizes'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
-                    const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 18),
+                    const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.gold),
+                    const SizedBox(width: 6),
+                    Text('${FanModel.fmtPublic(1840)} ${tr('entries')}', style: AppText.body3.copyWith(color: Colors.white70, fontWeight: FontWeight.w700)),
+                    const Spacer(),
+                    Text(tr('See all prizes'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                    const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
                   ]),
                 ]),
               ),
@@ -158,19 +167,19 @@ class GewinnenScreen extends StatelessWidget {
         HubListRow(
           icon: Icons.emoji_events_rounded, iconColor: AppColors.gold,
           title: 'My wins', subtitle: 'Prizes you\'ve won',
-          onTap: () => _push(context, const CollectionScreen()),
+          onTap: () => _push(context, const MyWinsScreen()),
         ),
         const SizedBox(height: 10),
         HubListRow(
           icon: Icons.history_rounded, iconColor: AppColors.brandPrimary,
           title: 'Past tombolas', subtitle: 'Results of previous draws',
-          onTap: () => _push(context, const RafflesScreen()),
+          onTap: () => _push(context, const PastTombolasScreen()),
         ),
         const SizedBox(height: 10),
         HubListRow(
-          icon: Icons.help_outline_rounded, iconColor: AppColors.textNormal,
-          title: 'How the tombola works', subtitle: 'Free lots, draws & winners',
-          onTap: () => _push(context, const RafflesScreen()),
+          icon: Icons.grid_view_rounded, iconColor: AppColors.textNormal,
+          title: 'Season Collection', subtitle: 'Your player stickers & badges',
+          onTap: () => _push(context, const CollectionScreen()),
         ),
       ],
     );

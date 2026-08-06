@@ -181,18 +181,16 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     ]);
   }
 
-  // The four core actions as round icons under the balance (Socios-style),
-  // in the fan's mental order: Collect → Redeem → Win → Benefits.
+  // Four round shortcuts under the balance (Socios-style). Redeem & Prizes are
+  // already bottom-nav tabs, so Home links to the things that DON'T have a tab:
+  // Earn, Tickets, Fanshop and Deals. One calm brand colour across all four —
+  // the glyph does the distinguishing, not the colour.
   Widget _roundActions() {
-    // (label, icon, colour, onTap) — Einlösen/Gewinne switch to their tab;
-    // Verdienen/Vorteile push their screen (no dedicated tab).
-    // One calm brand colour across all four — clean and premium (Socios-style),
-    // the glyph does the distinguishing, not the colour.
     const c = AppColors.brandPrimary;
     final items = <(String, IconData, Color, VoidCallback)>[
       ('Earn', Icons.bolt_rounded, c, () => _push(context, const EarnPointsScreen())),
-      ('Redeem', Icons.card_giftcard_rounded, c, () => tabRequestNotifier.value = 1),
-      ('Prizes', Icons.emoji_events_rounded, c, () => tabRequestNotifier.value = 2),
+      ('Tickets', Icons.confirmation_number_rounded, c, () => _push(context, const TicketsScreen())),
+      ('Fanshop', Icons.storefront_rounded, c, () => _push(context, const FanshopScreen())),
       ('Deals %', Icons.percent_rounded, c, () => _push(context, const DealsHubScreen())),
     ];
     return Padding(
@@ -222,29 +220,30 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           ]),
         ),
         const SizedBox(height: 12),
-        Tappable(
-          scale: 0.98,
+        // Road to Gold — calm surface card (was a loud navy gradient). A small
+        // gold accent keeps it premium without the colour noise.
+        SurfaceCard(
           onTap: () => _push(context, const SeasonJourneyScreen()),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                const Icon(Icons.route_rounded, color: AppColors.gold, size: 20),
-                const SizedBox(width: 8),
-                Text(tr('Road to Gold'), style: AppText.label2.copyWith(color: Colors.white)),
-                const Spacer(),
-                const Icon(Icons.chevron_right_rounded, color: Colors.white54, size: 18),
-              ]),
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: const LinearProgressIndicator(value: 0.24, minHeight: 7, backgroundColor: Colors.white24, valueColor: AlwaysStoppedAnimation(AppColors.gold)),
-              ),
-              const SizedBox(height: 8),
-              Text(tr('Your season journey through S04 history — resets each season.'), style: AppText.body3.copyWith(color: Colors.white70)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.route_rounded, color: AppColors.gold, size: 22)),
+              const SizedBox(width: 14),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('Road to Gold'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                Text(tr('Your season journey through S04 history'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+              ])),
+              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
             ]),
-          ),
+            const SizedBox(height: 12),
+            Row(children: [
+              Expanded(child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(value: 0.24, minHeight: 7, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.gold)),
+              )),
+              const SizedBox(width: 10),
+              Text('24%', style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800)),
+            ]),
+          ]),
         ),
       ]),
     );
@@ -435,35 +434,31 @@ class _MembershipCard extends StatelessWidget {
       builder: (context, tier, __) {
         final p = perksFor(tier);
         final isMember = p.monthlyPoints > 0;
-        return Tappable(
-          scale: 0.98,
+        return SurfaceCard(
+          color: AppColors.brandLightest,
           onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Row(children: [
-              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 26),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(isMember ? '${tr(tier)} · ${tr('your membership')}' : tr('Become a member'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 2),
-                  Text(
-                    isMember
-                        ? '${p.freeLots} ${tr('free lots')} + ${FanModel.fmtPublic(p.monthlyPoints)} ${tr('pts / month')}'
-                        : tr('Get free tombola lots + monthly bonus points'),
-                    maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: AppText.body3.copyWith(color: Colors.white70),
-                  ),
-                ]),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
-                child: Text(isMember ? tr('Manage') : tr('Upgrade'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
-              ),
-            ]),
-          ),
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 24)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(isMember ? '${tr(tier)} · ${tr('your membership')}' : tr('Become a member'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
+                Text(
+                  isMember
+                      ? '${p.freeLots} ${tr('free lots')} + ${FanModel.fmtPublic(p.monthlyPoints)} ${tr('pts / month')}'
+                      : tr('Get free tombola lots + monthly bonus points'),
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                  style: AppText.body3.copyWith(color: AppColors.onAccent),
+                ),
+              ]),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: AppColors.brandPrimary, borderRadius: BorderRadius.circular(999)),
+              child: Text(isMember ? tr('Manage') : tr('Upgrade'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+            ),
+          ]),
         );
       },
     );

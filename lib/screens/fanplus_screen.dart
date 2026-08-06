@@ -8,7 +8,7 @@ import '../widgets/hub_widgets.dart';
 import 'subscription_screen.dart';
 import 'fomo_drop_screen.dart';
 import 'exclusive_content_screen.dart';
-import 'fanshop_screen.dart';
+import 'member_discounts_screen.dart';
 import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
@@ -49,11 +49,13 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
     return Column(children: rows);
   }
 
-  // Member deals — real Fanshop products at a members-only price.
-  static const _drops = <(String, String, int, int, String, IconData, Color)>[
-    ('Home Jersey 25/26', 'Members', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
-    ('Home Scarf 25/26', 'Members', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0)),
-    ('Cap Royal Blue', 'Members', 1100, 950, '-15%', Icons.sports_baseball_rounded, Color(0xFF002F63)),
+  // Member discounts — fixed % off at club partners & sponsors (a membership
+  // perk). (partner, category, discount, icon, color)
+  static const _discounts = <(String, String, String, IconData, Color)>[
+    ('Official Fanshop', 'Club', '15% off', Icons.storefront_rounded, Color(0xFF004B9C)),
+    ('adidas', 'Sportswear', '20% off', Icons.sports_soccer_rounded, Color(0xFF111111)),
+    ('Veltins', 'Beverages', '10% off', Icons.sports_bar_rounded, Color(0xFF00623A)),
+    ("Ernsting's family", 'Fashion', '15% off', Icons.checkroom_rounded, Color(0xFFE30613)),
   ];
 
   // Member content (title, subtitle, image)
@@ -276,54 +278,74 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             onTap: () => _push(context, const FomoDropScreen(subscribed: true)),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]),
-                borderRadius: BorderRadius.circular(AppRadii.card),
-                border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
-              ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
-                  const Spacer(),
-                  Pill(color: Colors.white24, child: Text(tr('Only 50 made'), style: AppText.caption1.copyWith(color: Colors.white))),
-                ]),
-                const SizedBox(height: 14),
-                Container(
-                  width: 48, height: 48,
-                  decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)),
-                  child: const Icon(Icons.diamond_rounded, color: AppColors.gold, size: 26),
+              height: 230,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Stack(fit: StackFit.expand, children: [
+                const AssetImg('img_rewards', fit: BoxFit.cover, fallbackIcon: Icons.diamond_rounded),
+                const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                      colors: [Color(0x66000D22), Color(0x11000D22), Color(0xF2000D22)], stops: [0, 0.3, 1],
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                Text(tr('Signed Retro Shirt — April Drop'), style: AppText.h4.copyWith(color: Colors.white)),
-                const SizedBox(height: 6),
-                Text(tr('A limited signed 1997 UEFA Cup retro shirt — dropped once, never restocked.'), style: AppText.body3.copyWith(color: Colors.white70)),
-                const SizedBox(height: 14),
-                Row(children: [
-                  Text(tr('View this month\'s drop'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
-                  const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
-                ]),
+                Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Row(children: [
+                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                      const Spacer(),
+                      Pill(color: Colors.black.withValues(alpha: 0.4), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.local_fire_department_rounded, size: 12, color: AppColors.gold),
+                        const SizedBox(width: 4),
+                        Text(tr('Only 50 made'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                      ])),
+                    ]),
+                    const Spacer(),
+                    Text(tr('Signed Retro Shirt — April Drop'), style: AppText.h4.copyWith(color: Colors.white)),
+                    const SizedBox(height: 4),
+                    Text(tr('A limited signed 1997 UEFA Cup retro shirt — dropped once, never restocked.'), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+                    const SizedBox(height: 12),
+                    Row(children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                        decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Text(tr('View drop'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                          const Icon(Icons.chevron_right_rounded, color: AppColors.brandDarkest, size: 16),
+                        ]),
+                      ),
+                    ]),
+                  ]),
+                ),
               ]),
             ),
           ),
         ),
         const SizedBox(height: 24),
-        // Member deals — real Fanshop products at a members-only price
+        // Member discounts — fixed % vouchers at club partners & sponsors
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader('Member deals', onAction: () => _push(context, const FanshopScreen())),
+          child: SectionHeader('Member discounts', onAction: () => _push(context, const MemberDiscountsScreen())),
+        ),
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text(tr('Fixed % off at the Fanshop, partners & sponsors.'), style: AppText.body3Regular)),
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 194,
+          height: 150,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _drops.length,
+            itemCount: _discounts.length,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) {
-              final d = _drops[i];
-              return DealCard(title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, onTap: () => _push(context, const FanshopScreen()));
+              final d = _discounts[i];
+              return _DiscountCard(partner: d.$1, category: d.$2, discount: d.$3, icon: d.$4, color: d.$5, onTap: () => _push(context, const MemberDiscountsScreen()));
             },
           ),
         ),
@@ -432,6 +454,43 @@ class _UnlockedCard extends StatelessWidget {
         const SizedBox(height: 8),
         Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
       ]),
+    );
+  }
+}
+
+/// Compact member-discount card for the Fan+ carousel: a sponsor mark, the
+/// partner name & category and the fixed % badge. Taps into the full list.
+class _DiscountCard extends StatelessWidget {
+  final String partner;
+  final String category;
+  final String discount;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  const _DiscountCard({required this.partner, required this.category, required this.discount, required this.icon, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        width: 168,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SponsorLogo(name: partner, size: 40, bg: color, fg: Colors.white, symbol: icon),
+          const Spacer(),
+          Text(partner, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          Text(tr(category), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.chip)),
+            child: Text(tr(discount), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800, fontSize: 12)),
+          ),
+        ]),
+      ),
     );
   }
 }
