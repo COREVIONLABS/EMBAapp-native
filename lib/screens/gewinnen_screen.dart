@@ -26,12 +26,64 @@ class GewinnenScreen extends StatelessWidget {
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
+  // Top hero — same shape as the Redeem intro: a brand-gradient header with a
+  // headline stat (free lots this month) and the two ways to win below.
+  Widget _hero() {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Container(
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+          decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr('Play & win'), style: AppText.label1.copyWith(color: Colors.white)),
+            const SizedBox(height: 4),
+            Text(tr('Your daily games and the monthly tombola.'), style: AppText.body3.copyWith(color: Colors.white70)),
+            const SizedBox(height: 14),
+            Row(children: [
+              const Icon(Icons.hexagon_rounded, size: 18, color: AppColors.gold),
+              const SizedBox(width: 6),
+              Text(FanModel.pointsFormatted, style: AppText.h4.copyWith(color: Colors.white, fontSize: 26)),
+              const SizedBox(width: 6),
+              Padding(padding: const EdgeInsets.only(top: 4), child: Text(tr('points'), style: AppText.body3.copyWith(color: Colors.white70))),
+            ]),
+          ]),
+        ),
+        Container(
+          color: AppColors.surface,
+          padding: const EdgeInsets.all(12),
+          child: Row(children: [
+            Expanded(child: _pathTile(Icons.casino_rounded, tr('Daily games'), tr('Spin & scratch'))),
+            const SizedBox(width: 12),
+            Expanded(child: _pathTile(Icons.local_activity_rounded, tr('Monthly tombola'), tr('Win big prizes'))),
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  Widget _pathTile(IconData icon, String title, String sub) => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(width: 34, height: 34, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: AppColors.brandPrimary, size: 18)),
+          const SizedBox(height: 10),
+          Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 1),
+          Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.onAccent)),
+        ]),
+      );
+
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Prizes'),
       showBack: false,
       children: [
+        // ── Hero — mirrors the Redeem intro: gradient header + two pathways ──
+        _hero(),
+        const SizedBox(height: 24),
         // ── 1) Your daily chance (retention hook) ──
         AnimatedBuilder(
           animation: dailyGames,

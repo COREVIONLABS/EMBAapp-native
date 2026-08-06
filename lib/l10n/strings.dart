@@ -1534,6 +1534,13 @@ const Map<String, String> _de = {
   '5% off': '5% Rabatt',
   'View drop': 'Drop ansehen',
 
+  // ── Prizes hero ────────────────────────────────────────────
+  'Play & win': 'Spielen & gewinnen',
+  'Your daily games and the monthly tombola.': 'Deine täglichen Spiele und die monatliche Tombola.',
+  'Spin & scratch': 'Drehen & rubbeln',
+  'Monthly tombola': 'Monatliche Tombola',
+  'Win big prizes': 'Große Preise gewinnen',
+
   // ── Experiences as tombola prizes ──────────────────────────
   'Enter tombola to win': 'An der Tombola teilnehmen',
   'Tombola prize': 'Tombola-Preis',

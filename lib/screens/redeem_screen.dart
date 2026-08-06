@@ -21,6 +21,13 @@ import '../l10n/strings.dart';
 /// Offer: (badge, title, subtitle, points, category, sponsor, icon)
 typedef _Offer = (String, String, String, int, String, String, IconData);
 
+/// Shared redeem action — turns an offer into a voucher (used by the Redeem
+/// tab and the "see all" list screen).
+void _redeemOffer(BuildContext context, _Offer o) {
+  final (badge, title, _, points, category, sponsor, _) = o;
+  redeemForVoucher(context, title: '$badge ${tr(title)}', category: category, points: points, sponsor: sponsor);
+}
+
 class RedeemScreen extends StatelessWidget {
   final bool isTab;
   const RedeemScreen({super.key, this.isTab = false});
@@ -45,10 +52,6 @@ class RedeemScreen extends StatelessWidget {
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
-  void _redeem(BuildContext context, _Offer o) {
-    final (badge, title, _, points, category, sponsor, _) = o;
-    redeemForVoucher(context, title: '$badge ${tr(title)}', category: category, points: points, sponsor: sponsor);
-  }
 
   // Compact balance chip for the tab header (Socios-style points count).
   Widget _pointsChip() => Container(
@@ -106,23 +109,16 @@ class RedeemScreen extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
-        // ── 1) Value vouchers ──
-        Row(children: [
-          Expanded(child: Text(tr('Value vouchers'), style: AppText.label1)),
-          _hint(tr('Redeem at the club')),
-        ]),
-        const SizedBox(height: 4),
-        Text(tr('A fixed € amount for the Fanshop or a sponsor.'), style: AppText.body3Regular),
+        // ── 1) Value vouchers — swipeable row + See all ──
+        _sectionHead(context, title: tr('Value vouchers'), subtitle: tr('A fixed € amount for the Fanshop or a sponsor.'), list: _valueVouchers, valueBadge: true),
         const SizedBox(height: 12),
-        _grid(context, _valueVouchers, valueBadge: true),
+        _offerRow(context, _valueVouchers, valueBadge: true),
         const SizedBox(height: 24),
 
-        // ── 2) Discount vouchers ──
-        Text(tr('Discount vouchers'), style: AppText.label1),
-        const SizedBox(height: 4),
-        Text(tr('A fixed % off tickets, Fanshop and sponsors.'), style: AppText.body3Regular),
+        // ── 2) Discount vouchers — swipeable row + See all ──
+        _sectionHead(context, title: tr('Discount vouchers'), subtitle: tr('A fixed % off tickets, Fanshop and sponsors.'), list: _discountVouchers, valueBadge: false),
         const SizedBox(height: 12),
-        _grid(context, _discountVouchers, valueBadge: false),
+        _offerRow(context, _discountVouchers, valueBadge: false),
         const SizedBox(height: 24),
 
         // ── 3) Tombola lots ──
@@ -211,28 +207,73 @@ class RedeemScreen extends StatelessWidget {
         ]),
       );
 
-  Widget _hint(String text) => Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.storefront_rounded, size: 13, color: AppColors.textLight),
-        const SizedBox(width: 4),
-        Text(text, style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700)),
-      ]);
+  // Section header with a title, a "See all" link, and a subtitle line under it.
+  Widget _sectionHead(BuildContext context, {required String title, required String subtitle, required List<_Offer> list, required bool valueBadge}) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Expanded(child: Text(title, style: AppText.label1)),
+        Tappable(
+          onTap: () => _push(context, _VoucherListScreen(title: title, subtitle: subtitle, list: list, valueBadge: valueBadge)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(tr('See all'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+          ]),
+        ),
+      ]),
+      const SizedBox(height: 4),
+      Text(subtitle, style: AppText.body3Regular),
+    ]);
+  }
 
-  // 2-column offer grid.
-  Widget _grid(BuildContext context, List<_Offer> items, {required bool valueBadge}) {
+  // Horizontal, swipeable row of offer cards.
+  Widget _offerRow(BuildContext context, List<_Offer> items, {required bool valueBadge}) {
+    return SizedBox(
+      height: 176,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        itemCount: items.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, i) => SizedBox(
+          width: 168,
+          child: _OfferCard(offer: items[i], valueBadge: valueBadge, onTap: () => _redeemOffer(context, items[i])),
+        ),
+      ),
+    );
+  }
+}
+
+/// "See all" list for a voucher category — a 2-column grid of every offer.
+class _VoucherListScreen extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final List<_Offer> list;
+  final bool valueBadge;
+  const _VoucherListScreen({required this.title, required this.subtitle, required this.list, required this.valueBadge});
+
+  @override
+  Widget build(BuildContext context) {
     final rows = <Widget>[];
-    for (var i = 0; i < items.length; i += 2) {
+    for (var i = 0; i < list.length; i += 2) {
       rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(child: _OfferCard(offer: items[i], valueBadge: valueBadge, onTap: () => _redeem(context, items[i]))),
+        Expanded(child: _OfferCard(offer: list[i], valueBadge: valueBadge, onTap: () => _redeemOffer(context, list[i]))),
         const SizedBox(width: 12),
         Expanded(
-          child: i + 1 < items.length
-              ? _OfferCard(offer: items[i + 1], valueBadge: valueBadge, onTap: () => _redeem(context, items[i + 1]))
+          child: i + 1 < list.length
+              ? _OfferCard(offer: list[i + 1], valueBadge: valueBadge, onTap: () => _redeemOffer(context, list[i + 1]))
               : const SizedBox(),
         ),
       ]));
-      if (i + 2 < items.length) rows.add(const SizedBox(height: 12));
+      if (i + 2 < list.length) rows.add(const SizedBox(height: 12));
     }
-    return Column(children: rows);
+    return SubScaffold(
+      title: title,
+      children: [
+        Text(subtitle, style: AppText.body3Regular),
+        const SizedBox(height: 16),
+        ...rows,
+      ],
+    );
   }
 }
 
