@@ -16,29 +16,56 @@ import 'raffles_screen.dart';
 import 'deals_hub_screen.dart';
 import '../l10n/strings.dart';
 
-/// Redeem Points (Figma 2194:10804) — featured sponsor reward cards on top,
-/// then a "how you can redeem" category list. EMBA/S04 content with real club
-/// sponsors and symbolic category icons.
-class RedeemScreen extends StatelessWidget {
+/// Reward item: internal English category key + German-facing content.
+/// (category, title, subtitle, points, image, sponsor)
+typedef _Reward = (String, String, String, int, String, String);
+
+/// Redeem Points — Socios-style: a search bar and live filter chips on top,
+/// a curated view (exclusive experiences hero, category tiles, hot deals) when
+/// nothing is filtered, and a clean 2-column reward grid the moment a fan
+/// searches or picks a category. EMBA/S04 content with real club sponsors.
+class RedeemScreen extends StatefulWidget {
   final bool isTab;
   const RedeemScreen({super.key, this.isTab = false});
 
-  // Money-can't-buy experiences (title, subtitle, image, points).
-  static const _exclusive = <(String, String, String, int)>[
-    ('Auf dem Rasen spielen', 'Spiele in der VELTINS-Arena', 'img_experiences', 12000),
-    ('Triff die Mannschaft', 'Meet & Greet vor dem Spiel', 'img_rewards', 5000),
-    ('VIP-Loge am Spieltag', 'Logenplatz inkl. Catering', 'img_tickets', 8000),
+  @override
+  State<RedeemScreen> createState() => _RedeemScreenState();
+}
+
+class _RedeemScreenState extends State<RedeemScreen> {
+  String _filter = 'All';
+  String _query = '';
+  final _searchCtrl = TextEditingController();
+
+  // Filter categories (English keys → localized labels via tr()).
+  static const _filters = ['All', 'Tickets', 'Fanshop', 'Experiences', 'Sponsors', 'Tombola'];
+
+  // The full redeemable catalogue. Category is an English key (matches _filters).
+  static const _rewards = <_Reward>[
+    // Experiences — money-can't-buy (also feed the hero carousel).
+    ('Experiences', 'Auf dem Rasen spielen', 'Spiele in der VELTINS-Arena', 12000, 'img_experiences', 'FC Schalke 04'),
+    ('Experiences', 'VIP-Loge am Spieltag', 'Logenplatz inkl. Catering', 8000, 'img_tickets', 'FC Schalke 04'),
+    ('Experiences', 'Triff die Mannschaft', 'Meet & Greet vor dem Spiel', 5000, 'img_rewards', 'FC Schalke 04'),
+    ('Experiences', 'Stadiontour hinter den Kulissen', 'Kabine, Tunnel & Rasen', 2500, 'img_experiences', 'FC Schalke 04'),
+    // Tickets
+    ('Tickets', 'VIP-Ticket vs Dortmund', 'Business-Seat inkl. Catering', 8000, 'img_tickets', 'FC Schalke 04'),
+    ('Tickets', 'Grandstand — Heimspiel', 'Nordkurve, Oberrang', 3000, 'img_tickets', 'FC Schalke 04'),
+    ('Tickets', 'Standard-Ticket Heimspiel', 'Kategorie 3, freie Wahl', 1800, 'img_tickets', 'FC Schalke 04'),
+    ('Tickets', 'Presale-Zugang Derby', '24 h früher Tickets sichern', 600, 'img_tickets', 'FC Schalke 04'),
+    // Fanshop
+    ('Fanshop', 'Home Jersey 25/26', 'adidas · Heimtrikot', 3800, 'img_fanshop', 'adidas'),
+    ('Fanshop', 'Trainingsjacke', 'adidas · Anthrazit', 2400, 'img_fanshop', 'adidas'),
+    ('Fanshop', 'Home Scarf 25/26', 'Offizieller Fanschal', 720, 'img_fanshop', 'adidas'),
+    // Sponsors
+    ('Sponsors', 'VELTINS Matchday-Kiste', 'Bierkiste zum Spieltag', 1050, 'img_partner', 'Veltins'),
+    ('Sponsors', "Ernsting's family Gutschein", 'Mode für die Familie', 600, 'img_partner', "Ernsting's"),
+    ('Sponsors', 'REWE Gutschein 10 €', 'In allen REWE-Märkten', 400, 'img_partner', 'REWE'),
+    // Tombola
+    ('Tombola', 'Derby-VIP Tombola', 'Los für die Monatsverlosung', 500, 'img_rewards', 'FC Schalke 04'),
+    ('Tombola', 'Signiertes Trikot — Los', 'Money-can\'t-buy Verlosung', 350, 'img_rewards', 'FC Schalke 04'),
   ];
 
-  // Featured sponsor rewards: (sponsor, category, from-points)
-  static const _featured = [
-    ('Veltins', 'Food & Drink', 500),
-    ('adidas', 'Fanshop', 900),
-    ('REWE', 'Groceries', 400),
-    ("Ernsting's", 'Fashion', 600),
-  ];
-
-  // Real reward deals with strikethrough pricing (title, category, old, new, badge, glyph, colour)
+  // Hot reward deals with strikethrough pricing (curated view only).
   static const _deals = <(String, String, int, int, String, IconData, Color, String)>[
     ('Home Jersey 25/26', 'Fanshop', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E), 'img_fanshop'),
     ('VELTINS matchday crate', 'Sponsor', 1500, 1050, '-30%', Icons.sports_bar_rounded, Color(0xFF00897B), 'img_partner'),
@@ -46,18 +73,45 @@ class RedeemScreen extends StatelessWidget {
     ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0), 'img_fanshop'),
   ];
 
-  static const _cats = [
-    (Icons.checkroom_rounded, 'Fanshop', 'Jerseys, scarves & more', Color(0xFF0A2A5E)),
-    (Icons.confirmation_number_rounded, 'Tickets', 'Matchday & presale access', Color(0xFF1565C0)),
-    (Icons.storefront_rounded, 'Sponsors', 'Partner vouchers & offers', Color(0xFF00897B)),
-    (Icons.stadium_rounded, 'Experiences', 'Stadium tours, VIP, players', Color(0xFF6A1B9A)),
-    (Icons.fastfood_rounded, 'Food & Drink', 'Matchday combos & kiosks', Color(0xFFE65100)),
-    (Icons.local_activity_rounded, 'Tombola', 'Monthly ticket & prize draws', Color(0xFFC62828)),
-    (Icons.volunteer_activism_rounded, 'Donations', 'Give points to club causes', Color(0xFF2E7D32)),
+  // Category tiles for the curated "Discover" grid (category, icon, colour).
+  static const _catTiles = <(String, IconData, Color)>[
+    ('Tickets', Icons.confirmation_number_rounded, Color(0xFF1565C0)),
+    ('Fanshop', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
+    ('Experiences', Icons.stadium_rounded, Color(0xFF6A1B9A)),
+    ('Sponsors', Icons.storefront_rounded, Color(0xFF00897B)),
+    ('Tombola', Icons.local_activity_rounded, Color(0xFFC62828)),
+    ('Food & Drink', Icons.fastfood_rounded, Color(0xFFE65100)),
   ];
 
-  void _push(BuildContext context, Widget s) =>
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  void _push(Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
+
+  Widget? _screenFor(String category) => switch (category) {
+        'Fanshop' => const FanshopScreen(),
+        'Tickets' => const TicketsScreen(),
+        'Experiences' => const ExperiencesScreen(),
+        'Tombola' => const RafflesScreen(),
+        'Sponsors' => const DealsHubScreen(),
+        _ => null,
+      };
+
+  List<_Reward> get _filtered {
+    final q = _query.trim().toLowerCase();
+    return _rewards.where((r) {
+      final matchesCat = _filter == 'All' || r.$1 == _filter;
+      final matchesQuery = q.isEmpty ||
+          r.$2.toLowerCase().contains(q) ||
+          r.$6.toLowerCase().contains(q) ||
+          tr(r.$1).toLowerCase().contains(q);
+      return matchesCat && matchesQuery;
+    }).toList();
+  }
 
   // Compact balance chip for the tab header (Socios-style token count).
   Widget _pointsChip() => Container(
@@ -72,116 +126,51 @@ class RedeemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final searching = _query.trim().isNotEmpty || _filter != 'All';
     return SubScaffold(
       title: tr('Redeem'),
-      showBack: !isTab,
-      trailing: isTab ? _pointsChip() : null,
+      showBack: !widget.isTab,
+      trailing: widget.isTab ? _pointsChip() : null,
       children: [
-        // ── Exclusive, money-can't-buy experiences (the emotional heart) ──
-        Row(children: [
-          Text(tr('Exclusive for fans'), style: AppText.label1),
-          const SizedBox(width: 8),
-          Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Money-can\'t-buy'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
-        ]),
+        // ── Search ──
+        _SearchField(
+          controller: _searchCtrl,
+          hint: tr('Search reward, team, category'),
+          onChanged: (v) => setState(() => _query = v),
+          onClear: () => setState(() {
+            _query = '';
+            _searchCtrl.clear();
+          }),
+        ),
+        const SizedBox(height: 14),
+        // ── Filter chips ──
+        SizedBox(
+          height: 34,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _filters.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (_, i) {
+              final f = _filters[i];
+              return _FilterChip(
+                label: tr(f),
+                selected: _filter == f,
+                onTap: () => setState(() => _filter = f),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 20),
+        // ── Body: filtered grid or curated view ──
+        if (searching) ..._resultsView() else ..._curatedView(),
         const SizedBox(height: 4),
-        Text(tr('Experiences you can\'t get anywhere else.'), style: AppText.body3Regular),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 224,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _exclusive.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final e = _exclusive[i];
-              return _ExclusiveCard(
-                title: e.$1, sub: e.$2, image: e.$3, points: e.$4,
-                onTap: () => redeemForVoucher(context, title: e.$1, category: 'Experience', points: e.$4, sponsor: 'FC Schalke 04'),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 24),
-        // ── Ways to redeem (categories) ──
-        const SectionHeader('Ways to redeem', action: null),
-        const SizedBox(height: 12),
-        for (final c in _cats) ...[
-          HubListRow(
-            icon: c.$1,
-            title: c.$2,
-            subtitle: c.$3,
-            iconColor: c.$4,
-            onTap: () {
-              final Widget? dest = switch (c.$2) {
-                'Fanshop' => const FanshopScreen(),
-                'Tickets' => const TicketsScreen(),
-                'Experiences' => const ExperiencesScreen(),
-                'Tombola' => const RafflesScreen(),
-                'Sponsors' => const DealsHubScreen(),
-                _ => null,
-              };
-              if (dest != null) _push(context, dest);
-            },
-          ),
-          const SizedBox(height: 10),
-        ],
-        const SizedBox(height: 12),
-        // ── Reward deals (strikethrough pricing, urgency) ──
-        SectionHeader('Reward deals', action: null),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 194,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _deals.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final d = _deals[i];
-              return DealCard(
-                title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, image: d.$8,
-                onTap: () {
-                  switch (d.$2) {
-                    case 'Fanshop':
-                      _push(context, const FanshopScreen());
-                    case 'Tombola':
-                      _push(context, const RafflesScreen());
-                    default:
-                      redeemForVoucher(context, title: d.$1, category: d.$2, points: d.$4, sponsor: 'Veltins');
-                  }
-                },
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 24),
-        SectionHeader('Featured rewards', action: null),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 168,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _featured.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final f = _featured[i];
-              return _FeaturedCard(
-                sponsor: sponsorByName(f.$1),
-                name: f.$1,
-                category: f.$2,
-                fromPts: f.$3,
-                onTap: () => redeemForVoucher(context, title: '${f.$1} · ${f.$2}', category: f.$2, points: f.$3, sponsor: f.$1),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 22),
-        // ── My Vouchers (reactive open count) — what you've redeemed ──
+        // ── Always available: My Vouchers + Top up ──
         AnimatedBuilder(
           animation: voucherStore,
           builder: (context, _) {
             final open = voucherStore.openCount;
             return SurfaceCard(
-              onTap: () => _push(context, const MyVouchersScreen()),
+              onTap: () => _push(const MyVouchersScreen()),
               child: Row(children: [
                 Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.confirmation_number_rounded, color: AppColors.brandPrimary, size: 22)),
                 const SizedBox(width: 14),
@@ -196,13 +185,13 @@ class RedeemScreen extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         HubListRow(
           icon: Icons.add_rounded,
           title: 'Top up points',
           subtitle: 'Reach your reward faster · optional',
           iconColor: AppColors.brandDarkest,
-          onTap: () => _push(context, const BuyPointsScreen()),
+          onTap: () => _push(const BuyPointsScreen()),
         ),
         const SizedBox(height: 12),
         Row(children: [
@@ -212,6 +201,356 @@ class RedeemScreen extends StatelessWidget {
               style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],
+    );
+  }
+
+  // ── Curated view (filter = All, no query) ──
+  List<Widget> _curatedView() {
+    final exclusive = _rewards.where((r) => r.$1 == 'Experiences').toList();
+    return [
+      // Exclusive, money-can't-buy hero.
+      Row(children: [
+        Text(tr('Exclusive for fans'), style: AppText.label1),
+        const SizedBox(width: 8),
+        Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Money-can\'t-buy'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+      ]),
+      const SizedBox(height: 4),
+      Text(tr('Experiences you can\'t get anywhere else.'), style: AppText.body3Regular),
+      const SizedBox(height: 12),
+      SizedBox(
+        height: 224,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: exclusive.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (_, i) {
+            final e = exclusive[i];
+            return _ExclusiveCard(
+              title: e.$2, sub: e.$3, image: e.$5, points: e.$4,
+              onTap: () => redeemForVoucher(context, title: e.$2, category: 'Experience', points: e.$4, sponsor: e.$6),
+            );
+          },
+        ),
+      ),
+      const SizedBox(height: 24),
+      // Discover categories (image tiles that filter in-place).
+      const SectionHeader('Discover', action: null),
+      const SizedBox(height: 12),
+      _catGrid(),
+      const SizedBox(height: 24),
+      // Hot deals.
+      const SectionHeader('Reward deals', action: null),
+      const SizedBox(height: 12),
+      SizedBox(
+        height: 194,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: _deals.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (_, i) {
+            final d = _deals[i];
+            return DealCard(
+              title: d.$1, category: d.$2, oldPts: d.$3, newPts: d.$4, badge: d.$5, glyph: d.$6, color: d.$7, image: d.$8,
+              onTap: () {
+                switch (d.$2) {
+                  case 'Fanshop':
+                    _push(const FanshopScreen());
+                  case 'Tombola':
+                    _push(const RafflesScreen());
+                  default:
+                    redeemForVoucher(context, title: d.$1, category: d.$2, points: d.$4, sponsor: 'Veltins');
+                }
+              },
+            );
+          },
+        ),
+      ),
+      const SizedBox(height: 24),
+    ];
+  }
+
+  // 2-column grid of category image tiles.
+  Widget _catGrid() {
+    final rows = <Widget>[];
+    for (var i = 0; i < _catTiles.length; i += 2) {
+      rows.add(Row(children: [
+        Expanded(child: _CategoryTile(cat: _catTiles[i], onTap: () => _onCatTile(_catTiles[i].$1))),
+        const SizedBox(width: 12),
+        Expanded(
+          child: i + 1 < _catTiles.length
+              ? _CategoryTile(cat: _catTiles[i + 1], onTap: () => _onCatTile(_catTiles[i + 1].$1))
+              : const SizedBox(),
+        ),
+      ]));
+      if (i + 2 < _catTiles.length) rows.add(const SizedBox(height: 12));
+    }
+    return Column(children: rows);
+  }
+
+  void _onCatTile(String category) {
+    if (_filters.contains(category)) {
+      setState(() => _filter = category);
+    } else {
+      final dest = _screenFor(category);
+      if (dest != null) _push(dest);
+    }
+  }
+
+  // ── Results view (a filter or search is active) ──
+  List<Widget> _resultsView() {
+    final items = _filtered;
+    final title = _filter == 'All' ? tr('Results') : tr(_filter);
+    final dest = _screenFor(_filter);
+    return [
+      Row(children: [
+        Expanded(child: Text('$title · ${items.length} ${tr('rewards')}', style: AppText.label1)),
+        if (dest != null && _query.trim().isEmpty)
+          Tappable(
+            onTap: () => _push(dest),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(tr('See all'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            ]),
+          ),
+      ]),
+      const SizedBox(height: 14),
+      if (items.isEmpty)
+        _EmptyState(onReset: () => setState(() {
+          _filter = 'All';
+          _query = '';
+          _searchCtrl.clear();
+        }))
+      else
+        _grid(items),
+      const SizedBox(height: 20),
+    ];
+  }
+
+  // 2-column reward grid.
+  Widget _grid(List<_Reward> items) {
+    final rows = <Widget>[];
+    for (var i = 0; i < items.length; i += 2) {
+      rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(child: _RewardCard(reward: items[i], onTap: () => _redeem(items[i]))),
+        const SizedBox(width: 12),
+        Expanded(
+          child: i + 1 < items.length
+              ? _RewardCard(reward: items[i + 1], onTap: () => _redeem(items[i + 1]))
+              : const SizedBox(),
+        ),
+      ]));
+      if (i + 2 < items.length) rows.add(const SizedBox(height: 12));
+    }
+    return Column(children: rows);
+  }
+
+  void _redeem(_Reward r) {
+    // Tickets / Fanshop route to their rich flows; the rest issue a voucher.
+    switch (r.$1) {
+      case 'Fanshop':
+        _push(const FanshopScreen());
+      case 'Tickets':
+        _push(const TicketsScreen());
+      case 'Tombola':
+        _push(const RafflesScreen());
+      default:
+        redeemForVoucher(context, title: r.$2, category: r.$1, points: r.$4, sponsor: r.$6);
+    }
+  }
+}
+
+/// Rounded live search field with a clear button.
+class _SearchField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hint;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+  const _SearchField({required this.controller, required this.hint, required this.onChanged, required this.onClear});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+      child: Row(children: [
+        Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+        const SizedBox(width: 10),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            onChanged: onChanged,
+            style: AppText.body2.copyWith(color: AppColors.textDarker),
+            cursorColor: AppColors.brandPrimary,
+            decoration: InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: AppText.body2.copyWith(color: AppColors.textLight),
+              contentPadding: const EdgeInsets.symmetric(vertical: 13),
+            ),
+          ),
+        ),
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: controller,
+          builder: (_, v, __) => v.text.isEmpty
+              ? const SizedBox.shrink()
+              : Tappable(
+                  onTap: onClear,
+                  child: Icon(Icons.close_rounded, size: 18, color: AppColors.textLight),
+                ),
+        ),
+      ]),
+    );
+  }
+}
+
+/// Pill-style filter chip.
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _FilterChip({required this.label, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.96,
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: selected ? AppColors.brandPrimary : AppColors.surface,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: selected ? AppColors.brandPrimary : AppColors.borderLightest),
+        ),
+        child: Text(label, style: AppText.caption1.copyWith(
+          color: selected ? Colors.white : AppColors.textNormal,
+          fontWeight: FontWeight.w700,
+        )),
+      ),
+    );
+  }
+}
+
+/// Category image tile (curated Discover grid).
+class _CategoryTile extends StatelessWidget {
+  final (String, IconData, Color) cat;
+  final VoidCallback onTap;
+  const _CategoryTile({required this.cat, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final (name, icon, color) = cat;
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        height: 92,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Stack(fit: StackFit.expand, children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color, Color.lerp(color, Colors.black, 0.4)!]),
+            ),
+          ),
+          Positioned(right: -12, bottom: -12, child: Icon(icon, size: 82, color: Colors.white.withValues(alpha: 0.16))),
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
+              Text(tr(name), style: AppText.body1.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Reward grid card (Socios-style): full-bleed photo with a points badge and a
+/// category band, then a white body with title, sub and a redeem chip.
+class _RewardCard extends StatelessWidget {
+  final _Reward reward;
+  final VoidCallback onTap;
+  const _RewardCard({required this.reward, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final (category, title, sub, points, image, _) = reward;
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        height: 244,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: AppColors.borderLightest),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Stack(children: [
+            SizedBox(
+              height: 118, width: double.infinity,
+              child: AssetImg(image, fit: BoxFit.cover, fallbackIcon: Icons.card_giftcard_rounded),
+            ),
+            Positioned(
+              left: 10, top: 10,
+              child: Pill(color: Colors.black.withValues(alpha: 0.55), child: Text(tr(category), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
+            ),
+          ]),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr(title), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, height: 1.15)),
+                const SizedBox(height: 3),
+                Text(tr(sub), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+                const Spacer(),
+                Row(children: [
+                  const Icon(Icons.hexagon_rounded, size: 15, color: AppColors.brandPrimary),
+                  const SizedBox(width: 5),
+                  Expanded(child: Text(FanModel.fmtPublic(points), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800))),
+                  Container(
+                    width: 30, height: 30,
+                    decoration: BoxDecoration(color: AppColors.brandPrimary, borderRadius: BorderRadius.circular(9)),
+                    child: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 17),
+                  ),
+                ]),
+              ]),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Empty state when a search/filter yields nothing.
+class _EmptyState extends StatelessWidget {
+  final VoidCallback onReset;
+  const _EmptyState({required this.onReset});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.card)),
+      child: Column(children: [
+        Icon(Icons.search_off_rounded, size: 40, color: AppColors.textLight),
+        const SizedBox(height: 12),
+        Text(tr('No rewards found'), style: AppText.body1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 4),
+        Text(tr('Try another search or category.'), textAlign: TextAlign.center, style: AppText.body3Regular),
+        const SizedBox(height: 16),
+        Tappable(
+          onTap: onReset,
+          child: Pill(color: AppColors.brandLightest, child: Text(tr('Reset filters'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+        ),
+      ]),
     );
   }
 }
@@ -271,58 +610,6 @@ class _ExclusiveCard extends StatelessWidget {
               ),
             ]),
           ])),
-        ]),
-      ),
-    );
-  }
-}
-
-/// Featured reward card: coloured sponsor header (symbol) + white body with
-/// name, category and the points price.
-class _FeaturedCard extends StatelessWidget {
-  final Sponsor? sponsor;
-  final String name;
-  final String category;
-  final int fromPts;
-  final VoidCallback onTap;
-  const _FeaturedCard({required this.sponsor, required this.name, required this.category, required this.fromPts, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = sponsor?.color ?? AppColors.brandPrimary;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 172,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.card),
-          border: Border.all(color: AppColors.borderLightest),
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // Coloured header
-          Container(
-            height: 76,
-            width: double.infinity,
-            color: color,
-            alignment: Alignment.center,
-            child: Icon(sponsor?.icon ?? Icons.card_giftcard_rounded, color: Colors.white, size: 34),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 2),
-              Text(tr(category), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
-              const SizedBox(height: 8),
-              Row(children: [
-                const Icon(Icons.hexagon_rounded, size: 15, color: AppColors.brandPrimary),
-                const SizedBox(width: 5),
-                Text('${tr('From')} ${FanModel.fmtPublic(fromPts)}', style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-              ]),
-            ]),
-          ),
         ]),
       ),
     );

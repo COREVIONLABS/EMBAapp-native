@@ -512,6 +512,12 @@ const Map<String, String> _de = {
   '(Sponsors Only)': '(Nur Sponsoren)',
 
   // ── Redeem / rewards ───────────────────────────────────────
+  'Search reward, team, category': 'Suche Prämie, Team, Kategorie',
+  'Results': 'Ergebnisse',
+  'rewards': 'Prämien',
+  'No rewards found': 'Keine Prämien gefunden',
+  'Try another search or category.': 'Andere Suche oder Kategorie probieren.',
+  'Reset filters': 'Filter zurücksetzen',
   'Ways to redeem': 'Einlöse-Möglichkeiten',
   'Your loyalty. Your rewards.': 'Deine Treue. Deine Prämien.',
   'You won 100 Points!': 'Du hast 100 Punkte gewonnen!',
