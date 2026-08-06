@@ -1386,6 +1386,22 @@ const Map<String, String> _de = {
   'You can re-open “How Fan+ works” anytime under “More in the app”.':
       'Du findest „So funktioniert Fan+" jederzeit unter „Mehr in der App".',
   'The basics in 3 steps': 'Die Grundlagen in 3 Schritten',
+  // ── Gewinnen tab: daily games + tombola ──
+  'Your daily chance': 'Deine Tageschance',
+  'Free once a day': '1× täglich gratis',
+  'Done today · come back tomorrow': 'Heute erledigt · morgen wieder',
+  'use them in any draw': 'nutze sie in jeder Verlosung',
+  'What you can win': 'Was du gewinnen kannst',
+  'Sponsor prizes': 'Sponsor-Preise',
+  'Veltins crates, adidas gear & more': 'Veltins-Kisten, adidas-Artikel & mehr',
+  'Club prizes': 'Vereins-Preise',
+  'Signed shirts, matchballs, memorabilia': 'Signierte Trikots, Matchbälle, Memorabilia',
+  'Play on the pitch, meet the squad': 'Auf dem Rasen spielen, Team treffen',
+  'VIP tickets': 'VIP-Tickets',
+  'Derby & top-match VIP seats': 'Derby- & Topspiel-VIP-Plätze',
+  'Ends in 3d 6h': 'Endet in 3T 6Std',
+  'Enter with a free lot or points.': 'Mit Freilos oder Punkten teilnehmen.',
+  'See all': 'Alle ansehen',
   // ── Nav restructure: Home · Redeem · Prizes · Fan+ · Profile ──
   'Fan+': 'Fan+',
   'Have your say': 'Deine Stimme',

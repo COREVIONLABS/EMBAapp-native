@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/action_sheets.dart';
-import 'daily_spin_screen.dart';
-import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
+import 'fan_polls_screen.dart';
+import 'season_journey_screen.dart';
 import 'earn_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'notifications_screen.dart';
@@ -115,8 +115,8 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                     ? Padding(padding: const EdgeInsets.fromLTRB(20, 0, 20, 20), child: _HowItWorksCard(onDismiss: () => _dismissHowTo(context)))
                     : const SizedBox.shrink(),
               ),
-              // 4) Quick games — daily fun right on Home.
-              _games(context),
+              // 4) Engagement — fan votes + the season journey.
+              _engagement(context),
               const SizedBox(height: 20),
               // 5) Matchday context — the one contextual zone (matchday only).
               ValueListenableBuilder<bool>(
@@ -201,20 +201,50 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     );
   }
 
-  // Quick games section — daily fun right on Home.
-  Widget _games(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Quick games', action: null)),
-      const SizedBox(height: 12),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(children: [
-          Expanded(child: _GameCard(icon: Icons.casino_rounded, label: tr('Daily Spin'), sub: tr('Spin to win points'), gradient: const [Color(0xFF6A1B9A), Color(0xFF311B92)], onTap: () => showDailySpin(context))),
-          const SizedBox(width: 12),
-          Expanded(child: _GameCard(icon: Icons.style_rounded, label: tr('Scratch Card'), sub: tr('Scratch & reveal'), gradient: const [Color(0xFFB8860B), Color(0xFF7A5901)], onTap: () => showScratchCard(context))),
-        ]),
-      ),
-    ]);
+  // Engagement section — fan votes + Road to Gold (moved here from the tabs).
+  Widget _engagement(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(children: [
+        SurfaceCard(
+          onTap: () => _push(context, const FanPollsScreen()),
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: const Color(0xFF6A1B9A).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.how_to_vote_rounded, color: Color(0xFF6A1B9A), size: 22)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Fan votes'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              Text(tr('Captain, kit, Player of the Month'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+            ])),
+            Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          ]),
+        ),
+        const SizedBox(height: 12),
+        Tappable(
+          scale: 0.98,
+          onTap: () => _push(context, const SeasonJourneyScreen()),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                const Icon(Icons.route_rounded, color: AppColors.gold, size: 20),
+                const SizedBox(width: 8),
+                Text(tr('Road to Gold'), style: AppText.label2.copyWith(color: Colors.white)),
+                const Spacer(),
+                const Icon(Icons.chevron_right_rounded, color: Colors.white54, size: 18),
+              ]),
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: const LinearProgressIndicator(value: 0.24, minHeight: 7, backgroundColor: Colors.white24, valueColor: AlwaysStoppedAnimation(AppColors.gold)),
+              ),
+              const SizedBox(height: 8),
+              Text(tr('Your season journey through S04 history — resets each season.'), style: AppText.body3.copyWith(color: Colors.white70)),
+            ]),
+          ),
+        ),
+      ]),
+    );
   }
 
   void _dismissHowTo(BuildContext context) async {
@@ -459,35 +489,6 @@ class _RoundNav extends StatelessWidget {
         const SizedBox(height: 7),
         Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(fontSize: 12, fontWeight: FontWeight.w700)),
       ]),
-    );
-  }
-}
-
-/// A game card (spin / scratch) for the Home quick-games row.
-class _GameCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String sub;
-  final List<Color> gradient;
-  final VoidCallback onTap;
-  const _GameCard({required this.icon, required this.label, required this.sub, required this.gradient, required this.onTap});
-  @override
-  Widget build(BuildContext context) {
-    return Tappable(
-      scale: 0.97,
-      onTap: onTap,
-      child: Container(
-        height: 112,
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(width: 40, height: 40, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.gold, size: 22)),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(label, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
-            Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
-          ]),
-        ]),
-      ),
     );
   }
 }
