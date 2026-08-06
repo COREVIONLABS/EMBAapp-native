@@ -5,7 +5,6 @@ import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
-import 'buy_points_screen.dart';
 import 'subscription_screen.dart';
 import '../l10n/strings.dart';
 
@@ -45,8 +44,11 @@ class _RafflesScreenState extends State<RafflesScreen> {
         [Color(0xFF0A2A5E), Color(0xFF000D22)], 400, Duration(days: 12, hours: 4), 410),
   ];
 
-  final Set<int> _entered = {};
-  int _myTickets = FanModel.raffleTickets;
+  /// One extra lot costs this many points (the single conversion: points → lots).
+  static const int _kLotCost = 500;
+
+  final Map<int, int> _myEntries = {}; // draw index → how many lots you placed
+  late final List<int> _entries; // live entry pool per draw
   late final List<DateTime> _ends;
   Timer? _timer;
 
@@ -55,6 +57,7 @@ class _RafflesScreenState extends State<RafflesScreen> {
     super.initState();
     final now = DateTime.now();
     _ends = [for (final r in _raffles) now.add(r.drawIn)];
+    _entries = [for (final r in _raffles) r.entries];
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) setState(() {});
     });
@@ -72,61 +75,106 @@ class _RafflesScreenState extends State<RafflesScreen> {
     return d.isNegative ? Duration.zero : d;
   }
 
-  Future<void> _enter(int i) async {
-    final r = _raffles[i];
-    final free = r.superFanFree;
-    final head = free ? tr('Uses one free Super Fan entry.') : '${FanModel.fmtPublic(r.entryPoints)} ${tr('points')}';
-    final ok = await showConfirmDialog(
-      context,
-      title: 'Enter this tombola?',
-      message: '$head · ${tr('You\'ll be notified if you win.')}',
-      confirmLabel: 'Enter',
-    );
+  bool get _topTier => tierNotifier.value == 'Super Fan';
+
+  Future<void> _buyLot() async {
+    if (FanModel.fanPoints < _kLotCost) {
+      await showConfirmDialog(context,
+          title: 'Not enough points',
+          message: '${tr('An extra lot costs')} ${FanModel.fmtPublic(_kLotCost)} ${tr('points')} · ${tr('you have')} ${FanModel.pointsFormatted}.',
+          confirmLabel: 'OK');
+      return;
+    }
+    final ok = await showConfirmDialog(context,
+        title: 'Get an extra lot?',
+        message: '${FanModel.fmtPublic(_kLotCost)} ${tr('points')} → 1 ${tr('lot')} · ${tr('More lots = more chances.')}',
+        confirmLabel: 'Get lot');
     if (!ok || !mounted) return;
+    FanModel.spendPoints(_kLotCost);
+    lotsNotifier.value += 1;
+  }
+
+  // Place one lot on a draw. Free lots first; when out, one lot is bought with
+  // points. Multi-entry is allowed — more lots, more chances.
+  Future<void> _enter(int i) async {
+    final usingPaid = FanModel.raffleTickets <= 0;
+    if (usingPaid && FanModel.fanPoints < _kLotCost) {
+      await showConfirmDialog(context,
+          title: 'No lots left',
+          message: '${tr('You\'re out of free lots — an extra lot costs')} ${FanModel.fmtPublic(_kLotCost)} ${tr('points')}.',
+          confirmLabel: 'OK');
+      return;
+    }
+    final msg = usingPaid
+        ? '${tr('Places 1 extra lot for')} ${FanModel.fmtPublic(_kLotCost)} ${tr('points')}. ${tr('More lots = more chances.')}'
+        : '${tr('Places 1 of your lots.')} ${tr('More lots = more chances.')}';
+    final ok = await showConfirmDialog(context, title: 'Place a lot?', message: msg, confirmLabel: 'Place lot');
+    if (!ok || !mounted) return;
+    if (usingPaid) {
+      FanModel.spendPoints(_kLotCost);
+    } else {
+      lotsNotifier.value -= 1;
+    }
     setState(() {
-      _entered.add(i);
-      _myTickets += 1;
+      _myEntries[i] = (_myEntries[i] ?? 0) + 1;
+      _entries[i] += 1;
     });
     await showSuccessSheet(context,
         title: 'You\'re in!',
-        message: 'Your entry is confirmed — the winner is drawn when the timer ends.');
+        message: 'Lot placed — the winner is drawn when the timer ends. Good luck!');
+  }
+
+  void _showTerms() {
+    showConfirmDialog(context,
+        title: 'How the tombola works',
+        message: tr('Members get free lots each month; free lots enter automatically and extra lots cost points. One lot = one entry, more lots = more chances. No purchase necessary — you can always take part with your free lots. 18+. Winners are drawn at the timer and notified in the app.'),
+        confirmLabel: 'Got it');
   }
 
   @override
   Widget build(BuildContext context) {
-    final enteredCount = _entered.length;
     return SubScaffold(
       title: tr('Tombola'),
       children: [
-        // Membership free-lots strip — the core "why upgrade" for tombola.
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-          child: Row(children: [
-            const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${FanModel.perks.freeLots} ${tr('free lots this month')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700)),
-              Text('${tr(FanModel.membershipTier)} · ${_myTickets + enteredCount} ${tr('lots in total')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
-            ])),
-            Tappable(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
-              child: Pill(color: AppColors.surface, child: Text(tr('Top up points'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
-            ),
-          ]),
+        // Your lots — one honest number, one unit.
+        ValueListenableBuilder<int>(
+          valueListenable: lotsNotifier,
+          builder: (context, lots, __) => Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+            child: Row(children: [
+              const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('$lots ${tr('lots left')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+                Text('${tr(tierNotifier.value)} · ${tr('free lots enter automatically — more lots, more chances')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
+              ])),
+              Tappable(
+                onTap: _buyLot,
+                child: Pill(color: AppColors.surface, child: Text('${tr('Extra lot')} · $_kLotCost', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+              ),
+            ]),
+          ),
         ),
         const SizedBox(height: 10),
-        // Upgrade nudge — higher tier = more free lots each month.
-        Tappable(
-          scale: 0.99,
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
-          child: Row(children: [
-            Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
+        // Upgrade nudge — only when NOT already on the top tier (no dead end).
+        if (!_topTier)
+          Tappable(
+            scale: 0.99,
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+            child: Row(children: [
+              Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
+              const SizedBox(width: 6),
+              Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
+              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            ]),
+          )
+        else
+          Row(children: [
+            Icon(Icons.verified_rounded, size: 16, color: AppColors.success),
             const SizedBox(width: 6),
-            Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
-            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            Expanded(child: Text('${tr(tierNotifier.value)} · ${tr('you get the most free lots every month')}', style: AppText.body3.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w600))),
           ]),
-        ),
         const SizedBox(height: 18),
         // Tombola of the month (featured)
         Text(tr('Tombola of the month'), style: AppText.label1),
@@ -137,12 +185,15 @@ class _RafflesScreenState extends State<RafflesScreen> {
         const SizedBox(height: 12),
         for (var i = 1; i < _raffles.length; i++) ...[_row(i), const SizedBox(height: 10)],
         const SizedBox(height: 8),
-        Row(children: [
-          Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
-          const SizedBox(width: 6),
-          Expanded(child: Text(tr('Winners are drawn automatically when the timer ends and notified in the app.'),
-              style: AppText.caption1.copyWith(color: AppColors.textLight))),
-        ]),
+        Tappable(
+          onTap: _showTerms,
+          child: Row(children: [
+            Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+            const SizedBox(width: 6),
+            Expanded(child: Text(tr('18+ · No purchase necessary — take part with free lots · Terms apply'),
+                style: AppText.caption1.copyWith(color: AppColors.textLight, decoration: TextDecoration.underline))),
+          ]),
+        ),
       ],
     );
   }
@@ -150,7 +201,8 @@ class _RafflesScreenState extends State<RafflesScreen> {
   Widget _featured(int i) {
     final r = _raffles[i];
     final left = _left(i);
-    final entered = _entered.contains(i);
+    final myN = _myEntries[i] ?? 0;
+    final hasFree = FanModel.raffleTickets > 0;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -159,12 +211,14 @@ class _RafflesScreenState extends State<RafflesScreen> {
         Row(children: [
           Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
           const Spacer(),
-          Pill(color: Colors.white24, child: Text('${FanModel.fmtPublic(r.entries)} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white))),
+          Pill(color: Colors.white24, child: Text('${FanModel.fmtPublic(_entries[i])} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white))),
         ]),
         const SizedBox(height: 16),
         Icon(r.glyph, color: AppColors.gold, size: 40),
         const SizedBox(height: 10),
         Text(tr(r.prize), style: AppText.h4.copyWith(color: Colors.white)),
+        const SizedBox(height: 6),
+        Text(tr('Every lot boosts your chance.'), style: AppText.body3.copyWith(color: Colors.white70)),
         const SizedBox(height: 16),
         Text(tr('Draw in'), style: AppText.caption1.copyWith(color: Colors.white70)),
         const SizedBox(height: 8),
@@ -178,22 +232,24 @@ class _RafflesScreenState extends State<RafflesScreen> {
           _count(_two(left.inSeconds % 60), 'Sec'),
         ]),
         const SizedBox(height: 18),
-        entered
-            ? Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.check_circle_rounded, color: Colors.white, size: 18),
-                  const SizedBox(width: 8),
-                  Text(tr('You\'re entered'), style: AppText.label2.copyWith(color: Colors.white)),
-                ]),
-              )
-            : PrimaryButton(
-                r.superFanFree ? tr('Enter — free with Super Fan') : '${tr('Enter')} · ${FanModel.fmtPublic(r.entryPoints)} ${tr('pts')}',
-                color: AppColors.gold, textColor: AppColors.brandDarkest,
-                onTap: () => _enter(i)),
+        if (myN > 0) ...[
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(AppRadii.pill)),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              const Icon(Icons.check_circle_rounded, color: Colors.white, size: 16),
+              const SizedBox(width: 8),
+              Text('${tr('You\'re in')} · $myN ${myN == 1 ? tr('lot') : tr('lots')}', style: AppText.label2.copyWith(color: Colors.white)),
+            ]),
+          ),
+          const SizedBox(height: 10),
+        ],
+        PrimaryButton(
+          hasFree ? (myN > 0 ? tr('Place another lot') : tr('Place a lot')) : '${tr('Extra lot')} · ${FanModel.fmtPublic(_kLotCost)} ${tr('pts')}',
+          color: AppColors.gold, textColor: AppColors.brandDarkest,
+          onTap: () => _enter(i)),
       ]),
     );
   }
@@ -215,9 +271,10 @@ class _RafflesScreenState extends State<RafflesScreen> {
   Widget _row(int i) {
     final r = _raffles[i];
     final left = _left(i);
-    final entered = _entered.contains(i);
+    final myN = _myEntries[i] ?? 0;
+    final hasFree = FanModel.raffleTickets > 0;
     return SurfaceCard(
-      onTap: entered ? null : () => _enter(i),
+      onTap: () => _enter(i),
       child: Row(children: [
         Container(
           width: 52, height: 52,
@@ -235,9 +292,10 @@ class _RafflesScreenState extends State<RafflesScreen> {
           ]),
         ])),
         const SizedBox(width: 8),
-        entered
-            ? const Icon(Icons.check_circle_rounded, color: AppColors.success)
-            : Text('${FanModel.fmtPublic(r.entryPoints)} ${tr('pts')}', style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+        if (myN > 0)
+          Pill(color: AppColors.successBg, child: Text('$myN ×', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)))
+        else
+          Text(hasFree ? '1 ${tr('lot')}' : '$_kLotCost ${tr('pts')}', style: AppText.body2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
       ]),
     );
   }

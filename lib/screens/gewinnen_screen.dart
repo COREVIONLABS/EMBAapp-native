@@ -11,7 +11,6 @@ import 'my_wins_screen.dart';
 import 'past_tombolas_screen.dart';
 import 'collection_screen.dart';
 import 'subscription_screen.dart';
-import 'buy_points_screen.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import '../l10n/strings.dart';
@@ -118,35 +117,40 @@ class GewinnenScreen extends StatelessWidget {
         ),
         const SizedBox(height: 22),
 
-        // ── 2) Your free lots this month (membership) ──
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('${FanModel.perks.freeLots} ${tr('free lots this month')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
-                Text('${tr(FanModel.membershipTier)} · ${tr('use them in any draw')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
-              ])),
-              Tappable(
-                onTap: () => _push(context, const BuyPointsScreen()),
-                child: Pill(color: AppColors.surface, child: Text(tr('Top up points'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
-              ),
-            ]),
-            const SizedBox(height: 10),
-            Tappable(
-              scale: 0.99,
-              onTap: () => _push(context, const SubscriptionScreen()),
-              child: Row(children: [
-                Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
-                const SizedBox(width: 6),
-                Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
-                Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+        // ── 2) Your lots (membership) — one live number, one unit ──
+        ValueListenableBuilder<int>(
+          valueListenable: lotsNotifier,
+          builder: (context, lots, __) => Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
+                const SizedBox(width: 12),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('$lots ${tr('lots left')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+                  Text('${tr(tierNotifier.value)} · ${tr('free lots enter automatically — more lots, more chances')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
+                ])),
+                Tappable(
+                  onTap: () => _push(context, const RafflesScreen()),
+                  child: Pill(color: AppColors.surface, child: Text(tr('Open Tombola'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+                ),
               ]),
-            ),
-          ]),
+              if (tierNotifier.value != 'Super Fan') ...[
+                const SizedBox(height: 10),
+                Tappable(
+                  scale: 0.99,
+                  onTap: () => _push(context, const SubscriptionScreen()),
+                  child: Row(children: [
+                    Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
+                    Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+                  ]),
+                ),
+              ],
+            ]),
+          ),
         ),
         const SizedBox(height: 22),
 
@@ -189,7 +193,7 @@ class GewinnenScreen extends StatelessWidget {
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(tr('2× VIP tickets — vs Dortmund'), style: AppText.label1.copyWith(color: Colors.white)),
                   const SizedBox(height: 4),
-                  Text(tr('You\'re automatically entered every month.'), style: AppText.body3.copyWith(color: Colors.white70)),
+                  Text(tr('Place your free lots — more lots, more chances.'), style: AppText.body3.copyWith(color: Colors.white70)),
                   const SizedBox(height: 14),
                   Row(children: [
                     const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.gold),
@@ -215,7 +219,7 @@ class GewinnenScreen extends StatelessWidget {
           child: Row(children: [
             const Icon(Icons.verified_rounded, color: AppColors.success, size: 20),
             const SizedBox(width: 10),
-            Expanded(child: Text(tr('As a member you\'re automatically in every monthly draw.'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
+            Expanded(child: Text(tr('Your free lots are ready for every monthly draw — place them for a chance to win.'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
           ]),
         ),
         const SizedBox(height: 12),

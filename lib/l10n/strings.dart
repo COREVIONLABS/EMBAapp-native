@@ -1544,6 +1544,26 @@ const Map<String, String> _de = {
   'Preview · Season 2 concept — figures shown are illustrative.': 'Vorschau · Saison-2-Konzept — gezeigte Zahlen sind illustrativ.',
   'Branded Fan+ Pay card (from Season 2)': 'Gebrandete Fan+ Pay Karte (ab Saison 2)',
 
+  // ── Tombola: one unit "lots" (free + extra) ────────────────
+  'lots left': 'Lose übrig',
+  'free lots enter automatically — more lots, more chances': 'Freilose sind automatisch dabei — mehr Lose, mehr Chancen',
+  'Extra lot': 'Extra-Los',
+  'An extra lot costs': 'Ein Extra-Los kostet',
+  'More lots = more chances.': 'Mehr Lose = mehr Chancen.',
+  'You\'re out of free lots — an extra lot costs': 'Keine Freilose mehr — ein Extra-Los kostet',
+  'Places 1 extra lot for': 'Setzt 1 Extra-Los für',
+  'Places 1 of your lots.': 'Setzt 1 deiner Lose ein.',
+  'Every lot boosts your chance.': 'Jedes Los erhöht deine Chance.',
+  'You\'re in': 'Du bist dabei',
+  'Place a lot': 'Los einsetzen',
+  'Place another lot': 'Weiteres Los einsetzen',
+  'you get the most free lots every month': 'du bekommst die meisten Freilose pro Monat',
+  '18+ · No purchase necessary — take part with free lots · Terms apply': 'Ab 18 · Keine Kaufpflicht — teilnehmen mit Freilosen · Teilnahmebedingungen',
+  'Place your free lots — more lots, more chances.': 'Setze deine Freilose ein — mehr Lose, mehr Chancen.',
+  'Your free lots are ready for every monthly draw — place them for a chance to win.': 'Deine Freilose sind für jede Monatsziehung bereit — setze sie ein und gewinne.',
+  'Members get free lots each month; free lots enter automatically and extra lots cost points. One lot = one entry, more lots = more chances. No purchase necessary — you can always take part with your free lots. 18+. Winners are drawn at the timer and notified in the app.':
+      'Mitglieder erhalten jeden Monat Freilose; Freilose sind automatisch dabei, Extra-Lose kosten Punkte. Ein Los = eine Teilnahme, mehr Lose = mehr Chancen. Keine Kaufpflicht — mit deinen Freilosen bist du immer dabei. Ab 18. Gewinner werden bei Ablauf des Timers gezogen und in der App benachrichtigt.',
+
   // ── Prizes hero ────────────────────────────────────────────
   'Play & win': 'Spielen & gewinnen',
   'Your daily games and the monthly tombola.': 'Deine täglichen Spiele und die monatliche Tombola.',
