@@ -68,20 +68,40 @@ class RedeemScreen extends StatelessWidget {
       showBack: !isTab,
       trailing: isTab ? _pointsChip() : null,
       children: [
-        // ── What points are for (replaces the old "exclusive" framing) ──
+        // ── What points are for (the first thing a fan reads) — a clean hero
+        //    with your balance and the two ways to spend it ──
         Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              const Icon(Icons.redeem_rounded, color: AppColors.brandPrimary, size: 20),
-              const SizedBox(width: 8),
-              Text(tr('Turn points into rewards'), style: AppText.label2.copyWith(color: AppColors.onAccent)),
-            ]),
-            const SizedBox(height: 8),
-            _bullet(tr('Vouchers you redeem at the club — €-value or % off')),
-            const SizedBox(height: 6),
-            _bullet(tr('Lots for the monthly tombola')),
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            // Headline band — deep brand gradient with the live balance.
+            Container(
+              padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+              decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr('Turn points into rewards'), style: AppText.label1.copyWith(color: Colors.white)),
+                const SizedBox(height: 4),
+                Text(tr('Two simple ways to spend your points.'), style: AppText.body3.copyWith(color: Colors.white70)),
+                const SizedBox(height: 14),
+                Row(children: [
+                  const Icon(Icons.hexagon_rounded, size: 18, color: AppColors.gold),
+                  const SizedBox(width: 6),
+                  Text(FanModel.pointsFormatted, style: AppText.h4.copyWith(color: Colors.white, fontSize: 26)),
+                  const SizedBox(width: 6),
+                  Padding(padding: const EdgeInsets.only(top: 4), child: Text(tr('points'), style: AppText.body3.copyWith(color: Colors.white70))),
+                ]),
+              ]),
+            ),
+            // Two pathways.
+            Container(
+              color: AppColors.surface,
+              padding: const EdgeInsets.all(12),
+              child: Row(children: [
+                Expanded(child: _pathTile(Icons.confirmation_number_rounded, tr('Vouchers'), tr('€-value or % off'))),
+                const SizedBox(width: 12),
+                Expanded(child: _pathTile(Icons.local_activity_rounded, tr('Tombola lots'), tr('Win monthly prizes'))),
+              ]),
+            ),
           ]),
         ),
         const SizedBox(height: 24),
@@ -178,11 +198,18 @@ class RedeemScreen extends StatelessWidget {
     );
   }
 
-  Widget _bullet(String text) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Icon(Icons.check_circle_rounded, size: 16, color: AppColors.brandPrimary),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text, style: AppText.body3.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
-      ]);
+  // One of the two "how to spend points" pathway tiles in the intro hero.
+  Widget _pathTile(IconData icon, String title, String sub) => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(width: 34, height: 34, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: AppColors.brandPrimary, size: 18)),
+          const SizedBox(height: 10),
+          Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 1),
+          Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.onAccent)),
+        ]),
+      );
 
   Widget _hint(String text) => Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(Icons.storefront_rounded, size: 13, color: AppColors.textLight),

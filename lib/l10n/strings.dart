@@ -1443,6 +1443,9 @@ const Map<String, String> _de = {
 
   // ── Redeem rebuild (vouchers + tombola lots) ───────────────
   'Turn points into rewards': 'Punkte in Prämien verwandeln',
+  'Two simple ways to spend your points.': 'Zwei einfache Wege, deine Punkte einzulösen.',
+  '€-value or % off': '€-Wert oder % Rabatt',
+  'Win monthly prizes': 'Monatliche Preise gewinnen',
   'Vouchers you redeem at the club — €-value or % off': 'Gutscheine, die du beim Verein einlöst — €-Wert oder % Rabatt',
   'Lots for the monthly tombola': 'Lose für die monatliche Tombola',
   'Value vouchers': 'Wertgutscheine',
