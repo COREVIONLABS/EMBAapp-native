@@ -1402,6 +1402,18 @@ const Map<String, String> _de = {
   'Ends in 3d 6h': 'Endet in 3T 6Std',
   'Enter with a free lot or points.': 'Mit Freilos oder Punkten teilnehmen.',
   'See all': 'Alle ansehen',
+  // ── Fan+ tab: pitch (conversion) ──
+  'More points, free tombola lots & priority — from €4.99. It pays for itself.':
+      'Mehr Punkte, Gratis-Tombola-Lose & Priority — ab €4,99. Zahlt sich selbst.',
+  'Double points': 'Doppelte Punkte',
+  'on every purchase': 'bei jedem Kauf',
+  'every month': 'jeden Monat',
+  'Priority & drops': 'Priority & Drops',
+  'first access, exclusives': 'Zuerst dran, Exklusives',
+  'it pays for itself.': 'zahlt sich selbst.',
+  'Everything you get': 'Das bekommst du',
+  'Then from €4.99 / month · cancel anytime': 'Danach ab €4,99 / Monat · jederzeit kündbar',
+  'Compare all plans': 'Alle Tarife vergleichen',
   // ── Nav restructure: Home · Redeem · Prizes · Fan+ · Profile ──
   'Fan+': 'Fan+',
   'Have your say': 'Deine Stimme',

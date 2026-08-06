@@ -62,72 +62,66 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
   }
 
   Widget _pitch(BuildContext context) {
+    final s = perksFor('Super Fan'); // showcase the hero tier's numbers
+    void toPlans() => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen()));
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       skeleton: const HubSkeleton(),
       children: [
         _header(),
         const SizedBox(height: 16),
-        // Hero card
+        // Hero
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: AppColors.pointsGradient),
-              borderRadius: BorderRadius.circular(AppRadii.card),
-            ),
-            child: Column(
-              children: [
-                const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 40),
-                const SizedBox(height: 12),
-                Text(tr('Priority access to what fans want most'),
-                    textAlign: TextAlign.center, style: AppText.label1.copyWith(color: Colors.white)),
-                const SizedBox(height: 6),
-                Text(tr('Best seats first, exclusive drops, and extra points on everything'),
-                    textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
-                const SizedBox(height: 10),
-                Pill(
-                  color: Colors.white24,
-                  child: Text(tr('Membership · unlocks priority, access & perks'),
-                      style: AppText.caption1.copyWith(color: Colors.white)),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        // Value-back framing — the core "why fans pay" argument from the pitch
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            color: AppColors.brandLightest,
-            child: Row(children: [
-              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold),
-              const SizedBox(width: 12),
-              Expanded(child: Text(tr('Members earn extra points on everything — plus priority access, exclusive drops and VIP draws.'),
-                  style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Column(children: [
+              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 40),
+              const SizedBox(height: 12),
+              Text(tr('Become a Fan+ member'), textAlign: TextAlign.center, style: AppText.h4.copyWith(color: Colors.white)),
+              const SizedBox(height: 6),
+              Text(tr('More points, free tombola lots & priority — from €4.99. It pays for itself.'),
+                  textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
             ]),
           ),
         ),
         const SizedBox(height: 16),
-        // Two locked cards
+        // Concrete value grid (2×2)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Expanded(child: _LockedCard(icon: 'ic_daily_spin', label: tr('Extra Spin'))),
+          child: Column(children: [
+            Row(children: [
+              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: const Color(0xFF1B7A3D), title: tr('Double points'), sub: tr('on every purchase'))),
               const SizedBox(width: 12),
-              Expanded(child: _LockedCard(icon: 'ic_scratch', label: tr('Extra Scratch Card'))),
-            ],
+              Expanded(child: _ValueTile(icon: Icons.local_activity_rounded, color: const Color(0xFFC62828), title: '${s.freeLots} ${tr('free lots')}', sub: tr('every month'))),
+            ]),
+            const SizedBox(height: 12),
+            Row(children: [
+              Expanded(child: _ValueTile(icon: Icons.savings_rounded, color: AppColors.brandPrimary, title: '+${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')}', sub: tr('every month'))),
+              const SizedBox(width: 12),
+              Expanded(child: _ValueTile(icon: Icons.workspace_premium_rounded, color: const Color(0xFF6A1B9A), title: tr('Priority & drops'), sub: tr('first access, exclusives'))),
+            ]),
+          ]),
+        ),
+        const SizedBox(height: 16),
+        // Pays for itself
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SurfaceCard(
+            color: AppColors.successBg,
+            child: Row(children: [
+              const Icon(Icons.savings_rounded, color: AppColors.success),
+              const SizedBox(width: 12),
+              Expanded(child: Text('${tr('Super Fan')}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} / ${tr('month')} (≈ ${FanModel.euroValue(s.monthlyPoints)}) + ${s.freeLots} ${tr('free lots')} — ${tr('it pays for itself.')}',
+                  style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
+            ]),
           ),
         ),
-        const SizedBox(height: 24),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text(tr('VIP Experiences'), style: AppText.label1)),
-        ),
+        const SizedBox(height: 20),
+        // Everything you get
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: Align(alignment: Alignment.centerLeft, child: Text(tr('Everything you get'), style: AppText.label1))),
         const SizedBox(height: 12),
         for (final t in const [
           'Priority ticket access to top matches (48–72h)',
@@ -138,45 +132,27 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         ])
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-            child: Row(
-              children: [
-                const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22),
-                const SizedBox(width: 12),
-                Expanded(child: Text(tr(t), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
-                Pill(
-                  gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text(tr('Exclusive'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
-                ),
-              ],
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-          child: Text(tr('…and much more!'), style: AppText.body2),
-        ),
-        const SizedBox(height: 12),
-        // Free-trial trigger — try Super Fan free for the next big match
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            color: AppColors.successBg,
             child: Row(children: [
-              const Icon(Icons.lock_open_rounded, color: AppColors.success),
+              const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 20),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Start your 7-day free trial'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-                Text(tr('Free for 7 days — cancel anytime'), style: AppText.body3Regular),
-              ])),
+              Expanded(child: Text(tr(t), style: AppText.body1.copyWith(color: AppColors.textDarker, fontSize: 15))),
             ]),
           ),
-        ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
+        // Trial CTA
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: PrimaryButton(tr('See membership plans'),
-              onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SubscriptionScreen()),
-                  )),
+          child: PrimaryButton(tr('Start 7-day free trial'), onTap: toPlans),
+        ),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(child: Text(tr('Then from €4.99 / month · cancel anytime'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
+        ),
+        const SizedBox(height: 6),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(child: GestureDetector(onTap: toPlans, child: Text(tr('Compare all plans'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)))),
         ),
       ],
     );
@@ -382,6 +358,30 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
   }
 }
 
+/// Concrete membership-benefit tile for the pitch value grid.
+class _ValueTile extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String sub;
+  const _ValueTile({required this.icon, required this.color, required this.title, required this.sub});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 108,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Container(width: 38, height: 38, decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(11)), child: Icon(icon, color: color, size: 20)),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+        ]),
+      ]),
+    );
+  }
+}
+
 class _UnlockedCard extends StatelessWidget {
   final String icon;
   final String label;
@@ -409,35 +409,3 @@ class _UnlockedCard extends StatelessWidget {
   }
 }
 
-class _LockedCard extends StatelessWidget {
-  final String icon;
-  final String label;
-  const _LockedCard({required this.icon, required this.label});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Pill(
-              gradient: const LinearGradient(colors: AppColors.goldGradient),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                const Icon(Icons.lock_rounded, size: 10, color: AppColors.brandDarkest),
-                const SizedBox(width: 3),
-                Text(tr('Locked'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
-              ]),
-            ),
-          ),
-          const SizedBox(height: 4),
-          AssetImg(icon, width: 44, height: 44, fallbackIcon: Icons.lock_rounded),
-          const SizedBox(height: 8),
-          Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
-        ],
-      ),
-    );
-  }
-}
