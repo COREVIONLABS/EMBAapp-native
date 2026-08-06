@@ -101,6 +101,10 @@ final ValueNotifier<String> tierNotifier = ValueNotifier<String>(FanModel.member
 final ValueNotifier<bool> matchdayNotifier = ValueNotifier<bool>(true);
 final ValueNotifier<bool> memberPreviewNotifier = ValueNotifier<bool>(true);
 
+/// Lets any screen ask the main shell to switch bottom-nav tab (e.g. a Home
+/// round-action jumping to the Einlösen/Gewinnen tab instead of pushing a copy).
+final ValueNotifier<int?> tabRequestNotifier = ValueNotifier<int?>(null);
+
 /// Home: show the dismissible "How Fan+ works" explainer. Once a fan confirms
 /// dismissal it hides (it still lives permanently on the Points tab).
 final ValueNotifier<bool> howToNotifier = ValueNotifier<bool>(true);

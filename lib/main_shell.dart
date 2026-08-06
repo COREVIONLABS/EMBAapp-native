@@ -6,6 +6,7 @@ import 'screens/redeem_screen.dart';
 import 'screens/gewinnen_screen.dart';
 import 'screens/fanplus_screen.dart';
 import 'screens/profile_screen.dart';
+import 'model/fan_model.dart';
 
 class MainShell extends StatefulWidget {
   final int initialTab;
@@ -17,6 +18,25 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   late int _tab = widget.initialTab;
+
+  @override
+  void initState() {
+    super.initState();
+    // Let screens (e.g. Home round actions) request a tab switch.
+    tabRequestNotifier.addListener(_onTabRequest);
+  }
+
+  void _onTabRequest() {
+    final i = tabRequestNotifier.value;
+    if (i != null && i != _tab && mounted) setState(() => _tab = i);
+    tabRequestNotifier.value = null;
+  }
+
+  @override
+  void dispose() {
+    tabRequestNotifier.removeListener(_onTabRequest);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

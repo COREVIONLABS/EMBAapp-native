@@ -9,6 +9,7 @@ class SubScaffold extends StatelessWidget {
   final Color? background;
   final EdgeInsetsGeometry padding;
   final bool showBack;
+  final Widget? trailing;
   const SubScaffold({
     super.key,
     required this.title,
@@ -17,6 +18,7 @@ class SubScaffold extends StatelessWidget {
     this.background,
     this.padding = const EdgeInsets.fromLTRB(20, 8, 20, 24),
     this.showBack = true,
+    this.trailing,
   });
 
   @override
@@ -39,10 +41,13 @@ class SubScaffold extends StatelessWidget {
 
   Widget _bar(BuildContext context) {
     if (!showBack) {
-      // Tab-root header: no back arrow, title left-aligned.
+      // Tab-root header: no back arrow, title left-aligned, optional trailing.
       return Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
-        child: Align(alignment: Alignment.centerLeft, child: Text(title, style: AppText.h4)),
+        child: Row(children: [
+          Expanded(child: Text(title, style: AppText.h4)),
+          if (trailing != null) trailing!,
+        ]),
       );
     }
     return Padding(
@@ -56,7 +61,7 @@ class SubScaffold extends StatelessWidget {
           Expanded(
             child: Text(title, textAlign: TextAlign.center, style: AppText.label1),
           ),
-          const SizedBox(width: 44),
+          SizedBox(width: 44, child: trailing),
         ],
       ),
     );

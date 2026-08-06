@@ -5,7 +5,6 @@ import '../widgets/action_sheets.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
-import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'notifications_screen.dart';
@@ -22,7 +21,6 @@ import '../widgets/sub_scaffold.dart';
 import 'fanplus_screen.dart';
 import 'fanplus_pay_screen.dart';
 import 'matchday_quiz_screen.dart';
-import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
@@ -186,17 +184,19 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   // The four core actions as round icons under the balance (Socios-style),
   // in the fan's mental order: Collect → Redeem → Win → Benefits.
   Widget _roundActions() {
-    final items = <(String, IconData, Color, Widget)>[
-      ('Earn', Icons.bolt_rounded, const Color(0xFF1B7A3D), const EarnPointsScreen()),
-      ('Redeem', Icons.card_giftcard_rounded, const Color(0xFF0A2A5E), const RedeemScreen()),
-      ('Prizes', Icons.emoji_events_rounded, const Color(0xFF6A1B9A), const RafflesScreen()),
-      ('Deals %', Icons.percent_rounded, const Color(0xFFEF6C00), const DealsHubScreen()),
+    // (label, icon, colour, onTap) — Einlösen/Gewinne switch to their tab;
+    // Verdienen/Vorteile push their screen (no dedicated tab).
+    final items = <(String, IconData, Color, VoidCallback)>[
+      ('Earn', Icons.bolt_rounded, const Color(0xFF1B7A3D), () => _push(context, const EarnPointsScreen())),
+      ('Redeem', Icons.card_giftcard_rounded, const Color(0xFF0A2A5E), () => tabRequestNotifier.value = 1),
+      ('Prizes', Icons.emoji_events_rounded, const Color(0xFF6A1B9A), () => tabRequestNotifier.value = 2),
+      ('Deals %', Icons.percent_rounded, const Color(0xFFEF6C00), () => _push(context, const DealsHubScreen())),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         for (var i = 0; i < items.length; i++)
-          Expanded(child: _RoundNav(label: tr(items[i].$1), icon: items[i].$2, color: items[i].$3, onTap: () => _push(context, items[i].$4))),
+          Expanded(child: _RoundNav(label: tr(items[i].$1), icon: items[i].$2, color: items[i].$3, onTap: items[i].$4)),
       ]),
     );
   }
