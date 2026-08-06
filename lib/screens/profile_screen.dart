@@ -51,20 +51,41 @@ class ProfileScreen extends StatelessWidget {
           Text(tr('@maxmuster · Member #0042'), style: AppText.body2.copyWith(color: AppColors.textLight)),
         ]),
         const SizedBox(height: 18),
-        // One place for everything the fan holds.
+        // Points-forward wallet: balance + history, plus everything the fan holds.
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
+          child: Tappable(
+            scale: 0.98,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WalletScreen())),
-            child: Row(children: [
-              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.account_balance_wallet_rounded, color: AppColors.brandPrimary, size: 22)),
-              const SizedBox(width: 14),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('My Wallet'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-                Text(tr('Tickets, vouchers, bookings & collection'), style: AppText.body3Regular),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-            ]),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  const Icon(Icons.account_balance_wallet_rounded, color: Colors.white, size: 18),
+                  const SizedBox(width: 8),
+                  Text(tr('My Wallet'), style: AppText.body3.copyWith(color: Colors.white70)),
+                  const Spacer(),
+                  const Icon(Icons.chevron_right_rounded, color: Colors.white70, size: 18),
+                ]),
+                const SizedBox(height: 12),
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  const Icon(Icons.hexagon_rounded, color: AppColors.gold, size: 24),
+                  const SizedBox(width: 8),
+                  Text(FanModel.pointsFormatted, style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                ]),
+                const SizedBox(height: 4),
+                Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')} · ${tr('View history')}', style: AppText.body3.copyWith(color: Colors.white70)),
+                const SizedBox(height: 12),
+                Row(children: [
+                  for (final c in const ['Tickets', 'Vouchers', 'Bookings', 'Collection']) ...[
+                    Pill(color: Colors.white24, child: Text(tr(c), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
+                    const SizedBox(width: 6),
+                  ],
+                ]),
+              ]),
+            ),
           ),
         ),
         const SizedBox(height: 12),
@@ -95,7 +116,6 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 22),
         _group(context, 'Account', const [
           (Icons.person_outline_rounded, 'Edit Profile', ''),
-          (Icons.card_membership_outlined, 'Membership', 'Super Fan'),
           (Icons.military_tech_outlined, 'Fan Level', 'Schalker'),
           (Icons.history_rounded, 'Points History', ''),
           (Icons.account_balance_outlined, 'Bank Account', ''),

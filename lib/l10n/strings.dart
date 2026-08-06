@@ -1414,6 +1414,7 @@ const Map<String, String> _de = {
   'Everything you get': 'Das bekommst du',
   'Then from €4.99 / month · cancel anytime': 'Danach ab €4,99 / Monat · jederzeit kündbar',
   'Compare all plans': 'Alle Tarife vergleichen',
+  'Bookings': 'Buchungen',
   // ── Nav restructure: Home · Redeem · Prizes · Fan+ · Profile ──
   'Fan+': 'Fan+',
   'Have your say': 'Deine Stimme',
