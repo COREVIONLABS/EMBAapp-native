@@ -1149,6 +1149,8 @@ const Map<String, String> _de = {
   'Buy': 'Kaufen',
   // ── Home „Für dich" reale Inhalte ──
   'Stadium Tour VIP': 'Stadiontour VIP',
+  'lot': 'Los',
+  'lots': 'Lose',
   'Derby VIP Tombola': 'Derby VIP-Tombola',
   'Fanshop · 4,500 pts': 'Fanshop · 4.500 Pkt',
   'Tombola · free with Super Fan': 'Tombola · gratis mit Super Fan',

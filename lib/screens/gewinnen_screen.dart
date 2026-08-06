@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/asset_img.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import 'raffles_screen.dart';
@@ -21,12 +22,32 @@ class GewinnenScreen extends StatelessWidget {
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
-  // Prize categories in the monthly Tombola (icon, title, sub, colour).
-  static const _draws = <(IconData, String, String, Color)>[
-    (Icons.sports_bar_rounded, 'Sponsor prizes', 'Veltins crates, adidas gear & more', Color(0xFF00623A)),
-    (Icons.verified_rounded, 'Club prizes', 'Signed shirts, matchballs, memorabilia', Color(0xFF0A2A5E)),
-    (Icons.stadium_rounded, 'Money-can\'t-buy', 'Play on the pitch, meet the squad', Color(0xFF6A1B9A)),
-    (Icons.confirmation_number_rounded, 'VIP tickets', 'Derby & top-match VIP seats', Color(0xFFC62828)),
+  // 2-column grid of live prize draws (image, countdown, lot entry cost).
+  Widget _prizeGrid(BuildContext context) {
+    final rows = <Widget>[];
+    for (var i = 0; i < _prizes.length; i += 2) {
+      rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(child: _PrizeCard(prize: _prizes[i], onTap: () => _push(context, const RafflesScreen()))),
+        const SizedBox(width: 12),
+        Expanded(
+          child: i + 1 < _prizes.length
+              ? _PrizeCard(prize: _prizes[i + 1], onTap: () => _push(context, const RafflesScreen()))
+              : const SizedBox(),
+        ),
+      ]));
+      if (i + 2 < _prizes.length) rows.add(const SizedBox(height: 12));
+    }
+    return Column(children: rows);
+  }
+
+  // Live prize draws (title, category, image, ends-in, lots to enter, colour).
+  static const _prizes = <(String, String, String, String, int, Color)>[
+    ('2× VIP-Tickets vs Dortmund', 'VIP-Ticket', 'img_tickets', '3d 6h', 1, Color(0xFFC62828)),
+    ('Signiertes Heimtrikot 25/26', 'Vereinsprämie', 'img_fanshop', '5d 12h', 1, Color(0xFF0A2A5E)),
+    ('VELTINS Spieltags-Paket', 'Sponsor', 'img_partner', '2d 3h', 1, Color(0xFF00623A)),
+    ('Auf dem Rasen spielen', 'Money-can\'t-buy', 'img_experiences', '9d 4h', 2, Color(0xFF6A1B9A)),
+    ('Meet & Greet mit dem Team', 'Erlebnis', 'img_rewards', '6d 8h', 2, Color(0xFF6A1B9A)),
+    ('Matchball aus dem Derby', 'Vereinsprämie', 'img_rewards', '4d 1h', 1, Color(0xFF0A2A5E)),
   ];
 
   @override
@@ -130,24 +151,10 @@ class GewinnenScreen extends StatelessWidget {
         ),
         const SizedBox(height: 22),
 
-        // ── 4) All draws by prize source ──
+        // ── 4) All live draws (Socios-style prize grid) ──
         const SectionHeader('What you can win', action: null),
         const SizedBox(height: 12),
-        for (final d in _draws) ...[
-          SurfaceCard(
-            onTap: () => _push(context, const RafflesScreen()),
-            child: Row(children: [
-              Container(width: 44, height: 44, decoration: BoxDecoration(color: d.$4.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: Icon(d.$1, color: d.$4, size: 22)),
-              const SizedBox(width: 14),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr(d.$2), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-                Text(tr(d.$3), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-            ]),
-          ),
-          const SizedBox(height: 10),
-        ],
+        _prizeGrid(context),
       ],
     );
   }
@@ -191,6 +198,72 @@ class _DailyGameCard extends StatelessWidget {
             Text(tr(label), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
             Text(tr('Free once a day'), style: AppText.body3.copyWith(color: Colors.white70)),
           ]),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Prize draw card (Socios auctions-style): full-bleed photo with a category
+/// band and a live countdown, then a white body with title and the lot entry
+/// cost plus an "enter" chip.
+class _PrizeCard extends StatelessWidget {
+  final (String, String, String, String, int, Color) prize;
+  final VoidCallback onTap;
+  const _PrizeCard({required this.prize, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final (title, category, image, ends, lots, color) = prize;
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        height: 246,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: AppColors.borderLightest),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Stack(children: [
+            SizedBox(
+              height: 116, width: double.infinity,
+              child: AssetImg(image, fit: BoxFit.cover, fallbackIcon: Icons.emoji_events_rounded),
+            ),
+            Positioned(
+              left: 10, top: 10,
+              child: Pill(color: color, child: Text(tr(category), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800))),
+            ),
+            Positioned(
+              right: 10, top: 10,
+              child: Pill(color: Colors.black.withValues(alpha: 0.55), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.schedule_rounded, size: 11, color: Colors.white),
+                const SizedBox(width: 3),
+                Text(ends, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+              ])),
+            ),
+          ]),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tr(title), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, height: 1.15)),
+                const Spacer(),
+                Row(children: [
+                  const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.brandPrimary),
+                  const SizedBox(width: 5),
+                  Expanded(child: Text('$lots ${tr(lots == 1 ? 'lot' : 'lots')}', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700))),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(color: AppColors.brandPrimary, borderRadius: BorderRadius.circular(999)),
+                    child: Text(tr('Enter'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                  ),
+                ]),
+              ]),
+            ),
+          ),
         ]),
       ),
     );

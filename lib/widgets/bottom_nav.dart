@@ -19,7 +19,8 @@ const kNavDestinations = [
   NavDest('nav_profile', 'Profile'),
 ];
 
-/// Floating white pill navbar, 1:1 with Figma (active item shows label pill).
+/// Floating white navbar — icon + always-visible label under every tab
+/// (Socios-style), with the active tab highlighted in the brand colour.
 class AppBottomNav extends StatelessWidget {
   final int active;
   final ValueChanged<int> onTap;
@@ -31,9 +32,9 @@ class AppBottomNav extends StatelessWidget {
     // gesture / navigation bar now that the app draws edge-to-edge.
     final bottomInset = MediaQuery.of(context).padding.bottom;
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 10 + bottomInset),
+      padding: EdgeInsets.fromLTRB(12, 0, 12, 10 + bottomInset),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.nav),
@@ -44,17 +45,14 @@ class AppBottomNav extends StatelessWidget {
         child: Row(
           children: [
             for (var i = 0; i < kNavDestinations.length; i++)
-              Flexible(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: _NavItem(
-                    dest: kNavDestinations[i],
-                    selected: i == active,
-                    onTap: () {
-                      if (i != active) HapticFeedback.selectionClick();
-                      onTap(i);
-                    },
-                  ),
+              Expanded(
+                child: _NavItem(
+                  dest: kNavDestinations[i],
+                  selected: i == active,
+                  onTap: () {
+                    if (i != active) HapticFeedback.selectionClick();
+                    onTap(i);
+                  },
                 ),
               ),
           ],
@@ -72,31 +70,24 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = selected ? AppColors.brandPrimary : AppColors.textLight;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: EdgeInsets.symmetric(horizontal: selected ? 16 : 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.brandLightest : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-        ),
-        child: Row(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (dest.iconData != null)
-              Icon(dest.iconData, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal)
+              Icon(dest.iconData, size: 22, color: color)
             else
-              Svg(dest.icon!, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal),
-            if (selected) ...[
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(tr(dest.label),
-                    maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
-              ),
-            ],
+              Svg(dest.icon!, size: 22, color: color),
+            const SizedBox(height: 3),
+            Text(tr(dest.label),
+                maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+                style: AppText.caption1.copyWith(
+                    color: color, fontWeight: selected ? FontWeight.w800 : FontWeight.w600, fontSize: 11)),
           ],
         ),
       ),
