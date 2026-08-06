@@ -6,6 +6,7 @@ import '../widgets/tab_scaffold.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/hub_widgets.dart';
 import 'subscription_screen.dart';
+import 'manage_subscription_screen.dart';
 import 'fomo_drop_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'member_discounts_screen.dart';
@@ -115,31 +116,37 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               const SizedBox(height: 12),
               Text(tr('Become a Fan+ member'), textAlign: TextAlign.center, style: AppText.h4.copyWith(color: Colors.white)),
               const SizedBox(height: 6),
-              Text(tr('More points, free tombola lots & priority — from €4.99. It pays for itself.'),
+              Text(tr('More points, free tombola lots & priority. From €4.99 — Super Fan €9.99.'),
                   textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
             ]),
           ),
         ),
         const SizedBox(height: 16),
-        // Concrete value grid (2×2)
+        // Concrete value grid (2×2) — clearly labelled as the Super Fan tier so
+        // the numbers can't be mistaken for what the €4.99 tier includes.
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text('${tr('Super Fan')} (€9.99) ${tr('includes')}:', style: AppText.label2)),
+        ),
+        const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
             Row(children: [
-              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: const Color(0xFF1B7A3D), title: tr('Double points'), sub: tr('on every purchase'))),
+              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: AppColors.brandPrimary, title: tr('Double points'), sub: tr('on every purchase'))),
               const SizedBox(width: 12),
-              Expanded(child: _ValueTile(icon: Icons.local_activity_rounded, color: const Color(0xFFC62828), title: '${s.freeLots} ${tr('free lots')}', sub: tr('every month'))),
+              Expanded(child: _ValueTile(icon: Icons.local_activity_rounded, color: AppColors.brandPrimary, title: '${s.freeLots} ${tr('free lots')}', sub: tr('every month'))),
             ]),
             const SizedBox(height: 12),
             Row(children: [
               Expanded(child: _ValueTile(icon: Icons.savings_rounded, color: AppColors.brandPrimary, title: '+${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')}', sub: tr('every month'))),
               const SizedBox(width: 12),
-              Expanded(child: _ValueTile(icon: Icons.workspace_premium_rounded, color: const Color(0xFF6A1B9A), title: tr('Priority & drops'), sub: tr('first access, exclusives'))),
+              Expanded(child: _ValueTile(icon: Icons.workspace_premium_rounded, color: AppColors.gold, title: tr('Priority & drops'), sub: tr('first access, exclusives'))),
             ]),
           ]),
         ),
         const SizedBox(height: 16),
-        // Pays for itself
+        // Pays for itself — shown as honest rewards value, not cash.
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SurfaceCard(
@@ -147,7 +154,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             child: Row(children: [
               const Icon(Icons.savings_rounded, color: AppColors.success),
               const SizedBox(width: 12),
-              Expanded(child: Text('${tr('Super Fan')}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} / ${tr('month')} + ${s.freeLots} ${tr('free lots')} — ${tr('it pays for itself.')}',
+              Expanded(child: Text('${tr('Super Fan')}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} (${tr('≈')} ${FanModel.euroValue(s.monthlyPoints)} ${tr('in rewards')}) + ${s.freeLots} ${tr('free lots')} — ${tr('for €9.99 / month.')}',
                   style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
             ]),
           ),
@@ -180,7 +187,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Center(child: Text(tr('Then from €4.99 / month · cancel anytime'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
+          child: Center(child: Text(tr('Then from €4.99 / month · auto-renews · cancel anytime'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ),
         const SizedBox(height: 6),
         Padding(
@@ -231,7 +238,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(tr('Renews: 28 May 2026'), style: AppText.body3.copyWith(color: Colors.white70)),
                 Tappable(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ManageSubscriptionScreen())),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Text(tr('Manage Subscription'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
                     const Icon(Icons.chevron_right_rounded, size: 16, color: Colors.white),

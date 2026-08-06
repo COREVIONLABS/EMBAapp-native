@@ -74,7 +74,7 @@ class NotificationPrefsScreen extends StatelessWidget {
         SizedBox(height: 20),
         Padding(padding: EdgeInsets.only(bottom: 8), child: Text(tr('Email'), style: AppText.body3)),
         SettingsGroup([
-          ToggleRow(tr('Newsletter'), initial: true),
+          ToggleRow(tr('Newsletter')),
           ToggleRow(tr('Exclusive offers')),
         ]),
       ],
@@ -115,9 +115,9 @@ class ConsentScreen extends StatelessWidget {
       title: title,
       children: [
         SettingsGroup([
-          ToggleRow(tr('Personalised offers'), subtitle: tr('Use my activity to tailor rewards'), initial: true),
+          ToggleRow(tr('Personalised offers'), subtitle: tr('Use my activity to tailor rewards'), initial: false),
           ToggleRow(tr('Share with club partners'), subtitle: tr('Sponsors & official partners')),
-          ToggleRow(tr('Analytics'), subtitle: tr('Help improve the app'), initial: true),
+          ToggleRow(tr('Analytics'), subtitle: tr('Help improve the app'), initial: false),
           ToggleRow(tr('Third-party marketing')),
         ]),
         const SizedBox(height: 16),

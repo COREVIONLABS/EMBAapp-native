@@ -17,9 +17,13 @@ class FomoDropScreen extends StatefulWidget {
   State<FomoDropScreen> createState() => _FomoDropScreenState();
 }
 
+/// Shared drop deadline — computed once per app session so the countdown is
+/// stable across visits (no more resetting every time the screen opens).
+final DateTime kMonthlyDropDeadline = DateTime.now().add(const Duration(days: 2, hours: 14, minutes: 38, seconds: 5));
+
 class _FomoDropScreenState extends State<FomoDropScreen> {
-  late final DateTime _end = DateTime.now().add(const Duration(days: 2, hours: 14, minutes: 38, seconds: 5));
-  Duration _left = const Duration(days: 2, hours: 14, minutes: 38, seconds: 5);
+  final DateTime _end = kMonthlyDropDeadline;
+  Duration _left = kMonthlyDropDeadline.difference(DateTime.now());
   Timer? _timer;
 
   @override

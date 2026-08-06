@@ -32,7 +32,7 @@ class AllBenefitsScreen extends StatelessWidget {
     (Icons.casino_rounded, 'Free spins', '2 / day'),
     (Icons.shield_rounded, 'Streak protection', 'Active'),
     (Icons.block_rounded, 'Ad-free experience', 'Active'),
-    (Icons.savings_rounded, 'Guaranteed value back', '€14+ / month'),
+    (Icons.savings_rounded, 'Rewards value back', 'up to ~€14 / month'),
   ];
 
   @override
