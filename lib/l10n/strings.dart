@@ -1377,4 +1377,12 @@ const Map<String, String> _de = {
   'Open polls': 'Laufende Abstimmungen',
   'Ends in': 'Endet in',
   'One vote per fan per poll. Results are shared with the club.': 'Eine Stimme pro Fan pro Abstimmung. Ergebnisse gehen an den Club.',
+  // ── Home: points-forward layout (games section + dismissible explainer) ──
+  'Quick games': 'Schnelle Spiele',
+  'Spin to win points': 'Drehen & Punkte gewinnen',
+  'Scratch & reveal': 'Rubbeln & aufdecken',
+  'Hide this?': 'Ausblenden?',
+  'Hide': 'Ausblenden',
+  'You can always find “How Fan+ works” again on the Points tab.':
+      'Du findest „So funktioniert Fan+" jederzeit wieder im Punkte-Tab.',
 };

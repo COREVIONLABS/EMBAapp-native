@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/action_sheets.dart';
+import 'daily_spin_screen.dart';
+import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
 import 'redeem_screen.dart';
 import 'earn_points_screen.dart';
@@ -21,7 +24,6 @@ import 'fanplus_pay_screen.dart';
 import 'matchday_quiz_screen.dart';
 import 'raffles_screen.dart';
 import '../model/fan_model.dart';
-import '../widgets/hub_widgets.dart';
 import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
 
@@ -73,15 +75,25 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                 child: Text('${tr('Moin')}, Max 👋', style: AppText.h4.copyWith(color: AppColors.textDarker)),
               ),
               const SizedBox(height: 16),
-              // 1) Your points — always first.
+              // First-run activation — new fans only (Demo toggle).
+              ValueListenableBuilder<bool>(
+                valueListenable: starterNotifier,
+                builder: (context, show, __) => show
+                    ? const Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 14), child: _StarterCard())
+                    : const SizedBox.shrink(),
+              ),
+              // 1) Points — the main product, active and up top.
               const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
+              const SizedBox(height: 16),
+              // 2) Round core actions under the balance (Socios-style).
+              _roundActions(),
               const SizedBox(height: 12),
               // Fan+ Pay card promo — Phase-2 only (Demo toggle).
               ValueListenableBuilder<bool>(
                 valueListenable: cardActiveNotifier,
                 builder: (context, active, __) => active
                     ? Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
                         child: SurfaceCard(
                           onTap: () => _push(context, const FanPlusPayScreen()),
                           child: Row(children: [
@@ -97,19 +109,26 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                       )
                     : const SizedBox.shrink(),
               ),
-              // First-run activation: guide the new fan into the loop. Hidden
-              // once switched off (returning fan / presenter).
+              const SizedBox(height: 20),
+              // 3) How Fan+ works — dismissible (with a confirm so it's not lost).
               ValueListenableBuilder<bool>(
-                valueListenable: starterNotifier,
+                valueListenable: howToNotifier,
                 builder: (context, show, __) => show
-                    ? const Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 14), child: _StarterCard())
+                    ? Padding(padding: const EdgeInsets.fromLTRB(20, 0, 20, 20), child: _HowItWorksCard(onDismiss: () => _dismissHowTo(context)))
                     : const SizedBox.shrink(),
               ),
-              // 2) The four core actions — the whole app in one clear row:
-              //    Collect · Redeem · Win · Benefits. Simple and self-explanatory.
-              _shortcuts(),
-              const SizedBox(height: 10),
-              // Quiet link to everything else — keeps Home at four icons.
+              // 4) Quick games — daily fun right on Home.
+              _games(context),
+              const SizedBox(height: 20),
+              // 5) Matchday context — the one contextual zone (matchday only).
+              ValueListenableBuilder<bool>(
+                valueListenable: matchdayNotifier,
+                builder: (context, md, __) => md ? _matchdayZone(context) : const SizedBox.shrink(),
+              ),
+              // 6) Membership — value tied to the loop (lots + monthly points).
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _MembershipCard(onTap: () => _push(context, const FanPlusScreen()))),
+              const SizedBox(height: 18),
+              // Quiet link to everything else.
               Center(
                 child: GestureDetector(
                   onTap: () => _push(context, const _MoreScreen()),
@@ -122,15 +141,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
-              // 3) Matchday context — the one contextual zone (matchday only).
-              ValueListenableBuilder<bool>(
-                valueListenable: matchdayNotifier,
-                builder: (context, md, __) => md ? _matchdayZone(context) : const SizedBox.shrink(),
-              ),
-              // 5) Membership — value tied to the loop (lots + monthly points).
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _MembershipCard(onTap: () => _push(context, const FanPlusScreen()))),
-              const SizedBox(height: 22),
+              const SizedBox(height: 8),
             ],
           ],
         ),
@@ -172,24 +183,48 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     ]);
   }
 
-  // The four core actions, in the fan's own mental order:
-  // Collect points → Redeem them → Win (Tombola) → Benefits (sponsor % + codes).
-  Widget _shortcuts() {
-    final items = <(String, String, IconData, Color, Widget)>[
-      ('Collect', 'img_challenges', Icons.bolt_rounded, const Color(0xFF1B7A3D), const EarnPointsScreen()),
-      ('Redeem', 'img_rewards', Icons.card_giftcard_rounded, const Color(0xFF0A2A5E), const RedeemScreen()),
-      ('Prizes', 'img_raffles', Icons.emoji_events_rounded, const Color(0xFF6A1B9A), const RafflesScreen()),
-      ('Deals %', 'img_partner', Icons.percent_rounded, const Color(0xFFEF6C00), const DealsHubScreen()),
+  // The four core actions as round icons under the balance (Socios-style),
+  // in the fan's mental order: Collect → Redeem → Win → Benefits.
+  Widget _roundActions() {
+    final items = <(String, IconData, Color, Widget)>[
+      ('Earn', Icons.bolt_rounded, const Color(0xFF1B7A3D), const EarnPointsScreen()),
+      ('Redeem', Icons.card_giftcard_rounded, const Color(0xFF0A2A5E), const RedeemScreen()),
+      ('Prizes', Icons.emoji_events_rounded, const Color(0xFF6A1B9A), const RafflesScreen()),
+      ('Deals %', Icons.percent_rounded, const Color(0xFFEF6C00), const DealsHubScreen()),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        for (var i = 0; i < items.length; i++) ...[
-          if (i > 0) const SizedBox(width: 12),
-          Expanded(child: HomeImageTile(label: items[i].$1, image: items[i].$2, icon: items[i].$3, color: items[i].$4, height: 88, onTap: () => _push(context, items[i].$5))),
-        ],
+        for (var i = 0; i < items.length; i++)
+          Expanded(child: _RoundNav(label: tr(items[i].$1), icon: items[i].$2, color: items[i].$3, onTap: () => _push(context, items[i].$4))),
       ]),
     );
+  }
+
+  // Quick games section — daily fun right on Home.
+  Widget _games(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: SectionHeader('Quick games', action: null)),
+      const SizedBox(height: 12),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(children: [
+          Expanded(child: _GameCard(icon: Icons.casino_rounded, label: tr('Daily Spin'), sub: tr('Spin to win points'), gradient: const [Color(0xFF6A1B9A), Color(0xFF311B92)], onTap: () => showDailySpin(context))),
+          const SizedBox(width: 12),
+          Expanded(child: _GameCard(icon: Icons.style_rounded, label: tr('Scratch Card'), sub: tr('Scratch & reveal'), gradient: const [Color(0xFFB8860B), Color(0xFF7A5901)], onTap: () => showScratchCard(context))),
+        ]),
+      ),
+    ]);
+  }
+
+  void _dismissHowTo(BuildContext context) async {
+    final ok = await showConfirmDialog(
+      context,
+      title: 'Hide this?',
+      message: 'You can always find “How Fan+ works” again on the Points tab.',
+      confirmLabel: 'Hide',
+    );
+    if (ok) howToNotifier.value = false;
   }
 
   Widget _header() {
@@ -388,6 +423,100 @@ class _MembershipCard extends StatelessWidget {
   }
 }
 
+/// Round core-action button under the balance (Socios-style): a coloured circle
+/// with a white icon and a small label.
+class _RoundNav extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  const _RoundNav({required this.label, required this.icon, required this.color, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.92,
+      onTap: onTap,
+      child: Column(children: [
+        Container(
+          width: 56, height: 56,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle, boxShadow: [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))]),
+          child: Icon(icon, color: Colors.white, size: 26),
+        ),
+        const SizedBox(height: 7),
+        Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(fontSize: 12, fontWeight: FontWeight.w700)),
+      ]),
+    );
+  }
+}
+
+/// A game card (spin / scratch) for the Home quick-games row.
+class _GameCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String sub;
+  final List<Color> gradient;
+  final VoidCallback onTap;
+  const _GameCard({required this.icon, required this.label, required this.sub, required this.gradient, required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        height: 112,
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(width: 40, height: 40, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.gold, size: 22)),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(label, style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+            Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Dismissible "How Fan+ works" explainer for Home (three steps). The X asks for
+/// confirmation so a fan can't lose it by accident.
+class _HowItWorksCard extends StatelessWidget {
+  final VoidCallback onDismiss;
+  const _HowItWorksCard({required this.onDismiss});
+  @override
+  Widget build(BuildContext context) {
+    final steps = <(IconData, Color, String, String)>[
+      (Icons.add_circle_outline_rounded, AppColors.brandPrimary, 'Earn points', 'On tickets, shop, games & check-ins'),
+      (Icons.card_giftcard_rounded, const Color(0xFF6A1B9A), 'Redeem for vouchers', 'Swap points for real club & sponsor vouchers'),
+      (Icons.emoji_events_rounded, const Color(0xFFC62828), 'Win experiences', 'Enter tombolas & unlock VIP moments'),
+    ];
+    return SurfaceCard(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(child: Text(tr('How Fan+ works'), style: AppText.label2.copyWith(color: AppColors.textDarker))),
+          GestureDetector(
+            onTap: onDismiss,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(padding: const EdgeInsets.only(left: 8), child: Icon(Icons.close_rounded, size: 20, color: AppColors.textLight)),
+          ),
+        ]),
+        const SizedBox(height: 12),
+        for (var i = 0; i < steps.length; i++) ...[
+          if (i > 0) const SizedBox(height: 14),
+          Row(children: [
+            Container(width: 34, height: 34, decoration: BoxDecoration(color: steps[i].$2.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)), child: Icon(steps[i].$1, color: steps[i].$2, size: 18)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(steps[i].$3), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              Text(tr(steps[i].$4), style: AppText.body3Regular),
+            ])),
+          ]),
+        ],
+      ]),
+    );
+  }
+}
+
 /// Loading placeholder for the Home tab.
 class _HomeSkeleton extends StatelessWidget {
   const _HomeSkeleton();
@@ -465,10 +594,13 @@ class _PointsCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.keyboard_double_arrow_down_rounded, size: 14, color: Colors.white),
+                          const Icon(Icons.workspace_premium_rounded, size: 14, color: AppColors.gold),
                           const SizedBox(width: 4),
-                          Text(tr('Schalker'),
-                              style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 11)),
+                          ValueListenableBuilder<String>(
+                            valueListenable: tierNotifier,
+                            builder: (context, tier, __) => Text(tr(tier),
+                                style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 11)),
+                          ),
                           const SizedBox(width: 4),
                           const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
                         ],
