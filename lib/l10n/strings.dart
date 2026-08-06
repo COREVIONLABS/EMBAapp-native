@@ -1533,4 +1533,15 @@ const Map<String, String> _de = {
   '20% off': '20% Rabatt',
   '5% off': '5% Rabatt',
   'View drop': 'Drop ansehen',
+
+  // ── Experiences as tombola prizes ──────────────────────────
+  'Enter tombola to win': 'An der Tombola teilnehmen',
+  'Tombola prize': 'Tombola-Preis',
+  'Money-can\'t-buy — won in the tombola': 'Unbezahlbar — in der Tombola gewinnen',
+  'Money-can\'t-buy — win in the tombola': 'Unbezahlbar — in der Tombola gewinnen',
+  'Enter the monthly draw with lots for your chance.': 'Mit Losen an der monatlichen Verlosung teilnehmen.',
+  'Top prizes': 'Top-Preise',
+  'More prizes': 'Weitere Preise',
+  'An exclusive, money-can\'t-buy FC Schalke 04 experience. You can\'t buy it with points — enter the monthly tombola with lots for your chance to win it.':
+      'Ein exklusives, unbezahlbares FC-Schalke-04-Erlebnis. Mit Punkten nicht kaufbar — nimm mit Losen an der monatlichen Tombola teil und gewinne es.',
 };

@@ -373,14 +373,16 @@ class _MoreScreen extends StatelessWidget {
   const _MoreScreen();
   @override
   Widget build(BuildContext context) {
+    // One calm brand tint across the whole list (was a rainbow of 7 colours).
+    const c = AppColors.brandPrimary;
     final items = <(IconData, String, String, Color, Widget)>[
-      (Icons.confirmation_number_rounded, 'Tickets', 'Matchday & presale access', const Color(0xFF1565C0), const TicketsScreen()),
-      (Icons.storefront_rounded, 'Fanshop', 'Jerseys, scarves & more', const Color(0xFF0A2A5E), const FanshopScreen()),
-      (Icons.stadium_rounded, 'Experiences', 'Stadium tours, VIP & players', const Color(0xFF6A1B9A), const ExperiencesScreen()),
-      (Icons.newspaper_rounded, 'Club News', 'Latest from S04', const Color(0xFF3949AB), const ClubNewsScreen()),
-      (Icons.play_circle_outline_rounded, 'Exclusive Content', 'Members-only clips', const Color(0xFFC62828), const ExclusiveContentScreen()),
-      (Icons.leaderboard_rounded, 'Leaderboard', 'Your rank this season', const Color(0xFF1565C0), const LeaderboardScreen()),
-      (Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', const Color(0xFF00897B), const CollectionScreen()),
+      (Icons.confirmation_number_rounded, 'Tickets', 'Matchday & presale access', c, const TicketsScreen()),
+      (Icons.storefront_rounded, 'Fanshop', 'Jerseys, scarves & more', c, const FanshopScreen()),
+      (Icons.stadium_rounded, 'Experiences', 'Money-can\'t-buy — win in the tombola', c, const ExperiencesScreen()),
+      (Icons.newspaper_rounded, 'Club News', 'Latest from S04', c, const ClubNewsScreen()),
+      (Icons.play_circle_outline_rounded, 'Exclusive Content', 'Members-only clips', c, const ExclusiveContentScreen()),
+      (Icons.leaderboard_rounded, 'Leaderboard', 'Your rank this season', c, const LeaderboardScreen()),
+      (Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', c, const CollectionScreen()),
     ];
     return SubScaffold(
       title: tr('More'),

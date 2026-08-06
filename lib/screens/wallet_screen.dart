@@ -93,13 +93,13 @@ class WalletScreen extends StatelessWidget {
         AnimatedBuilder(
           animation: voucherStore,
           builder: (context, _) => Column(children: [
-            _row(context, Icons.confirmation_number_rounded, 'My Tickets', '2 upcoming · tap to show QR', const Color(0xFF1565C0), const MyTicketsScreen()),
+            _row(context, Icons.confirmation_number_rounded, 'My Tickets', '2 upcoming · tap to show QR', AppColors.brandPrimary, const MyTicketsScreen()),
             const SizedBox(height: 10),
-            _row(context, Icons.card_giftcard_rounded, 'My Vouchers', voucherStore.openCount > 0 ? '${voucherStore.openCount} ${tr('ready to redeem')}' : 'Codes to show in the shop', const Color(0xFF6A1B9A), const MyVouchersScreen(), badge: voucherStore.openCount),
+            _row(context, Icons.card_giftcard_rounded, 'My Vouchers', voucherStore.openCount > 0 ? '${voucherStore.openCount} ${tr('ready to redeem')}' : 'Codes to show in the shop', AppColors.brandPrimary, const MyVouchersScreen(), badge: voucherStore.openCount),
             const SizedBox(height: 10),
-            _row(context, Icons.event_available_rounded, 'My Bookings', 'Experiences you reserved', const Color(0xFF00897B), const MyBookingsScreen()),
+            _row(context, Icons.event_available_rounded, 'My Bookings', 'Experiences you reserved', AppColors.brandPrimary, const MyBookingsScreen()),
             const SizedBox(height: 10),
-            _row(context, Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', const Color(0xFFC62828), const CollectionScreen()),
+            _row(context, Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', AppColors.brandPrimary, const CollectionScreen()),
           ]),
         ),
       ],

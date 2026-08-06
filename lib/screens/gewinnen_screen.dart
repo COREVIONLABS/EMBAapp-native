@@ -39,22 +39,22 @@ class GewinnenScreen extends StatelessWidget {
             Row(children: [
               Text(tr('Your daily chance'), style: AppText.label1),
               const Spacer(),
-              Pill(color: const Color(0x1AEF6C00), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                const Icon(Icons.local_fire_department_rounded, size: 13, color: Color(0xFFEF6C00)),
+              Pill(color: AppColors.brandLightest, child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.local_fire_department_rounded, size: 13, color: AppColors.brandPrimary),
                 const SizedBox(width: 3),
-                Text('${dailyGames.streakDays} ${tr('day streak')}', style: AppText.caption1.copyWith(color: const Color(0xFFEF6C00), fontWeight: FontWeight.w800)),
+                Text('${dailyGames.streakDays} ${tr('day streak')}', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
               ])),
             ]),
             const SizedBox(height: 12),
             Row(children: [
               Expanded(child: _DailyGameCard(
-                icon: Icons.casino_rounded, label: tr('Daily Spin'), gradient: const [Color(0xFF6A1B9A), Color(0xFF311B92)],
+                icon: Icons.casino_rounded, label: tr('Daily Spin'),
                 done: dailyGames.spinDone,
                 onPlay: () { dailyGames.playSpin(); showDailySpin(context); },
               )),
               const SizedBox(width: 12),
               Expanded(child: _DailyGameCard(
-                icon: Icons.style_rounded, label: tr('Scratch Card'), gradient: const [Color(0xFFB8860B), Color(0xFF7A5901)],
+                icon: Icons.style_rounded, label: tr('Scratch Card'),
                 done: dailyGames.scratchDone,
                 onPlay: () { dailyGames.playScratch(); showScratchCard(context); },
               )),
@@ -77,7 +77,7 @@ class GewinnenScreen extends StatelessWidget {
               ])),
               Tappable(
                 onTap: () => _push(context, const BuyPointsScreen()),
-                child: Pill(color: AppColors.surface, child: Text(tr('Buy lots'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+                child: Pill(color: AppColors.surface, child: Text(tr('Top up points'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
               ),
             ]),
             const SizedBox(height: 10),
@@ -187,13 +187,13 @@ class GewinnenScreen extends StatelessWidget {
 }
 
 /// A daily game card that flips to a "done today, come back tomorrow" state.
+/// Calm, brand-consistent surface card (was a loud purple/gold gradient).
 class _DailyGameCard extends StatelessWidget {
   final IconData icon;
   final String label;
-  final List<Color> gradient;
   final bool done;
   final VoidCallback onPlay;
-  const _DailyGameCard({required this.icon, required this.label, required this.gradient, required this.done, required this.onPlay});
+  const _DailyGameCard({required this.icon, required this.label, required this.done, required this.onPlay});
 
   @override
   Widget build(BuildContext context) {
@@ -217,12 +217,15 @@ class _DailyGameCard extends StatelessWidget {
       child: Container(
         height: 128,
         padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: gradient), borderRadius: BorderRadius.circular(AppRadii.card)),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(width: 40, height: 40, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.gold, size: 22)),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: AppColors.brandPrimary, size: 22)),
+            Container(width: 26, height: 26, decoration: const BoxDecoration(color: AppColors.brandPrimary, shape: BoxShape.circle), child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 17)),
+          ]),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(tr(label), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
-            Text(tr('Free once a day'), style: AppText.body3.copyWith(color: Colors.white70)),
+            Text(tr(label), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+            Text(tr('Free once a day'), style: AppText.body3Regular),
           ]),
         ]),
       ),

@@ -111,7 +111,7 @@ class _RafflesScreenState extends State<RafflesScreen> {
             ])),
             Tappable(
               onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BuyPointsScreen())),
-              child: Pill(color: AppColors.surface, child: Text(tr('Buy lots'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+              child: Pill(color: AppColors.surface, child: Text(tr('Top up points'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
             ),
           ]),
         ),

@@ -15,12 +15,12 @@ class AllBenefitsScreen extends StatelessWidget {
   // (label, icon, badge, colour)
   static const _perks = [
     ('Fanshop', Icons.checkroom_rounded, '15% off', Color(0xFF0A2A5E)),
-    ('Tickets', Icons.confirmation_number_rounded, '10% off', Color(0xFF1565C0)),
+    ('Tickets', Icons.confirmation_number_rounded, '10% off', AppColors.brandPrimary),
     ('Food & Drink', Icons.fastfood_rounded, '10% off', Color(0xFFE65100)),
-    ('Sponsors', Icons.storefront_rounded, 'Voucher', Color(0xFF00897B)),
-    ('Experiences', Icons.stadium_rounded, 'VIP', Color(0xFF6A1B9A)),
+    ('Sponsors', Icons.storefront_rounded, 'Voucher', AppColors.brandPrimary),
+    ('Experiences', Icons.stadium_rounded, 'VIP', AppColors.brandPrimary),
     ('Content', Icons.play_circle_fill_rounded, 'Free', Color(0xFFC2185B)),
-    ('Extra Raffle Tickets', Icons.local_activity_rounded, '+3', Color(0xFFC62828)),
+    ('Extra Raffle Tickets', Icons.local_activity_rounded, '+3', AppColors.brandPrimary),
     ('Top up points', Icons.add_rounded, 'Bonus', Color(0xFF2E7D32)),
   ];
 

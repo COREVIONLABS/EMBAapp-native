@@ -21,11 +21,11 @@ class EarnPointsScreen extends StatelessWidget {
 
   // Ways to earn: (icon, title, subtitle, reward pill, colour)
   static const _ways = <(IconData, String, String, String, Color)>[
-    (Icons.confirmation_number_outlined, 'Attend a Match', 'Check in at the stadium', '+100', Color(0xFF1565C0)),
+    (Icons.confirmation_number_outlined, 'Attend a Match', 'Check in at the stadium', '+100', AppColors.brandPrimary),
     (Icons.shopping_bag_outlined, 'Fanshop Purchase', 'Earn on every order', '1 / €1', Color(0xFF0A2A5E)),
     (Icons.play_circle_outline_rounded, 'Watch a Short Ad', 'A quick sponsor clip', '+15', Color(0xFFE65100)),
-    (Icons.share_outlined, 'Share on Social', 'Spread the blue & white', '+25', Color(0xFF00897B)),
-    (Icons.person_outline_rounded, 'Complete Profile', 'One-off — takes a minute', '+50', Color(0xFF6A1B9A)),
+    (Icons.share_outlined, 'Share on Social', 'Spread the blue & white', '+25', AppColors.brandPrimary),
+    (Icons.person_outline_rounded, 'Complete Profile', 'One-off — takes a minute', '+50', AppColors.brandPrimary),
   ];
 
   // Active challenges: (icon, title, sub, progress, reward)
@@ -55,10 +55,10 @@ class EarnPointsScreen extends StatelessWidget {
             Row(children: [
               Text(tr('This week'), style: AppText.body2.copyWith(color: AppColors.textLight)),
               const Spacer(),
-              Pill(color: const Color(0x1AEF6C00), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                const Icon(Icons.local_fire_department_rounded, size: 13, color: Color(0xFFEF6C00)),
+              Pill(color: AppColors.brandLightest, child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.local_fire_department_rounded, size: 13, color: AppColors.brandPrimary),
                 const SizedBox(width: 3),
-                Text(tr('5-day streak'), style: AppText.caption1.copyWith(color: const Color(0xFFEF6C00), fontWeight: FontWeight.w800)),
+                Text(tr('5-day streak'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
               ])),
             ]),
             const SizedBox(height: 12),
@@ -115,9 +115,9 @@ class EarnPointsScreen extends StatelessWidget {
           Expanded(child: _DailyAction(icon: Icons.event_available_rounded, label: tr('Check-in'), reward: '+10', color: const Color(0xFF2E7D32),
               onTap: () => showSuccessSheet(context, title: 'Checked in!', message: '+10 points added — come back tomorrow to keep your streak.'))),
           const SizedBox(width: 10),
-          Expanded(child: _DailyAction(icon: Icons.casino_rounded, label: tr('Spin'), reward: tr('Play'), color: const Color(0xFF6A1B9A), onTap: () => showDailySpin(context))),
+          Expanded(child: _DailyAction(icon: Icons.casino_rounded, label: tr('Spin'), reward: tr('Play'), color: AppColors.brandPrimary, onTap: () => showDailySpin(context))),
           const SizedBox(width: 10),
-          Expanded(child: _DailyAction(icon: Icons.style_rounded, label: tr('Scratch'), reward: tr('Play'), color: const Color(0xFFB8860B), onTap: () => showScratchCard(context))),
+          Expanded(child: _DailyAction(icon: Icons.style_rounded, label: tr('Scratch'), reward: tr('Play'), color: AppColors.brandPrimary, onTap: () => showScratchCard(context))),
           const SizedBox(width: 10),
           Expanded(child: _DailyAction(icon: Icons.sports_soccer_rounded, label: tr('Predict'), reward: '+50', color: const Color(0xFF1B7A3D), onTap: () => _push(context, const PredictionsScreen()))),
         ]),
