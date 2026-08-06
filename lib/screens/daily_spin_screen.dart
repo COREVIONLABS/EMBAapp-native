@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// Presents Daily Spin as a modal sheet over the current screen (Figma 2145:8385).
@@ -26,13 +27,32 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
   late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 3400));
   Animation<double> _anim = const AlwaysStoppedAnimation(0);
   bool _spun = false;
+  int _reward = 0;
 
-  static const _labels = ['Signed Jersey', '50 Points', 'Extra Spin', '100 Points', '25 Tickets', '25 Points', '20 Points', '30 Points'];
+  // Points-only wheel (no fake "Extra Spin / 25 Tickets" units). Weighted so
+  // small wins are common and the jackpot is rare.
+  static const _values = [20, 25, 30, 50, 75, 100, 150, 250];
+  static const _labels = ['20 Points', '25 Points', '30 Points', '50 Points', '75 Points', '100 Points', '150 Points', '250 Points'];
+  static const _weights = [26, 22, 18, 14, 9, 6, 3, 2]; // sums to 100
+
+  int _rollReward() {
+    var r = math.Random().nextInt(100);
+    for (var i = 0; i < _weights.length; i++) {
+      if (r < _weights[i]) return _values[i];
+      r -= _weights[i];
+    }
+    return _values.first;
+  }
 
   void _spin() {
     if (_c.isAnimating || _spun) return;
-    _anim = Tween<double>(begin: 0, end: 6 * 2 * math.pi + math.pi / 3).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
-    _c.forward(from: 0).whenComplete(() => setState(() => _spun = true));
+    final extra = math.Random().nextDouble() * 2 * math.pi; // vary where it stops
+    _anim = Tween<double>(begin: 0, end: 6 * 2 * math.pi + extra).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
+    _c.forward(from: 0).whenComplete(() {
+      final reward = _rollReward();
+      FanModel.addPoints(reward); // credit the balance for real
+      if (mounted) setState(() { _reward = reward; _spun = true; });
+    });
     setState(() {});
   }
 
@@ -114,7 +134,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                         const Icon(Icons.celebration_rounded, color: AppColors.success),
                         const SizedBox(width: 10),
-                        Text(tr('You won 100 Points!'), style: AppText.label2.copyWith(color: AppColors.success)),
+                        Text('${tr('You won')} +$_reward ${tr('points')}!', style: AppText.label2.copyWith(color: AppColors.success)),
                       ]),
                     )
                   else

@@ -588,10 +588,15 @@ class _PointsHeader extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 14),
-      // Big, clean, centred balance — no icon, medium weight.
-      Text(FanModel.pointsFormatted, textAlign: TextAlign.center, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 54, fontWeight: FontWeight.w600, letterSpacing: -1)),
-      const SizedBox(height: 6),
-      Text(tr('S04 Fan Points'), style: AppText.body3.copyWith(color: AppColors.textLight)),
+      // Big, clean, centred balance — live, with its €-reward value.
+      ValueListenableBuilder<int>(
+        valueListenable: pointsNotifier,
+        builder: (context, _, __) => Column(children: [
+          Text(FanModel.pointsFormatted, textAlign: TextAlign.center, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 54, fontWeight: FontWeight.w600, letterSpacing: -1)),
+          const SizedBox(height: 6),
+          Text('${tr('S04 Fan Points')} · ${tr('≈')} ${FanModel.balanceEuro} ${tr('in rewards')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+        ]),
+      ),
     ]);
   }
 }

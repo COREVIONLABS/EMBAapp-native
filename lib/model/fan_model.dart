@@ -10,8 +10,24 @@ class FanTier {
 }
 
 class FanModel {
-  static const int fanPoints = 4820;
-  static const int raffleTickets = 3;
+  /// Live points balance (prototype state). Reading stays `FanModel.fanPoints`
+  /// everywhere; the value is now mutable so redeeming actually debits it and
+  /// games/earn credit it. Balance displays listen to [pointsNotifier].
+  static int get fanPoints => pointsNotifier.value;
+  static int get raffleTickets => lotsNotifier.value;
+
+  /// Spend points if the balance covers it; returns false if not enough.
+  static bool spendPoints(int amount) {
+    if (amount <= 0) return true;
+    if (pointsNotifier.value < amount) return false;
+    pointsNotifier.value -= amount;
+    return true;
+  }
+
+  /// Credit points (games, earn, monthly bonus).
+  static void addPoints(int amount) {
+    if (amount > 0) pointsNotifier.value += amount;
+  }
 
   /// Points earned in the *current season only* — the metric behind the
   /// "Road to Gold" season journey. Kept separate from [fanPoints] (the
@@ -85,14 +101,16 @@ class FanModel {
     return b.toString();
   }
 
-  /// Product catalogue for the Fanshop (Figma 2162:6193).
+  /// Product catalogue for the Fanshop (Figma 2162:6193). Points are priced at
+  /// the single app-wide rate: 100 points = €1 (points == price × 100), so the
+  /// Fanshop, value vouchers and Fan+ all speak the same currency.
   static const products = [
-    FanProduct('Home Jersey 25/26', 89.99, 4500, 'Jerseys', Color(0xFF0A2A5E), imageKey: 'product_home_jersey'),
-    FanProduct('Away Jersey 25/26', 89.99, 4500, 'Jerseys', Color(0xFFEDEFF3), imageKey: 'product_away_jersey'),
-    FanProduct('Windbreaker', 24.99, 1200, 'Jackets', Color(0xFF0A2A5E), imageKey: 'product_windbreaker'),
-    FanProduct('Kapuzen-Jacke', 49.99, 2800, 'Jackets', Color(0xFFEDEFF3), imageKey: 'product_kapuzenjacke'),
-    FanProduct('Home Scarf 25/26', 19.99, 900, 'Scarves', Color(0xFF0A2A5E)),
-    FanProduct('Cap Royal Blue', 22.99, 1100, 'Accessories', Color(0xFF002F63)),
+    FanProduct('Home Jersey 25/26', 89.99, 8999, 'Jerseys', Color(0xFF0A2A5E), imageKey: 'product_home_jersey'),
+    FanProduct('Away Jersey 25/26', 89.99, 8999, 'Jerseys', Color(0xFFEDEFF3), imageKey: 'product_away_jersey'),
+    FanProduct('Windbreaker', 24.99, 2499, 'Jackets', Color(0xFF0A2A5E), imageKey: 'product_windbreaker'),
+    FanProduct('Kapuzen-Jacke', 49.99, 4999, 'Jackets', Color(0xFFEDEFF3), imageKey: 'product_kapuzenjacke'),
+    FanProduct('Home Scarf 25/26', 19.99, 1999, 'Scarves', Color(0xFF0A2A5E)),
+    FanProduct('Cap Royal Blue', 22.99, 2299, 'Accessories', Color(0xFF002F63)),
   ];
 }
 
@@ -108,10 +126,17 @@ const Map<String, MembershipPerks> kMembershipPerks = {
   'Free Fan': MembershipPerks(0, 0),
   'Fan Member': MembershipPerks(3, 500),
   'Super Fan': MembershipPerks(8, 1200),
-  'Ultra': MembershipPerks(20, 3000),
 };
 
 MembershipPerks perksFor(String tier) => kMembershipPerks[tier] ?? const MembershipPerks(0, 0);
+
+/// Live points balance + tombola-lot balance (prototype state). Made live so
+/// the whole app tells one honest story: redeeming a voucher or entering the
+/// tombola debits points; playing a daily game credits them; using a lot
+/// decrements the lot count. Balance/lot displays wrap these in a
+/// ValueListenableBuilder so they update instantly.
+final ValueNotifier<int> pointsNotifier = ValueNotifier<int>(4820);
+final ValueNotifier<int> lotsNotifier = ValueNotifier<int>(8);
 
 /// Live-selected membership tier (prototype state). Set when a fan "becomes" a
 /// tier on the Membership screen; the Home membership chip and the Fan+ hub

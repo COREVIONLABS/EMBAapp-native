@@ -30,6 +30,18 @@ class _FanPlusPayScreenState extends State<FanPlusPayScreen> {
     return SubScaffold(
       title: tr('Fan+ Pay'),
       children: [
+        // Preview framing — this is a Season-2 roadmap concept; every figure here
+        // is illustrative, not a real financial statement.
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+          child: Row(children: [
+            Icon(Icons.info_outline_rounded, size: 15, color: AppColors.brandPrimary),
+            const SizedBox(width: 8),
+            Expanded(child: Text(tr('Preview · Season 2 concept — figures shown are illustrative.'), style: AppText.caption1.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w700))),
+          ]),
+        ),
+        const SizedBox(height: 14),
         // ── Choose how you earn: new card vs link your own ──
         _ModeToggle(mode: _mode, onChanged: (m) => setState(() => _mode = m)),
         const SizedBox(height: 14),
@@ -225,7 +237,7 @@ class _PayCard extends StatelessWidget {
               Text(tr('MAX MUSTERMANN'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
             ]),
             const Spacer(),
-            Text('VISA', style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic)),
+            Text('Mastercard', style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900, fontStyle: FontStyle.italic)),
           ]),
         ]),
       ),

@@ -1534,6 +1534,16 @@ const Map<String, String> _de = {
   '5% off': '5% Rabatt',
   'View drop': 'Drop ansehen',
 
+  // ── Live points economy (debit/credit, €-value) ────────────
+  'This costs': 'Das kostet',
+  'you have': 'du hast',
+  'Earn or top up to unlock it.': 'Verdiene oder lade auf, um es freizuschalten.',
+  '≈': '≈',
+  'in rewards': 'in Prämien',
+  'You won': 'Du hast gewonnen',
+  'Preview · Season 2 concept — figures shown are illustrative.': 'Vorschau · Saison-2-Konzept — gezeigte Zahlen sind illustrativ.',
+  'Branded Fan+ Pay card (from Season 2)': 'Gebrandete Fan+ Pay Karte (ab Saison 2)',
+
   // ── Prizes hero ────────────────────────────────────────────
   'Play & win': 'Spielen & gewinnen',
   'Your daily games and the monthly tombola.': 'Deine täglichen Spiele und die monatliche Tombola.',

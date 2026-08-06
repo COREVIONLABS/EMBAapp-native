@@ -84,7 +84,10 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             const Icon(Icons.hexagon_rounded, size: 14, color: AppColors.brandPrimary),
             const SizedBox(width: 5),
-            Text(FanModel.pointsFormatted, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+            ValueListenableBuilder<int>(
+              valueListenable: pointsNotifier,
+              builder: (_, __, ___) => Text(FanModel.pointsFormatted, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+            ),
           ]),
         ),
       ]),
@@ -158,7 +161,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           'Best seats first + matchday upgrades',
           'Monthly exclusive FOMO drop',
           'Exclusive content & locker-room clips',
-          'Branded VISA fan card (from Season 2)',
+          'Branded Fan+ Pay card (from Season 2)',
         ])
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),

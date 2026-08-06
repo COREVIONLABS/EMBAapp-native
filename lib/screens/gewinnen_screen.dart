@@ -41,13 +41,16 @@ class GewinnenScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(tr('Your daily games and the monthly tombola.'), style: AppText.body3.copyWith(color: Colors.white70)),
             const SizedBox(height: 14),
-            Row(children: [
-              const Icon(Icons.hexagon_rounded, size: 18, color: AppColors.gold),
-              const SizedBox(width: 6),
-              Text(FanModel.pointsFormatted, style: AppText.h4.copyWith(color: Colors.white, fontSize: 26)),
-              const SizedBox(width: 6),
-              Padding(padding: const EdgeInsets.only(top: 4), child: Text(tr('points'), style: AppText.body3.copyWith(color: Colors.white70))),
-            ]),
+            ValueListenableBuilder<int>(
+              valueListenable: pointsNotifier,
+              builder: (context, _, __) => Row(children: [
+                const Icon(Icons.hexagon_rounded, size: 18, color: AppColors.gold),
+                const SizedBox(width: 6),
+                Text(FanModel.pointsFormatted, style: AppText.h4.copyWith(color: Colors.white, fontSize: 26)),
+                const SizedBox(width: 6),
+                Padding(padding: const EdgeInsets.only(top: 4), child: Text('${tr('points')} · ${tr('≈')} ${FanModel.balanceEuro}', style: AppText.body3.copyWith(color: Colors.white70))),
+              ]),
+            ),
           ]),
         ),
         Container(

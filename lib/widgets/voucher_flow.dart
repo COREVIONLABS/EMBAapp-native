@@ -16,13 +16,26 @@ Future<void> redeemForVoucher(
   String? sponsor,
   String? detail,
 }) async {
+  // Guard: a paid voucher can only be issued if the balance covers it.
+  if (points > 0 && FanModel.fanPoints < points) {
+    await showConfirmDialog(
+      context,
+      title: 'Not enough points',
+      message: '${tr('This costs')} ${FanModel.fmtPublic(points)} ${tr('points')} · ${tr('you have')} ${FanModel.pointsFormatted}. ${tr('Earn or top up to unlock it.')}',
+      confirmLabel: 'OK',
+    );
+    return;
+  }
   final ok = await showConfirmDialog(
     context,
     title: 'Get this voucher?',
-    message: '${FanModel.fmtPublic(points)} ${tr('points')} · ${tr('redeem in the official shop or at the counter.')}',
+    message: points > 0
+        ? '${FanModel.fmtPublic(points)} ${tr('points')} (${FanModel.euroValue(points)}) · ${tr('redeem in the official shop or at the counter.')}'
+        : tr('redeem in the official shop or at the counter.'),
     confirmLabel: 'Get voucher',
   );
   if (!ok || !context.mounted) return;
+  FanModel.spendPoints(points);
   final v = voucherStore.issue(title: title, category: category, points: points, sponsor: sponsor, detail: detail);
   if (!context.mounted) return;
   await Navigator.of(context).push(MaterialPageRoute(builder: (_) => VoucherScreen.fromIssued(v)));

@@ -35,6 +35,7 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
     return SubScaffold(
       title: tr('Buy Points'),
       bottomBar: PrimaryButton('${tr('Pay')} €${p.$2.toStringAsFixed(2)}${_recurring ? ' / ${tr('mo')}' : ''}', onTap: () async {
+        FanModel.addPoints(total); // credit the balance for real
         await showSuccessSheet(context,
             title: 'Points added',
             message: _recurring
