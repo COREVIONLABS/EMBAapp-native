@@ -1585,6 +1585,13 @@ const Map<String, String> _de = {
   'Cancel subscription': 'Mitgliedschaft kündigen',
   'Cancel in one tap — no phone call, no hoops.': 'Kündigung mit einem Tipp — kein Anruf, keine Hürden.',
 
+  // ── Tombola: lots enter automatically ──────────────────────
+  'Your lots are entered into the next draw automatically — more lots, more chances.': 'Deine Lose kommen automatisch in die nächste Ziehung — mehr Lose, mehr Chancen.',
+  'You\'re automatically in this draw': 'Du bist automatisch dabei',
+  'lots this month': 'Lose diesen Monat',
+  'You\'re automatically in — more lots, more chances.': 'Du bist automatisch dabei — mehr Lose, mehr Chancen.',
+  'Your free lots enter every monthly draw automatically.': 'Deine Freilose sind bei jeder Monatsziehung automatisch dabei.',
+
   // ── Tombola: one unit "lots" (free + extra) ────────────────
   'lots left': 'Lose übrig',
   'free lots enter automatically — more lots, more chances': 'Freilose sind automatisch dabei — mehr Lose, mehr Chancen',
