@@ -9,6 +9,8 @@ import 'earn_points_screen.dart';
 import 'fanshop_screen.dart';
 import 'notifications_screen.dart';
 import 'tickets_screen.dart';
+import 'my_vouchers_screen.dart';
+import 'raffles_screen.dart';
 import 'club_news_screen.dart';
 import 'experiences_screen.dart';
 import 'leaderboard_screen.dart';
@@ -181,17 +183,17 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     ]);
   }
 
-  // Four round shortcuts under the balance (Socios-style). Redeem & Prizes are
-  // already bottom-nav tabs, so Home links to the things that DON'T have a tab:
-  // Earn, Tickets, Fanshop and Deals. One calm brand colour across all four —
-  // the glyph does the distinguishing, not the colour.
+  // Four round shortcuts under the balance (Socios-style). These mirror the
+  // universal voucher/points loop — the SAME for every club, no club-specific
+  // retail (Tickets/Fanshop): Earn points → Vouchers → Discounts → Tombola.
+  // One calm brand colour across all four — the glyph does the distinguishing.
   Widget _roundActions() {
     const c = AppColors.brandPrimary;
     final items = <(String, IconData, Color, VoidCallback)>[
       ('Earn', Icons.bolt_rounded, c, () => _push(context, const EarnPointsScreen())),
-      ('Tickets', Icons.confirmation_number_rounded, c, () => _push(context, const TicketsScreen())),
-      ('Fanshop', Icons.storefront_rounded, c, () => _push(context, const FanshopScreen())),
+      ('Vouchers', Icons.confirmation_number_rounded, c, () => _push(context, const MyVouchersScreen())),
       ('Deals %', Icons.percent_rounded, c, () => _push(context, const DealsHubScreen())),
+      ('Tombola', Icons.local_activity_rounded, c, () => _push(context, const RafflesScreen())),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
