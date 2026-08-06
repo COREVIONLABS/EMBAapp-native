@@ -6,7 +6,7 @@ import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import 'my_tickets_screen.dart';
 import 'my_vouchers_screen.dart';
-import 'my_bookings_screen.dart';
+import 'my_wins_screen.dart';
 import 'collection_screen.dart';
 import 'subscription_screen.dart';
 import 'points_history_screen.dart';
@@ -97,7 +97,7 @@ class WalletScreen extends StatelessWidget {
             const SizedBox(height: 10),
             _row(context, Icons.card_giftcard_rounded, 'My Vouchers', voucherStore.openCount > 0 ? '${voucherStore.openCount} ${tr('ready to redeem')}' : 'Codes to show in the shop', AppColors.brandPrimary, const MyVouchersScreen(), badge: voucherStore.openCount),
             const SizedBox(height: 10),
-            _row(context, Icons.event_available_rounded, 'My Bookings', 'Experiences you reserved', AppColors.brandPrimary, const MyBookingsScreen()),
+            _row(context, Icons.emoji_events_rounded, 'My wins', 'Prizes you\'ve won', AppColors.brandPrimary, const MyWinsScreen()),
             const SizedBox(height: 10),
             _row(context, Icons.grid_view_rounded, 'Collection', 'Player stickers & badges', AppColors.brandPrimary, const CollectionScreen()),
           ]),

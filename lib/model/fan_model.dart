@@ -35,6 +35,12 @@ class FanModel {
   /// journey and the loyalty ladder are clearly two different things.
   static const int seasonPoints = 2140;
 
+  /// Season target for the "Road to Gold" journey, and the derived progress so
+  /// Home and the journey screen never disagree on the percentage.
+  static const int seasonGoal = 9000;
+  static double get seasonProgress => (seasonPoints / seasonGoal).clamp(0.0, 1.0);
+  static int get seasonPercent => (seasonProgress * 100).round();
+
   // Schalke-culture loyalty ladder (ascending).
   static const tiers = [
     FanTier('Nordkurve', 0),

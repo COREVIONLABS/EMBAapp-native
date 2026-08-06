@@ -1544,6 +1544,15 @@ const Map<String, String> _de = {
   'Preview · Season 2 concept — figures shown are illustrative.': 'Vorschau · Saison-2-Konzept — gezeigte Zahlen sind illustrativ.',
   'Branded Fan+ Pay card (from Season 2)': 'Gebrandete Fan+ Pay Karte (ab Saison 2)',
 
+  // ── Batch 4: notifications, predictions, i18n, share ───────
+  'Kickoff vs Dortmund in 2 hours. Predict the score for +50 pts!': 'Anpfiff gegen Dortmund in 2 Stunden. Tippe das Ergebnis für +50 Pkt!',
+  'You have enough points for a Fanshop voucher.': 'Du hast genug Punkte für einen Fanshop-Gutschein.',
+  'Tombola lots are ready — place them for this week\'s draws.': 'Deine Lose sind bereit — setze sie für die Ziehungen dieser Woche ein.',
+  'Past Results': 'Vergangene Ergebnisse',
+  'Earn +50 pts for a correct prediction!': 'Verdiene +50 Pkt für einen richtigen Tipp!',
+  'Share article': 'Artikel teilen',
+  'Deutsch': 'Deutsch',
+
   // ── Fan+ honesty + manage/cancel ───────────────────────────
   'More points, free tombola lots & priority. From €4.99 — Super Fan €9.99.': 'Mehr Punkte, Freilose & Priorität. Ab €4,99 — Super Fan €9,99.',
   'includes': 'enthält',

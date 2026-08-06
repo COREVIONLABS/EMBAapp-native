@@ -76,15 +76,18 @@ class NewsDetailScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                   ],
                   const SizedBox(height: 8),
-                  Row(children: [
-                    Icon(Icons.favorite_border_rounded, size: 20, color: AppColors.textLight),
-                    const SizedBox(width: 6),
-                    Text(tr('248'), style: AppText.body3Regular),
-                    const SizedBox(width: 20),
-                    Icon(Icons.mode_comment_outlined, size: 19, color: AppColors.textLight),
-                    const SizedBox(width: 6),
-                    Text(tr('32'), style: AppText.body3Regular),
-                  ]),
+                  Tappable(
+                    onTap: () => showShareSheet(context, subject: article.title),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+                      decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Icon(Icons.ios_share_rounded, size: 18, color: AppColors.brandPrimary),
+                        const SizedBox(width: 8),
+                        Text(tr('Share article'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+                      ]),
+                    ),
+                  ),
                 ],
               ),
             ),

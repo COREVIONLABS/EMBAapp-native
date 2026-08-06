@@ -3,9 +3,16 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/empty_state.dart';
+import 'predictions_screen.dart';
+import 'points_history_screen.dart';
+import 'redeem_screen.dart';
+import 'raffles_screen.dart';
+import 'daily_spin_screen.dart';
 import '../l10n/strings.dart';
 
 /// Notifications (Figma 385:4892). Clearable — clearing shows the empty state.
+/// Each notification deep-links to where it can be acted on (predict, redeem,
+/// spin, tombola, points history) so an alert is never a dead end.
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
   @override
@@ -13,15 +20,31 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
+  // (title, body, time, icon, unread, route)
   static const _seed = [
-    ('Matchday reminder', 'Kickoff vs Bayern in 2 hours. Predict the score for +50 pts!', 'Now', Icons.sports_soccer_rounded, true),
-    ('You earned points', '+120 Fan Points for your stadium check-in.', '1h ago', Icons.add_circle_outline_rounded, true),
-    ('Reward available', 'You can now redeem the Home Jersey 24/25.', '3h ago', Icons.redeem_rounded, false),
-    ('Daily spin ready', 'Your free spin is waiting — win up to 250 pts.', 'Yesterday', Icons.casino_rounded, false),
-    ('Superfan perk', 'Meet & greet raffle entries are open this week.', '2d ago', Icons.star_rounded, false),
+    ('Matchday reminder', 'Kickoff vs Dortmund in 2 hours. Predict the score for +50 pts!', 'Now', Icons.sports_soccer_rounded, true, 'predict'),
+    ('You earned points', '+120 Fan Points for your stadium check-in.', '1h ago', Icons.add_circle_outline_rounded, true, 'points'),
+    ('Reward available', 'You have enough points for a Fanshop voucher.', '3h ago', Icons.redeem_rounded, false, 'redeem'),
+    ('Daily spin ready', 'Your free spin is waiting — win up to 250 pts.', 'Yesterday', Icons.casino_rounded, false, 'spin'),
+    ('Superfan perk', 'Tombola lots are ready — place them for this week\'s draws.', '2d ago', Icons.star_rounded, false, 'tombola'),
   ];
 
-  late List<(String, String, String, IconData, bool)> _items = List.of(_seed);
+  late List<(String, String, String, IconData, bool, String)> _items = List.of(_seed);
+
+  void _open(String route) {
+    switch (route) {
+      case 'predict':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PredictionsScreen()));
+      case 'points':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PointsHistoryScreen()));
+      case 'redeem':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RedeemScreen()));
+      case 'spin':
+        showDailySpin(context);
+      case 'tombola':
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RafflesScreen()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +79,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             child: SurfaceCard(
               color: n.$5 ? AppColors.brandLightest : AppColors.surface,
               border: Border.all(color: n.$5 ? AppColors.brandLightest : AppColors.borderLightest),
+              onTap: () => _open(n.$6),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -81,6 +105,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
                 ],
               ),
             ),

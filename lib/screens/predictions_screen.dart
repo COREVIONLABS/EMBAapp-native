@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../widgets/action_sheets.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 class _Match {
@@ -12,9 +14,9 @@ class _Match {
 }
 
 const _upcoming = [
-  _Match('HSV', Color(0xFF9C27B0), 'Sat. 12 Apr · 15:30 · Veltins-Arena'),
-  _Match('Nürnberg', Color(0xFF2E7D32), 'Sat. 19 Apr · 15:30 · Veltins-Arena'),
-  _Match('Köln', Color(0xFFE64A19), 'Sat. 26 Apr · 15:30 · Veltins-Arena'),
+  _Match('Dortmund', Color(0xFF1A1A1A), 'Sat. 12 Apr · 15:30 · Veltins-Arena'),
+  _Match('Nürnberg', Color(0xFF002F63), 'Sat. 19 Apr · 15:30 · Veltins-Arena'),
+  _Match('Köln', Color(0xFF002F63), 'Sat. 26 Apr · 15:30 · Veltins-Arena'),
 ];
 
 /// Predictions (Figma 2145:13125) — Upcoming / Past Results.
@@ -46,7 +48,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
                         color: i == _seg ? AppColors.surface : Colors.transparent,
                         borderRadius: BorderRadius.circular(AppRadii.pill),
                       ),
-                      child: Center(child: Text(i == 0 ? 'Upcoming' : 'Past Results', style: AppText.body2.copyWith(color: i == _seg ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700))),
+                      child: Center(child: Text(i == 0 ? tr('Upcoming') : tr('Past Results'), style: AppText.body2.copyWith(color: i == _seg ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700))),
                     ),
                   ),
                 ),
@@ -61,7 +63,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
             child: Row(children: [
               const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 10),
-              Text(tr('Earn up to +75 pts for correct prediction!'), style: AppText.body2.copyWith(color: AppColors.onAccent)),
+              Text(tr('Earn +50 pts for a correct prediction!'), style: AppText.body2.copyWith(color: AppColors.onAccent)),
             ]),
           ),
           const SizedBox(height: 16),
@@ -173,9 +175,12 @@ class _PredictScoreScreenState extends State<PredictScoreScreen> {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Predict Score'),
-      bottomBar: PrimaryButton(tr('Submit Prediction'), onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Predicted Schalke $_h : $_a ${widget.opp}')));
-        Navigator.of(context).maybePop();
+      bottomBar: PrimaryButton(tr('Submit Prediction'), onTap: () async {
+        FanModel.addPoints(50); // credit for taking part
+        await showSuccessSheet(context,
+            title: 'Prediction submitted!',
+            message: 'Schalke $_h : $_a ${widget.opp} · +50 points. A correct score wins you more — good luck!');
+        if (context.mounted) Navigator.of(context).maybePop();
       }),
       children: [
         const SizedBox(height: 8),

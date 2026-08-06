@@ -235,10 +235,10 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             Row(children: [
               Expanded(child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(value: 0.24, minHeight: 7, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.gold)),
+                child: LinearProgressIndicator(value: FanModel.seasonProgress, minHeight: 7, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.gold)),
               )),
               const SizedBox(width: 10),
-              Text('24%', style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800)),
+              Text('${FanModel.seasonPercent}%', style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800)),
             ]),
           ]),
         ),
@@ -303,9 +303,9 @@ class _StarterCard extends StatefulWidget {
 class _StarterCardState extends State<_StarterCard> {
   // (icon, title, reward, destination-or-null)
   static const _tasks = <(IconData, String, String)>[
-    (Icons.person_outline_rounded, 'Complete your profile', '+50'),
-    (Icons.sports_soccer_rounded, 'Make your first prediction', '+50'),
-    (Icons.event_available_rounded, 'Check in today', '+10'),
+    (Icons.person_outline_rounded, 'Complete your profile', '+150'),
+    (Icons.sports_soccer_rounded, 'Make your first prediction', '+150'),
+    (Icons.event_available_rounded, 'Check in today', '+200'),
   ];
   final Set<int> _done = {};
 

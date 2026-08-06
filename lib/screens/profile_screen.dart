@@ -123,13 +123,13 @@ class ProfileScreen extends StatelessWidget {
           (Icons.style_rounded, 'Fan+ Pay card', 'Season 2'),
         ]),
         const SizedBox(height: 16),
-        _group(context, 'Settings', const [
+        _group(context, 'Settings', [
           (Icons.notifications_none_rounded, 'Notification Preferences', ''),
           (Icons.lock_outline_rounded, 'Update Password', ''),
           (Icons.fingerprint_rounded, 'Biometric Login', 'toggle'),
           (Icons.dark_mode_outlined, 'Dark Mode', 'darktoggle'),
           (Icons.devices_other_rounded, 'Device Management', ''),
-          (Icons.language_rounded, 'Language', 'English'),
+          (Icons.language_rounded, 'Language', localeNotifier.value == AppLocale.de ? 'Deutsch' : 'English'),
         ]),
         const SizedBox(height: 16),
         _group(context, 'Privacy', const [
