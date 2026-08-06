@@ -20,7 +20,8 @@ import '../l10n/strings.dart';
 /// then a "how you can redeem" category list. EMBA/S04 content with real club
 /// sponsors and symbolic category icons.
 class RedeemScreen extends StatelessWidget {
-  const RedeemScreen({super.key});
+  final bool isTab;
+  const RedeemScreen({super.key, this.isTab = false});
 
   // Money-can't-buy experiences (title, subtitle, image, points).
   static const _exclusive = <(String, String, String, int)>[
@@ -68,6 +69,7 @@ class RedeemScreen extends StatelessWidget {
     final goalProgress = (FanModel.fanPoints / _goalPts).clamp(0.0, 1.0);
     return SubScaffold(
       title: tr('Redeem Points'),
+      showBack: !isTab,
       children: [
         // ── Balance hero with a goal to redeem toward ──
         Container(

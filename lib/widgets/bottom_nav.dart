@@ -13,8 +13,9 @@ class NavDest {
 
 const kNavDestinations = [
   NavDest('nav_home', 'Home'),
-  NavDest(null, 'Fan+ World', iconData: Icons.workspace_premium_outlined),
-  NavDest(null, 'Points', iconData: Icons.toll_rounded),
+  NavDest(null, 'Redeem', iconData: Icons.card_giftcard_rounded),
+  NavDest(null, 'Prizes', iconData: Icons.emoji_events_rounded),
+  NavDest(null, 'Fan+', iconData: Icons.workspace_premium_outlined),
   NavDest('nav_profile', 'Profile'),
 ];
 
@@ -41,16 +42,20 @@ class AppBottomNav extends StatelessWidget {
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             for (var i = 0; i < kNavDestinations.length; i++)
-              _NavItem(
-                dest: kNavDestinations[i],
-                selected: i == active,
-                onTap: () {
-                  if (i != active) HapticFeedback.selectionClick();
-                  onTap(i);
-                },
+              Flexible(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: _NavItem(
+                    dest: kNavDestinations[i],
+                    selected: i == active,
+                    onTap: () {
+                      if (i != active) HapticFeedback.selectionClick();
+                      onTap(i);
+                    },
+                  ),
+                ),
               ),
           ],
         ),
@@ -78,6 +83,7 @@ class _NavItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadii.pill),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (dest.iconData != null)
               Icon(dest.iconData, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal)
@@ -85,9 +91,11 @@ class _NavItem extends StatelessWidget {
               Svg(dest.icon!, size: 20, color: selected ? AppColors.brandPrimary : AppColors.textNormal),
             if (selected) ...[
               const SizedBox(width: 6),
-              Text(tr(dest.label),
-                  style: AppText.body3
-                      .copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
+              Flexible(
+                child: Text(tr(dest.label),
+                    maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
+              ),
             ],
           ],
         ),

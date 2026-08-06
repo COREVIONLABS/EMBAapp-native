@@ -1383,6 +1383,15 @@ const Map<String, String> _de = {
   'Scratch & reveal': 'Rubbeln & aufdecken',
   'Hide this?': 'Ausblenden?',
   'Hide': 'Ausblenden',
-  'You can always find “How Fan+ works” again on the Points tab.':
-      'Du findest „So funktioniert Fan+" jederzeit wieder im Punkte-Tab.',
+  'You can re-open “How Fan+ works” anytime under “More in the app”.':
+      'Du findest „So funktioniert Fan+" jederzeit unter „Mehr in der App".',
+  'The basics in 3 steps': 'Die Grundlagen in 3 Schritten',
+  // ── Nav restructure: Home · Redeem · Prizes · Fan+ · Profile ──
+  'Fan+': 'Fan+',
+  'Have your say': 'Deine Stimme',
+  'Season': 'Saison',
+  'Captain, kit, Player of the Month': 'Kapitän, Trikot, Spieler des Monats',
+  '2× VIP tickets — vs Dortmund': '2× VIP-Tickets — gegen Dortmund',
+  'Win VIP tickets, signed gear and more.': 'Gewinne VIP-Tickets, signierte Fanartikel & mehr.',
+  'Your season journey through S04 history': 'Deine Saison-Reise durch die S04-Geschichte',
 };

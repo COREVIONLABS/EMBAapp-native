@@ -221,7 +221,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     final ok = await showConfirmDialog(
       context,
       title: 'Hide this?',
-      message: 'You can always find “How Fan+ works” again on the Points tab.',
+      message: 'You can re-open “How Fan+ works” anytime under “More in the app”.',
       confirmLabel: 'Hide',
     );
     if (ok) howToNotifier.value = false;
@@ -356,6 +356,20 @@ class _MoreScreen extends StatelessWidget {
     return SubScaffold(
       title: tr('More'),
       children: [
+        // Re-open the "How Fan+ works" explainer on Home.
+        SurfaceCard(
+          onTap: () { howToNotifier.value = true; Navigator.of(context).pop(); },
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.help_outline_rounded, color: AppColors.brandPrimary, size: 22)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('How Fan+ works'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+              Text(tr('The basics in 3 steps'), style: AppText.body3Regular),
+            ])),
+            Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+          ]),
+        ),
+        const SizedBox(height: 10),
         for (final it in items) ...[
           SurfaceCard(
             onTap: () => _push(context, it.$5),
