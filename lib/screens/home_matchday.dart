@@ -601,8 +601,8 @@ class _PointsHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(FanModel.pointsFormatted, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 46, fontWeight: FontWeight.w800)),
       ]),
-      const SizedBox(height: 6),
-      Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+      const SizedBox(height: 4),
+      Text(tr('S04 Fan Points'), style: AppText.body3.copyWith(color: AppColors.textLight)),
     ]);
   }
 }
