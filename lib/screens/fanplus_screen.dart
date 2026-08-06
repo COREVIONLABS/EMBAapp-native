@@ -31,6 +31,24 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
 
   void _push(BuildContext context, Widget s) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
+  // 2-column grid of member-content photo tiles.
+  Widget _contentGrid(BuildContext context) {
+    final rows = <Widget>[];
+    for (var i = 0; i < _content.length; i += 2) {
+      rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(child: _ContentCard(item: _content[i], onTap: () => _push(context, const ExclusiveContentScreen()))),
+        const SizedBox(width: 12),
+        Expanded(
+          child: i + 1 < _content.length
+              ? _ContentCard(item: _content[i + 1], onTap: () => _push(context, const ExclusiveContentScreen()))
+              : const SizedBox(),
+        ),
+      ]));
+      if (i + 2 < _content.length) rows.add(const SizedBox(height: 12));
+    }
+    return Column(children: rows);
+  }
+
   // Member deals — real Fanshop products at a members-only price.
   static const _drops = <(String, String, int, int, String, IconData, Color)>[
     ('Home Jersey 25/26', 'Members', 4500, 3800, '-15%', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
@@ -38,11 +56,11 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
     ('Cap Royal Blue', 'Members', 1100, 950, '-15%', Icons.sports_baseball_rounded, Color(0xFF002F63)),
   ];
 
-  // Member content (title, subtitle, category, glyph, gradient)
-  static const _content = <(String, String, String, IconData, List<Color>)>[
-    ('Locker-room after the derby', 'Exclusive clip · 6:20', 'Video', Icons.play_circle_rounded, [Color(0xFF2A2440), Color(0xFF0B0616)]),
-    ('Training-ground access', 'Behind the scenes', 'Video', Icons.videocam_rounded, [Color(0xFF00695C), Color(0xFF003D33)]),
-    ('Captain’s matchday vlog', 'Members only', 'Vlog', Icons.movie_rounded, [Color(0xFF4A148C), Color(0xFF1A0033)]),
+  // Member content (title, subtitle, image)
+  static const _content = <(String, String, String)>[
+    ('Locker-room after the derby', 'Exclusive clip · 6:20', 'img_experiences'),
+    ('Training-ground access', 'Behind the scenes', 'img_rewards'),
+    ('Captain’s matchday vlog', 'Members only · 4:12', 'img_tickets'),
   ];
 
   @override
@@ -51,12 +69,22 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         builder: (context, member, __) => member ? _lounge(context) : _pitch(context),
       );
 
+  // Tab-root header — left-aligned title + points chip, matching the other
+  // tabs (Einlösen / Gewinne).
   Widget _header() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        const Svg('logo_s04', size: 36),
-        Container(width: 36, height: 36, decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(36)), child: const Center(child: Svg('bell_dot', size: 20))),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
+      child: Row(children: [
+        Expanded(child: Text(tr('Fan+'), style: AppText.h4)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(999)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.hexagon_rounded, size: 14, color: AppColors.brandPrimary),
+            const SizedBox(width: 5),
+            Text(FanModel.pointsFormatted, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+          ]),
+        ),
       ]),
     );
   }
@@ -292,24 +320,15 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ),
         ),
         const SizedBox(height: 24),
-        // Member content
+        // Member content — real photo tiles (matches Redeem / Prizes)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionHeader('Member content', onAction: () => _push(context, const ExclusiveContentScreen())),
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 194,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _content.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final c = _content[i];
-              return FeaturedImageCard(title: c.$1, subtitle: c.$2, category: c.$3, glyph: c.$4, gradient: c.$5, badge: 'Members only', onTap: () => _push(context, const ExclusiveContentScreen()));
-            },
-          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _contentGrid(context),
         ),
         const SizedBox(height: 24),
         Padding(
@@ -405,6 +424,53 @@ class _UnlockedCard extends StatelessWidget {
         const SizedBox(height: 8),
         Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
       ]),
+    );
+  }
+}
+
+/// Member-content photo card: full-bleed image, dark scrim, a play badge and a
+/// "Members only" pill, with the title and duration overlaid.
+class _ContentCard extends StatelessWidget {
+  final (String, String, String) item;
+  final VoidCallback onTap;
+  const _ContentCard({required this.item, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final (title, sub, image) = item;
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        height: 172,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Stack(fit: StackFit.expand, children: [
+          AssetImg(image, fit: BoxFit.cover, fallbackIcon: Icons.play_circle_rounded),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                colors: [Color(0x22000000), Color(0x00000000), Color(0xE6000B18)],
+                stops: [0, 0.4, 1],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 10, left: 10,
+            child: Pill(color: Colors.black.withValues(alpha: 0.55), child: Text(tr('Members only'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
+          ),
+          const Center(child: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 42)),
+          Positioned(
+            left: 12, right: 12, bottom: 12,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr(title), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label2.copyWith(color: Colors.white)),
+              const SizedBox(height: 2),
+              Text(tr(sub), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
+            ]),
+          ),
+        ]),
+      ),
     );
   }
 }
