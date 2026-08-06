@@ -186,11 +186,14 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   Widget _roundActions() {
     // (label, icon, colour, onTap) — Einlösen/Gewinne switch to their tab;
     // Verdienen/Vorteile push their screen (no dedicated tab).
+    // One calm brand colour across all four — clean and premium (Socios-style),
+    // the glyph does the distinguishing, not the colour.
+    const c = AppColors.brandPrimary;
     final items = <(String, IconData, Color, VoidCallback)>[
-      ('Earn', Icons.bolt_rounded, const Color(0xFF1B7A3D), () => _push(context, const EarnPointsScreen())),
-      ('Redeem', Icons.card_giftcard_rounded, const Color(0xFF0A2A5E), () => tabRequestNotifier.value = 1),
-      ('Prizes', Icons.emoji_events_rounded, const Color(0xFF6A1B9A), () => tabRequestNotifier.value = 2),
-      ('Deals %', Icons.percent_rounded, const Color(0xFFEF6C00), () => _push(context, const DealsHubScreen())),
+      ('Earn', Icons.bolt_rounded, c, () => _push(context, const EarnPointsScreen())),
+      ('Redeem', Icons.card_giftcard_rounded, c, () => tabRequestNotifier.value = 1),
+      ('Prizes', Icons.emoji_events_rounded, c, () => tabRequestNotifier.value = 2),
+      ('Deals %', Icons.percent_rounded, c, () => _push(context, const DealsHubScreen())),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -209,7 +212,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
         SurfaceCard(
           onTap: () => _push(context, const FanPollsScreen()),
           child: Row(children: [
-            Container(width: 44, height: 44, decoration: BoxDecoration(color: const Color(0xFF6A1B9A).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.how_to_vote_rounded, color: Color(0xFF6A1B9A), size: 22)),
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.how_to_vote_rounded, color: AppColors.brandPrimary, size: 22)),
             const SizedBox(width: 14),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(tr('Fan votes'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
@@ -590,18 +593,10 @@ class _PointsHeader extends StatelessWidget {
           ),
         ),
       ),
-      const SizedBox(height: 12),
-      // Big centred balance.
-      Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-        Container(
-          width: 40, height: 40,
-          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)),
-          child: const Icon(Icons.hexagon_rounded, color: AppColors.gold, size: 22),
-        ),
-        const SizedBox(width: 12),
-        Text(FanModel.pointsFormatted, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 46, fontWeight: FontWeight.w800)),
-      ]),
-      const SizedBox(height: 4),
+      const SizedBox(height: 14),
+      // Big, clean, centred balance — no icon, medium weight.
+      Text(FanModel.pointsFormatted, textAlign: TextAlign.center, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 54, fontWeight: FontWeight.w600, letterSpacing: -1)),
+      const SizedBox(height: 6),
       Text(tr('S04 Fan Points'), style: AppText.body3.copyWith(color: AppColors.textLight)),
     ]);
   }

@@ -73,16 +73,6 @@ class _RedeemScreenState extends State<RedeemScreen> {
     ('Home Scarf 25/26', 'Fanshop', 900, 720, '-20%', Icons.style_rounded, Color(0xFF1565C0), 'img_fanshop'),
   ];
 
-  // Category tiles for the curated "Discover" grid (category, icon, colour).
-  static const _catTiles = <(String, IconData, Color)>[
-    ('Tickets', Icons.confirmation_number_rounded, Color(0xFF1565C0)),
-    ('Fanshop', Icons.checkroom_rounded, Color(0xFF0A2A5E)),
-    ('Experiences', Icons.stadium_rounded, Color(0xFF6A1B9A)),
-    ('Sponsors', Icons.storefront_rounded, Color(0xFF00897B)),
-    ('Tombola', Icons.local_activity_rounded, Color(0xFFC62828)),
-    ('Food & Drink', Icons.fastfood_rounded, Color(0xFFE65100)),
-  ];
-
   @override
   void dispose() {
     _searchCtrl.dispose();
@@ -233,11 +223,6 @@ class _RedeemScreenState extends State<RedeemScreen> {
         ),
       ),
       const SizedBox(height: 24),
-      // Discover categories (image tiles that filter in-place).
-      const SectionHeader('Discover', action: null),
-      const SizedBox(height: 12),
-      _catGrid(),
-      const SizedBox(height: 24),
       // Hot deals.
       const SectionHeader('Reward deals', action: null),
       const SizedBox(height: 12),
@@ -267,33 +252,6 @@ class _RedeemScreenState extends State<RedeemScreen> {
       ),
       const SizedBox(height: 24),
     ];
-  }
-
-  // 2-column grid of category image tiles.
-  Widget _catGrid() {
-    final rows = <Widget>[];
-    for (var i = 0; i < _catTiles.length; i += 2) {
-      rows.add(Row(children: [
-        Expanded(child: _CategoryTile(cat: _catTiles[i], onTap: () => _onCatTile(_catTiles[i].$1))),
-        const SizedBox(width: 12),
-        Expanded(
-          child: i + 1 < _catTiles.length
-              ? _CategoryTile(cat: _catTiles[i + 1], onTap: () => _onCatTile(_catTiles[i + 1].$1))
-              : const SizedBox(),
-        ),
-      ]));
-      if (i + 2 < _catTiles.length) rows.add(const SizedBox(height: 12));
-    }
-    return Column(children: rows);
-  }
-
-  void _onCatTile(String category) {
-    if (_filters.contains(category)) {
-      setState(() => _filter = category);
-    } else {
-      final dest = _screenFor(category);
-      if (dest != null) _push(dest);
-    }
   }
 
   // ── Results view (a filter or search is active) ──
@@ -429,41 +387,6 @@ class _FilterChip extends StatelessWidget {
           color: selected ? Colors.white : AppColors.textNormal,
           fontWeight: FontWeight.w700,
         )),
-      ),
-    );
-  }
-}
-
-/// Category image tile (curated Discover grid).
-class _CategoryTile extends StatelessWidget {
-  final (String, IconData, Color) cat;
-  final VoidCallback onTap;
-  const _CategoryTile({required this.cat, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final (name, icon, color) = cat;
-    return Tappable(
-      scale: 0.97,
-      onTap: onTap,
-      child: Container(
-        height: 92,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
-        child: Stack(fit: StackFit.expand, children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color, Color.lerp(color, Colors.black, 0.4)!]),
-            ),
-          ),
-          Positioned(right: -12, bottom: -12, child: Icon(icon, size: 82, color: Colors.white.withValues(alpha: 0.16))),
-          Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text(tr(name), style: AppText.body1.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
-            ]),
-          ),
-        ]),
       ),
     );
   }

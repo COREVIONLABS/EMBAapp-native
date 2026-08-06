@@ -277,23 +277,31 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFFC62828), Color(0xFF7F1414)]), borderRadius: BorderRadius.circular(AppRadii.card)),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0A2A5E), Color(0xFF000D22)]),
+                borderRadius: BorderRadius.circular(AppRadii.card),
+                border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
+              ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
-                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                  Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
                   const Spacer(),
                   Pill(color: Colors.white24, child: Text(tr('Only 50 made'), style: AppText.caption1.copyWith(color: Colors.white))),
                 ]),
                 const SizedBox(height: 14),
-                const Icon(Icons.local_fire_department_rounded, color: AppColors.gold, size: 36),
-                const SizedBox(height: 10),
+                Container(
+                  width: 48, height: 48,
+                  decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)),
+                  child: const Icon(Icons.diamond_rounded, color: AppColors.gold, size: 26),
+                ),
+                const SizedBox(height: 12),
                 Text(tr('Signed Retro Shirt — April Drop'), style: AppText.h4.copyWith(color: Colors.white)),
                 const SizedBox(height: 6),
                 Text(tr('A limited signed 1997 UEFA Cup retro shirt — dropped once, never restocked.'), style: AppText.body3.copyWith(color: Colors.white70)),
                 const SizedBox(height: 14),
                 Row(children: [
-                  Text(tr('View this month\'s drop'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                  const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 18),
+                  Text(tr('View this month\'s drop'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                  const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
                 ]),
               ]),
             ),

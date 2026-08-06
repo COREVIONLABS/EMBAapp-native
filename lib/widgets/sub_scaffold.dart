@@ -30,7 +30,9 @@ class SubScaffold extends StatelessWidget {
         child: Column(
           children: [
             _bar(context),
-            Expanded(child: ListView(padding: padding.add(EdgeInsets.only(bottom: bottomBar == null ? MediaQuery.of(context).padding.bottom : 0)), children: children)),
+            // Tab-root screens (no back arrow) sit under the floating bottom
+            // nav, so add clearance to their scroll padding.
+            Expanded(child: ListView(padding: padding.add(EdgeInsets.only(bottom: (showBack ? 0 : 96) + (bottomBar == null ? MediaQuery.of(context).padding.bottom : 0))), children: children)),
             if (bottomBar != null)
               SafeArea(top: false, child: Padding(padding: const EdgeInsets.all(20), child: bottomBar!)),
           ],
