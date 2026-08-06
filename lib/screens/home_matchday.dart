@@ -200,49 +200,30 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
   }
 
   // Engagement section — fan votes + Road to Gold (moved here from the tabs).
+  // Engagement — two brand-tinted tiles in the same clean style as the
+  // "Vouchers / Tombola lots" pathway tiles on the Redeem screen.
   Widget _engagement(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(children: [
-        SurfaceCard(
-          onTap: () => _push(context, const FanPollsScreen()),
-          child: Row(children: [
-            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.how_to_vote_rounded, color: AppColors.brandPrimary, size: 22)),
-            const SizedBox(width: 14),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('Fan votes'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-              Text(tr('Captain, kit, Player of the Month'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
-            ])),
-            Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-          ]),
-        ),
-        const SizedBox(height: 12),
-        // Road to Gold — calm surface card (was a loud navy gradient). A small
-        // gold accent keeps it premium without the colour noise.
-        SurfaceCard(
-          onTap: () => _push(context, const SeasonJourneyScreen()),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.route_rounded, color: AppColors.gold, size: 22)),
-              const SizedBox(width: 14),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Road to Gold'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-                Text(tr('Your season journey through S04 history'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
-              ])),
-              Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-            ]),
-            const SizedBox(height: 12),
-            Row(children: [
-              Expanded(child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(value: FanModel.seasonProgress, minHeight: 7, backgroundColor: AppColors.surfaceLowContrast, valueColor: const AlwaysStoppedAnimation(AppColors.gold)),
-              )),
-              const SizedBox(width: 10),
-              Text('${FanModel.seasonPercent}%', style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800)),
-            ]),
-          ]),
-        ),
-      ]),
+      child: IntrinsicHeight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(child: _EngageTile(
+            icon: Icons.how_to_vote_rounded,
+            iconColor: AppColors.brandPrimary,
+            title: tr('Fan votes'),
+            sub: tr('Captain, kit & more'),
+            onTap: () => _push(context, const FanPollsScreen()),
+          )),
+          const SizedBox(width: 12),
+          Expanded(child: _EngageTile(
+            icon: Icons.route_rounded,
+            iconColor: AppColors.gold,
+            title: tr('Road to Gold'),
+            sub: '${FanModel.seasonPercent}% · ${tr('season journey')}',
+            onTap: () => _push(context, const SeasonJourneyScreen()),
+          )),
+        ]),
+      ),
     );
   }
 
@@ -486,6 +467,40 @@ class _RoundNav extends StatelessWidget {
         const SizedBox(height: 7),
         Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(fontSize: 12, fontWeight: FontWeight.w700)),
       ]),
+    );
+  }
+}
+
+/// Engagement tile in the Redeem "pathway tile" style: a brand-tinted box with
+/// a small surface icon chip, a title and a sub. Tappable.
+class _EngageTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String sub;
+  final VoidCallback onTap;
+  const _EngageTile({required this.icon, required this.iconColor, required this.title, required this.sub, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(width: 36, height: 36, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(11)), child: Icon(icon, color: iconColor, size: 19)),
+            const Spacer(),
+            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+          ]),
+          const SizedBox(height: 12),
+          Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 1),
+          Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.onAccent)),
+        ]),
+      ),
     );
   }
 }

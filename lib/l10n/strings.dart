@@ -1440,6 +1440,8 @@ const Map<String, String> _de = {
   '2× VIP tickets — vs Dortmund': '2× VIP-Tickets — gegen Dortmund',
   'Win VIP tickets, signed gear and more.': 'Gewinne VIP-Tickets, signierte Fanartikel & mehr.',
   'Your season journey through S04 history': 'Deine Saison-Reise durch die S04-Geschichte',
+  'Captain, kit & more': 'Kapitän, Trikot & mehr',
+  'season journey': 'Saison-Reise',
 
   // ── Redeem rebuild (vouchers + tombola lots) ───────────────
   'Turn points into rewards': 'Punkte in Prämien verwandeln',
