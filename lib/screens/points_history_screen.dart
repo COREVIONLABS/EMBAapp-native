@@ -40,7 +40,6 @@ class PointsHistoryScreen extends StatelessWidget {
               Text(tr('Current balance'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
               Text('${FanModel.pointsFormatted} ${tr('pts')}', style: AppText.label1.copyWith(color: AppColors.textDarker)),
             ])),
-            Text('≈ ${FanModel.balanceEuro}', style: AppText.body2.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700)),
           ]),
         ),
         const SizedBox(height: 16),

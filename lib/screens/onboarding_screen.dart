@@ -243,8 +243,6 @@ class _HomeMock extends StatelessWidget {
             Text('S04 Fan Points', style: TextStyle(fontFamily: 'Urbanist', fontSize: 10, color: Colors.white70)),
             const SizedBox(height: 4),
             Text('4.820', style: TextStyle(fontFamily: 'Urbanist', fontSize: 34, height: 1, fontWeight: FontWeight.w800, color: Colors.white)),
-            const SizedBox(height: 4),
-            Text('≈ €48,20 in Gutscheinen', style: TextStyle(fontFamily: 'Urbanist', fontSize: 10, color: Colors.white70)),
           ]),
         ),
         const SizedBox(height: 14),

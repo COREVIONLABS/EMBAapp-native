@@ -76,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                   Text(FanModel.pointsFormatted, style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
                 ]),
                 const SizedBox(height: 4),
-                Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')} · ${tr('View history')}', style: AppText.body3.copyWith(color: Colors.white70)),
+                Text(tr('View history'), style: AppText.body3.copyWith(color: Colors.white70)),
                 const SizedBox(height: 12),
                 Row(children: [
                   for (final c in const ['Tickets', 'Vouchers', 'Bookings', 'Collection']) ...[

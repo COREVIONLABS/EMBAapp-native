@@ -96,11 +96,7 @@ class PointsScreen extends StatelessWidget {
               Text(FanModel.pointsFormatted, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 46, fontWeight: FontWeight.w800)),
             ]),
             const SizedBox(height: 6),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
-              const SizedBox(width: 4),
-              Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
-            ]),
+            Text(tr('S04 Fan Points'), style: AppText.body3.copyWith(color: AppColors.textLight)),
             const SizedBox(height: 20),
             // Primary quick-access — clean round wallet actions (Socios-style).
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -513,7 +513,6 @@ const Map<String, String> _de = {
 
   // ── Redeem / rewards ───────────────────────────────────────
   'Ways to redeem': 'Einlöse-Möglichkeiten',
-  '2,450 pts available (≈ €24.50)': '2.450 Pkt. verfügbar (≈ 24,50 €)',
   'Your loyalty. Your rewards.': 'Deine Treue. Deine Prämien.',
   'You won 100 Points!': 'Du hast 100 Punkte gewonnen!',
 
@@ -1265,7 +1264,6 @@ const Map<String, String> _de = {
   'How many German championships has S04 won?': 'Wie viele deutsche Meisterschaften hat S04 gewonnen?',
   'Who does Schalke meet in the Revierderby?': 'Gegen wen spielt Schalke im Revierderby?',
   // ── P0: clear value model (points vs real cashback) ──
-  'in vouchers': 'in Gutscheinen',
   'How Fan+ works': 'So funktioniert Fan+',
   'Earn points': 'Punkte sammeln',
   'On tickets, shop, games & check-ins': 'Bei Tickets, Shop, Spielen & Check-ins',

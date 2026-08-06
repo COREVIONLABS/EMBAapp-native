@@ -114,7 +114,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             child: Row(children: [
               const Icon(Icons.savings_rounded, color: AppColors.success),
               const SizedBox(width: 12),
-              Expanded(child: Text('${tr('Super Fan')}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} / ${tr('month')} (≈ ${FanModel.euroValue(s.monthlyPoints)}) + ${s.freeLots} ${tr('free lots')} — ${tr('it pays for itself.')}',
+              Expanded(child: Text('${tr('Super Fan')}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} / ${tr('month')} + ${s.freeLots} ${tr('free lots')} — ${tr('it pays for itself.')}',
                   style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
             ]),
           ),

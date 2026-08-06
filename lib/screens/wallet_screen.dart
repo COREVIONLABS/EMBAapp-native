@@ -61,7 +61,7 @@ class WalletScreen extends StatelessWidget {
             const SizedBox(width: 14),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('${FanModel.pointsFormatted} ${tr('pts')}', style: AppText.label2.copyWith(color: AppColors.textDarker)),
-              Text('≈ ${FanModel.balanceEuro} · ${tr('View history')}', style: AppText.body3Regular),
+              Text(tr('View history'), style: AppText.body3Regular),
             ])),
             Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
           ]),
