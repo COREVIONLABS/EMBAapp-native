@@ -72,20 +72,20 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text('${tr('Moin')}, Max 👋', style: AppText.h4.copyWith(color: AppColors.textDarker)),
               ),
-              const SizedBox(height: 16),
-              // First-run activation — new fans only (Demo toggle).
+              const SizedBox(height: 22),
+              // 1) Clean, centred points balance (Socios-style) — right under greeting.
+              const _PointsHeader(),
+              const SizedBox(height: 22),
+              // 2) Round core actions under the balance.
+              _roundActions(),
+              const SizedBox(height: 20),
+              // First-run activation — new fans only (below the balance).
               ValueListenableBuilder<bool>(
                 valueListenable: starterNotifier,
                 builder: (context, show, __) => show
-                    ? const Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 14), child: _StarterCard())
+                    ? const Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 8), child: _StarterCard())
                     : const SizedBox.shrink(),
               ),
-              // 1) Points — the main product, active and up top.
-              const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: _PointsCard()),
-              const SizedBox(height: 16),
-              // 2) Round core actions under the balance (Socios-style).
-              _roundActions(),
-              const SizedBox(height: 12),
               // Fan+ Pay card promo — Phase-2 only (Demo toggle).
               ValueListenableBuilder<bool>(
                 valueListenable: cardActiveNotifier,
@@ -565,90 +565,45 @@ class _HomeSkeleton extends StatelessWidget {
   }
 }
 
-class _PointsCard extends StatelessWidget {
-  const _PointsCard();
+/// Clean, centred points balance (Socios-style) — the tier chip, the big number
+/// and its voucher value, on a plain background. No card, no gradient.
+class _PointsHeader extends StatelessWidget {
+  const _PointsHeader();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: AppColors.pointsGradient),
-        borderRadius: BorderRadius.circular(AppRadii.card),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: -23,
-            top: -22,
-            child: Container(
-              width: 193,
-              height: 193,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.05),
-              ),
-            ),
+    return Column(children: [
+      // Tier chip → membership plans.
+      ValueListenableBuilder<String>(
+        valueListenable: tierNotifier,
+        builder: (context, tier, __) => Tappable(
+          scale: 0.97,
+          onTap: () => _push(context, const SubscriptionScreen()),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(999)),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              const Icon(Icons.workspace_premium_rounded, size: 14, color: AppColors.gold),
+              const SizedBox(width: 5),
+              Text(tr(tier), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+              Icon(Icons.chevron_right_rounded, size: 15, color: AppColors.brandPrimary),
+            ]),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(tr('S04 Fan Points'), style: AppText.body2.copyWith(color: Colors.white)),
-                  Tappable(
-                    onTap: () => _push(context, const SubscriptionScreen()),
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(6, 4, 4, 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.24),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.workspace_premium_rounded, size: 14, color: AppColors.gold),
-                          const SizedBox(width: 4),
-                          ValueListenableBuilder<String>(
-                            valueListenable: tierNotifier,
-                            builder: (context, tier, __) => Text(tr(tier),
-                                style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 11)),
-                          ),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(FanModel.pointsFormatted,
-                  style: AppText.h1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 4),
-              Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')}', style: AppText.body3.copyWith(color: Colors.white70)),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Pill(
-                    color: AppColors.brandDark,
-                    child: Text('${FanModel.raffleTickets} ${tr('Raffle Tickets')}',
-                        style: AppText.caption1.copyWith(color: AppColors.textLightest)),
-                  ),
-                  const SizedBox(width: 8),
-                  Pill(
-                    gradient: const LinearGradient(colors: AppColors.goldGradient),
-                    child: Text(tr('3x Stadium Boost'), style: AppText.caption1.copyWith(color: AppColors.textDarker)),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
-    );
+      const SizedBox(height: 12),
+      // Big centred balance.
+      Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+        Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(12)),
+          child: const Icon(Icons.hexagon_rounded, color: AppColors.gold, size: 22),
+        ),
+        const SizedBox(width: 12),
+        Text(FanModel.pointsFormatted, style: AppText.h1.copyWith(color: AppColors.textDarker, fontSize: 46, fontWeight: FontWeight.w800)),
+      ]),
+      const SizedBox(height: 6),
+      Text('≈ ${FanModel.balanceEuro} ${tr('in vouchers')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+    ]);
   }
 }
 
