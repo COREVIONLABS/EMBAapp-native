@@ -114,9 +114,9 @@ class ProfileScreen extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 22),
-        _group(context, 'Account', const [
+        _group(context, 'Account', [
           (Icons.person_outline_rounded, 'Edit Profile', ''),
-          (Icons.military_tech_outlined, 'Fan Level', 'Schalker'),
+          (Icons.military_tech_outlined, 'Fan Level', FanModel.currentTier),
           (Icons.history_rounded, 'Points History', ''),
           (Icons.account_balance_outlined, 'Bank Account', ''),
           (Icons.credit_card_rounded, 'Payment Methods', ''),

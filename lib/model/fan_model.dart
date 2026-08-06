@@ -28,12 +28,34 @@ class FanModel {
     FanTier('Legende', 25000),
   ];
 
-  static const String currentTier = 'Schalker';
-  static const int nextTierPoints = 15000; // Ehrenmitglied
+  /// The lifetime loyalty tier a fan currently holds — the highest ladder step
+  /// whose threshold they have passed. Derived from [fanPoints] so the tier,
+  /// the "Current" badge and the progress bar always agree.
+  static FanTier get currentFanTier {
+    var held = tiers.first;
+    for (final t in tiers) {
+      if (fanPoints >= t.minPoints) held = t;
+    }
+    return held;
+  }
+
+  /// The next tier up, or null once the top tier (Legende) is reached.
+  static FanTier? get nextFanTier {
+    for (final t in tiers) {
+      if (t.minPoints > fanPoints) return t;
+    }
+    return null;
+  }
+
+  static String get currentTier => currentFanTier.name;
+  static int get nextTierPoints => nextFanTier?.minPoints ?? currentFanTier.minPoints;
 
   static String get pointsFormatted => _fmt(fanPoints);
   static String get nextTierFormatted => _fmt(nextTierPoints);
-  static double get tierProgress => fanPoints / nextTierPoints;
+
+  /// Progress toward the next tier's threshold (1.0 once at the top tier).
+  static double get tierProgress =>
+      nextFanTier == null ? 1.0 : (fanPoints / nextTierPoints).clamp(0.0, 1.0);
 
   static String fmtPublic(int n) => _fmt(n);
 
