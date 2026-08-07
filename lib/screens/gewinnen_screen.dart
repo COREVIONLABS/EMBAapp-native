@@ -7,6 +7,8 @@ import '../widgets/asset_img.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import 'raffles_screen.dart';
+import 'auctions_screen.dart';
+import '../model/auctions.dart';
 import 'my_wins_screen.dart';
 import 'past_tombolas_screen.dart';
 import 'collection_screen.dart';
@@ -114,6 +116,74 @@ class GewinnenScreen extends StatelessWidget {
               )),
             ]),
           ]),
+        ),
+        const SizedBox(height: 22),
+
+        // ── Auctions — bid points on money-can't-buy lots (Socios-style) ──
+        SectionHeader('Points auctions', action: 'See all', onAction: () => _push(context, const AuctionsScreen())),
+        const SizedBox(height: 12),
+        AnimatedBuilder(
+          animation: auctionStore,
+          builder: (context, _) {
+            final a = auctionStore.live.isNotEmpty ? auctionStore.live.first : null;
+            if (a == null) return const SizedBox.shrink();
+            return Tappable(
+              scale: 0.98,
+              onTap: () => _push(context, AuctionDetailScreen(id: a.id)),
+              child: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  SizedBox(
+                    height: 120,
+                    child: Stack(fit: StackFit.expand, children: [
+                      if (a.image != null)
+                        AssetImg(a.image!, fit: BoxFit.cover, fallbackIcon: a.glyph)
+                      else
+                        DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [a.color, Color.lerp(a.color, Colors.black, 0.5)!])), child: Center(child: Icon(a.glyph, size: 54, color: Colors.white70))),
+                      const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x33000D22), Color(0x66000D22)]))),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Row(children: [
+                          Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                            const Icon(Icons.gavel_rounded, size: 12, color: AppColors.brandDarkest),
+                            const SizedBox(width: 4),
+                            Text(tr('Live auction'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                          ])),
+                          const Spacer(),
+                          Pill(color: AppColors.danger, child: Row(mainAxisSize: MainAxisSize.min, children: [
+                            const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                          ])),
+                        ]),
+                      ),
+                    ]),
+                  ),
+                  Container(
+                    color: AppColors.brandDarkest,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(tr(a.title), style: AppText.label1.copyWith(color: Colors.white)),
+                      const SizedBox(height: 4),
+                      Text(tr('Bid with your Fan Points — win what money can’t buy.'), style: AppText.body3.copyWith(color: Colors.white70)),
+                      const SizedBox(height: 12),
+                      Row(children: [
+                        const Icon(Icons.hexagon_rounded, size: 15, color: AppColors.gold),
+                        const SizedBox(width: 6),
+                        Text('${FanModel.fmtPublic(a.currentBid)} ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                        const SizedBox(width: 6),
+                        Text(trp('· {n} bids', n: '${a.bidCount}'), style: AppText.body3.copyWith(color: Colors.white60)),
+                        const Spacer(),
+                        Text(tr('Bid now'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                        const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
+                      ]),
+                    ]),
+                  ),
+                ]),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 22),
 

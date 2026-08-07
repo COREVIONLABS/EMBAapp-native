@@ -23,6 +23,12 @@ class MemberDiscountsScreen extends StatelessWidget {
     ('Vivawest', 'Housing', '10% off', 'Rent & services', Icons.apartment_rounded, Color(0xFF6A1B9A)),
     ("Ernsting's family", 'Fashion', '15% off', 'Family fashion', Icons.checkroom_rounded, Color(0xFFE30613)),
     ('REWE', 'Groceries', '5% off', 'In all REWE stores', Icons.shopping_cart_rounded, Color(0xFFC8102E)),
+    // ── Local partners around Gelsenkirchen (regional sponsor tier) ──
+    ('ZOOM Erlebniswelt', 'Local', '20% off', 'Gelsenkirchen zoo tickets', Icons.pets_rounded, Color(0xFF2E7D32)),
+    ('Cineworld GE', 'Local', '25% off', 'Cinema tickets on matchdays', Icons.local_movies_rounded, Color(0xFF5E35B1)),
+    ('McFit Gelsenkirchen', 'Fitness', '10% off', 'Monthly gym membership', Icons.fitness_center_rounded, Color(0xFFEF6C00)),
+    ('Trattoria Napoli', 'Dining', '15% off', 'Post-match dinner in GE', Icons.restaurant_rounded, Color(0xFFC62828)),
+    ('VRR / Bahn', 'Transport', '10% off', 'Matchday travel to the arena', Icons.directions_bus_rounded, Color(0xFF00695C)),
   ];
 
   Future<void> _claim(BuildContext context, String partner, String discount) async {

@@ -24,6 +24,10 @@ import '../widgets/sub_scaffold.dart';
 import 'fanplus_screen.dart';
 import 'fanplus_pay_screen.dart';
 import 'matchday_quiz_screen.dart';
+import 'sponsor_missions_screen.dart';
+import 'auctions_screen.dart';
+import '../model/sponsor_missions.dart';
+import '../model/auctions.dart';
 import '../model/fan_model.dart';
 import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
@@ -120,6 +124,9 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               ),
               // 4) Engagement — fan votes + the season journey.
               _engagement(context),
+              const SizedBox(height: 12),
+              // 4b) Partner value — sponsor missions + points auctions.
+              _partnerRow(context),
               const SizedBox(height: 20),
               // 5) Matchday context — the one contextual zone (matchday only).
               ValueListenableBuilder<bool>(
@@ -224,6 +231,36 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
             onTap: () => _push(context, const SeasonJourneyScreen()),
           )),
         ]),
+      ),
+    );
+  }
+
+  // Partner value row — the sponsor-funded stream + points auctions, in the
+  // same clean pathway-tile style as the engagement row above.
+  Widget _partnerRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: AnimatedBuilder(
+        animation: Listenable.merge([sponsorMissionStore, auctionStore, pointsNotifier]),
+        builder: (context, _) => IntrinsicHeight(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Expanded(child: _EngageTile(
+              icon: Icons.handshake_rounded,
+              iconColor: AppColors.brandPrimary,
+              title: tr('Sponsor missions'),
+              sub: '+${sponsorMissionStore.availablePoints} ${tr('pts to earn')}',
+              onTap: () => _push(context, const SponsorMissionsScreen()),
+            )),
+            const SizedBox(width: 12),
+            Expanded(child: _EngageTile(
+              icon: Icons.gavel_rounded,
+              iconColor: AppColors.gold,
+              title: tr('Points auctions'),
+              sub: auctionStore.leadingCount > 0 ? tr('You’re winning a lot') : tr('Bid to win prizes'),
+              onTap: () => _push(context, const AuctionsScreen()),
+            )),
+          ]),
+        ),
       ),
     );
   }

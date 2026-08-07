@@ -12,6 +12,8 @@ import 'predictions_screen.dart';
 import 'leaderboard_screen.dart';
 import 'fan_polls_screen.dart';
 import 'referral_screen.dart';
+import 'sponsor_missions_screen.dart';
+import '../model/sponsor_missions.dart';
 import '../l10n/strings.dart';
 
 /// Earn Points — a motivating fan hub (not a flat list): a weekly points goal
@@ -81,6 +83,43 @@ class EarnPointsScreen extends StatelessWidget {
               Expanded(child: Text(tr('Reach 500 this week to unlock a +100 bonus.'), style: AppText.body3.copyWith(color: AppColors.textNormal))),
             ]),
           ]),
+        ),
+        const SizedBox(height: 16),
+
+        // ── Sponsor missions (the club's 3rd revenue stream — partners pay) ──
+        AnimatedBuilder(
+          animation: sponsorMissionStore,
+          builder: (context, _) => Tappable(
+            scale: 0.98,
+            onTap: () => _push(context, const SponsorMissionsScreen()),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient),
+                borderRadius: BorderRadius.circular(AppRadii.card),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Container(width: 48, height: 48, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.handshake_rounded, color: AppColors.gold, size: 26)),
+                  const SizedBox(width: 14),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(tr('Sponsor missions'), style: AppText.label2.copyWith(color: Colors.white)),
+                    const SizedBox(height: 2),
+                    Text(tr('Our partners pay you in points'), style: AppText.body3.copyWith(color: Colors.white70)),
+                  ])),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                    decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),
+                    child: Text('+${sponsorMissionStore.availablePoints}', style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                  ),
+                ]),
+                if (sponsorMissionStore.openCount > 0) ...[
+                  const SizedBox(height: 12),
+                  Text(trp('{n} open missions · watch, survey, scan & more', n: '${sponsorMissionStore.openCount}'), style: AppText.caption1.copyWith(color: Colors.white60)),
+                ],
+              ]),
+            ),
+          ),
         ),
         const SizedBox(height: 16),
 
