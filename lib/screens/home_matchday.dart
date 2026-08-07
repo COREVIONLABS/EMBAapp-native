@@ -17,6 +17,7 @@ import 'leaderboard_screen.dart';
 import 'collection_screen.dart';
 import 'deals_hub_screen.dart';
 import 'search_screen.dart';
+import 'assistant_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'subscription_screen.dart';
 import '../widgets/sub_scaffold.dart';
@@ -246,6 +247,16 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           const Svg('logo_s04', size: 36),
           Builder(
             builder: (context) => Row(children: [
+              GestureDetector(
+                onTap: () => _push(context, const AssistantScreen()),
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(36)),
+                  child: Icon(Icons.auto_awesome_rounded, size: 19, color: AppColors.brandPrimary),
+                ),
+              ),
+              const SizedBox(width: 10),
               GestureDetector(
                 onTap: () => _push(context, const SearchScreen()),
                 child: Container(

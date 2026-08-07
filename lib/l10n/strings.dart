@@ -1443,6 +1443,50 @@ const Map<String, String> _de = {
   'Captain, kit & more': 'Kapitän, Trikot & mehr',
   'season journey': 'Saison-Reise',
 
+  // ── Club ID / membership card ──────────────────────────────
+  'Club ID': 'Club-ID',
+  'Official Club ID · Est. 1904': 'Offizielle Club-ID · gegr. 1904',
+  'MEMBER': 'MITGLIED',
+  'Member no.': 'Mitgliedsnr.',
+  'Member since': 'Mitglied seit',
+  'Show this at the stadium, fanshop and fan events to identify yourself and collect points.': 'Zeig sie im Stadion, Fanshop und bei Fan-Events, um dich auszuweisen und Punkte zu sammeln.',
+  'Your Club ID is personal — the code refreshes for each scan in the full app.': 'Deine Club-ID ist persönlich — in der vollen App erneuert sich der Code bei jedem Scan.',
+
+  // ── Referral / invite friends ──────────────────────────────
+  'Bring a friend to S04': 'Bring einen Freund zu S04',
+  'You both get': 'Ihr bekommt beide',
+  'when they join.': 'wenn er beitritt.',
+  'Code copied': 'Code kopiert',
+  'Copy': 'Kopieren',
+  'Share invite': 'Einladung teilen',
+  'Send your invite code to a friend': 'Sende deinen Einladungscode an einen Freund',
+  'They join': 'Er tritt bei',
+  'Each of you gets +250 points': 'Jeder von euch bekommt +250 Punkte',
+  'friends joined': 'Freunde beigetreten',
+  'points earned': 'Punkte verdient',
+  'You both get +250 points': 'Ihr bekommt beide +250 Punkte',
+
+  // ── Earn: training check-in ────────────────────────────────
+  'Visit training': 'Training besuchen',
+  'Check in at Berger Feld': 'Am Berger Feld einchecken',
+
+  // ── AI assistant ───────────────────────────────────────────
+  'S04 Assistant': 'S04 Assistent',
+  'Always here to help': 'Immer für dich da',
+  'Ask the assistant…': 'Frag den Assistenten…',
+  'Moin! I\'m your S04 assistant. Ask me anything — or tap a question below.': 'Moin! Ich bin dein S04-Assistent. Frag mich etwas — oder tippe unten auf eine Frage.',
+  'When\'s the next match?': 'Wann ist das nächste Spiel?',
+  'How do points work?': 'Wie funktionieren Punkte?',
+  'Where are my vouchers?': 'Wo sind meine Gutscheine?',
+  'How does the tombola work?': 'Wie funktioniert die Tombola?',
+  'How do I get tickets?': 'Wie bekomme ich Tickets?',
+  'Your next match is FC Schalke 04 vs Borussia Dortmund, Sat 15:30 at the VELTINS-Arena. Predict the score on the Home screen for +50 points!': 'Dein nächstes Spiel ist FC Schalke 04 gegen Borussia Dortmund, Sa 15:30 in der VELTINS-Arena. Tippe das Ergebnis auf der Home-Seite für +50 Punkte!',
+  '100 points = €1 in rewards. Earn points from check-ins, predictions, votes and daily games, then turn them into vouchers or tombola lots. Nothing is ever cashed out.': '100 Punkte = 1 € in Prämien. Sammle Punkte durch Check-ins, Tipps, Abstimmungen und Tagesspiele und mach daraus Gutscheine oder Tombola-Lose. Punkte werden nie ausgezahlt.',
+  'All your redeemed vouchers live in Wallet → My Vouchers. Show the code at the club shop or counter to redeem.': 'Alle eingelösten Gutscheine findest du unter Wallet → Meine Gutscheine. Zeig den Code im Vereinsshop oder am Schalter zum Einlösen.',
+  'Members get free lots each month. Your lots are entered automatically into the next monthly draw — more lots, more chances. 18+, no purchase necessary.': 'Mitglieder bekommen jeden Monat Freilose. Deine Lose kommen automatisch in die nächste Monatsziehung — mehr Lose, mehr Chancen. Ab 18, keine Kaufpflicht.',
+  'Redeem points for a ticket voucher on the Redeem tab, or open Tickets from the Home menu. Fan+ members get priority access 48–72h early.': 'Löse Punkte im Einlösen-Tab für einen Ticket-Gutschein ein oder öffne Tickets im Home-Menü. Fan+ Mitglieder bekommen 48–72 h früher Vorzugszugang.',
+  'I can help with matches, points, vouchers, the tombola and tickets. Tap one of the questions below, or ask in those words.': 'Ich helfe bei Spielen, Punkten, Gutscheinen, der Tombola und Tickets. Tippe unten auf eine Frage oder frag mit diesen Worten.',
+
   // ── Redeem rebuild (vouchers + tombola lots) ───────────────
   'Turn points into rewards': 'Punkte in Prämien verwandeln',
   'Two simple ways to spend your points.': 'Zwei einfache Wege, deine Punkte einzulösen.',

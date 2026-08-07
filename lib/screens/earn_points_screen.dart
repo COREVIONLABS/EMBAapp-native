@@ -11,6 +11,7 @@ import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
 import 'leaderboard_screen.dart';
 import 'fan_polls_screen.dart';
+import 'referral_screen.dart';
 import '../l10n/strings.dart';
 
 /// Earn Points — a motivating fan hub (not a flat list): a weekly points goal
@@ -22,6 +23,7 @@ class EarnPointsScreen extends StatelessWidget {
   // Ways to earn: (icon, title, subtitle, reward pill, colour)
   static const _ways = <(IconData, String, String, String, Color)>[
     (Icons.confirmation_number_outlined, 'Attend a Match', 'Check in at the stadium', '+100', AppColors.brandPrimary),
+    (Icons.sports_soccer_outlined, 'Visit training', 'Check in at Berger Feld', '+40', AppColors.brandPrimary),
     (Icons.shopping_bag_outlined, 'Fanshop Purchase', 'Earn on every order', '1 / €1', Color(0xFF0A2A5E)),
     (Icons.play_circle_outline_rounded, 'Watch a Short Ad', 'A quick sponsor clip', '+15', Color(0xFFE65100)),
     (Icons.share_outlined, 'Share on Social', 'Spread the blue & white', '+25', AppColors.brandPrimary),
@@ -163,11 +165,11 @@ class EarnPointsScreen extends StatelessWidget {
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(tr('Bring a friend'), style: AppText.label2.copyWith(color: Colors.white)),
               const SizedBox(height: 2),
-              Text(tr('You both get +200 points'), style: AppText.body3.copyWith(color: Colors.white70)),
+              Text(tr('You both get +250 points'), style: AppText.body3.copyWith(color: Colors.white70)),
             ])),
             const SizedBox(width: 10),
             Tappable(
-              onTap: () => showShareSheet(context, subject: tr('Join me on the S04 Fan App')),
+              onTap: () => _push(context, const ReferralScreen()),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(999)),

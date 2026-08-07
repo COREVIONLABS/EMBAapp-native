@@ -14,6 +14,8 @@ import 'loyalty_tiers_screen.dart';
 import 'fan_profile_screen.dart';
 import 'payment_methods_screen.dart';
 import 'points_history_screen.dart';
+import 'member_id_screen.dart';
+import 'referral_screen.dart';
 import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
@@ -115,6 +117,8 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 22),
         _group(context, 'Account', [
+          (Icons.badge_outlined, 'Club ID', ''),
+          (Icons.group_add_outlined, 'Invite friends', '+250'),
           (Icons.person_outline_rounded, 'Edit Profile', ''),
           (Icons.military_tech_outlined, 'Fan Level', FanModel.currentTier),
           (Icons.history_rounded, 'Points History', ''),
@@ -190,6 +194,10 @@ class ProfileScreen extends StatelessWidget {
 
 Widget? _screenFor(String label) {
   switch (label) {
+    case 'Club ID':
+      return const MemberIdScreen();
+    case 'Invite friends':
+      return const ReferralScreen();
     case 'Edit Profile':
       return const EditProfileScreen();
     case 'Fan Level':
