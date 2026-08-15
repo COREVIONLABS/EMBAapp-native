@@ -1797,4 +1797,37 @@ const Map<String, String> _de = {
   'Monthly gym membership': 'Monatliche Fitness-Mitgliedschaft',
   'Post-match dinner in GE': 'Essen nach dem Spiel in GE',
   'Matchday travel to the arena': 'Anreise zur Arena am Spieltag',
+
+  // ── Local partner marketplace ────────────────────────────────
+  'Partners near you': 'Partner in deiner Nähe',
+  'Local partner deals': 'Lokale Partner-Angebote',
+  'Swap points for vouchers at cafés, restaurants & shops around you.':
+      'Tausche Punkte gegen Gutscheine bei Cafés, Restaurants & Läden in deiner Nähe.',
+  '{n} partners': '{n} Partner',
+  '{n} live offers': '{n} aktive Angebote',
+  'List': 'Liste',
+  'Map': 'Karte',
+  'Café': 'Café',
+  'Restaurant': 'Restaurant',
+  'Bakery': 'Bäckerei',
+  'Barber': 'Friseur',
+  'Leisure': 'Freizeit',
+  'Tap a pin to see the partner’s offers.': 'Tippe auf einen Pin für die Angebote des Partners.',
+  'Partners join free and reward you with vouchers — no ads, real value.':
+      'Partner sind kostenlos dabei und belohnen dich mit Gutscheinen — keine Werbung, echter Mehrwert.',
+  'Ad': 'Anzeige',
+  '{n} offers': '{n} Angebote',
+  'Official partner': 'Offizieller Partner',
+  'Directions': 'Route',
+  'Opening directions to': 'Route wird geöffnet zu',
+  'Saved — we’ll notify you when they add a new offer.':
+      'Gemerkt — wir benachrichtigen dich bei neuen Angeboten.',
+  'Offers': 'Angebote',
+  'Redeem points for a voucher, then show its QR code at the shop.':
+      'Punkte gegen Gutschein einlösen, dann den QR-Code im Laden zeigen.',
+  'Cafés, restaurants & shops around you — pay with points.':
+      'Cafés, Restaurants & Läden in deiner Nähe — mit Punkten bezahlen.',
+  'Near me': 'In der Nähe',
+  '{n} partners with live offers': '{n} Partner mit aktiven Angeboten',
+  '% off · 1+1 · € vouchers — redeem in-store': '% Rabatt · 1+1 · €-Gutscheine — im Laden einlösen',
 };

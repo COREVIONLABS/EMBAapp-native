@@ -5,10 +5,12 @@ import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
+import '../model/partners.dart';
 import '../widgets/voucher_flow.dart';
 import 'my_vouchers_screen.dart';
 import 'buy_points_screen.dart';
 import 'raffles_screen.dart';
+import 'partners_screen.dart';
 import '../l10n/strings.dart';
 
 /// Redeem Points — deliberately simple. Points can only be turned into two
@@ -115,6 +117,70 @@ class RedeemScreen extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
+        // ── Partners near you — local merchant marketplace (points → voucher) ──
+        Row(children: [
+          Expanded(child: Text(tr('Partners near you'), style: AppText.label1)),
+          Tappable(
+            onTap: () => _push(context, const PartnersScreen()),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(tr('See all'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            ]),
+          ),
+        ]),
+        const SizedBox(height: 4),
+        Text(tr('Cafés, restaurants & shops around you — pay with points.'), style: AppText.body3Regular),
+        const SizedBox(height: 12),
+        Tappable(
+          scale: 0.98,
+          onTap: () => _push(context, const PartnersScreen()),
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              // Mini map strip with a "near me" pill.
+              SizedBox(
+                height: 96,
+                child: Stack(fit: StackFit.expand, children: [
+                  CustomPaint(painter: _MiniMapPainter()),
+                  Positioned(left: 20, top: 30, child: _pin('🥐', AppColors.gold)),
+                  Positioned(left: 120, top: 52, child: _pin('☕', AppColors.surface)),
+                  Positioned(right: 40, top: 22, child: _pin('🍕', AppColors.gold)),
+                  Positioned(right: 110, bottom: 14, child: _pin('🏋️', AppColors.surface)),
+                  Positioned(
+                    right: 12, top: 12,
+                    child: Pill(color: AppColors.brandPrimary, child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.near_me_rounded, size: 12, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Text(tr('Near me'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                    ])),
+                  ),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Row(children: [
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(trp('{n} partners with live offers', n: '${partnerStore.partnerCount}'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                    const SizedBox(height: 2),
+                    Text(tr('% off · 1+1 · € vouchers — redeem in-store'), style: AppText.body3Regular),
+                  ])),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(color: AppColors.brandPrimary, borderRadius: BorderRadius.circular(999)),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.map_rounded, size: 15, color: Colors.white),
+                      const SizedBox(width: 6),
+                      Text(tr('Explore'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                    ]),
+                  ),
+                ]),
+              ),
+            ]),
+          ),
+        ),
+        const SizedBox(height: 24),
+
         // ── 1) Value vouchers — swipeable row + See all ──
         _sectionHead(context, title: tr('Value vouchers'), subtitle: tr('A fixed € amount for the Fanshop or a sponsor.'), list: _valueVouchers, valueBadge: true),
         const SizedBox(height: 12),
@@ -200,6 +266,18 @@ class RedeemScreen extends StatelessWidget {
     );
   }
 
+  // A small map pin (emoji chip) for the Partners mini-map strip.
+  Widget _pin(String emoji, Color bg) => Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: bg,
+          shape: BoxShape.circle,
+          border: Border.all(color: bg == AppColors.surface ? AppColors.borderLightest : bg, width: 2),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 5, offset: const Offset(0, 2))],
+        ),
+        child: Text(emoji, style: const TextStyle(fontSize: 14)),
+      );
+
   // One of the two "how to spend points" pathway tiles in the intro hero.
   Widget _pathTile(IconData icon, String title, String sub) => Container(
         padding: const EdgeInsets.all(12),
@@ -281,6 +359,26 @@ class _VoucherListScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Faint street-grid backdrop for the Partners mini-map strip on the Redeem tab.
+class _MiniMapPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Offset.zero & size, Paint()..color = AppColors.surfaceMinimal);
+    final line = Paint()..color = AppColors.borderLightest..strokeWidth = 1;
+    for (double x = 0; x < size.width; x += 30) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), line);
+    }
+    for (double y = 0; y < size.height; y += 26) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), line);
+    }
+    // One highlighted "road".
+    canvas.drawLine(Offset(0, size.height * 0.62), Offset(size.width, size.height * 0.42), Paint()..color = AppColors.brandPrimary.withValues(alpha: 0.18)..strokeWidth = 5);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// A clean voucher-offer card: a small icon, a value/discount badge, the title

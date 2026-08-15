@@ -26,8 +26,10 @@ import 'fanplus_pay_screen.dart';
 import 'matchday_quiz_screen.dart';
 import 'sponsor_missions_screen.dart';
 import 'auctions_screen.dart';
+import 'partners_screen.dart';
 import '../model/sponsor_missions.dart';
 import '../model/auctions.dart';
+import '../model/partners.dart';
 import '../model/fan_model.dart';
 import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
@@ -127,6 +129,9 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               const SizedBox(height: 12),
               // 4b) Partner value — sponsor missions + points auctions.
               _partnerRow(context),
+              const SizedBox(height: 12),
+              // 4c) Sponsored placement (labelled "Anzeige") — sellable inventory.
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _sponsoredBanner(context)),
               const SizedBox(height: 20),
               // 5) Matchday context — the one contextual zone (matchday only).
               ValueListenableBuilder<bool>(
@@ -259,6 +264,57 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               sub: auctionStore.leadingCount > 0 ? tr('You’re winning a lot') : tr('Bid to win prizes'),
               onTap: () => _push(context, const AuctionsScreen()),
             )),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  // Sponsored home placement — a paid, clearly-labelled "Anzeige" card for a
+  // local Top-Partner. This is the sellable ad inventory (banner / home tile),
+  // kept premium: one tasteful card, always labelled per EU 2019/1150.
+  Widget _sponsoredBanner(BuildContext context) {
+    final sponsored = partnerStore.nearest.where((p) => p.sponsored).toList();
+    if (sponsored.isEmpty) return const SizedBox.shrink();
+    final p = sponsored.first;
+    final o = p.offers.first;
+    return Tappable(
+      scale: 0.98,
+      onTap: () => _push(context, PartnerDetailScreen(id: p.id)),
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
+          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [p.color.withValues(alpha: 0.12), AppColors.surface]),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Container(width: 40, height: 40, decoration: BoxDecoration(color: p.color.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)), alignment: Alignment.center, child: Text(p.emoji, style: const TextStyle(fontSize: 20))),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 9))),
+                  const SizedBox(width: 6),
+                  Flexible(child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700))),
+                ]),
+                const SizedBox(height: 3),
+                Text(tr(o.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+              ])),
+            ]),
+            const SizedBox(height: 12),
+            Row(children: [
+              Pill(color: AppColors.brandLightest, child: Text('${o.badge} · ${tr(p.category)}', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+              const SizedBox(width: 8),
+              Icon(Icons.near_me_rounded, size: 12, color: AppColors.textLight),
+              const SizedBox(width: 3),
+              Text(p.distanceLabel, style: AppText.caption1.copyWith(color: AppColors.textLight)),
+              const Spacer(),
+              Text(tr('Get voucher'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            ]),
           ]),
         ),
       ),
