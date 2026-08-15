@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
@@ -44,8 +45,41 @@ class _RafflesScreenState extends State<RafflesScreen> {
         [Color(0xFF0A2A5E), Color(0xFF000D22)], 400, Duration(days: 12, hours: 4), 410),
   ];
 
+  /// Cost of one extra lot in points (the "extra lots cost points" economy — a
+  /// real points sink and the destination for daily-game points).
+  static const int _extraLotCost = 200;
+
+  /// Extra lots the fan has bought into each draw (on top of their free lots).
+  final List<int> _extra = List<int>.filled(_raffles.length, 0);
+
   late final List<DateTime> _ends;
   Timer? _timer;
+
+  /// Free lots that automatically enter every open draw (from membership).
+  int get _freeLots => FanModel.perks.freeLots;
+
+  /// The fan's total entries in draw [i] = free lots + bought extra lots.
+  int _myEntries(int i) => _freeLots + _extra[i];
+
+  /// Total entries shown for a draw = the seeded crowd + your extra lots.
+  int _entriesFor(int i) => _raffles[i].entries + _extra[i];
+
+  Future<void> _addExtraLot(int i) async {
+    if (FanModel.fanPoints < _extraLotCost) {
+      await showConfirmDialog(context,
+          title: 'Not enough points',
+          message: trp('An extra lot costs {n} points. Earn or top up to boost your chances.', n: '$_extraLotCost'),
+          confirmLabel: 'OK');
+      return;
+    }
+    if (!FanModel.spendPoints(_extraLotCost)) return;
+    HapticFeedback.mediumImpact();
+    setState(() => _extra[i] += 1);
+    if (!mounted) return;
+    await showSuccessSheet(context,
+        title: 'Lot added! 🎉',
+        message: trp('You now have {n} lots in this draw — more lots, more chances.', n: '${_myEntries(i)}'));
+  }
 
   @override
   void initState() {
@@ -83,14 +117,29 @@ class _RafflesScreenState extends State<RafflesScreen> {
     return SubScaffold(
       title: tr('Tombola'),
       children: [
-        // Lots are entered automatically into the next draw — a short line, not
-        // a "lots left" box (which read oddly when you never place them yourself).
-        Row(children: [
-          Icon(Icons.bolt_rounded, size: 15, color: AppColors.brandPrimary),
-          const SizedBox(width: 6),
-          Expanded(child: Text(tr('Your lots are entered into the next draw automatically — more lots, more chances.'),
-              style: AppText.body3.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w600))),
-        ]),
+        // Free lots auto-enter every open draw; extra lots can be added for points.
+        if (_freeLots == 0)
+          Tappable(
+            scale: 0.99,
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+              child: Row(children: [
+                Icon(Icons.info_outline_rounded, size: 16, color: AppColors.brandPrimary),
+                const SizedBox(width: 8),
+                Expanded(child: Text(tr('You have no free lots yet — become a member to enter every draw, or add a lot for points below.'), style: AppText.body3.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
+                Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+              ]),
+            ),
+          )
+        else
+          Row(children: [
+            Icon(Icons.bolt_rounded, size: 15, color: AppColors.brandPrimary),
+            const SizedBox(width: 6),
+            Expanded(child: Text(trp('Your {n} free lots enter every open draw automatically — add extra lots for even more chances.', n: '$_freeLots'),
+                style: AppText.body3.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w600))),
+          ]),
         const SizedBox(height: 10),
         // Upgrade nudge — only when NOT already on the top tier (no dead end).
         if (!_topTier)
@@ -144,7 +193,7 @@ class _RafflesScreenState extends State<RafflesScreen> {
         Row(children: [
           Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
           const Spacer(),
-          Pill(color: Colors.white24, child: Text('${FanModel.fmtPublic(r.entries)} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white))),
+          Pill(color: Colors.white24, child: Text('${FanModel.fmtPublic(_entriesFor(i))} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white))),
         ]),
         const SizedBox(height: 16),
         Icon(r.glyph, color: AppColors.gold, size: 40),
@@ -161,21 +210,31 @@ class _RafflesScreenState extends State<RafflesScreen> {
           _count(_two(left.inHours % 24), 'Hrs'),
           const SizedBox(width: 8),
           _count(_two(left.inMinutes % 60), 'Min'),
-          const SizedBox(width: 8),
-          _count(_two(left.inSeconds % 60), 'Sec'),
         ]),
-        const SizedBox(height: 18),
-        // You're automatically in the next draw — no manual entry.
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 13),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(AppRadii.pill)),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.check_circle_rounded, color: AppColors.gold, size: 18),
-            const SizedBox(width: 8),
-            Text(tr('You\'re automatically in this draw'), style: AppText.label2.copyWith(color: Colors.white)),
-          ]),
+        const SizedBox(height: 16),
+        // Your entries in this draw + an active "add an extra lot" action.
+        Row(children: [
+          const Icon(Icons.local_activity_rounded, color: AppColors.gold, size: 18),
+          const SizedBox(width: 8),
+          Expanded(child: Text(
+            _myEntries(i) > 0 ? trp('You’re in with {n} lots', n: '${_myEntries(i)}') : tr('You have no lots in this draw yet'),
+            style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+          )),
+        ]),
+        const SizedBox(height: 12),
+        Tappable(
+          onTap: () => _addExtraLot(i),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.goldGradient), borderRadius: BorderRadius.circular(AppRadii.pill)),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              const Icon(Icons.add_rounded, color: AppColors.brandDarkest, size: 20),
+              const SizedBox(width: 8),
+              Text('${tr('Add an extra lot')} · $_extraLotCost ${tr('pts')}', style: AppText.label2.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+            ]),
+          ),
         ),
       ]),
     );
@@ -199,6 +258,7 @@ class _RafflesScreenState extends State<RafflesScreen> {
     final r = _raffles[i];
     final left = _left(i);
     return SurfaceCard(
+      onTap: () => _openDraw(i),
       child: Row(children: [
         Container(
           width: 52, height: 52,
@@ -213,11 +273,78 @@ class _RafflesScreenState extends State<RafflesScreen> {
             Icon(Icons.schedule_rounded, size: 13, color: AppColors.textLight),
             const SizedBox(width: 4),
             Text('${tr('Draw in')} ${left.inDays}d ${left.inHours % 24}h', style: AppText.body3Regular),
+            const SizedBox(width: 8),
+            const Icon(Icons.local_activity_rounded, size: 12, color: AppColors.brandPrimary),
+            const SizedBox(width: 3),
+            Text(trp('you: {n}', n: '${_myEntries(i)}'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
           ]),
         ])),
         const SizedBox(width: 8),
-        Pill(color: AppColors.surfaceMinimal, child: Text('${FanModel.fmtPublic(r.entries)} ${tr('entries')}', style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700))),
+        Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
       ]),
     );
   }
+
+  /// Draw detail — prize, live countdown, your entries vs the crowd, and the
+  /// active "add an extra lot" action.
+  void _openDraw(int i) {
+    final r = _raffles[i];
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+      builder: (sheetCtx) {
+        final left = _left(i);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16), decoration: BoxDecoration(color: AppColors.borderLightest, borderRadius: BorderRadius.circular(2)))),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Icon(r.glyph, color: AppColors.gold, size: 36),
+                const SizedBox(height: 10),
+                Text(tr(r.prize), style: AppText.h4.copyWith(color: Colors.white, fontSize: 22)),
+                const SizedBox(height: 4),
+                Text('${tr('Draw in')} ${left.inDays}d ${left.inHours % 24}h ${left.inMinutes % 60}m', style: AppText.body3.copyWith(color: Colors.white70)),
+              ]),
+            ),
+            const SizedBox(height: 16),
+            Row(children: [
+              Expanded(child: _sheetStat(trp('{n} lots', n: '${_myEntries(i)}'), tr('your entries'))),
+              const SizedBox(width: 12),
+              Expanded(child: _sheetStat(FanModel.fmtPublic(_entriesFor(i)), tr('total entries'))),
+            ]),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+              child: Row(children: [
+                Icon(Icons.bolt_rounded, size: 15, color: AppColors.brandPrimary),
+                const SizedBox(width: 8),
+                Expanded(child: Text(trp('Your {n} free lots are already in — add extra lots to boost your chances.', n: '$_freeLots'), style: AppText.body3.copyWith(color: AppColors.onAccent))),
+              ]),
+            ),
+            const SizedBox(height: 16),
+            PrimaryButton('${tr('Add an extra lot')} · $_extraLotCost ${tr('pts')}', onTap: () {
+              Navigator.of(sheetCtx).pop();
+              _addExtraLot(i);
+            }),
+          ]),
+        );
+      },
+    );
+  }
+
+  Widget _sheetStat(String value, String label) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(value, style: AppText.h4.copyWith(color: AppColors.textDarker, fontSize: 22)),
+          Text(label, style: AppText.body3Regular),
+        ]),
+      );
 }

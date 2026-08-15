@@ -1915,4 +1915,34 @@ const Map<String, String> _de = {
   'Ready to redeem': 'Bereit zum Einlösen',
   'Show the code in the shop or at the partner to redeem.':
       'Zeig den Code im Shop oder beim Partner zum Einlösen.',
+
+  // ── Tombola: active entry + extra lots ───────────────────────
+  'An extra lot costs {n} points. Earn or top up to boost your chances.':
+      'Ein Extra-Los kostet {n} Punkte. Sammle welche oder lade auf, um deine Chancen zu erhöhen.',
+  'Lot added! 🎉': 'Los eingesetzt! 🎉',
+  'You now have {n} lots in this draw — more lots, more chances.':
+      'Du hast jetzt {n} Lose in dieser Ziehung — mehr Lose, mehr Chancen.',
+  'You have no free lots yet — become a member to enter every draw, or add a lot for points below.':
+      'Du hast noch keine Freilose — werde Mitglied, um bei jeder Ziehung dabei zu sein, oder setze unten ein Los für Punkte ein.',
+  'Your {n} free lots enter every open draw automatically — add extra lots for even more chances.':
+      'Deine {n} Freilose sind in jeder offenen Ziehung automatisch dabei — setze Extra-Lose für noch mehr Chancen ein.',
+  'You’re in with {n} lots': 'Du bist mit {n} Losen dabei',
+  'You have no lots in this draw yet': 'Du hast noch keine Lose in dieser Ziehung',
+  'Add an extra lot': 'Extra-Los einsetzen',
+  'you: {n}': 'du: {n}',
+  '{n} lots': '{n} Lose',
+  'your entries': 'deine Lose',
+  'total entries': 'Lose gesamt',
+  'Your {n} free lots are already in — add extra lots to boost your chances.':
+      'Deine {n} Freilose sind schon dabei — setze Extra-Lose ein, um deine Chancen zu erhöhen.',
+  'See all draws': 'Alle Ziehungen',
+
+  // ── Collection: sticker packs ────────────────────────────────
+  'Open a sticker pack': 'Sticker-Pack öffnen',
+  'Album complete!': 'Album komplett!',
+  'You’ve collected every sticker this season. 🎉': 'Du hast diese Saison alle Sticker gesammelt. 🎉',
+  'A sticker pack costs {n} points. Earn some and come back.':
+      'Ein Sticker-Pack kostet {n} Punkte. Sammle welche und komm wieder.',
+  'New sticker! 🎉': 'Neuer Sticker! 🎉',
+  'You unlocked {a} — {n} of {b} collected.': '{a} freigeschaltet — {n} von {b} gesammelt.',
 };

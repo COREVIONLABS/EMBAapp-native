@@ -270,7 +270,7 @@ class GewinnenScreen extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text('${FanModel.fmtPublic(1840)} ${tr('entries')}', style: AppText.body3.copyWith(color: Colors.white70, fontWeight: FontWeight.w700)),
                     const Spacer(),
-                    Text(tr('See all prizes'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                    Text(tr('See all draws'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
                     const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
                   ]),
                 ]),

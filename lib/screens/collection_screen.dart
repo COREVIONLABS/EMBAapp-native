@@ -3,15 +3,22 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// Season Collection — a Panini-style digital sticker album. Fans earn or
 /// win stickers through activity and drops; completing sets unlocks rewards.
 /// A retention loop that gives points a collectible destination.
-class CollectionScreen extends StatelessWidget {
+class CollectionScreen extends StatefulWidget {
   const CollectionScreen({super.key});
+  @override
+  State<CollectionScreen> createState() => _CollectionScreenState();
+}
 
-  // (name, owned, rare)
+class _CollectionScreenState extends State<CollectionScreen> {
+  static const int _packCost = 200;
+
+  // (name, initiallyOwned, rare)
   static const _stickers = [
     ('Karaman', true, false),
     ('Terodde', true, true),
@@ -27,13 +34,32 @@ class CollectionScreen extends StatelessWidget {
     ('Coach', false, true),
   ];
 
+  late final Set<String> _owned = {for (final s in _stickers) if (s.$2) s.$1};
+
+  Future<void> _openPack() async {
+    final missing = _stickers.where((s) => !_owned.contains(s.$1)).toList();
+    if (missing.isEmpty) {
+      await showConfirmDialog(context, title: 'Album complete!', message: 'You’ve collected every sticker this season. 🎉', confirmLabel: 'Nice');
+      return;
+    }
+    if (FanModel.fanPoints < _packCost) {
+      await showConfirmDialog(context, title: 'Not enough points', message: trp('A sticker pack costs {n} points. Earn some and come back.', n: '$_packCost'), confirmLabel: 'OK');
+      return;
+    }
+    if (!FanModel.spendPoints(_packCost)) return;
+    final reveal = missing.first;
+    setState(() => _owned.add(reveal.$1));
+    if (!mounted) return;
+    await showSuccessSheet(context, title: 'New sticker! 🎉', message: trp('You unlocked {a} — {n} of {b} collected.', n: '${_owned.length}', a: reveal.$1, b: '${_stickers.length}'));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final owned = _stickers.where((s) => s.$2).length;
+    final owned = _owned.length;
     final total = _stickers.length;
     return SubScaffold(
       title: tr('Season Collection'),
-      bottomBar: PrimaryButton(tr('Open a sticker pack · 200 pts'), onTap: () => showSuccessSheet(context, title: 'Pack opened!', message: 'You unlocked 3 new stickers — check your album.')),
+      bottomBar: PrimaryButton('${tr('Open a sticker pack')} · $_packCost ${tr('pts')}', onTap: _openPack),
       children: [
         // Progress
         Container(
@@ -65,7 +91,7 @@ class CollectionScreen extends StatelessWidget {
           crossAxisSpacing: 12,
           childAspectRatio: 0.72,
           children: [
-            for (final s in _stickers) _StickerTile(name: s.$1, owned: s.$2, rare: s.$3),
+            for (final s in _stickers) _StickerTile(name: s.$1, owned: _owned.contains(s.$1), rare: s.$3),
           ],
         ),
       ],

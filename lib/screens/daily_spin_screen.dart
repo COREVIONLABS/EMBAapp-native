@@ -46,10 +46,15 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
 
   void _spin() {
     if (_c.isAnimating || _spun) return;
-    final extra = math.Random().nextDouble() * 2 * math.pi; // vary where it stops
-    _anim = Tween<double>(begin: 0, end: 6 * 2 * math.pi + extra).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
+    // Roll the reward first, then stop the wheel *on that segment* — so the
+    // pointer always lands on the value actually awarded (fairness/trust).
+    final reward = _rollReward();
+    final idx = _values.indexOf(reward);
+    const twoPi = 2 * math.pi;
+    final sweep = twoPi / _values.length;
+    final stop = (twoPi - ((idx + 0.5) * sweep) % twoPi) % twoPi;
+    _anim = Tween<double>(begin: 0, end: 6 * twoPi + stop).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
     _c.forward(from: 0).whenComplete(() {
-      final reward = _rollReward();
       FanModel.addPoints(reward); // credit the balance for real
       if (mounted) setState(() { _reward = reward; _spun = true; });
     });
