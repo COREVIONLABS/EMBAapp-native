@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// Points History — a running balance header plus grouped transaction cards
-/// (earned in green, redeemed in red) with the amount shown as a pill.
-class PointsHistoryScreen extends StatelessWidget {
+/// (earned in green, redeemed in red) with the amount shown as a pill. A filter
+/// toggle narrows to earned or spent.
+class PointsHistoryScreen extends StatefulWidget {
   const PointsHistoryScreen({super.key});
+  @override
+  State<PointsHistoryScreen> createState() => _PointsHistoryScreenState();
+}
+
+class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
+  int _filter = 0; // 0 = all, 1 = earned, 2 = spent
 
   // (icon, title, when, amount, isCredit)
   static const _rows = <(IconData, String, String, String, bool)>[
@@ -43,10 +51,24 @@ class PointsHistoryScreen extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 16),
-        SurfaceCard(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Column(children: [
-            for (final (i, r) in _rows.indexed) ...[
+        SegmentedToggle(
+          labels: [tr('All'), tr('Earned'), tr('Spent')],
+          selected: _filter,
+          onTap: (i) => setState(() => _filter = i),
+        ),
+        const SizedBox(height: 12),
+        Builder(builder: (context) {
+          final rows = _filter == 0 ? _rows : _rows.where((r) => _filter == 1 ? r.$5 : !r.$5).toList();
+          if (rows.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Center(child: Text(tr('Nothing here yet'), style: AppText.body2.copyWith(color: AppColors.textLight))),
+            );
+          }
+          return SurfaceCard(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Column(children: [
+              for (final (i, r) in rows.indexed) ...[
               if (i > 0) Divider(height: 1, color: AppColors.borderLightest),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -71,7 +93,8 @@ class PointsHistoryScreen extends StatelessWidget {
               ),
             ],
           ]),
-        ),
+          );
+        }),
       ],
     );
   }

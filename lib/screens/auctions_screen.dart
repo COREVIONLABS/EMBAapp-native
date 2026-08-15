@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/auctions.dart';
@@ -12,8 +13,14 @@ import '../l10n/strings.dart';
 
 /// Fan Points auctions hub — bid points on money-can't-buy lots (Socios-style,
 /// in the club's own points, no crypto). Pushed from the Gewinnen tab.
-class AuctionsScreen extends StatelessWidget {
+class AuctionsScreen extends StatefulWidget {
   const AuctionsScreen({super.key});
+  @override
+  State<AuctionsScreen> createState() => _AuctionsScreenState();
+}
+
+class _AuctionsScreenState extends State<AuctionsScreen> {
+  int _tab = 0; // 0 = live, 1 = ended
 
   void _open(BuildContext context, Auction a) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => AuctionDetailScreen(id: a.id)));
@@ -66,32 +73,37 @@ class AuctionsScreen extends StatelessWidget {
               const SizedBox(height: 16),
             ],
 
-            // ── Live auctions ──
-            Align(alignment: Alignment.centerLeft, child: Text(tr('Live now'), style: AppText.label1)),
-            const SizedBox(height: 12),
-            for (final a in live) ...[
-              _AuctionCard(auction: a, onTap: () => _open(context, a)),
-              const SizedBox(height: 14),
+            // ── Live / Ended toggle (only when there are past lots) ──
+            if (past.isNotEmpty) ...[
+              SegmentedToggle(
+                labels: ['${tr('Live now')} (${live.length})', '${tr('Ended')} (${past.length})'],
+                selected: _tab,
+                onTap: (i) => setState(() => _tab = i),
+              ),
+              const SizedBox(height: 16),
+            ] else ...[
+              Align(alignment: Alignment.centerLeft, child: Text(tr('Live now'), style: AppText.label1)),
+              const SizedBox(height: 12),
             ],
 
-            // ── How it works ──
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile)),
-              child: Row(children: [
-                Icon(Icons.info_outline_rounded, size: 18, color: AppColors.textLight),
-                const SizedBox(width: 10),
-                Expanded(child: Text(tr('A bid commits your points. Get outbid and they’re returned — you only spend what you win with.'),
-                    style: AppText.body3.copyWith(color: AppColors.textNormal))),
-              ]),
-            ),
-
-            // ── Past / won ──
-            if (past.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              Align(alignment: Alignment.centerLeft, child: Text(tr('Past auctions'), style: AppText.label1)),
-              const SizedBox(height: 12),
+            if (_tab == 0) ...[
+              for (final a in live) ...[
+                _AuctionCard(auction: a, onTap: () => _open(context, a)),
+                const SizedBox(height: 14),
+              ],
+              // ── How it works ──
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile)),
+                child: Row(children: [
+                  Icon(Icons.info_outline_rounded, size: 18, color: AppColors.textLight),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(tr('A bid commits your points. Get outbid and they’re returned — you only spend what you win with.'),
+                      style: AppText.body3.copyWith(color: AppColors.textNormal))),
+                ]),
+              ),
+            ] else ...[
               for (final a in past) ...[
                 _AuctionCard(auction: a, onTap: () => _open(context, a)),
                 const SizedBox(height: 14),

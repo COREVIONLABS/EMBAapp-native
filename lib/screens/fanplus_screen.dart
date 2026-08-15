@@ -49,32 +49,6 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
 
   void _push(BuildContext context, Widget s) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
-  // Reusable pill segmented control (matches the Redeem € / % toggle).
-  Widget _segment(List<String> labels, int selected, ValueChanged<int> onTap) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(999)),
-      child: Row(children: [
-        for (var i = 0; i < labels.length; i++)
-          Expanded(
-            child: Tappable(
-              onTap: () => onTap(i),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 9),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: i == selected ? AppColors.surface : Colors.transparent,
-                  borderRadius: BorderRadius.circular(999),
-                  boxShadow: i == selected ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
-                ),
-                child: Text(labels[i], maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: i == selected ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w800)),
-              ),
-            ),
-          ),
-      ]),
-    );
-  }
-
   // Pitch pricing helpers (Fan Member €4.99 · Super Fan €9.99 · annual = 10×).
   String get _pitchTierName => _pitchTier == 0 ? 'Fan Member' : 'Super Fan';
   double get _monthly => _pitchTier == 0 ? 4.99 : 9.99;
@@ -189,13 +163,13 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         // ── Tier + billing toggles (compare inline, like the voucher switch) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _segment([tr('Fan Member'), tr('Super Fan')], _pitchTier, (i) => setState(() => _pitchTier = i)),
+          child: SegmentedToggle(labels: [tr('Fan Member'), tr('Super Fan')], selected: _pitchTier, onTap: (i) => setState(() => _pitchTier = i)),
         ),
         const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
-            Expanded(child: _segment([tr('Monthly'), tr('Yearly')], _annual ? 1 : 0, (i) => setState(() => _annual = i == 1))),
+            Expanded(child: SegmentedToggle(labels: [tr('Monthly'), tr('Yearly')], selected: _annual ? 1 : 0, onTap: (i) => setState(() => _annual = i == 1))),
             const SizedBox(width: 10),
             _annual
                 ? Pill(color: AppColors.successBg, child: Text(tr('2 months free'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)))
@@ -330,7 +304,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         // ── Vorteile / Inhalte toggle (same pattern as the voucher switch) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _segment([tr('Perks'), tr('Content')], _loungeTab, (i) => setState(() => _loungeTab = i)),
+          child: SegmentedToggle(labels: [tr('Perks'), tr('Content')], selected: _loungeTab, onTap: (i) => setState(() => _loungeTab = i)),
         ),
         const SizedBox(height: 20),
         if (_loungeTab == 0) ...[

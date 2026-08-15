@@ -205,14 +205,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
         ]),
         const SizedBox(height: 10),
         // € / % segmented toggle.
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(999)),
-          child: Row(children: [
-            Expanded(child: _voucherTabButton(label: tr('€ value'), selected: _vTab == 0, onTap: () => setState(() => _vTab = 0))),
-            Expanded(child: _voucherTabButton(label: tr('% off'), selected: _vTab == 1, onTap: () => setState(() => _vTab = 1))),
-          ]),
-        ),
+        SegmentedToggle(labels: [tr('€ value'), tr('% off')], selected: _vTab, onTap: (i) => setState(() => _vTab = i)),
         const SizedBox(height: 8),
         Text(_vTab == 0 ? tr('A fixed € amount for the Fanshop or a sponsor.') : tr('A fixed % off tickets, Fanshop and sponsors.'), style: AppText.body3Regular),
         const SizedBox(height: 12),
@@ -289,23 +282,6 @@ class _RedeemScreenState extends State<RedeemScreen> {
               style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],
-    );
-  }
-
-  // One pill in the € / % voucher toggle.
-  Widget _voucherTabButton({required String label, required bool selected, required VoidCallback onTap}) {
-    return Tappable(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 9),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: selected ? AppColors.surface : Colors.transparent,
-          borderRadius: BorderRadius.circular(999),
-          boxShadow: selected ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
-        ),
-        child: Text(label, style: AppText.body3.copyWith(color: selected ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w800)),
-      ),
     );
   }
 

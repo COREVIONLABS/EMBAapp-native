@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
@@ -9,9 +10,16 @@ import '../l10n/strings.dart';
 
 /// "My Vouchers" — every reward the fan redeemed points for. Each is a code they
 /// take to the real Fanshop / ticket shop / counter; the status flips to "used"
-/// once the staff PIN confirms it.
-class MyVouchersScreen extends StatelessWidget {
+/// once the staff PIN confirms it. Open vs. used split behind a toggle so a long
+/// history never buries the codes that are still redeemable.
+class MyVouchersScreen extends StatefulWidget {
   const MyVouchersScreen({super.key});
+  @override
+  State<MyVouchersScreen> createState() => _MyVouchersScreenState();
+}
+
+class _MyVouchersScreenState extends State<MyVouchersScreen> {
+  int _tab = 0; // 0 = open, 1 = used
 
   IconData _icon(String category) => switch (category) {
         'Fanshop' => Icons.checkroom_rounded,
@@ -33,24 +41,27 @@ class MyVouchersScreen extends StatelessWidget {
             if (list.isEmpty) return _empty(context);
             final open = list.where((v) => !v.redeemed).toList();
             final used = list.where((v) => v.redeemed).toList();
+            final showing = _tab == 0 ? open : used;
             return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              if (open.isNotEmpty) ...[
-                _header(tr('Ready to redeem'), open.length),
-                const SizedBox(height: 10),
-                for (final v in open) ...[_row(context, v), const SizedBox(height: 10)],
-                const SizedBox(height: 6),
-                Row(children: [
-                  Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
-                  const SizedBox(width: 6),
-                  Expanded(child: Text(tr('Show the code in the shop or at the partner to redeem.'),
-                      style: AppText.caption1.copyWith(color: AppColors.textLight))),
-                ]),
-              ],
-              if (used.isNotEmpty) ...[
-                const SizedBox(height: 22),
-                _header(tr('Used'), used.length),
-                const SizedBox(height: 10),
-                for (final v in used) ...[_row(context, v), const SizedBox(height: 10)],
+              SegmentedToggle(
+                labels: ['${tr('Open')} (${open.length})', '${tr('Used')} (${used.length})'],
+                selected: _tab,
+                onTap: (i) => setState(() => _tab = i),
+              ),
+              const SizedBox(height: 16),
+              if (showing.isEmpty)
+                _tabEmpty()
+              else ...[
+                for (final v in showing) ...[_row(context, v), const SizedBox(height: 10)],
+                if (_tab == 0) ...[
+                  const SizedBox(height: 6),
+                  Row(children: [
+                    Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(tr('Show the code in the shop or at the partner to redeem.'),
+                        style: AppText.caption1.copyWith(color: AppColors.textLight))),
+                  ]),
+                ],
               ],
             ]);
           },
@@ -59,11 +70,16 @@ class MyVouchersScreen extends StatelessWidget {
     );
   }
 
-  Widget _header(String label, int n) => Row(children: [
-        Text(label, style: AppText.label2),
-        const SizedBox(width: 8),
-        Pill(color: AppColors.surfaceMinimal, child: Text('$n', style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w800))),
-      ]);
+  Widget _tabEmpty() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Center(child: Column(children: [
+          Container(width: 64, height: 64, decoration: BoxDecoration(color: AppColors.surfaceMinimal, shape: BoxShape.circle), child: Icon(_tab == 0 ? Icons.confirmation_number_outlined : Icons.check_circle_outline_rounded, size: 30, color: AppColors.textLight)),
+          const SizedBox(height: 14),
+          Text(_tab == 0 ? tr('No open vouchers') : tr('Nothing used yet'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(_tab == 0 ? tr('Redeem points for a voucher to see it here.') : tr('Redeemed vouchers move here once the code is used.'), textAlign: TextAlign.center, style: AppText.body3Regular),
+        ])),
+      );
 
   Widget _row(BuildContext context, IssuedVoucher v) {
     return SurfaceCard(

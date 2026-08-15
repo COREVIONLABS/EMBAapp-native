@@ -599,6 +599,43 @@ class SponsorPromoCard extends StatelessWidget {
   }
 }
 
+/// A pill segmented control (the "€ Wert / % Rabatt" switch) reused across the
+/// app for two- or three-way views of the same list. Pass already-localized
+/// [labels]; the selected index is highlighted on a white pill.
+class SegmentedToggle extends StatelessWidget {
+  final List<String> labels;
+  final int selected;
+  final ValueChanged<int> onTap;
+  const SegmentedToggle({super.key, required this.labels, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(999)),
+      child: Row(children: [
+        for (var i = 0; i < labels.length; i++)
+          Expanded(
+            child: Tappable(
+              onTap: () => onTap(i),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 4),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: i == selected ? AppColors.surface : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                  boxShadow: i == selected ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
+                ),
+                child: Text(labels[i], maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: AppText.body3.copyWith(color: i == selected ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w800)),
+              ),
+            ),
+          ),
+      ]),
+    );
+  }
+}
+
 /// One entry in a [QuickNavCard]: a coloured icon, a label, a sub-line and a tap.
 class QuickNavItem {
   final IconData icon;
