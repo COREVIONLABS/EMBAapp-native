@@ -11,3 +11,8 @@ import 'package:flutter/foundation.dart';
 final ValueNotifier<bool> personalizationConsent = ValueNotifier<bool>(true);
 final ValueNotifier<bool> adsConsent = ValueNotifier<bool>(true);
 final ValueNotifier<bool> locationConsent = ValueNotifier<bool>(true);
+
+/// Per-placement dismissal for the two floating sponsor ads. A fan can hide each
+/// one (with a confirm so it isn't lost by accident); session-scoped.
+final ValueNotifier<bool> pizzaHutAdVisible = ValueNotifier<bool>(true);
+final ValueNotifier<bool> mcdonaldsAdVisible = ValueNotifier<bool>(true);

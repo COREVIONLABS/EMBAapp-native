@@ -1841,6 +1841,8 @@ const Map<String, String> _de = {
   'Partners around the VELTINS-Arena.': 'Partner rund um die VELTINS-Arena.',
   'On every matchday menu': 'Auf jedes Spieltags-Menü',
   'Large pizzas, home delivery': 'Große Pizzen, Lieferung nach Hause',
+  'Hide this ad?': 'Anzeige ausblenden?',
+  'This sponsored placement will be hidden.': 'Diese gesponserte Anzeige wird ausgeblendet.',
   // ── Member-discounts marketplace: contextual bottom nav + views ──
   'Favorites': 'Favoriten',
   'Your saved partners.': 'Deine gemerkten Partner.',

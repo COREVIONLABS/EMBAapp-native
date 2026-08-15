@@ -59,10 +59,10 @@ class _MainShellState extends State<MainShell> {
             bottom: 0,
             child: AppBottomNav(active: _tab, onTap: (i) => setState(() => _tab = i)),
           ),
-          // Sellable sponsor ad slots floating above the nav (noon style):
-          // a centre Pizza Hut button + a floating McDonald's badge, hovering
-          // over the menu. Gated on ad consent, labelled "Anzeige".
-          const Positioned.fill(child: FloatingSponsorAds()),
+          // Floating Pizza Hut ad — Home tab only (kept off the other tabs so
+          // it doesn't feel like too much). The McDonald's badge lives on the
+          // Vorteile page instead. Gated on ad consent, labelled "Anzeige".
+          if (_tab == 0) const Positioned.fill(child: FloatingSponsorAds()),
         ],
       ),
     );

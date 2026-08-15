@@ -123,14 +123,18 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
           _ => _homeView(),
         },
       ),
-      // The floating McDonald's badge hovers above this page's own nav too
-      // (noon: Pizza Hut in the bar + M floating over it). Gated on ad consent.
+      // The floating McDonald's badge hovers above this page's own nav (noon:
+      // Pizza Hut in the bar + M floating over it). This is the ONLY place the M
+      // appears. Gated on ad consent, and dismissible with a confirm.
       Positioned(
         right: 26, bottom: bottomInset + 104,
-        child: ValueListenableBuilder<bool>(
-          valueListenable: adsConsent,
-          builder: (context, ads, __) => ads
-              ? McDonaldsAdBadge(onTap: () => _claim("McDonald's", '20% off'))
+        child: AnimatedBuilder(
+          animation: Listenable.merge([adsConsent, mcdonaldsAdVisible]),
+          builder: (context, __) => (adsConsent.value && mcdonaldsAdVisible.value)
+              ? McDonaldsAdBadge(
+                  onTap: () => _claim("McDonald's", '20% off'),
+                  onDismiss: () => confirmHideAd(context, mcdonaldsAdVisible),
+                )
               : const SizedBox.shrink(),
         ),
       ),
