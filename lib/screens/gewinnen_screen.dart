@@ -40,7 +40,7 @@ class GewinnenScreen extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(tr('Play & win'), style: AppText.label1.copyWith(color: Colors.white)),
             const SizedBox(height: 4),
-            Text(tr('Your daily games and the monthly tombola.'), style: AppText.body3.copyWith(color: Colors.white70)),
+            Text(tr('Daily games, the monthly tombola, points auctions & your collection.'), style: AppText.body3.copyWith(color: Colors.white70)),
             const SizedBox(height: 14),
             ValueListenableBuilder<int>(
               valueListenable: pointsNotifier,

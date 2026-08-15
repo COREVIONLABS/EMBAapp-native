@@ -1956,4 +1956,6 @@ const Map<String, String> _de = {
   'Free tombola lots': 'Freilose',
   'Inside the dressing room — derby win': 'In der Kabine — Derbysieg',
   'Terodde: "This club means everything"': 'Terodde: „Dieser Verein bedeutet alles"',
+  'Daily games, the monthly tombola, points auctions & your collection.':
+      'Tägliche Spiele, die monatliche Tombola, Punkte-Auktionen & deine Sammlung.',
 };
