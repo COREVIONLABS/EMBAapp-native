@@ -106,20 +106,6 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
         HubSearchField(hint: 'Search partners & offers'),
         const SizedBox(height: 16),
 
-        // ── Brand shortcut buttons (noon top-icon style) — the premium, separately
-        //    sellable ad slots. Each is one sponsor's own tappable placement. ──
-        SizedBox(
-          height: 92,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            itemCount: _sponsored.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 14),
-            itemBuilder: (_, i) => _BrandButton(partner: _sponsored[i], onTap: () => _claim(_sponsored[i].name, _sponsored[i].discount)),
-          ),
-        ),
-        const SizedBox(height: 18),
-
         // ── Intro strip: what these are ──
         Container(
           padding: const EdgeInsets.all(14),
@@ -233,40 +219,6 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
           Expanded(child: Text(tr('Discounts are a Fan+ perk — free to claim, as often as you like.'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],
-    );
-  }
-}
-
-/// A square brand shortcut button (noon top-icon style): a rounded brand-coloured
-/// tile with the logo and the name underneath. Each is a sponsor's own sellable
-/// placement — a tiny "Anzeige" dot marks it as paid.
-class _BrandButton extends StatelessWidget {
-  final _Partner partner;
-  final VoidCallback onTap;
-  const _BrandButton({required this.partner, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final p = partner;
-    return Tappable(
-      scale: 0.95,
-      onTap: onTap,
-      child: SizedBox(
-        width: 66,
-        child: Column(children: [
-          Stack(children: [
-            Container(
-              width: 64, height: 64,
-              decoration: BoxDecoration(color: p.color, borderRadius: BorderRadius.circular(18)),
-              alignment: Alignment.center,
-              child: Icon(p.icon, color: Colors.white, size: 30),
-            ),
-            Positioned(right: 3, top: 3, child: Container(padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1), decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(4)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 8)))),
-          ]),
-          const SizedBox(height: 6),
-          Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 11)),
-        ]),
-      ),
     );
   }
 }

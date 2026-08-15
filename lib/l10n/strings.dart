@@ -1839,6 +1839,8 @@ const Map<String, String> _de = {
   'Top partners': 'Top-Partner',
   'Featured offers from our sponsors.': 'Ausgewählte Angebote unserer Sponsoren.',
   'Partners around the VELTINS-Arena.': 'Partner rund um die VELTINS-Arena.',
+  'On every matchday menu': 'Auf jedes Spieltags-Menü',
+  'Large pizzas, home delivery': 'Große Pizzen, Lieferung nach Hause',
   'partners': 'Partner',
   '{n} offers': '{n} Angebote',
   'Official partner': 'Offizieller Partner',

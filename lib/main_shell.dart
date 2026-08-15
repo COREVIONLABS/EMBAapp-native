@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'widgets/bottom_nav.dart';
+import 'widgets/floating_sponsor_ads.dart';
 import 'screens/home_matchday.dart';
 import 'screens/redeem_screen.dart';
 import 'screens/gewinnen_screen.dart';
@@ -58,6 +59,10 @@ class _MainShellState extends State<MainShell> {
             bottom: 0,
             child: AppBottomNav(active: _tab, onTap: (i) => setState(() => _tab = i)),
           ),
+          // Sellable sponsor ad slots floating above the nav (noon style):
+          // a centre Pizza Hut button + a floating McDonald's badge, hovering
+          // over the menu. Gated on ad consent, labelled "Anzeige".
+          const Positioned.fill(child: FloatingSponsorAds()),
         ],
       ),
     );
