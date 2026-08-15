@@ -1856,6 +1856,11 @@ const Map<String, String> _de = {
   'Spent': 'Ausgegeben',
   'Nothing here yet': 'Hier ist noch nichts',
   'All missions done — new ones drop weekly.': 'Alle Missionen erledigt — jede Woche kommen neue dazu.',
+  // ── Buy points (RevPoints-style top-up) ──
+  'Buy points': 'Punkte kaufen',
+  '+15% bonus': '+15% Bonus',
+  'The more you buy, the bigger the bonus': 'Je mehr du kaufst, desto größer der Bonus',
+  'Extra points on top — up to +15% free.': 'Extra-Punkte obendrauf — bis zu +15% gratis.',
   '1.5× points': '1,5× Punkte',
   'automatically entered': 'automatisch dabei',
   'Hide this ad?': 'Anzeige ausblenden?',

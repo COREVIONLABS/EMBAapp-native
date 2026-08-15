@@ -88,6 +88,20 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
           ]),
         ),
         const SizedBox(height: 20),
+        // ── Escalating-bonus explainer (Revolut RevPoints idea) ──
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Row(children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.trending_up_rounded, color: AppColors.success, size: 22)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('The more you buy, the bigger the bonus'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+              Text(tr('Extra points on top — up to +15% free.'), style: AppText.body3Regular),
+            ])),
+          ]),
+        ),
+        const SizedBox(height: 20),
         Text(tr('Choose a top-up'), style: AppText.label1),
         const SizedBox(height: 12),
         for (var i = 0; i < _packs.length; i++) ...[

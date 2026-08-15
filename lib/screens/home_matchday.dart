@@ -20,6 +20,7 @@ import 'search_screen.dart';
 import 'assistant_screen.dart';
 import 'exclusive_content_screen.dart';
 import 'subscription_screen.dart';
+import 'buy_points_screen.dart';
 import '../widgets/sub_scaffold.dart';
 import 'fanplus_screen.dart';
 import 'fanplus_pay_screen.dart';
@@ -722,6 +723,24 @@ class _PointsHeader extends StatelessWidget {
           const SizedBox(height: 6),
           Text('${tr('S04 Fan Points')} · ${tr('≈')} ${FanModel.balanceEuro} ${tr('in rewards')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
         ]),
+      ),
+      const SizedBox(height: 12),
+      // Visible top-up entry (Revolut RevPoints style — buy more, get a bigger
+      // bonus). Kept subtle so it never overshadows earning points.
+      Tappable(
+        scale: 0.97,
+        onTap: () => _push(context, const BuyPointsScreen()),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(999)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.add_rounded, size: 16, color: AppColors.brandPrimary),
+            const SizedBox(width: 6),
+            Text(tr('Buy points'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+            const SizedBox(width: 6),
+            Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1), decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(5)), child: Text(tr('+15% bonus'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 10))),
+          ]),
+        ),
       ),
     ]);
   }
