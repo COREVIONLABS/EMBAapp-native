@@ -1868,4 +1868,15 @@ const Map<String, String> _de = {
   'Withdraw all': 'Alle widerrufen',
   'See our Privacy Policy for the full detail on how your data is processed.':
       'Alle Details zur Verarbeitung deiner Daten findest du in unserer Datenschutzerklärung.',
+
+  // ── Consent onboarding (first run) ───────────────────────────
+  'Your privacy choices': 'Deine Datenschutz-Einstellungen',
+  'Choose what we may use to improve your experience. Each is a separate choice — and you can change any of them later under Profile.':
+      'Wähle, was wir nutzen dürfen, um deine App zu verbessern. Jede Option ist einzeln — und später jederzeit im Profil änderbar.',
+  'Tailor rewards & offers to what you like': 'Prämien & Angebote auf dich zuschneiden',
+  'Show sponsored partner offers, always labelled “Ad”': 'Gesponserte Partner-Angebote zeigen, immer als „Anzeige“ gekennzeichnet',
+  'Show partners near you and matchday offers': 'Partner in deiner Nähe und Spieltag-Angebote zeigen',
+  'Partners only ever see aggregated numbers — never your personal data.':
+      'Partner sehen nur aggregierte Zahlen — niemals deine persönlichen Daten.',
+  'Continue with essentials only': 'Nur mit dem Nötigsten fortfahren',
 };

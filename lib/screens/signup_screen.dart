@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/text_field.dart';
-import '../main_shell.dart';
+import 'consent_onboarding_screen.dart';
 import '../l10n/strings.dart';
 
 /// Sign Up (Figma node 385:3518).
@@ -56,9 +56,8 @@ class SignupScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   PrimaryButton(tr('Create Account'),
-                      onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (_) => const MainShell()),
-                            (r) => false,
+                      onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const ConsentOnboardingScreen()),
                           )),
                 ],
               ),
