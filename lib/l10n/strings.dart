@@ -1830,4 +1830,42 @@ const Map<String, String> _de = {
   'Near me': 'In der Nähe',
   '{n} partners with live offers': '{n} Partner mit aktiven Angeboten',
   '% off · 1+1 · € vouchers — redeem in-store': '% Rabatt · 1+1 · €-Gutscheine — im Laden einlösen',
+  'Location is off': 'Standort ist aus',
+  'Map & distances are hidden.': 'Karte & Entfernungen sind ausgeblendet.',
+  'Turn on': 'Aktivieren',
+
+  // ── Privacy & data consent ───────────────────────────────────
+  'Privacy & data': 'Datenschutz & Daten',
+  'You’re in control': 'Du hast die Kontrolle',
+  'Each purpose is a separate choice — turn any of them off at any time.':
+      'Jeder Zweck ist eine eigene Entscheidung — jederzeit einzeln abschaltbar.',
+  'Personalisation': 'Personalisierung',
+  'Use my activity to tailor rewards, offers and challenges to what I actually like.':
+      'Meine Aktivität nutzen, um Prämien, Angebote und Challenges auf mich zuzuschneiden.',
+  'Off: you’ll see the same offers as everyone else.':
+      'Aus: Du siehst dieselben Angebote wie alle anderen.',
+  'Advertising': 'Werbung',
+  'Show sponsored partner placements (always labelled “Ad”) and let partners reward me for missions.':
+      'Gesponserte Partner-Platzierungen zeigen (immer als „Anzeige“ gekennzeichnet) und Partner-Missionen belohnen lassen.',
+  'Off: sponsored placements are hidden across the app.':
+      'Aus: Gesponserte Platzierungen werden app-weit ausgeblendet.',
+  'Location': 'Standort',
+  'Use my location to show partners near me, distances and matchday offers around the stadium.':
+      'Meinen Standort nutzen, um Partner in der Nähe, Entfernungen und Spieltag-Angebote rund ums Stadion zu zeigen.',
+  'Off: the partner map and “near me” distances are hidden.':
+      'Aus: Partner-Karte und „in der Nähe“-Entfernungen werden ausgeblendet.',
+  'How we handle your data': 'Wie wir mit deinen Daten umgehen',
+  'Partners and sponsors only ever see aggregated numbers — never your personal data.':
+      'Partner und Sponsoren sehen nur aggregierte Zahlen — niemals deine persönlichen Daten.',
+  'Payment and card data is kept separate and never used for advertising.':
+      'Zahlungs- und Kartendaten bleiben getrennt und werden nie für Werbung genutzt.',
+  'You can withdraw any consent here at any time, with immediate effect.':
+      'Du kannst jede Einwilligung hier jederzeit mit sofortiger Wirkung widerrufen.',
+  'Withdraw all consent': 'Alle Einwilligungen widerrufen',
+  'Withdraw all consent?': 'Alle Einwilligungen widerrufen?',
+  'This turns off personalisation, advertising and location. You’ll still get the core app — just nothing tailored.':
+      'Das schaltet Personalisierung, Werbung und Standort aus. Die Kern-App bleibt — nur nichts Zugeschnittenes mehr.',
+  'Withdraw all': 'Alle widerrufen',
+  'See our Privacy Policy for the full detail on how your data is processed.':
+      'Alle Details zur Verarbeitung deiner Daten findest du in unserer Datenschutzerklärung.',
 };

@@ -4,6 +4,8 @@ import '../widgets/app_widgets.dart';
 import '../widgets/settings_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/text_field.dart';
+import '../widgets/action_sheets.dart';
+import '../model/consent.dart';
 import '../l10n/strings.dart';
 
 /// Edit Profile (Figma 385:4414).
@@ -106,24 +108,142 @@ class _LanguageScreenState extends State<LanguageScreen> {
 }
 
 /// Data Sharing / Marketing Consent (Figma 416:2249 / 416:2317).
+/// Privacy & data consent — three separate, individually withdrawable opt-ins
+/// (personalisation, advertising, location) as required by GDPR and the EU
+/// ranking-transparency rules that the sponsored placements depend on. Each is
+/// bound to a live [ValueNotifier], so switching one off takes effect instantly
+/// across the app (e.g. ads off → sponsored placements disappear).
 class ConsentScreen extends StatelessWidget {
   final String title;
   const ConsentScreen({super.key, required this.title});
+
+  Future<void> _withdrawAll(BuildContext context) async {
+    final ok = await showConfirmDialog(
+      context,
+      title: 'Withdraw all consent?',
+      message: 'This turns off personalisation, advertising and location. You’ll still get the core app — just nothing tailored.',
+      confirmLabel: 'Withdraw all',
+      destructive: true,
+    );
+    if (!ok) return;
+    personalizationConsent.value = false;
+    adsConsent.value = false;
+    locationConsent.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
-      title: title,
+      title: tr('Privacy & data'),
       children: [
-        SettingsGroup([
-          ToggleRow(tr('Personalised offers'), subtitle: tr('Use my activity to tailor rewards'), initial: false),
-          ToggleRow(tr('Share with club partners'), subtitle: tr('Sponsors & official partners')),
-          ToggleRow(tr('Analytics'), subtitle: tr('Help improve the app'), initial: false),
-          ToggleRow(tr('Third-party marketing')),
-        ]),
+        // Intro — the value exchange, stated plainly.
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.shield_rounded, color: AppColors.brandPrimary, size: 24)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('You’re in control'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+              Text(tr('Each purpose is a separate choice — turn any of them off at any time.'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
+            ])),
+          ]),
+        ),
         const SizedBox(height: 16),
-        Text(tr('You can change these choices at any time. See our Privacy Policy for details on how your data is processed.'),
-            style: AppText.body3Regular),
+
+        _ConsentCard(
+          flag: personalizationConsent,
+          icon: Icons.auto_awesome_rounded,
+          title: 'Personalisation',
+          purpose: 'Use my activity to tailor rewards, offers and challenges to what I actually like.',
+          off: 'Off: you’ll see the same offers as everyone else.',
+        ),
+        const SizedBox(height: 12),
+        _ConsentCard(
+          flag: adsConsent,
+          icon: Icons.campaign_rounded,
+          title: 'Advertising',
+          purpose: 'Show sponsored partner placements (always labelled “Ad”) and let partners reward me for missions.',
+          off: 'Off: sponsored placements are hidden across the app.',
+        ),
+        const SizedBox(height: 12),
+        _ConsentCard(
+          flag: locationConsent,
+          icon: Icons.location_on_rounded,
+          title: 'Location',
+          purpose: 'Use my location to show partners near me, distances and matchday offers around the stadium.',
+          off: 'Off: the partner map and “near me” distances are hidden.',
+        ),
+        const SizedBox(height: 16),
+
+        // Transparency block.
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr('How we handle your data'), style: AppText.label2),
+            const SizedBox(height: 10),
+            for (final s in const [
+              'Partners and sponsors only ever see aggregated numbers — never your personal data.',
+              'Payment and card data is kept separate and never used for advertising.',
+              'You can withdraw any consent here at any time, with immediate effect.',
+            ]) ...[
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Icon(Icons.check_circle_rounded, size: 16, color: AppColors.success),
+                const SizedBox(width: 10),
+                Expanded(child: Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(tr(s), style: AppText.body3.copyWith(color: AppColors.textNormal)))),
+              ]),
+            ],
+          ]),
+        ),
+        const SizedBox(height: 16),
+        SecondaryButton(tr('Withdraw all consent'), onTap: () => _withdrawAll(context)),
+        const SizedBox(height: 12),
+        Text(tr('See our Privacy Policy for the full detail on how your data is processed.'), style: AppText.body3Regular),
       ],
+    );
+  }
+}
+
+/// A single consent card: icon, purpose, a live switch bound to a notifier, and
+/// a plain-language note on what turning it off means.
+class _ConsentCard extends StatelessWidget {
+  final ValueNotifier<bool> flag;
+  final IconData icon;
+  final String title;
+  final String purpose;
+  final String off;
+  const _ConsentCard({required this.flag, required this.icon, required this.title, required this.purpose, required this.off});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: flag,
+      builder: (context, on, __) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(11)), child: Icon(icon, color: AppColors.brandPrimary, size: 21)),
+            const SizedBox(width: 12),
+            Expanded(child: Text(tr(title), style: AppText.label2)),
+            Switch(
+              value: on,
+              activeThumbColor: Colors.white,
+              activeTrackColor: AppColors.brandPrimary,
+              onChanged: (v) => flag.value = v,
+            ),
+          ]),
+          const SizedBox(height: 8),
+          Text(tr(purpose), style: AppText.body3.copyWith(color: AppColors.textNormal, height: 1.5)),
+          const SizedBox(height: 8),
+          Row(children: [
+            Icon(on ? Icons.check_circle_outline_rounded : Icons.remove_circle_outline_rounded, size: 14, color: on ? AppColors.success : AppColors.textLight),
+            const SizedBox(width: 6),
+            Expanded(child: Text(on ? tr('On') : tr(off), style: AppText.caption1.copyWith(color: on ? AppColors.success : AppColors.textLight, fontWeight: FontWeight.w700))),
+          ]),
+        ]),
+      ),
     );
   }
 }

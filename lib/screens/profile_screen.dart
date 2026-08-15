@@ -137,8 +137,7 @@ class ProfileScreen extends StatelessWidget {
         ]),
         const SizedBox(height: 16),
         _group(context, 'Privacy', const [
-          (Icons.shield_outlined, 'Data Sharing Preferences', ''),
-          (Icons.campaign_outlined, 'Marketing Consent', ''),
+          (Icons.shield_outlined, 'Privacy & data', ''),
           (Icons.policy_outlined, 'Privacy Policy', ''),
         ]),
         const SizedBox(height: 16),
@@ -222,10 +221,8 @@ Widget? _screenFor(String label) {
       return const DeviceManagementScreen();
     case 'Language':
       return const LanguageScreen();
-    case 'Data Sharing Preferences':
-      return ConsentScreen(title: tr('Data Sharing'));
-    case 'Marketing Consent':
-      return ConsentScreen(title: tr('Marketing Consent'));
+    case 'Privacy & data':
+      return ConsentScreen(title: tr('Privacy & data'));
     case 'Privacy Policy':
       return const PrivacyPolicyScreen();
     case 'Update Password':

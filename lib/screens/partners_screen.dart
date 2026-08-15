@@ -5,6 +5,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/voucher_flow.dart';
 import '../model/partners.dart';
+import '../model/consent.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
@@ -26,9 +27,10 @@ class _PartnersScreenState extends State<PartnersScreen> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: partnerStore,
+      animation: Listenable.merge([partnerStore, locationConsent]),
       builder: (context, _) {
         final partners = partnerStore.all;
+        final loc = locationConsent.value;
         return SubScaffold(
           title: tr('Partners near you'),
           children: [
@@ -59,15 +61,37 @@ class _PartnersScreenState extends State<PartnersScreen> {
             ),
             const SizedBox(height: 14),
 
-            // ── List / Map toggle ──
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-              child: Row(children: [
-                Expanded(child: _segment(tr('List'), Icons.view_list_rounded, !_map, () => setState(() => _map = false))),
-                Expanded(child: _segment(tr('Map'), Icons.map_rounded, _map, () => setState(() => _map = true))),
-              ]),
-            ),
+            // ── List / Map toggle (map needs location consent) ──
+            if (loc)
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                child: Row(children: [
+                  Expanded(child: _segment(tr('List'), Icons.view_list_rounded, !_map, () => setState(() => _map = false))),
+                  Expanded(child: _segment(tr('Map'), Icons.map_rounded, _map, () => setState(() => _map = true))),
+                ]),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+                child: Row(children: [
+                  Icon(Icons.location_off_rounded, size: 20, color: AppColors.brandPrimary),
+                  const SizedBox(width: 12),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(tr('Location is off'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+                    Text(tr('Map & distances are hidden.'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
+                  ])),
+                  Tappable(
+                    onTap: () => locationConsent.value = true,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                      decoration: BoxDecoration(color: AppColors.brandPrimary, borderRadius: BorderRadius.circular(999)),
+                      child: Text(tr('Turn on'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                    ),
+                  ),
+                ]),
+              ),
             const SizedBox(height: 14),
 
             // ── Category filter chips ──
@@ -97,7 +121,7 @@ class _PartnersScreenState extends State<PartnersScreen> {
             ),
             const SizedBox(height: 16),
 
-            if (_map) ...[
+            if (_map && loc) ...[
               _MockMap(partners: partners, onTap: _open),
               const SizedBox(height: 8),
               Row(children: [
@@ -107,7 +131,7 @@ class _PartnersScreenState extends State<PartnersScreen> {
               ]),
             ] else ...[
               for (final p in partners) ...[
-                _PartnerRow(partner: p, onTap: () => _open(p)),
+                _PartnerRow(partner: p, showDistance: loc, onTap: () => _open(p)),
                 const SizedBox(height: 12),
               ],
               const SizedBox(height: 2),
@@ -142,8 +166,9 @@ class _PartnersScreenState extends State<PartnersScreen> {
 /// "Anzeige" tags, and the best badge on the right.
 class _PartnerRow extends StatelessWidget {
   final Partner partner;
+  final bool showDistance;
   final VoidCallback onTap;
-  const _PartnerRow({required this.partner, required this.onTap});
+  const _PartnerRow({required this.partner, required this.onTap, this.showDistance = true});
 
   @override
   Widget build(BuildContext context) {
@@ -180,10 +205,12 @@ class _PartnerRow extends StatelessWidget {
             ]),
             const SizedBox(height: 3),
             Row(children: [
-              Icon(Icons.near_me_rounded, size: 12, color: AppColors.textLight),
-              const SizedBox(width: 3),
-              Text(p.distanceLabel, style: AppText.caption1.copyWith(color: AppColors.textLight)),
-              const SizedBox(width: 8),
+              if (showDistance) ...[
+                Icon(Icons.near_me_rounded, size: 12, color: AppColors.textLight),
+                const SizedBox(width: 3),
+                Text(p.distanceLabel, style: AppText.caption1.copyWith(color: AppColors.textLight)),
+                const SizedBox(width: 8),
+              ],
               Icon(Icons.star_rounded, size: 12, color: AppColors.gold),
               const SizedBox(width: 2),
               Text(p.rating.toStringAsFixed(1), style: AppText.caption1.copyWith(color: AppColors.textLight)),

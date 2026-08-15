@@ -30,6 +30,7 @@ import 'partners_screen.dart';
 import '../model/sponsor_missions.dart';
 import '../model/auctions.dart';
 import '../model/partners.dart';
+import '../model/consent.dart';
 import '../model/fan_model.dart';
 import '../widgets/skeleton.dart';
 import '../l10n/strings.dart';
@@ -130,8 +131,14 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
               // 4b) Partner value — sponsor missions + points auctions.
               _partnerRow(context),
               const SizedBox(height: 12),
-              // 4c) Sponsored placement (labelled "Anzeige") — sellable inventory.
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _sponsoredBanner(context)),
+              // 4c) Sponsored placement (labelled "Anzeige") — sellable inventory,
+              //     shown only while the fan consents to advertising.
+              ValueListenableBuilder<bool>(
+                valueListenable: adsConsent,
+                builder: (context, ads, __) => ads
+                    ? Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _sponsoredBanner(context))
+                    : const SizedBox.shrink(),
+              ),
               const SizedBox(height: 20),
               // 5) Matchday context — the one contextual zone (matchday only).
               ValueListenableBuilder<bool>(
