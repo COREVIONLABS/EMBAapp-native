@@ -5,6 +5,7 @@ import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../widgets/floating_sponsor_ads.dart';
+import '../widgets/filter_bar.dart';
 import '../model/consent.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
@@ -95,6 +96,35 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
 
   List<_Partner> get _filtered =>
       _cat == 'All' ? _partners : _partners.where((p) => p.category == _cat).toList();
+
+  // Sort: 0 Recommended (sponsored first, then rating) · 1 Most popular · 2 Nearest.
+  int _sort = 0;
+  static const _sortOptions = ['Recommended', 'Most popular', 'Nearest'];
+
+  double _km(_Partner p) {
+    final d = p.distance;
+    if (d.endsWith('km')) return double.tryParse(d.replaceAll(' km', '').replaceAll('km', '')) ?? 99;
+    if (d.endsWith('m')) return (double.tryParse(d.replaceAll(' m', '').replaceAll('m', '')) ?? 99000) / 1000;
+    return 999; // Online / Arena → last when sorting by distance
+  }
+
+  List<_Partner> get _sortedFiltered {
+    final l = [..._filtered];
+    switch (_sort) {
+      case 1:
+        l.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case 2:
+        l.sort((a, b) => _km(a).compareTo(_km(b)));
+        break;
+      default:
+        l.sort((a, b) {
+          if (a.sponsored != b.sponsored) return a.sponsored ? -1 : 1;
+          return b.rating.compareTo(a.rating);
+        });
+    }
+    return l;
+  }
 
   Future<void> _claim(String partner, String discount) async {
     final ok = await showConfirmDialog(
@@ -326,11 +356,17 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
       ),
       const SizedBox(height: 18),
       Row(children: [
-        Expanded(child: Text(_cat == 'All' ? tr('All partners') : tr(_cat), style: AppText.label1)),
-        Text('${list.length} ${tr('partners')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(_cat == 'All' ? tr('All partners') : tr(_cat), style: AppText.label1),
+          Text('${list.length} ${tr('partners')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+        ])),
+        SortButton(label: tr(_sortOptions[_sort]), onTap: () async {
+          final sel = await showSortSheet(context, options: [for (final o in _sortOptions) tr(o)], current: _sort);
+          if (sel != null) setState(() => _sort = sel);
+        }),
       ]),
       const SizedBox(height: 12),
-      ..._rows(list),
+      ..._rows(_sortedFiltered),
       _footerNote(),
     ];
   }

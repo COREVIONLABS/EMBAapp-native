@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
+import '../widgets/filter_bar.dart';
 import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
@@ -286,8 +287,9 @@ class _RedeemScreenState extends State<RedeemScreen> {
   }
 }
 
-/// "See all" list for a voucher category — a 2-column grid of every offer.
-class _VoucherListScreen extends StatelessWidget {
+/// "See all" list for a voucher category — a 2-column grid with category chips
+/// and a sort control (shared filter system).
+class _VoucherListScreen extends StatefulWidget {
   final String title;
   final String subtitle;
   final List<_Offer> list;
@@ -295,26 +297,74 @@ class _VoucherListScreen extends StatelessWidget {
   const _VoucherListScreen({required this.title, required this.subtitle, required this.list, required this.valueBadge});
 
   @override
+  State<_VoucherListScreen> createState() => _VoucherListScreenState();
+}
+
+class _VoucherListScreenState extends State<_VoucherListScreen> {
+  String _cat = 'All';
+  int _sort = 0;
+  static const _sortOptions = ['Recommended', 'Lowest points', 'Highest points'];
+
+  List<String> get _cats {
+    final s = <String>['All'];
+    for (final o in widget.list) {
+      if (!s.contains(o.$5)) s.add(o.$5);
+    }
+    return s;
+  }
+
+  List<_Offer> get _filtered => _cat == 'All' ? widget.list : widget.list.where((o) => o.$5 == _cat).toList();
+
+  List<_Offer> get _sorted {
+    final l = [..._filtered];
+    switch (_sort) {
+      case 1:
+        l.sort((a, b) => a.$4.compareTo(b.$4));
+        break;
+      case 2:
+        l.sort((a, b) => b.$4.compareTo(a.$4));
+        break;
+    }
+    return l;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final list = _sorted;
     final rows = <Widget>[];
     for (var i = 0; i < list.length; i += 2) {
       rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(child: _OfferCard(offer: list[i], valueBadge: valueBadge, onTap: () => _redeemOffer(context, list[i]))),
+        Expanded(child: _OfferCard(offer: list[i], valueBadge: widget.valueBadge, onTap: () => _redeemOffer(context, list[i]))),
         const SizedBox(width: 12),
         Expanded(
           child: i + 1 < list.length
-              ? _OfferCard(offer: list[i + 1], valueBadge: valueBadge, onTap: () => _redeemOffer(context, list[i + 1]))
+              ? _OfferCard(offer: list[i + 1], valueBadge: widget.valueBadge, onTap: () => _redeemOffer(context, list[i + 1]))
               : const SizedBox(),
         ),
       ]));
       if (i + 2 < list.length) rows.add(const SizedBox(height: 12));
     }
     return SubScaffold(
-      title: title,
+      title: widget.title,
       children: [
-        Text(subtitle, style: AppText.body3Regular),
+        Text(widget.subtitle, style: AppText.body3Regular),
         const SizedBox(height: 16),
-        ...rows,
+        if (_cats.length > 2) ...[
+          CategoryChips(categories: _cats, selected: _cat, onSelect: (c) => setState(() => _cat = c)),
+          const SizedBox(height: 12),
+        ],
+        Row(children: [
+          Expanded(child: Text('${list.length} ${tr('vouchers')}', style: AppText.body3.copyWith(color: AppColors.textLight))),
+          SortButton(label: tr(_sortOptions[_sort]), onTap: () async {
+            final sel = await showSortSheet(context, options: [for (final o in _sortOptions) tr(o)], current: _sort);
+            if (sel != null) setState(() => _sort = sel);
+          }),
+        ]),
+        const SizedBox(height: 12),
+        if (list.isEmpty)
+          Padding(padding: const EdgeInsets.symmetric(vertical: 40), child: Center(child: Text(tr('No vouchers for this filter.'), style: AppText.body3Regular)))
+        else
+          ...rows,
       ],
     );
   }

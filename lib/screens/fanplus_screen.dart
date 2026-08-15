@@ -10,7 +10,6 @@ import 'upgrade_plan_screen.dart';
 import 'manage_subscription_screen.dart';
 import 'fomo_drop_screen.dart';
 import 'exclusive_content_screen.dart';
-import 'member_discounts_screen.dart';
 import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
@@ -85,15 +84,6 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
     }
     return Column(children: rows);
   }
-
-  // Member discounts — fixed % off at club partners & sponsors (a membership
-  // perk). (partner, category, discount, icon, color)
-  static const _discounts = <(String, String, String, IconData, Color)>[
-    ('Official Fanshop', 'Club', '15% off', Icons.storefront_rounded, Color(0xFF004B9C)),
-    ('adidas', 'Sportswear', '20% off', Icons.sports_soccer_rounded, Color(0xFF111111)),
-    ('Veltins', 'Beverages', '10% off', Icons.sports_bar_rounded, Color(0xFF00623A)),
-    ('Vivawest', 'Housing', '10% off', Icons.apartment_rounded, Color(0xFF6A1B9A)),
-  ];
 
   // Member content (title, subtitle, image)
   static const _content = <(String, String, String)>[
@@ -425,33 +415,6 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         ),
         const SizedBox(height: 24),
         ],
-        if (_loungeTab == 0) ...[
-        // Member discounts — fixed % vouchers at club partners & sponsors
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionHeader('Member discounts', onAction: () => _push(context, const MemberDiscountsScreen())),
-        ),
-        const SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text(tr('Fixed % off at the Fanshop, partners & sponsors.'), style: AppText.body3Regular)),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 150,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _discounts.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final d = _discounts[i];
-              return _DiscountCard(partner: d.$1, category: d.$2, discount: d.$3, icon: d.$4, color: d.$5, onTap: () => _push(context, const MemberDiscountsScreen()));
-            },
-          ),
-        ),
-        const SizedBox(height: 24),
-        ],
         if (_loungeTab == 1) ...[
         // Member content — real photo tiles (matches Redeem / Prizes)
         Padding(
@@ -535,43 +498,6 @@ class _UnlockedCard extends StatelessWidget {
         const SizedBox(height: 8),
         Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
       ]),
-    );
-  }
-}
-
-/// Compact member-discount card for the Fan+ carousel: a sponsor mark, the
-/// partner name & category and the fixed % badge. Taps into the full list.
-class _DiscountCard extends StatelessWidget {
-  final String partner;
-  final String category;
-  final String discount;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-  const _DiscountCard({required this.partner, required this.category, required this.discount, required this.icon, required this.color, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Tappable(
-      scale: 0.97,
-      onTap: onTap,
-      child: Container(
-        width: 168,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SponsorLogo(name: partner, size: 40, bg: color, fg: Colors.white, symbol: icon),
-          const Spacer(),
-          Text(partner, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-          Text(tr(category), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.chip)),
-            child: Text(tr(discount), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800, fontSize: 12)),
-          ),
-        ]),
-      ),
     );
   }
 }

@@ -1705,6 +1705,26 @@ const Map<String, String> _de = {
   '€25 Fanshop voucher': '€25 Fanshop-Gutschein',
   'Meet & greet with a player': 'Meet & Greet mit einem Spieler',
   '2× tickets to the final incl. travel': '2× Tickets fürs Finale inkl. Anreise',
+  // ── Fan votes ──
+  'OPEN': 'OFFEN',
+  'ENDING SOON': 'ENDET BALD',
+  'CLOSED': 'BEENDET',
+  'Open votes': 'Offene Abstimmungen',
+  'Closed votes': 'Beendete Abstimmungen',
+  'Voting closed': 'Abstimmung beendet',
+  'You voted': 'Du hast abgestimmt',
+  'Final result': 'Endergebnis',
+  'Vote now': 'Jetzt abstimmen',
+  'No open vote right now': 'Aktuell gibt es keine offene Fan-Abstimmung.',
+  'New fan votes drop regularly — check back soon.': 'Neue Abstimmungen kommen regelmäßig — schau bald wieder vorbei.',
+  'Thanks for voting — +{n} points added.': 'Danke fürs Mitbestimmen — +{n} Punkte gutgeschrieben.',
+  // ── Filters / sorting ──
+  'Nearest': 'Am nächsten',
+  'Lowest points': 'Wenigste Punkte',
+  'Highest points': 'Meiste Punkte',
+  'Sort by': 'Sortieren nach',
+  'vouchers': 'Gutscheine',
+  'No vouchers for this filter.': 'Für diese Auswahl wurden keine Gutscheine gefunden.',
 
   // ── Experiences as tombola prizes ──────────────────────────
   'Enter tombola to win': 'An der Tombola teilnehmen',
