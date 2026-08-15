@@ -1844,6 +1844,7 @@ const Map<String, String> _de = {
   'Hide this ad?': 'Anzeige ausblenden?',
   'This sponsored placement will be hidden.': 'Diese gesponserte Anzeige wird ausgeblendet.',
   // ── Member-discounts marketplace: contextual bottom nav + views ──
+  'Overview': 'Übersicht',
   'Favorites': 'Favoriten',
   'Your saved partners.': 'Deine gemerkten Partner.',
   'No favourites yet': 'Noch keine Favoriten',

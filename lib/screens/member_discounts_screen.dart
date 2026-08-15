@@ -6,6 +6,7 @@ import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../widgets/floating_sponsor_ads.dart';
 import '../model/consent.dart';
+import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import 'voucher_screen.dart';
 import 'partners_screen.dart';
@@ -108,12 +109,23 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
     await Navigator.of(context).push(MaterialPageRoute(builder: (_) => VoucherScreen.fromIssued(v)));
   }
 
+  // The real "Home": leave the marketplace and return to the app's Home tab.
+  void _goHome() {
+    tabRequestNotifier.value = 0;
+    Navigator.of(context).popUntil((r) => r.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     return Stack(children: [
       SubScaffold(
         title: tr('Member discounts'),
+        trailing: IconButton(
+          onPressed: _goHome,
+          tooltip: tr('Home'),
+          icon: const Icon(Icons.home_rounded, size: 22, color: AppColors.brandPrimary),
+        ),
         bottomBar: _MarketplaceNav(active: _nav, onTap: (i) => setState(() => _nav = i)),
         children: switch (_nav) {
           1 => _favView(),
@@ -567,7 +579,7 @@ class _MarketplaceNav extends StatelessWidget {
   const _MarketplaceNav({required this.active, required this.onTap});
 
   static const _items = <(IconData, String)>[
-    (Icons.home_rounded, 'Home'),
+    (Icons.grid_view_rounded, 'Overview'),
     (Icons.favorite_rounded, 'Favorites'),
     (Icons.local_pizza_rounded, 'Pizza Hut'), // centre — sponsored
     (Icons.workspace_premium_rounded, 'Top partners'),
