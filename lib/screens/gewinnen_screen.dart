@@ -4,7 +4,6 @@ import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/asset_img.dart';
-import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import 'raffles_screen.dart';
@@ -13,7 +12,6 @@ import '../model/auctions.dart';
 import 'my_wins_screen.dart';
 import 'past_tombolas_screen.dart';
 import 'collection_screen.dart';
-import 'subscription_screen.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import '../l10n/strings.dart';
@@ -63,17 +61,6 @@ class GewinnenScreen extends StatelessWidget {
     );
   }
 
-  // Clear the quick-access grid (with a confirm so it isn't lost by accident).
-  Future<void> _dismissQuickNav(BuildContext context) async {
-    final ok = await showConfirmDialog(
-      context,
-      title: 'Hide quick access?',
-      message: 'You can turn this shortcut grid back on anytime under Account → Demo.',
-      confirmLabel: 'Hide',
-    );
-    if (ok) winQuickNavNotifier.value = false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
@@ -82,36 +69,14 @@ class GewinnenScreen extends StatelessWidget {
       children: [
         // ── Hero — mirrors the Redeem intro: gradient header + live balance ──
         _hero(),
-        const SizedBox(height: 14),
-        // ── Quick access — dismissible 2×2 grid (same pattern as Redeem) ──
-        ValueListenableBuilder<bool>(
-          valueListenable: winQuickNavNotifier,
-          builder: (context, show, __) => show
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: QuickNavCard(
-                    title: 'Ways to win',
-                    onDismiss: () => _dismissQuickNav(context),
-                    items: [
-                      QuickNavItem(icon: Icons.casino_rounded, color: AppColors.brandPrimary, label: tr('Daily games'), sub: tr('Spin & scratch'),
-                          onTap: () { if (!dailyGames.spinDone) dailyGames.playSpin(); showDailySpin(context); }),
-                      QuickNavItem(icon: Icons.local_activity_rounded, color: const Color(0xFFC62828), label: tr('Monthly tombola'), sub: tr('Win big prizes'),
-                          onTap: () => _push(context, const RafflesScreen())),
-                      QuickNavItem(icon: Icons.gavel_rounded, color: AppColors.gold, label: tr('Points auctions'), sub: tr('Bid to win'),
-                          onTap: () => _push(context, const AuctionsScreen())),
-                      QuickNavItem(icon: Icons.grid_view_rounded, color: const Color(0xFF6A1B9A), label: tr('Collection'), sub: tr('Stickers & badges'),
-                          onTap: () => _push(context, const CollectionScreen())),
-                    ],
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-        // ── 1) Your daily chance (retention hook) ──
+        const SizedBox(height: 22),
+
+        // ══ BLOCK ① Play today — the daily retention hook, top & prominent ══
         AnimatedBuilder(
           animation: dailyGames,
           builder: (context, _) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              Text(tr('Your daily chance'), style: AppText.label1),
+              Text(tr('Play today'), style: AppText.label1),
               const Spacer(),
               Pill(color: AppColors.brandLightest, child: Row(mainAxisSize: MainAxisSize.min, children: [
                 const Icon(Icons.local_fire_department_rounded, size: 13, color: AppColors.brandPrimary),
@@ -119,6 +84,8 @@ class GewinnenScreen extends StatelessWidget {
                 Text('${dailyGames.streakDays} ${tr('day streak')}', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
               ])),
             ]),
+            const SizedBox(height: 4),
+            Text(tr('One free spin & one scratch card, every day.'), style: AppText.body3Regular),
             const SizedBox(height: 12),
             Row(children: [
               Expanded(child: _DailyGameCard(
@@ -135,184 +102,22 @@ class GewinnenScreen extends StatelessWidget {
             ]),
           ]),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 26),
 
-        // ── Auctions — bid points on money-can't-buy lots (Socios-style) ──
-        SectionHeader('Points auctions', action: 'See all', onAction: () => _push(context, const AuctionsScreen())),
+        // ══ BLOCK ② Big prizes — Tombola + Auction, two equal cards ══
+        Text(tr('Big prizes'), style: AppText.label1),
+        const SizedBox(height: 4),
+        Text(tr('The monthly tombola and live points auctions.'), style: AppText.body3Regular),
         const SizedBox(height: 12),
-        AnimatedBuilder(
-          animation: auctionStore,
-          builder: (context, _) {
-            final a = auctionStore.live.isNotEmpty ? auctionStore.live.first : null;
-            if (a == null) return const SizedBox.shrink();
-            return Tappable(
-              scale: 0.98,
-              onTap: () => _push(context, AuctionDetailScreen(id: a.id)),
-              child: Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                  SizedBox(
-                    height: 120,
-                    child: Stack(fit: StackFit.expand, children: [
-                      // Always a branded motif so the header never looks empty;
-                      // a real product photo layers on top when one is bundled.
-                      DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [a.color, Color.lerp(a.color, Colors.black, 0.5)!])), child: Center(child: Icon(a.glyph, size: 54, color: Colors.white70))),
-                      if (a.image != null)
-                        Positioned.fill(child: Image.asset('assets/images/${a.image}.png', fit: BoxFit.cover, errorBuilder: (_, __, ___) => const SizedBox.shrink())),
-                      const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x33000D22), Color(0x66000D22)]))),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(children: [
-                          Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                            const Icon(Icons.gavel_rounded, size: 12, color: AppColors.brandDarkest),
-                            const SizedBox(width: 4),
-                            Text(tr('Live auction'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
-                          ])),
-                          const Spacer(),
-                          Pill(color: AppColors.danger, child: Row(mainAxisSize: MainAxisSize.min, children: [
-                            const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
-                            const SizedBox(width: 4),
-                            a.endsAt != null
-                                ? CountdownText(a.endsAt!, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))
-                                : Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                          ])),
-                        ]),
-                      ),
-                    ]),
-                  ),
-                  Container(
-                    color: AppColors.brandDarkest,
-                    padding: const EdgeInsets.all(16),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(tr(a.title), style: AppText.label1.copyWith(color: Colors.white)),
-                      const SizedBox(height: 4),
-                      Text(tr('Bid with your Fan Points — win what money can’t buy.'), style: AppText.body3.copyWith(color: Colors.white70)),
-                      const SizedBox(height: 12),
-                      Row(children: [
-                        const Icon(Icons.hexagon_rounded, size: 15, color: AppColors.gold),
-                        const SizedBox(width: 6),
-                        Text('${FanModel.fmtPublic(a.currentBid)} ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
-                        const SizedBox(width: 6),
-                        Text(trp('· {n} bids', n: '${a.bidCount}'), style: AppText.body3.copyWith(color: Colors.white60)),
-                        const Spacer(),
-                        Text(tr('Bid now'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
-                        const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
-                      ]),
-                    ]),
-                  ),
-                ]),
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: 22),
-
-        // ── 2) Your lots (membership) — tier-driven free lots ──
-        ValueListenableBuilder<String>(
-          valueListenable: tierNotifier,
-          builder: (context, tier, __) => Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
-                const SizedBox(width: 12),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('${perksFor(tier).freeLots} ${tr('lots this month')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
-                  Text('${tr(tierNotifier.value)} · ${tr('free lots enter automatically — more lots, more chances')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
-                ])),
-                Tappable(
-                  onTap: () => _push(context, const RafflesScreen()),
-                  child: Pill(color: AppColors.surface, child: Text(tr('Open Tombola'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
-                ),
-              ]),
-              if (tierNotifier.value != 'Super Fan') ...[
-                const SizedBox(height: 10),
-                Tappable(
-                  scale: 0.99,
-                  onTap: () => _push(context, const SubscriptionScreen()),
-                  child: Row(children: [
-                    Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
-                    const SizedBox(width: 6),
-                    Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
-                    Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
-                  ]),
-                ),
-              ],
-            ]),
-          ),
-        ),
-        const SizedBox(height: 22),
-
-        // ── 3) Tombola of the month — clean card: photo on top, all text on a
-        //    solid panel below (no wild text-over-busy-photo) ──
-        SectionHeader('Tombola of the month', action: 'See all', onAction: () => _push(context, const RafflesScreen())),
+        // Tombola — one consolidated card: prize, countdown AND your free lots.
+        _tombolaCard(context),
         const SizedBox(height: 12),
-        Tappable(
-          scale: 0.98,
-          onTap: () => _push(context, const RafflesScreen()),
-          child: Container(
-            width: double.infinity,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              // Photo strip with just the two small badges over a light scrim.
-              SizedBox(
-                height: 132,
-                child: Stack(fit: StackFit.expand, children: [
-                  const AssetImg('img_tickets', fit: BoxFit.cover, fallbackIcon: Icons.emoji_events_rounded),
-                  const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x55000D22), Color(0x11000D22)]))),
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Row(children: [
-                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
-                      const Spacer(),
-                      Pill(color: Colors.black.withValues(alpha: 0.5), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
-                        const SizedBox(width: 4),
-                        CountdownText(_monthlyDrawEnd, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                      ])),
-                    ]),
-                  ),
-                ]),
-              ),
-              // Solid info panel — clean, legible text.
-              Container(
-                color: AppColors.brandDarkest,
-                padding: const EdgeInsets.all(18),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(tr('2× VIP tickets — vs Dortmund'), style: AppText.label1.copyWith(color: Colors.white)),
-                  const SizedBox(height: 4),
-                  Text(tr('You\'re automatically in — more lots, more chances.'), style: AppText.body3.copyWith(color: Colors.white70)),
-                  const SizedBox(height: 14),
-                  Row(children: [
-                    const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.gold),
-                    const SizedBox(width: 6),
-                    Text('${FanModel.fmtPublic(1840)} ${tr('entries')}', style: AppText.body3.copyWith(color: Colors.white70, fontWeight: FontWeight.w700)),
-                    const Spacer(),
-                    Text(tr('See all draws'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
-                    const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
-                  ]),
-                ]),
-              ),
-            ]),
-          ),
-        ),
-        const SizedBox(height: 22),
+        // Auction — the featured live lot (parallel treatment to the tombola).
+        _auctionCard(context),
+        const SizedBox(height: 26),
 
-        // ── 4) Your tombola overview (wins & past draws) ──
-        const SectionHeader('Your tombola', action: null),
-        const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.tile)),
-          child: Row(children: [
-            const Icon(Icons.verified_rounded, color: AppColors.success, size: 20),
-            const SizedBox(width: 10),
-            Expanded(child: Text(tr('Your free lots enter every monthly draw automatically.'), style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
-          ]),
-        ),
+        // ══ BLOCK ③ Your wins & collection ══
+        Text(tr('Your wins & collection'), style: AppText.label1),
         const SizedBox(height: 12),
         HubListRow(
           icon: Icons.emoji_events_rounded, iconColor: AppColors.gold,
@@ -332,6 +137,143 @@ class GewinnenScreen extends StatelessWidget {
           onTap: () => _push(context, const CollectionScreen()),
         ),
       ],
+    );
+  }
+
+  // ── Tombola of the month — ONE card that folds in your membership free
+  //    lots, so the tombola is stated exactly once (no repeated surfaces). ──
+  Widget _tombolaCard(BuildContext context) {
+    return ValueListenableBuilder<String>(
+      valueListenable: tierNotifier,
+      builder: (context, tier, __) {
+        final lots = perksFor(tier).freeLots;
+        return Tappable(
+          scale: 0.98,
+          onTap: () => _push(context, const RafflesScreen()),
+          child: Container(
+            width: double.infinity,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              // Photo strip with the label + live countdown.
+              SizedBox(
+                height: 132,
+                child: Stack(fit: StackFit.expand, children: [
+                  const AssetImg('img_tickets', fit: BoxFit.cover, fallbackIcon: Icons.emoji_events_rounded),
+                  const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x55000D22), Color(0x11000D22)]))),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(children: [
+                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                      const Spacer(),
+                      Pill(color: Colors.black.withValues(alpha: 0.5), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
+                        const SizedBox(width: 4),
+                        CountdownText(_monthlyDrawEnd, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                      ])),
+                    ]),
+                  ),
+                ]),
+              ),
+              // Solid info panel — prize + your free lots (the consolidation).
+              Container(
+                color: AppColors.brandDarkest,
+                padding: const EdgeInsets.all(18),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(tr('2× VIP tickets — vs Dortmund'), style: AppText.label1.copyWith(color: Colors.white)),
+                  const SizedBox(height: 8),
+                  // Your free lots — the single place the membership benefit is shown.
+                  Row(children: [
+                    const Icon(Icons.check_circle_rounded, size: 15, color: AppColors.gold),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(trp('You’re in with {n} free lots — more lots, more chances.', n: '$lots'),
+                        style: AppText.body3.copyWith(color: Colors.white))),
+                  ]),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.gold),
+                    const SizedBox(width: 6),
+                    Text('${FanModel.fmtPublic(1840)} ${tr('entries')}', style: AppText.body3.copyWith(color: Colors.white70, fontWeight: FontWeight.w700)),
+                    const Spacer(),
+                    Text(tr('See all draws'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                    const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
+                  ]),
+                ]),
+              ),
+            ]),
+          ),
+        );
+      },
+    );
+  }
+
+  // ── Featured live auction — parallel card treatment to the tombola. ──
+  Widget _auctionCard(BuildContext context) {
+    return AnimatedBuilder(
+      animation: auctionStore,
+      builder: (context, _) {
+        final a = auctionStore.live.isNotEmpty ? auctionStore.live.first : null;
+        if (a == null) return const SizedBox.shrink();
+        return Tappable(
+          scale: 0.98,
+          onTap: () => _push(context, AuctionDetailScreen(id: a.id)),
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              SizedBox(
+                height: 132,
+                child: Stack(fit: StackFit.expand, children: [
+                  // Always a branded motif so the header never looks empty;
+                  // a real product photo layers on top when one is bundled.
+                  DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [a.color, Color.lerp(a.color, Colors.black, 0.5)!])), child: Center(child: Icon(a.glyph, size: 54, color: Colors.white70))),
+                  if (a.image != null)
+                    Positioned.fill(child: Image.asset('assets/images/${a.image}.png', fit: BoxFit.cover, errorBuilder: (_, __, ___) => const SizedBox.shrink())),
+                  const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x33000D22), Color(0x66000D22)]))),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(children: [
+                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.gavel_rounded, size: 12, color: AppColors.brandDarkest),
+                        const SizedBox(width: 4),
+                        Text(tr('Live auction'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+                      ])),
+                      const Spacer(),
+                      Pill(color: AppColors.danger, child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
+                        const SizedBox(width: 4),
+                        a.endsAt != null
+                            ? CountdownText(a.endsAt!, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))
+                            : Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                      ])),
+                    ]),
+                  ),
+                ]),
+              ),
+              Container(
+                color: AppColors.brandDarkest,
+                padding: const EdgeInsets.all(18),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(tr(a.title), style: AppText.label1.copyWith(color: Colors.white)),
+                  const SizedBox(height: 4),
+                  Text(tr('Bid with your Fan Points — win what money can’t buy.'), style: AppText.body3.copyWith(color: Colors.white70)),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    const Icon(Icons.hexagon_rounded, size: 15, color: AppColors.gold),
+                    const SizedBox(width: 6),
+                    Text('${FanModel.fmtPublic(a.currentBid)} ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                    const SizedBox(width: 6),
+                    Text(trp('· {n} bids', n: '${a.bidCount}'), style: AppText.body3.copyWith(color: Colors.white60)),
+                    const Spacer(),
+                    Text(tr('Bid now'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                    const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
+                  ]),
+                ]),
+              ),
+            ]),
+          ),
+        );
+      },
     );
   }
 }

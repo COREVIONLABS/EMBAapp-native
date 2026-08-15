@@ -1666,6 +1666,16 @@ const Map<String, String> _de = {
   'Spin & scratch': 'Drehen & rubbeln',
   'Monthly tombola': 'Monatliche Tombola',
   'Win big prizes': 'Große Preise gewinnen',
+  'Play today': 'Heute spielen',
+  'One free spin & one scratch card, every day.': 'Ein Gratis-Dreh und eine Rubbelkarte — jeden Tag.',
+  'Big prizes': 'Große Preise',
+  'The monthly tombola and live points auctions.': 'Die monatliche Tombola und Live-Punkte-Auktionen.',
+  'Your wins & collection': 'Deine Gewinne & Sammlung',
+  'You’re in with {n} free lots — more lots, more chances.': 'Du bist mit {n} Freilosen dabei — mehr Lose, mehr Chancen.',
+  'More points, free tombola lots & priority access.': 'Mehr Punkte, Gratis-Tombola-Lose & Priorität.',
+  '7 days free': '7 Tage gratis',
+  'Choose your plan': 'Tarif wählen',
+  'for': 'für',
 
   // ── Experiences as tombola prizes ──────────────────────────
   'Enter tombola to win': 'An der Tombola teilnehmen',

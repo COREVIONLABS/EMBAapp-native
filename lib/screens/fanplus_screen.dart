@@ -142,7 +142,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
       children: [
         _header(),
         const SizedBox(height: 16),
-        // Hero
+        // ── Hero with the price anchor front-and-centre (value first) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
@@ -154,33 +154,31 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               const SizedBox(height: 12),
               Text(tr('Become a Fan+ member'), textAlign: TextAlign.center, style: AppText.h4.copyWith(color: Colors.white)),
               const SizedBox(height: 6),
-              Text(tr('More points, free tombola lots & priority. From €4.99 — Super Fan €9.99.'),
+              Text(tr('More points, free tombola lots & priority access.'),
                   textAlign: TextAlign.center, style: AppText.body3.copyWith(color: Colors.white70)),
+              const SizedBox(height: 18),
+              // Big price anchor — reflects the selected tier & billing below.
+              Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+                Text(_priceLabel, style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                const SizedBox(width: 5),
+                Text(_period(), style: AppText.body2.copyWith(color: Colors.white70)),
+              ]),
+              const SizedBox(height: 4),
+              Text('${tr(tierName)} · ${tr('cancel anytime')}', style: AppText.caption1.copyWith(color: Colors.white60)),
+              const SizedBox(height: 14),
+              Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.check_circle_rounded, size: 13, color: AppColors.brandDarkest),
+                const SizedBox(width: 5),
+                Text(tr('7 days free'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
+              ])),
             ]),
           ),
         ),
-        const SizedBox(height: 16),
-        // ── Tier + billing toggles (compare inline, like the voucher switch) ──
+        const SizedBox(height: 20),
+        // ── Value first: the concrete 2×2 grid, before any toggles ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SegmentedToggle(labels: [tr('Fan Member'), tr('Super Fan')], selected: _pitchTier, onTap: (i) => setState(() => _pitchTier = i)),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(children: [
-            Expanded(child: SegmentedToggle(labels: [tr('Monthly'), tr('Yearly')], selected: _annual ? 1 : 0, onTap: (i) => setState(() => _annual = i == 1))),
-            const SizedBox(width: 10),
-            _annual
-                ? Pill(color: AppColors.successBg, child: Text(tr('2 months free'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)))
-                : Pill(color: AppColors.surfaceMinimal, child: Text(tr('Save yearly'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700))),
-          ]),
-        ),
-        const SizedBox(height: 18),
-        // Concrete value grid (2×2) — reflects the selected tier & billing.
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text('${tr(tierName)} ($_priceLabel ${_period()}) ${tr('includes')}:', style: AppText.label2)),
+          child: Align(alignment: Alignment.centerLeft, child: Text('${tr(tierName)} ${tr('includes')}:', style: AppText.label1)),
         ),
         const SizedBox(height: 10),
         Padding(
@@ -208,10 +206,32 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             child: Row(children: [
               const Icon(Icons.savings_rounded, color: AppColors.success),
               const SizedBox(width: 12),
-              Expanded(child: Text('${tr(tierName)}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} (${tr('≈')} ${FanModel.euroValue(s.monthlyPoints)} ${tr('in rewards')}) + ${s.freeLots} ${tr('free lots')} — $_priceLabel ${_period()}.',
+              Expanded(child: Text('+${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} (${tr('≈')} ${FanModel.euroValue(s.monthlyPoints)} ${tr('in rewards')}) + ${s.freeLots} ${tr('free lots')} — ${tr('for')} $_priceLabel ${_period()}.',
                   style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
             ]),
           ),
+        ),
+        const SizedBox(height: 20),
+        // ── Compact plan switch — AFTER the value is shown ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text(tr('Choose your plan'), style: AppText.label2)),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SegmentedToggle(labels: [tr('Fan Member'), tr('Super Fan')], selected: _pitchTier, onTap: (i) => setState(() => _pitchTier = i)),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(children: [
+            Expanded(child: SegmentedToggle(labels: [tr('Monthly'), tr('Yearly')], selected: _annual ? 1 : 0, onTap: (i) => setState(() => _annual = i == 1))),
+            const SizedBox(width: 10),
+            _annual
+                ? Pill(color: AppColors.successBg, child: Text(tr('2 months free'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)))
+                : Pill(color: AppColors.surfaceMinimal, child: Text(tr('Save yearly'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700))),
+          ]),
         ),
         const SizedBox(height: 20),
         // Everything you get
