@@ -185,13 +185,13 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
             Row(children: [
-              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: AppColors.brandPrimary, title: _pitchTier == 1 ? tr('Double points') : tr('1.5× points'), sub: tr('on every purchase'))),
+              Expanded(child: _ValueTile(icon: Icons.savings_rounded, color: AppColors.brandPrimary, title: '+${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')}', sub: tr('automatically, every month'))),
               const SizedBox(width: 12),
               Expanded(child: _ValueTile(icon: Icons.local_activity_rounded, color: AppColors.brandPrimary, title: '${s.freeLots} ${tr('free lots')}', sub: tr('every month'))),
             ]),
             const SizedBox(height: 12),
             Row(children: [
-              Expanded(child: _ValueTile(icon: Icons.savings_rounded, color: AppColors.brandPrimary, title: '+${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')}', sub: tr('every month'))),
+              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: AppColors.brandPrimary, title: _pitchTier == 1 ? tr('Double points') : tr('1.5× points'), sub: tr('on every purchase'))),
               const SizedBox(width: 12),
               Expanded(child: _ValueTile(icon: Icons.workspace_premium_rounded, color: AppColors.gold, title: tr('Priority & drops'), sub: tr('first access, exclusives'))),
             ]),
@@ -299,7 +299,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
                         Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
                       ]),
                       const SizedBox(height: 3),
-                      Text('${p.freeLots} ${tr('free lots')} · +${FanModel.fmtPublic(p.monthlyPoints)} ${tr('pts')} ${tr('/ month')}', style: AppText.body3.copyWith(color: Colors.white70)),
+                      Text('${p.freeLots} ${tr('free lots')} · ${tr('Priority access')}', style: AppText.body3.copyWith(color: Colors.white70)),
                     ])),
                   ]),
                   const SizedBox(height: 12),
@@ -316,6 +316,31 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
                   ]),
                 ]);
               },
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // ── Monthly points — the recurring benefit, stated clearly ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: ValueListenableBuilder<String>(
+            valueListenable: tierNotifier,
+            builder: (context, tier, __) => Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Row(children: [
+                Container(width: 46, height: 46, decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(13)), child: const Icon(Icons.savings_rounded, color: AppColors.success, size: 24)),
+                const SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+                    Text('+${FanModel.fmtPublic(perksFor(tier).monthlyPoints)}', style: AppText.h4.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                    const SizedBox(width: 6),
+                    Text('${tr('points')} ${tr('/ month')}', style: AppText.body2.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700)),
+                  ]),
+                  const SizedBox(height: 2),
+                  Text('${tr('Automatically credited — next on')} ${_renewLabel()}', style: AppText.body3Regular),
+                ])),
+              ]),
             ),
           ),
         ),

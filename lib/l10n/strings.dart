@@ -1679,6 +1679,8 @@ const Map<String, String> _de = {
   'Your {n} free lots auto-enter every draw — add extra lots for even more chances.': 'Deine {n} Freilose sind bei jeder Ziehung automatisch dabei — mit Extra-Losen erhöhst du deine Chancen.',
   'Your {n} free lots auto-enter every draw — a higher membership gets you more.': 'Deine {n} Freilose sind bei jeder Ziehung automatisch dabei — mit höherer Mitgliedschaft gibt es mehr.',
   'Predict · +50': 'Tippen · +50',
+  'Automatically credited — next on': 'Automatisch gutgeschrieben — nächste am',
+  'automatically, every month': 'automatisch, jeden Monat',
 
   // ── Experiences as tombola prizes ──────────────────────────
   'Enter tombola to win': 'An der Tombola teilnehmen',
