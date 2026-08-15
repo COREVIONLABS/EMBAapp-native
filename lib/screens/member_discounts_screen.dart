@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
-import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../widgets/floating_sponsor_ads.dart';
@@ -94,8 +93,16 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
     return seen;
   }
 
-  List<_Partner> get _filtered =>
-      _cat == 'All' ? _partners : _partners.where((p) => p.category == _cat).toList();
+  String _query = '';
+
+  List<_Partner> get _filtered {
+    var l = _cat == 'All' ? _partners.toList() : _partners.where((p) => p.category == _cat).toList();
+    final q = _query.trim().toLowerCase();
+    if (q.isNotEmpty) {
+      l = l.where((p) => p.name.toLowerCase().contains(q) || tr(p.category).toLowerCase().contains(q) || p.sub.toLowerCase().contains(q)).toList();
+    }
+    return l;
+  }
 
   // Sort: 0 Recommended (sponsored first, then rating) · 1 Most popular · 2 Nearest.
   int _sort = 0;
@@ -269,8 +276,8 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
     final list = _filtered;
     final isTab = widget.isTab;
     return [
-      // Search is always the first thing on the page.
-      HubSearchField(hint: 'Search partners & offers'),
+      // Search is always the first thing on the page (live filter).
+      SearchField(hint: 'Search partners & offers', value: _query, onChanged: (v) => setState(() => _query = v)),
       const SizedBox(height: 16),
       if (isTab) ...[
         // Redemption entries (no redundant heading — the tab is already
@@ -366,7 +373,22 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
         }),
       ]),
       const SizedBox(height: 12),
-      ..._rows(_sortedFiltered),
+      if (list.isEmpty)
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Column(children: [
+            Text(tr('No offers found for this selection.'), textAlign: TextAlign.center, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 10),
+            Tappable(
+              onTap: () => setState(() { _cat = 'All'; _query = ''; }),
+              child: Pill(color: AppColors.brandLightest, child: Text(tr('Reset filters'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+            ),
+          ]),
+        )
+      else
+        ..._rows(_sortedFiltered),
       _footerNote(),
     ];
   }

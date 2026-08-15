@@ -7,6 +7,42 @@ import 'app_widgets.dart';
 /// Vouchers, and (later) Auctions & Rewards, so every list filters the same
 /// way. Mobile-first: horizontal category chips + a "Sortieren" bottom sheet.
 
+/// A live search field (filters as you type). Shows a clear button when filled.
+class SearchField extends StatelessWidget {
+  final String hint;
+  final String value;
+  final ValueChanged<String> onChanged;
+  const SearchField({super.key, required this.hint, required this.value, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
+      child: Row(children: [
+        Icon(Icons.search_rounded, size: 20, color: AppColors.textLight),
+        const SizedBox(width: 8),
+        Expanded(
+          child: TextField(
+            controller: TextEditingController(text: value)..selection = TextSelection.collapsed(offset: value.length),
+            onChanged: onChanged,
+            style: AppText.body2.copyWith(color: AppColors.textDarker),
+            cursorColor: AppColors.brandPrimary,
+            decoration: InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+              hintText: tr(hint),
+              hintStyle: AppText.body2.copyWith(color: AppColors.textLight),
+            ),
+          ),
+        ),
+        if (value.isNotEmpty)
+          Tappable(onTap: () => onChanged(''), child: Icon(Icons.close_rounded, size: 18, color: AppColors.textLight)),
+      ]),
+    );
+  }
+}
+
 /// Horizontal, scrollable category chips. Pass already-tr'd labels via
 /// [labelOf] if the raw values aren't translation keys.
 class CategoryChips extends StatelessWidget {

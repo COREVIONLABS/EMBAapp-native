@@ -1725,6 +1725,13 @@ const Map<String, String> _de = {
   'Sort by': 'Sortieren nach',
   'vouchers': 'Gutscheine',
   'No vouchers for this filter.': 'Für diese Auswahl wurden keine Gutscheine gefunden.',
+  // ── Auctions ──
+  'Next bid from': 'Nächstes Gebot ab',
+  'Not enough': 'Zu wenig',
+  'No auctions right now': 'Aktuell laufen keine Auktionen.',
+  'New lots drop regularly — check back soon.': 'Neue Objekte kommen regelmäßig — schau bald wieder vorbei.',
+  'Memorabilia': 'Erinnerungsstücke',
+  'No offers found for this selection.': 'Für diese Auswahl wurden keine Angebote gefunden.',
 
   // ── Experiences as tombola prizes ──────────────────────────
   'Enter tombola to win': 'An der Tombola teilnehmen',

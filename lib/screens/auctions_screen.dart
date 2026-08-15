@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
+import '../widgets/filter_bar.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/auctions.dart';
@@ -21,6 +22,17 @@ class AuctionsScreen extends StatefulWidget {
 
 class _AuctionsScreenState extends State<AuctionsScreen> {
   int _tab = 0; // 0 = live, 1 = ended
+  String _cat = 'All';
+
+  List<String> get _cats {
+    final s = <String>['All'];
+    for (final a in auctionStore.auctions) {
+      if (!s.contains(a.category)) s.add(a.category);
+    }
+    return s;
+  }
+
+  List<Auction> _filter(List<Auction> l) => _cat == 'All' ? l : l.where((a) => a.category == _cat).toList();
 
   void _open(BuildContext context, Auction a) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => AuctionDetailScreen(id: a.id)));
@@ -86,8 +98,15 @@ class _AuctionsScreenState extends State<AuctionsScreen> {
               const SizedBox(height: 12),
             ],
 
+            // ── Category chips (shared filter system) ──
+            if (_cats.length > 2) ...[
+              CategoryChips(categories: _cats, selected: _cat, onSelect: (c) => setState(() => _cat = c)),
+              const SizedBox(height: 16),
+            ],
+
             if (_tab == 0) ...[
-              for (final a in live) ...[
+              if (_filter(live).isEmpty) _emptyAuctions(),
+              for (final a in _filter(live)) ...[
                 _AuctionCard(auction: a, onTap: () => _open(context, a)),
                 const SizedBox(height: 14),
               ],
@@ -104,7 +123,8 @@ class _AuctionsScreenState extends State<AuctionsScreen> {
                 ]),
               ),
             ] else ...[
-              for (final a in past) ...[
+              if (_filter(past).isEmpty) _emptyAuctions(),
+              for (final a in _filter(past)) ...[
                 _AuctionCard(auction: a, onTap: () => _open(context, a)),
                 const SizedBox(height: 14),
               ],
@@ -114,6 +134,19 @@ class _AuctionsScreenState extends State<AuctionsScreen> {
       },
     );
   }
+
+  Widget _emptyAuctions() => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 20),
+        decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Column(children: [
+          Container(width: 60, height: 60, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle), child: Icon(Icons.gavel_rounded, size: 28, color: AppColors.textLight)),
+          const SizedBox(height: 14),
+          Text(tr('No auctions right now'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(tr('New lots drop regularly — check back soon.'), textAlign: TextAlign.center, style: AppText.body3Regular),
+        ]),
+      );
 
   Widget _statusBanner(BuildContext context, List<Auction> live) {
     final outbid = live.where((a) => a.outbid).toList();
@@ -211,7 +244,11 @@ class _AuctionCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr(a.title), style: AppText.label2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+              Row(children: [
+                Expanded(child: Text(tr(a.title), style: AppText.label2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800))),
+                const SizedBox(width: 8),
+                _statusChip(a),
+              ]),
               const SizedBox(height: 2),
               Text(tr(a.item), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
               const SizedBox(height: 14),
@@ -226,10 +263,19 @@ class _AuctionCard extends StatelessWidget {
                   ]),
                 ]),
                 const Spacer(),
-                _statusChip(a),
+                if (!a.ended)
+                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Text(tr('Next bid from'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
+                    const SizedBox(height: 2),
+                    Text('${FanModel.fmtPublic(a.nextMinBid)} ${tr('pts')}', style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                  ])
+                else
+                  Text(trp('{n} bids', n: '${a.bidCount}'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
               ]),
-              const SizedBox(height: 4),
-              Text(trp('{n} bids', n: '${a.bidCount}'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
+              if (!a.ended) ...[
+                const SizedBox(height: 12),
+                _bidCta(context, a),
+              ],
             ]),
           ),
         ]),
@@ -261,6 +307,32 @@ class _AuctionCard extends StatelessWidget {
       ]));
     }
     return Pill(color: AppColors.brandLightest, child: Text(tr('Bid now'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)));
+  }
+
+  // Bid CTA — "Jetzt bieten" + your points and an enough-to-bid check, so the
+  // fan sees current bid, next min bid, own points and affordability at a glance.
+  Widget _bidCta(BuildContext context, Auction a) {
+    final needed = a.leadingByMe ? (a.nextMinBid - a.myMaxBid) : a.nextMinBid;
+    return ValueListenableBuilder<int>(
+      valueListenable: pointsNotifier,
+      builder: (_, __, ___) {
+        final enough = FanModel.fanPoints >= needed;
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          PrimaryButton(a.leadingByMe ? tr('Raise your bid') : tr('Bid now'), height: 46, onTap: onTap),
+          const SizedBox(height: 8),
+          Row(children: [
+            Icon(Icons.hexagon_rounded, size: 13, color: AppColors.textLight),
+            const SizedBox(width: 5),
+            Expanded(child: Text('${trp('{n} bids', n: '${a.bidCount}')} · ${tr('You')}: ${FanModel.pointsFormatted} ${tr('pts')}',
+                maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textLight))),
+            if (!enough) ...[
+              const SizedBox(width: 8),
+              Pill(color: AppColors.dangerBg, child: Text(tr('Not enough'), style: AppText.caption1.copyWith(color: AppColors.danger, fontWeight: FontWeight.w800))),
+            ],
+          ]),
+        ]);
+      },
+    );
   }
 
   Widget _motif(Auction a) => DecoratedBox(
