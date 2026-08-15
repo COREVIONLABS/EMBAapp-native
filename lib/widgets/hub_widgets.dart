@@ -623,11 +623,17 @@ class QuickNavCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = <Widget>[];
     for (var i = 0; i < items.length; i += 2) {
-      rows.add(Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Expanded(child: _tile(items[i])),
-        const SizedBox(width: 10),
-        Expanded(child: i + 1 < items.length ? _tile(items[i + 1]) : const SizedBox()),
-      ]));
+      // IntrinsicHeight gives the row a definite cross-axis extent so the two
+      // stretched tiles match height — without it, a Row of all-Expanded
+      // children under CrossAxisAlignment.stretch has no resolvable height in a
+      // ListView (unbounded) and the whole page fails to lay out.
+      rows.add(IntrinsicHeight(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(child: _tile(items[i])),
+          const SizedBox(width: 10),
+          Expanded(child: i + 1 < items.length ? _tile(items[i + 1]) : const SizedBox()),
+        ]),
+      ));
       if (i + 2 < items.length) rows.add(const SizedBox(height: 10));
     }
     return SurfaceCard(

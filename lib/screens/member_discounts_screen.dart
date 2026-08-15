@@ -6,6 +6,7 @@ import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/voucher_store.dart';
 import 'voucher_screen.dart';
+import 'partners_screen.dart';
 import '../l10n/strings.dart';
 
 /// A single member-discount partner. `sponsored` flags a paid "Top partner"
@@ -21,7 +22,8 @@ class _Partner {
   final Color color;
   final String rating;
   final bool sponsored;
-  const _Partner(this.name, this.category, this.discount, this.sub, this.icon, this.color, this.rating, this.sponsored);
+  final String distance; // 'm'/'km' near the arena, or 'Online'/'Arena'
+  const _Partner(this.name, this.category, this.discount, this.sub, this.icon, this.color, this.rating, this.sponsored, this.distance);
 }
 
 /// Member discounts ("Vorteile") — rebuilt as a food-delivery-style marketplace
@@ -46,24 +48,28 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
   //  • The rest are the club's official & regional member partners.
   static const _partners = <_Partner>[
     // Sponsored / paid placements (Anzeige)
-    _Partner("McDonald's", 'Fast food', '20% off', 'On every matchday menu', Icons.lunch_dining_rounded, Color(0xFFDA291C), '4.5', true),
-    _Partner('Pizza Hut', 'Fast food', '30% off', 'Large pizzas, home delivery', Icons.local_pizza_rounded, Color(0xFFE3000B), '4.3', true),
-    _Partner('BURGER KING', 'Fast food', '2-for-1', 'Selected Whopper menus', Icons.fastfood_rounded, Color(0xFFD62300), '4.2', true),
+    _Partner("McDonald's", 'Fast food', '20% off', 'On every matchday menu', Icons.lunch_dining_rounded, Color(0xFFDA291C), '4.5', true, '300 m'),
+    _Partner('Pizza Hut', 'Fast food', '30% off', 'Large pizzas, home delivery', Icons.local_pizza_rounded, Color(0xFFE3000B), '4.3', true, '900 m'),
+    _Partner('BURGER KING', 'Fast food', '2-for-1', 'Selected Whopper menus', Icons.fastfood_rounded, Color(0xFFD62300), '4.2', true, '1.1 km'),
     // Club & official
-    _Partner('Official Fanshop', 'Club', '15% off', 'Jerseys, scarves & more', Icons.storefront_rounded, Color(0xFF004B9C), '4.8', false),
-    _Partner('adidas', 'Sportswear', '20% off', 'Online & in-store', Icons.sports_soccer_rounded, Color(0xFF111111), '4.7', false),
-    _Partner('Veltins', 'Beverages', '10% off', 'Matchday crates & more', Icons.sports_bar_rounded, Color(0xFF00623A), '4.4', false),
-    _Partner('Vivawest', 'Housing', '10% off', 'Rent & services', Icons.apartment_rounded, Color(0xFF6A1B9A), '4.1', false),
-    _Partner("Ernsting's family", 'Fashion', '15% off', 'Family fashion', Icons.checkroom_rounded, Color(0xFFE30613), '4.3', false),
-    _Partner('REWE', 'Groceries', '5% off', 'In all REWE stores', Icons.shopping_cart_rounded, Color(0xFFC8102E), '4.6', false),
-    _Partner('ZOOM Erlebniswelt', 'Local', '20% off', 'Gelsenkirchen zoo tickets', Icons.pets_rounded, Color(0xFF2E7D32), '4.7', false),
-    _Partner('Cineworld GE', 'Local', '25% off', 'Cinema tickets on matchdays', Icons.local_movies_rounded, Color(0xFF5E35B1), '4.5', false),
-    _Partner('McFit Gelsenkirchen', 'Fitness', '10% off', 'Monthly gym membership', Icons.fitness_center_rounded, Color(0xFFEF6C00), '4.0', false),
-    _Partner('Trattoria Napoli', 'Dining', '15% off', 'Post-match dinner in GE', Icons.restaurant_rounded, Color(0xFFC62828), '4.6', false),
-    _Partner('VRR / Bahn', 'Transport', '10% off', 'Matchday travel to the arena', Icons.directions_bus_rounded, Color(0xFF00695C), '4.2', false),
+    _Partner('Official Fanshop', 'Club', '15% off', 'Jerseys, scarves & more', Icons.storefront_rounded, Color(0xFF004B9C), '4.8', false, 'Arena'),
+    _Partner('adidas', 'Sportswear', '20% off', 'Online & in-store', Icons.sports_soccer_rounded, Color(0xFF111111), '4.7', false, 'Online'),
+    _Partner('Veltins', 'Beverages', '10% off', 'Matchday crates & more', Icons.sports_bar_rounded, Color(0xFF00623A), '4.4', false, '1.5 km'),
+    _Partner('Vivawest', 'Housing', '10% off', 'Rent & services', Icons.apartment_rounded, Color(0xFF6A1B9A), '4.1', false, '2.0 km'),
+    _Partner("Ernsting's family", 'Fashion', '15% off', 'Family fashion', Icons.checkroom_rounded, Color(0xFFE30613), '4.3', false, '1.2 km'),
+    _Partner('REWE', 'Groceries', '5% off', 'In all REWE stores', Icons.shopping_cart_rounded, Color(0xFFC8102E), '4.6', false, '650 m'),
+    _Partner('ZOOM Erlebniswelt', 'Local', '20% off', 'Gelsenkirchen zoo tickets', Icons.pets_rounded, Color(0xFF2E7D32), '4.7', false, '3.4 km'),
+    _Partner('Cineworld GE', 'Local', '25% off', 'Cinema tickets on matchdays', Icons.local_movies_rounded, Color(0xFF5E35B1), '4.5', false, '2.1 km'),
+    _Partner('McFit Gelsenkirchen', 'Fitness', '10% off', 'Monthly gym membership', Icons.fitness_center_rounded, Color(0xFFEF6C00), '4.0', false, '1.8 km'),
+    _Partner('Trattoria Napoli', 'Dining', '15% off', 'Post-match dinner in GE', Icons.restaurant_rounded, Color(0xFFC62828), '4.6', false, '750 m'),
+    _Partner('VRR / Bahn', 'Transport', '10% off', 'Matchday travel to the arena', Icons.directions_bus_rounded, Color(0xFF00695C), '4.2', false, 'Arena'),
   ];
 
   List<_Partner> get _sponsored => _partners.where((p) => p.sponsored).toList();
+
+  // Partners with a real metric distance — for the "near you" rail & map.
+  List<_Partner> get _nearby =>
+      _partners.where((p) => p.distance.endsWith('m') || p.distance.endsWith('km')).toList();
 
   // Chip categories: "All" + the distinct categories, in first-seen order.
   List<String> get _categories {
@@ -100,6 +106,20 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
         HubSearchField(hint: 'Search partners & offers'),
         const SizedBox(height: 16),
 
+        // ── Brand shortcut buttons (noon top-icon style) — the premium, separately
+        //    sellable ad slots. Each is one sponsor's own tappable placement. ──
+        SizedBox(
+          height: 92,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            itemCount: _sponsored.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 14),
+            itemBuilder: (_, i) => _BrandButton(partner: _sponsored[i], onTap: () => _claim(_sponsored[i].name, _sponsored[i].discount)),
+          ),
+        ),
+        const SizedBox(height: 18),
+
         // ── Intro strip: what these are ──
         Container(
           padding: const EdgeInsets.all(14),
@@ -132,6 +152,37 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
             itemCount: _sponsored.length,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) => _FeaturedCard(partner: _sponsored[i], onTap: () => _claim(_sponsored[i].name, _sponsored[i].discount)),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // ── Near you — a map preview + a rail of the closest partners ──
+        Row(children: [
+          Expanded(child: Text(tr('Near you'), style: AppText.label1)),
+          Tappable(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PartnersScreen())),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(tr('Map'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            ]),
+          ),
+        ]),
+        const SizedBox(height: 4),
+        Text(tr('Partners around the VELTINS-Arena.'), style: AppText.body3Regular),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 150,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            children: [
+              _MapTile(onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PartnersScreen()))),
+              const SizedBox(width: 12),
+              for (final p in _nearby.take(6)) ...[
+                _NearbyCard(partner: p, onTap: () => _claim(p.name, p.discount)),
+                const SizedBox(width: 12),
+              ],
+            ],
           ),
         ),
         const SizedBox(height: 24),
@@ -182,6 +233,116 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
           Expanded(child: Text(tr('Discounts are a Fan+ perk — free to claim, as often as you like.'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],
+    );
+  }
+}
+
+/// A square brand shortcut button (noon top-icon style): a rounded brand-coloured
+/// tile with the logo and the name underneath. Each is a sponsor's own sellable
+/// placement — a tiny "Anzeige" dot marks it as paid.
+class _BrandButton extends StatelessWidget {
+  final _Partner partner;
+  final VoidCallback onTap;
+  const _BrandButton({required this.partner, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final p = partner;
+    return Tappable(
+      scale: 0.95,
+      onTap: onTap,
+      child: SizedBox(
+        width: 66,
+        child: Column(children: [
+          Stack(children: [
+            Container(
+              width: 64, height: 64,
+              decoration: BoxDecoration(color: p.color, borderRadius: BorderRadius.circular(18)),
+              alignment: Alignment.center,
+              child: Icon(p.icon, color: Colors.white, size: 30),
+            ),
+            Positioned(right: 3, top: 3, child: Container(padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1), decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(4)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 8)))),
+          ]),
+          const SizedBox(height: 6),
+          Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 11)),
+        ]),
+      ),
+    );
+  }
+}
+
+/// A "see the map" tile that opens the full partner marketplace (real map).
+class _MapTile extends StatelessWidget {
+  final VoidCallback onTap;
+  const _MapTile({required this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        width: 128,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient),
+          borderRadius: BorderRadius.circular(AppRadii.card),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(width: 40, height: 40, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.map_rounded, color: Colors.white, size: 22)),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr('On the map'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 2),
+            Row(children: [
+              Text(tr('Open'), style: AppText.caption1.copyWith(color: Colors.white70)),
+              const Icon(Icons.chevron_right_rounded, size: 14, color: Colors.white70),
+            ]),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Compact "near you" partner card: brand thumbnail, name, distance + discount.
+class _NearbyCard extends StatelessWidget {
+  final _Partner partner;
+  final VoidCallback onTap;
+  const _NearbyCard({required this.partner, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final p = partner;
+    return Tappable(
+      scale: 0.97,
+      onTap: onTap,
+      child: Container(
+        width: 158,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.card),
+          border: Border.all(color: p.sponsored ? AppColors.gold.withValues(alpha: 0.5) : AppColors.borderLightest),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: p.color, borderRadius: BorderRadius.circular(11)), alignment: Alignment.center, child: Icon(p.icon, color: Colors.white, size: 20)),
+            const Spacer(),
+            Pill(color: AppColors.brandLightest, child: Text(tr(p.discount), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
+          ]),
+          const SizedBox(height: 10),
+          Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 3),
+          Row(children: [
+            Icon(Icons.near_me_rounded, size: 12, color: AppColors.textLight),
+            const SizedBox(width: 3),
+            Text(p.distance, style: AppText.caption1.copyWith(color: AppColors.textLight)),
+            const SizedBox(width: 8),
+            const Icon(Icons.star_rounded, size: 12, color: AppColors.gold),
+            const SizedBox(width: 2),
+            Text(p.rating, style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700)),
+          ]),
+        ]),
+      ),
     );
   }
 }

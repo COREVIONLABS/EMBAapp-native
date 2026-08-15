@@ -1838,6 +1838,7 @@ const Map<String, String> _de = {
       'Gutschein holen und beim Partner einlösen. So oft du willst.',
   'Top partners': 'Top-Partner',
   'Featured offers from our sponsors.': 'Ausgewählte Angebote unserer Sponsoren.',
+  'Partners around the VELTINS-Arena.': 'Partner rund um die VELTINS-Arena.',
   'partners': 'Partner',
   '{n} offers': '{n} Angebote',
   'Official partner': 'Offizieller Partner',
