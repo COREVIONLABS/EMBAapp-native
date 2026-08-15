@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
@@ -34,7 +35,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     return SubScaffold(
       title: tr('Top Supporters'),
       children: [
-        _Segmented(labels: const ['This Season', 'Hall of Fame'], index: _seg, onChanged: (i) => setState(() => _seg = i)),
+        SegmentedToggle(labels: [tr('This Season'), tr('Hall of Fame')], selected: _seg, onTap: (i) => setState(() => _seg = i)),
         const SizedBox(height: 16),
         if (_seg == 0) ..._season2526() else ..._hallOfFame(),
       ],
@@ -219,38 +220,3 @@ class _RankRow extends StatelessWidget {
   }
 }
 
-class _Segmented extends StatelessWidget {
-  final List<String> labels;
-  final int index;
-  final ValueChanged<int> onChanged;
-  const _Segmented({required this.labels, required this.index, required this.onChanged});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-      child: Row(
-        children: [
-          for (var i = 0; i < labels.length; i++)
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: i == index ? AppColors.surface : Colors.transparent,
-                    borderRadius: BorderRadius.circular(AppRadii.pill),
-                    boxShadow: i == index ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
-                  ),
-                  child: Center(
-                    child: Text(tr(labels[i]), style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700)),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/asset_img.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/voucher_flow.dart';
@@ -56,7 +57,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ]),
         ),
         const SizedBox(height: 16),
-        _Segmented(labels: _tabs, index: _tab, onChanged: (i) => setState(() => _tab = i)),
+        SegmentedToggle(labels: [for (final t in _tabs) _ticketTab(t)], selected: _tab, onTap: (i) => setState(() => _tab = i)),
         const SizedBox(height: 16),
         for (final t in list) ...[_TicketCard(t), const SizedBox(height: 12)],
       ],
@@ -152,30 +153,3 @@ class _TicketCard extends StatelessWidget {
 String _ticketTab(String t) => localeNotifier.value == AppLocale.de
     ? (const {'All': 'Alle', 'Home': 'Heim', 'Away': 'Auswärts'}[t] ?? t)
     : t;
-
-class _Segmented extends StatelessWidget {
-  final List<String> labels;
-  final int index;
-  final ValueChanged<int> onChanged;
-  const _Segmented({required this.labels, required this.index, required this.onChanged});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-      child: Row(children: [
-        for (var i = 0; i < labels.length; i++)
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onChanged(i),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(color: i == index ? AppColors.surface : Colors.transparent, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                child: Center(child: Text(_ticketTab(labels[i]), style: AppText.body2.copyWith(color: i == index ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700))),
-              ),
-            ),
-          ),
-      ]),
-    );
-  }
-}
