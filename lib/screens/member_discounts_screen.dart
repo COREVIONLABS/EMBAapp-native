@@ -4,6 +4,8 @@ import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
+import '../widgets/floating_sponsor_ads.dart';
+import '../model/consent.dart';
 import '../model/voucher_store.dart';
 import 'voucher_screen.dart';
 import 'partners_screen.dart';
@@ -108,17 +110,31 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SubScaffold(
-      title: tr('Member discounts'),
-      bottomBar: _MarketplaceNav(active: _nav, onTap: (i) => setState(() => _nav = i)),
-      children: switch (_nav) {
-        1 => _favView(),
-        2 => _pizzaView(),
-        3 => _topPartnerView(),
-        4 => _newPartnerView(),
-        _ => _homeView(),
-      },
-    );
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    return Stack(children: [
+      SubScaffold(
+        title: tr('Member discounts'),
+        bottomBar: _MarketplaceNav(active: _nav, onTap: (i) => setState(() => _nav = i)),
+        children: switch (_nav) {
+          1 => _favView(),
+          2 => _pizzaView(),
+          3 => _topPartnerView(),
+          4 => _newPartnerView(),
+          _ => _homeView(),
+        },
+      ),
+      // The floating McDonald's badge hovers above this page's own nav too
+      // (noon: Pizza Hut in the bar + M floating over it). Gated on ad consent.
+      Positioned(
+        right: 26, bottom: bottomInset + 104,
+        child: ValueListenableBuilder<bool>(
+          valueListenable: adsConsent,
+          builder: (context, ads, __) => ads
+              ? McDonaldsAdBadge(onTap: () => _claim("McDonald's", '20% off'))
+              : const SizedBox.shrink(),
+        ),
+      ),
+    ]);
   }
 
   // A partner row + spacing, with the favourite heart wired in.

@@ -52,7 +52,7 @@ class FloatingSponsorAds extends StatelessWidget {
           // ── McDonald's — round badge floating diagonally up-right ──
           Positioned(
             right: 26, bottom: navClear + 52,
-            child: _McDonaldsBadge(onTap: () => _claim(context,
+            child: McDonaldsAdBadge(onTap: () => _claim(context,
                 partner: "McDonald's", discount: '20% off', detail: tr('On every matchday menu'))),
           ),
         ]);
@@ -98,10 +98,11 @@ class _PizzaHutButton extends StatelessWidget {
 }
 
 /// Floating McDonald's badge: a red circle with a golden "M", a tiny "Anzeige"
-/// tag underneath. Hovers above the nav, over the menu.
-class _McDonaldsBadge extends StatelessWidget {
+/// tag underneath. Hovers above the nav, over the menu. Public so pages with
+/// their own nav (e.g. the discounts marketplace) can float it too.
+class McDonaldsAdBadge extends StatelessWidget {
   final VoidCallback onTap;
-  const _McDonaldsBadge({required this.onTap});
+  const McDonaldsAdBadge({super.key, required this.onTap});
   static const _red = Color(0xFFDA291C);
   static const _gold = Color(0xFFFFC72C);
 
