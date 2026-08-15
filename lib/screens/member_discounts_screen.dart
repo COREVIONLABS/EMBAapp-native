@@ -40,6 +40,16 @@ class MemberDiscountsScreen extends StatefulWidget {
 
 class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
   String _cat = 'All';
+  // The page has its own contextual bottom nav (noon style). 0 Home · 1 Favorites
+  // · 2 Pizza Hut (sponsored centre) · 3 Top partners · 4 New partners.
+  int _nav = 0;
+  final Set<String> _fav = <String>{};
+  static const _newNames = <String>{'Trattoria Napoli', 'Cineworld GE', 'McFit Gelsenkirchen', 'ZOOM Erlebniswelt'};
+
+  List<_Partner> get _favPartners => _partners.where((p) => _fav.contains(p.name)).toList();
+  List<_Partner> get _newPartners => _partners.where((p) => _newNames.contains(p.name)).toList();
+  List<_Partner> get _fastFood => _partners.where((p) => p.category == 'Fast food').toList();
+  void _toggleFav(String name) => setState(() => _fav.contains(name) ? _fav.remove(name) : _fav.add(name));
 
   // ── Partner inventory ──
   //  • The first block are paid, sponsored "Top partner" placements — the
@@ -98,30 +108,139 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final list = _filtered;
     return SubScaffold(
       title: tr('Member discounts'),
-      children: [
-        // ── Search ──
-        HubSearchField(hint: 'Search partners & offers'),
-        const SizedBox(height: 16),
+      bottomBar: _MarketplaceNav(active: _nav, onTap: (i) => setState(() => _nav = i)),
+      children: switch (_nav) {
+        1 => _favView(),
+        2 => _pizzaView(),
+        3 => _topPartnerView(),
+        4 => _newPartnerView(),
+        _ => _homeView(),
+      },
+    );
+  }
 
-        // ── Intro strip: what these are ──
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Row(children: [
-            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22)),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('Free member discounts'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
-              Text(tr('Claim a voucher, redeem it at the partner. As often as you like.'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
-            ])),
+  // A partner row + spacing, with the favourite heart wired in.
+  List<Widget> _rows(List<_Partner> items) => [
+        for (final p in items) ...[
+          _PartnerRow(partner: p, onClaim: () => _claim(p.name, p.discount), isFav: _fav.contains(p.name), onFav: () => _toggleFav(p.name)),
+          const SizedBox(height: 12),
+        ],
+      ];
+
+  Widget _emptyState(IconData icon, String title, String sub) => Container(
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+        alignment: Alignment.center,
+        child: Column(children: [
+          Container(width: 64, height: 64, decoration: BoxDecoration(color: AppColors.surfaceMinimal, shape: BoxShape.circle), child: Icon(icon, size: 30, color: AppColors.textLight)),
+          const SizedBox(height: 14),
+          Text(tr(title), textAlign: TextAlign.center, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(tr(sub), textAlign: TextAlign.center, style: AppText.body3Regular),
+        ]),
+      );
+
+  Widget _footerNote() => Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Row(children: [
+          Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+          const SizedBox(width: 6),
+          Expanded(child: Text(tr('Discounts are a Fan+ perk — free to claim, as often as you like.'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
+        ]),
+      );
+
+  // ── View: Home — the full marketplace ──
+  List<Widget> _homeView() {
+    final list = _filtered;
+    return [
+      HubSearchField(hint: 'Search partners & offers'),
+      const SizedBox(height: 16),
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
+        child: Row(children: [
+          Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22)),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr('Free member discounts'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+            Text(tr('Claim a voucher, redeem it at the partner. As often as you like.'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
+          ])),
+        ]),
+      ),
+      const SizedBox(height: 22),
+      _topPartnerCarousel(),
+      const SizedBox(height: 24),
+      // ── Near you — a map preview + a rail of the closest partners ──
+      Row(children: [
+        Expanded(child: Text(tr('Near you'), style: AppText.label1)),
+        Tappable(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PartnersScreen())),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(tr('Map'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
           ]),
         ),
-        const SizedBox(height: 22),
+      ]),
+      const SizedBox(height: 4),
+      Text(tr('Partners around the VELTINS-Arena.'), style: AppText.body3Regular),
+      const SizedBox(height: 12),
+      SizedBox(
+        height: 150,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          children: [
+            _MapTile(onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PartnersScreen()))),
+            const SizedBox(width: 12),
+            for (final p in _nearby.take(6)) ...[
+              _NearbyCard(partner: p, onTap: () => _claim(p.name, p.discount)),
+              const SizedBox(width: 12),
+            ],
+          ],
+        ),
+      ),
+      const SizedBox(height: 24),
+      // ── Category chips ──
+      SizedBox(
+        height: 36,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          itemCount: _categories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (_, i) {
+            final c = _categories[i];
+            final sel = c == _cat;
+            return Tappable(
+              onTap: () => setState(() => _cat = c),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: sel ? AppColors.brandPrimary : AppColors.surface,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: sel ? AppColors.brandPrimary : AppColors.borderLightest),
+                ),
+                child: Text(tr(c), style: AppText.body3.copyWith(color: sel ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w700)),
+              ),
+            );
+          },
+        ),
+      ),
+      const SizedBox(height: 18),
+      Row(children: [
+        Expanded(child: Text(_cat == 'All' ? tr('All partners') : tr(_cat), style: AppText.label1)),
+        Text('${list.length} ${tr('partners')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
+      ]),
+      const SizedBox(height: 12),
+      ..._rows(list),
+      _footerNote(),
+    ];
+  }
 
-        // ── Top partners — paid placements, labelled "Anzeige" ──
+  // Shared horizontal "Top partners" carousel (Anzeige).
+  Widget _topPartnerCarousel() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Text(tr('Top partners'), style: AppText.label1),
           const SizedBox(width: 8),
@@ -140,86 +259,69 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
             itemBuilder: (_, i) => _FeaturedCard(partner: _sponsored[i], onTap: () => _claim(_sponsored[i].name, _sponsored[i].discount)),
           ),
         ),
-        const SizedBox(height: 24),
+      ]);
 
-        // ── Near you — a map preview + a rail of the closest partners ──
-        Row(children: [
-          Expanded(child: Text(tr('Near you'), style: AppText.label1)),
-          Tappable(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PartnersScreen())),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Text(tr('Map'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
-            ]),
-          ),
-        ]),
-        const SizedBox(height: 4),
-        Text(tr('Partners around the VELTINS-Arena.'), style: AppText.body3Regular),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 150,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            children: [
-              _MapTile(onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PartnersScreen()))),
-              const SizedBox(width: 12),
-              for (final p in _nearby.take(6)) ...[
-                _NearbyCard(partner: p, onTap: () => _claim(p.name, p.discount)),
-                const SizedBox(width: 12),
-              ],
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-
-        // ── Category chips ──
-        SizedBox(
-          height: 36,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            itemCount: _categories.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
-            itemBuilder: (_, i) {
-              final c = _categories[i];
-              final sel = c == _cat;
-              return Tappable(
-                onTap: () => setState(() => _cat = c),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: sel ? AppColors.brandPrimary : AppColors.surface,
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: sel ? AppColors.brandPrimary : AppColors.borderLightest),
-                  ),
-                  child: Text(tr(c), style: AppText.body3.copyWith(color: sel ? Colors.white : AppColors.textNormal, fontWeight: FontWeight.w700)),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 18),
-
-        // ── Partner list ──
-        Row(children: [
-          Expanded(child: Text(_cat == 'All' ? tr('All partners') : tr(_cat), style: AppText.label1)),
-          Text('${list.length} ${tr('partners')}', style: AppText.body3.copyWith(color: AppColors.textLight)),
-        ]),
-        const SizedBox(height: 12),
-        for (final p in list) ...[
-          _PartnerRow(partner: p, onClaim: () => _claim(p.name, p.discount)),
-          const SizedBox(height: 12),
-        ],
-        const SizedBox(height: 4),
-        Row(children: [
-          Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
-          const SizedBox(width: 6),
-          Expanded(child: Text(tr('Discounts are a Fan+ perk — free to claim, as often as you like.'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
-        ]),
+  // ── View: Favorites ──
+  List<Widget> _favView() {
+    final favs = _favPartners;
+    return [
+      Text(tr('Favorites'), style: AppText.label1),
+      const SizedBox(height: 4),
+      Text(tr('Your saved partners.'), style: AppText.body3Regular),
+      const SizedBox(height: 14),
+      if (favs.isEmpty)
+        _emptyState(Icons.favorite_border_rounded, 'No favourites yet', 'Tap the heart on a partner to save it here.')
+      else ...[
+        ..._rows(favs),
+        _footerNote(),
       ],
-    );
+    ];
+  }
+
+  // ── View: Pizza Hut (sponsored focus) ──
+  List<Widget> _pizzaView() {
+    final ph = _partners.firstWhere((p) => p.name == 'Pizza Hut');
+    return [
+      Row(children: [
+        Text(tr('Sponsored'), style: AppText.label1),
+        const SizedBox(width: 8),
+        Pill(color: AppColors.surfaceMinimal, child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800, fontSize: 10))),
+      ]),
+      const SizedBox(height: 12),
+      SizedBox(height: 184, child: _FeaturedCard(partner: ph, wide: true, onTap: () => _claim(ph.name, ph.discount))),
+      const SizedBox(height: 22),
+      Text(tr('More fast-food offers'), style: AppText.label1),
+      const SizedBox(height: 12),
+      ..._rows(_fastFood),
+      _footerNote(),
+    ];
+  }
+
+  // ── View: Top partners ──
+  List<Widget> _topPartnerView() => [
+        _topPartnerCarousel(),
+        const SizedBox(height: 22),
+        Text(tr('All top partners'), style: AppText.label1),
+        const SizedBox(height: 12),
+        ..._rows(_sponsored),
+        _footerNote(),
+      ];
+
+  // ── View: New partners ──
+  List<Widget> _newPartnerView() {
+    final news = _newPartners;
+    return [
+      Text(tr('New partners'), style: AppText.label1),
+      const SizedBox(height: 4),
+      Text(tr('Just joined the Fan+ programme.'), style: AppText.body3Regular),
+      const SizedBox(height: 14),
+      if (news.isEmpty)
+        _emptyState(Icons.fiber_new_rounded, 'Nothing new right now', 'Check back soon for new partners.')
+      else ...[
+        ..._rows(news),
+        _footerNote(),
+      ],
+    ];
   }
 }
 
@@ -305,7 +407,8 @@ class _NearbyCard extends StatelessWidget {
 class _FeaturedCard extends StatelessWidget {
   final _Partner partner;
   final VoidCallback onTap;
-  const _FeaturedCard({required this.partner, required this.onTap});
+  final bool wide;
+  const _FeaturedCard({required this.partner, required this.onTap, this.wide = false});
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +417,7 @@ class _FeaturedCard extends StatelessWidget {
       scale: 0.98,
       onTap: onTap,
       child: Container(
-        width: 260,
+        width: wide ? double.infinity : 260,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppRadii.card),
@@ -359,7 +462,9 @@ class _FeaturedCard extends StatelessWidget {
 class _PartnerRow extends StatelessWidget {
   final _Partner partner;
   final VoidCallback onClaim;
-  const _PartnerRow({required this.partner, required this.onClaim});
+  final bool isFav;
+  final VoidCallback? onFav;
+  const _PartnerRow({required this.partner, required this.onClaim, this.isFav = false, this.onFav});
 
   @override
   Widget build(BuildContext context) {
@@ -386,6 +491,14 @@ class _PartnerRow extends StatelessWidget {
             if (p.sponsored) ...[
               const SizedBox(width: 6),
               Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800, fontSize: 9))),
+            ],
+            if (onFav != null) ...[
+              const SizedBox(width: 4),
+              GestureDetector(
+                onTap: onFav,
+                behavior: HitTestBehavior.opaque,
+                child: Icon(isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded, size: 20, color: isFav ? AppColors.danger : AppColors.textLight),
+              ),
             ],
           ]),
           const SizedBox(height: 3),
@@ -420,6 +533,104 @@ class _PartnerRow extends StatelessWidget {
             ),
           ]),
         ])),
+      ]),
+    );
+  }
+}
+
+/// Page-specific bottom navigation for the marketplace (noon style): the centre
+/// slot is a paid, branded Pizza Hut placement; the others switch the view.
+/// This replaces the app's normal nav on the discounts page only.
+class _MarketplaceNav extends StatelessWidget {
+  final int active;
+  final ValueChanged<int> onTap;
+  const _MarketplaceNav({required this.active, required this.onTap});
+
+  static const _items = <(IconData, String)>[
+    (Icons.home_rounded, 'Home'),
+    (Icons.favorite_rounded, 'Favorites'),
+    (Icons.local_pizza_rounded, 'Pizza Hut'), // centre — sponsored
+    (Icons.workspace_premium_rounded, 'Top partners'),
+    (Icons.fiber_new_rounded, 'New partners'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.nav),
+        border: Border.all(color: AppColors.borderLightest),
+        boxShadow: const [BoxShadow(color: Color(0x1F000000), blurRadius: 16, offset: Offset(0, 2))],
+      ),
+      child: Row(children: [
+        for (var i = 0; i < _items.length; i++)
+          Expanded(
+            child: i == 2
+                ? _PizzaNavItem(selected: i == active, onTap: () => onTap(i))
+                : _NavItem(icon: _items[i].$1, label: _items[i].$2, selected: i == active, onTap: () => onTap(i)),
+          ),
+      ]),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _NavItem({required this.icon, required this.label, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? AppColors.brandPrimary : AppColors.textLight;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Icon(icon, size: 22, color: color),
+          const SizedBox(height: 3),
+          Text(tr(label), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+              style: AppText.caption1.copyWith(color: color, fontWeight: selected ? FontWeight.w800 : FontWeight.w600, fontSize: 11)),
+        ]),
+      ),
+    );
+  }
+}
+
+/// The centre Pizza Hut slot — a raised, branded red button with a tiny
+/// "Anzeige" tag, so it reads as the paid placement it is.
+class _PizzaNavItem extends StatelessWidget {
+  final bool selected;
+  final VoidCallback onTap;
+  const _PizzaNavItem({required this.selected, required this.onTap});
+  static const _red = Color(0xFFE3000B);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(
+            color: _red, shape: BoxShape.circle,
+            border: selected ? Border.all(color: AppColors.brandDarkest, width: 2) : null,
+            boxShadow: [BoxShadow(color: _red.withValues(alpha: 0.4), blurRadius: 10, offset: const Offset(0, 3))],
+          ),
+          child: const Icon(Icons.local_pizza_rounded, color: Colors.white, size: 22),
+        ),
+        const SizedBox(height: 3),
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          Text('Pizza Hut', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: _red, fontWeight: FontWeight.w800, fontSize: 10)),
+          const SizedBox(width: 3),
+          Container(padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1), decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(3)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800, fontSize: 7))),
+        ]),
       ]),
     );
   }
