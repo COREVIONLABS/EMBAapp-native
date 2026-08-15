@@ -29,6 +29,16 @@ jobs:
         run: python3 tools/fetch_figma_assets.py
       - name: Generate Android project
         run: flutter create --platforms=android --org de.schalke04 --project-name emba_app .
+      - name: Use a stable signing key (so updates install over the old app)
+        # Flutter release builds are signed with the debug signingConfig, whose
+        # key normally lives at ~/.android/debug.keystore. On an ephemeral CI
+        # runner that file is generated fresh (random key) every run, so each
+        # APK gets a DIFFERENT signature and Android refuses to install it as an
+        # update over a previously-installed build. Copying a committed keystore
+        # in gives every build the SAME signature, so in-place updates work.
+        run: |
+          mkdir -p ~/.android
+          cp ci/debug.keystore ~/.android/debug.keystore
       - name: Enable edge-to-edge system bars (native theme)
         run: python3 tools/patch_edge_to_edge.py
       - name: Get packages
