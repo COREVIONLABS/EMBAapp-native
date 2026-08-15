@@ -1958,4 +1958,20 @@ const Map<String, String> _de = {
   'Terodde: "This club means everything"': 'Terodde: „Dieser Verein bedeutet alles"',
   'Daily games, the monthly tombola, points auctions & your collection.':
       'Tägliche Spiele, die monatliche Tombola, Punkte-Auktionen & deine Sammlung.',
+
+  // ── Membership: side-by-side plan comparison ─────────────────
+  'Compare plans and pick what fits — all in one view.':
+      'Vergleiche die Tarife und wähle, was passt — alles auf einen Blick.',
+  'your current plan': 'dein aktueller Tarif',
+  'Continue with Free': 'Mit Free fortfahren',
+  'Choose': 'Wähle',
+  '7-day free trial': '7 Tage kostenlos testen',
+  'forever': 'für immer',
+  'Monthly bonus points': 'Monatliche Bonuspunkte',
+  'Points per purchase': 'Punkte pro Kauf',
+  'Ticket presale': 'Ticket-Vorverkauf',
+  'Best seats + upgrades': 'Beste Plätze + Upgrades',
+  'Monthly member drop': 'Monatlicher Mitglieder-Drop',
+  'Partner perks': 'Partner-Vorteile',
+  'Daily games & Fan Points': 'Tägliche Spiele & Fan Points',
 };
