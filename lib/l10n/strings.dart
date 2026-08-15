@@ -1841,6 +1841,10 @@ const Map<String, String> _de = {
   'Partners around the VELTINS-Arena.': 'Partner rund um die VELTINS-Arena.',
   'On every matchday menu': 'Auf jedes Spieltags-Menü',
   'Large pizzas, home delivery': 'Große Pizzen, Lieferung nach Hause',
+  'Play along and win real experiences.': 'Spiel mit und gewinn echte Erlebnisse.',
+  '€ value': '€ Wert',
+  'Ended': 'Beendet',
+  'automatically entered': 'automatisch dabei',
   'Hide this ad?': 'Anzeige ausblenden?',
   'This sponsored placement will be hidden.': 'Diese gesponserte Anzeige wird ausgeblendet.',
   // ── Points auctions (data) ──

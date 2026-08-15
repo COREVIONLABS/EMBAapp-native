@@ -262,22 +262,6 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             ]),
           ),
         ),
-        const SizedBox(height: 14),
-        // Value-back — your membership already paid for itself
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SurfaceCard(
-            color: AppColors.brandLightest,
-            child: Row(children: [
-              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Your membership is working for you'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-                Text('${FanModel.perks.freeLots} ${tr('free lots')} + ${FanModel.fmtPublic(FanModel.perks.monthlyPoints)} ${tr('pts / month')}', style: AppText.body3Regular),
-              ])),
-            ]),
-          ),
-        ),
         const SizedBox(height: 16),
         // Unlocked perks
         Padding(
@@ -385,45 +369,16 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           child: _contentGrid(context),
         ),
         const SizedBox(height: 24),
+        // Tombola perk — compact link (the numbers already live on the
+        // membership card, so this stays a lean shortcut, not a repeat).
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text(tr('Your Tombola perk'), style: AppText.label1)),
-        ),
-        const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF6A1B9A), Color(0xFF311B92)]), borderRadius: BorderRadius.circular(AppRadii.card)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Membership perk'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
-                const Spacer(),
-                const Icon(Icons.local_activity_rounded, color: AppColors.gold, size: 24),
-              ]),
-              const SizedBox(height: 14),
-              Text('${FanModel.perks.freeLots} ${tr('free tombola lots every month')}', style: AppText.label1.copyWith(color: Colors.white)),
-              const SizedBox(height: 4),
-              Text(tr('Win VIP tickets, signed gear and more — winners drawn each month.'), style: AppText.body3.copyWith(color: Colors.white70)),
-              const SizedBox(height: 14),
-              SizedBox(
-                width: double.infinity,
-                child: Tappable(
-                  onTap: () => _push(context, const RafflesScreen()),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(color: AppColors.brandDarkest, borderRadius: BorderRadius.circular(999)),
-                    child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(tr('Open Tombola'), style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.white),
-                    ]),
-                  ),
-                ),
-              ),
-            ]),
+          child: HubListRow(
+            icon: Icons.local_activity_rounded,
+            iconColor: AppColors.brandPrimary,
+            title: 'Your Tombola perk',
+            subtitle: '${FanModel.perks.freeLots} ${tr('free lots')} · ${tr('automatically entered')}',
+            onTap: () => _push(context, const RafflesScreen()),
           ),
         ),
       ],

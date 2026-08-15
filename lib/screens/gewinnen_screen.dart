@@ -18,6 +18,10 @@ import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import '../l10n/strings.dart';
 
+/// Stable end time for the monthly-tombola preview countdown (set once at app
+/// start so the ticker counts down smoothly instead of resetting each build).
+final DateTime _monthlyDrawEnd = DateTime.now().add(const Duration(days: 3, hours: 6));
+
 /// "Gewinnen" tab — the play-&-win hub: daily games (spin / scratch, once a day,
 /// with a streak to pull fans back), then the monthly Tombola where membership
 /// grants free lots, with prizes from sponsors, the club and money-can't-buy
@@ -41,7 +45,7 @@ class GewinnenScreen extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(tr('Play & win'), style: AppText.label1.copyWith(color: Colors.white)),
             const SizedBox(height: 4),
-            Text(tr('Daily games, the monthly tombola, points auctions & your collection.'), style: AppText.body3.copyWith(color: Colors.white70)),
+            Text(tr('Play along and win real experiences.'), style: AppText.body3.copyWith(color: Colors.white70)),
             const SizedBox(height: 14),
             ValueListenableBuilder<int>(
               valueListenable: pointsNotifier,
@@ -169,7 +173,9 @@ class GewinnenScreen extends StatelessWidget {
                           Pill(color: AppColors.danger, child: Row(mainAxisSize: MainAxisSize.min, children: [
                             const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
                             const SizedBox(width: 4),
-                            Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                            a.endsAt != null
+                                ? CountdownText(a.endsAt!, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))
+                                : Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                           ])),
                         ]),
                       ),
@@ -265,7 +271,7 @@ class GewinnenScreen extends StatelessWidget {
                       Pill(color: Colors.black.withValues(alpha: 0.5), child: Row(mainAxisSize: MainAxisSize.min, children: [
                         const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text(tr('Ends in 3d 6h'), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                        CountdownText(_monthlyDrawEnd, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                       ])),
                     ]),
                   ),

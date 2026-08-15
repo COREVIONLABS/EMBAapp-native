@@ -183,7 +183,9 @@ class _AuctionCard extends StatelessWidget {
                       child: Row(mainAxisSize: MainAxisSize.min, children: [
                         Icon(a.ended ? Icons.check_circle_rounded : Icons.schedule_rounded, size: 12, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                        a.endsAt != null
+                            ? CountdownText(a.endsAt!, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))
+                            : Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                       ]),
                     ),
                   ]),
@@ -332,7 +334,9 @@ class AuctionDetailScreen extends StatelessWidget {
                       Pill(color: a.ended ? Colors.black.withValues(alpha: 0.45) : AppColors.danger, child: Row(mainAxisSize: MainAxisSize.min, children: [
                         Icon(a.ended ? Icons.check_circle_rounded : Icons.schedule_rounded, size: 12, color: Colors.white),
                         const SizedBox(width: 4),
-                        Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                        a.endsAt != null
+                            ? CountdownText(a.endsAt!, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))
+                            : Text(tr(a.endsInLabel), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
                       ])),
                     ]),
                     const Spacer(),

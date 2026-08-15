@@ -1,8 +1,54 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../theme/app_theme.dart';
 import '../l10n/strings.dart';
+
+/// A live, ticking countdown to [endsAt] — "2 T 4 Std 12 Min" (DE) or
+/// "2d 4h 12m" (EN). Drops the seconds while a day or more remains, shows
+/// seconds in the final hour for urgency, and reads "Beendet" once past.
+class CountdownText extends StatefulWidget {
+  final DateTime endsAt;
+  final TextStyle? style;
+  const CountdownText(this.endsAt, {super.key, this.style});
+  @override
+  State<CountdownText> createState() => _CountdownTextState();
+}
+
+class _CountdownTextState extends State<CountdownText> {
+  Timer? _t;
+  @override
+  void initState() {
+    super.initState();
+    _t = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _t?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final d = widget.endsAt.difference(DateTime.now());
+    if (d.isNegative) return Text(tr('Ended'), style: widget.style);
+    final days = d.inDays, h = d.inHours % 24, m = d.inMinutes % 60, s = d.inSeconds % 60;
+    final de = localeNotifier.value == AppLocale.de;
+    final String label;
+    if (days > 0) {
+      label = de ? '$days T $h Std $m Min' : '${days}d ${h}h ${m}m';
+    } else if (h > 0) {
+      label = de ? '$h Std $m Min $s Sek' : '${h}h ${m}m ${s}s';
+    } else {
+      label = de ? '$m Min $s Sek' : '${m}m ${s}s';
+    }
+    return Text(label, style: widget.style);
+  }
+}
 
 /// Local SVG asset helper.
 class Svg extends StatelessWidget {

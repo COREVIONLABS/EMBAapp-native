@@ -31,9 +31,16 @@ void _redeemOffer(BuildContext context, _Offer o) {
   redeemForVoucher(context, title: '$badge ${tr(title)}', category: category, points: points, sponsor: sponsor);
 }
 
-class RedeemScreen extends StatelessWidget {
+class RedeemScreen extends StatefulWidget {
   final bool isTab;
   const RedeemScreen({super.key, this.isTab = false});
+  @override
+  State<RedeemScreen> createState() => _RedeemScreenState();
+}
+
+class _RedeemScreenState extends State<RedeemScreen> {
+  // Selected voucher tab in the merged section: 0 = € value, 1 = % discount.
+  int _vTab = 0;
 
   // ── Value vouchers (Wertgutscheine) — a fixed € amount to spend at the club
   //    Fanshop or a sponsor. Badge = the € value.
@@ -84,8 +91,8 @@ class RedeemScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Redeem'),
-      showBack: !isTab,
-      trailing: isTab ? _pointsChip() : null,
+      showBack: !widget.isTab,
+      trailing: widget.isTab ? _pointsChip() : null,
       children: [
         // ── What points are for (the first thing a fan reads) — a clean hero
         //    with your balance and the two ways to spend it ──
@@ -176,16 +183,40 @@ class RedeemScreen extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
-        // ── 1) Value vouchers — swipeable row + See all ──
-        _sectionHead(context, title: tr('Value vouchers'), subtitle: tr('A fixed € amount for the Fanshop or a sponsor.'), list: _valueVouchers, valueBadge: true),
+        // ── Vouchers — one section with a € / % toggle (was two stacked
+        //    sections; merging shortens the page and makes the choice clearer) ──
+        Row(children: [
+          Expanded(child: Text(tr('Vouchers'), style: AppText.label1)),
+          Tappable(
+            onTap: () {
+              final value = _vTab == 0;
+              _push(context, _VoucherListScreen(
+                title: value ? tr('Value vouchers') : tr('Discount vouchers'),
+                subtitle: value ? tr('A fixed € amount for the Fanshop or a sponsor.') : tr('A fixed % off tickets, Fanshop and sponsors.'),
+                list: value ? _valueVouchers : _discountVouchers,
+                valueBadge: value,
+              ));
+            },
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(tr('See all'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
+              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+            ]),
+          ),
+        ]),
+        const SizedBox(height: 10),
+        // € / % segmented toggle.
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(999)),
+          child: Row(children: [
+            Expanded(child: _voucherTabButton(label: tr('€ value'), selected: _vTab == 0, onTap: () => setState(() => _vTab = 0))),
+            Expanded(child: _voucherTabButton(label: tr('% off'), selected: _vTab == 1, onTap: () => setState(() => _vTab = 1))),
+          ]),
+        ),
+        const SizedBox(height: 8),
+        Text(_vTab == 0 ? tr('A fixed € amount for the Fanshop or a sponsor.') : tr('A fixed % off tickets, Fanshop and sponsors.'), style: AppText.body3Regular),
         const SizedBox(height: 12),
-        _offerRow(context, _valueVouchers, valueBadge: true),
-        const SizedBox(height: 24),
-
-        // ── 2) Discount vouchers — swipeable row + See all ──
-        _sectionHead(context, title: tr('Discount vouchers'), subtitle: tr('A fixed % off tickets, Fanshop and sponsors.'), list: _discountVouchers, valueBadge: false),
-        const SizedBox(height: 12),
-        _offerRow(context, _discountVouchers, valueBadge: false),
+        _offerRow(context, _vTab == 0 ? _valueVouchers : _discountVouchers, valueBadge: _vTab == 0),
         const SizedBox(height: 24),
 
         // ── 3) Tombola lots ──
@@ -261,22 +292,21 @@ class RedeemScreen extends StatelessWidget {
     );
   }
 
-  // Section header with a title, a "See all" link, and a subtitle line under it.
-  Widget _sectionHead(BuildContext context, {required String title, required String subtitle, required List<_Offer> list, required bool valueBadge}) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Expanded(child: Text(title, style: AppText.label1)),
-        Tappable(
-          onTap: () => _push(context, _VoucherListScreen(title: title, subtitle: subtitle, list: list, valueBadge: valueBadge)),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Text(tr('See all'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-            Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
-          ]),
+  // One pill in the € / % voucher toggle.
+  Widget _voucherTabButton({required String label, required bool selected, required VoidCallback onTap}) {
+    return Tappable(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 9),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: selected ? AppColors.surface : Colors.transparent,
+          borderRadius: BorderRadius.circular(999),
+          boxShadow: selected ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
         ),
-      ]),
-      const SizedBox(height: 4),
-      Text(subtitle, style: AppText.body3Regular),
-    ]);
+        child: Text(label, style: AppText.body3.copyWith(color: selected ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w800)),
+      ),
+    );
   }
 
   // Horizontal, swipeable row of offer cards.

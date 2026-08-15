@@ -21,6 +21,7 @@ class Auction {
   final int startBid;
   final int minIncrement;
   final String endsInLabel;
+  final DateTime? endsAt; // live end time for a ticking countdown (null if ended)
   final bool ended;
 
   int currentBid;
@@ -39,6 +40,7 @@ class Auction {
     required this.color,
     required this.startBid,
     required this.endsInLabel,
+    Duration? endsIn,
     this.sponsor,
     this.image,
     this.minIncrement = 500,
@@ -49,7 +51,8 @@ class Auction {
     this.myMaxBid = 0,
     this.outbid = false,
     this.won = false,
-  }) : currentBid = currentBid ?? startBid;
+  })  : currentBid = currentBid ?? startBid,
+        endsAt = endsIn == null ? null : DateTime.now().add(endsIn);
 
   /// The smallest valid next bid.
   int get nextMinBid => currentBid + minIncrement;
@@ -76,6 +79,7 @@ class AuctionStore extends ChangeNotifier {
       currentBid: 8500,
       bidCount: 23,
       endsInLabel: 'Ends in 2d 4h',
+      endsIn: const Duration(days: 2, hours: 4),
     ),
     Auction(
       id: 'vip',
@@ -90,6 +94,7 @@ class AuctionStore extends ChangeNotifier {
       currentBid: 24000,
       bidCount: 51,
       endsInLabel: 'Ends in 6h 12m',
+      endsIn: const Duration(hours: 6, minutes: 12),
       // Premium, hotly-contested lot led by other fans (a stretch goal).
     ),
     Auction(
@@ -105,6 +110,7 @@ class AuctionStore extends ChangeNotifier {
       currentBid: 6000,
       bidCount: 14,
       endsInLabel: 'Ends in 1d 9h',
+      endsIn: const Duration(days: 1, hours: 9),
       // You bid earlier and got outbid — shows the "Outbid" state.
       outbid: true,
     ),
@@ -120,6 +126,7 @@ class AuctionStore extends ChangeNotifier {
       currentBid: 5000,
       bidCount: 33,
       endsInLabel: 'Ends in 3d 1h',
+      endsIn: const Duration(days: 3, hours: 1),
       // You currently lead this lot — shows the "You’re winning" state and a
       // believable refund when the presenter demos being outbid.
       leadingByMe: true,
