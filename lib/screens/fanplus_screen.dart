@@ -273,51 +273,50 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
       children: [
         _header(),
         const SizedBox(height: 16),
-        // Active membership card
+        // Active membership — compact card (you already pay; no need for a big
+        // hero). Tier + status inline, perks on one line, manage on the right.
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(colors: AppColors.pointsGradient),
               borderRadius: BorderRadius.circular(AppRadii.card),
             ),
-            child: Column(children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Pill(
-                  gradient: const LinearGradient(colors: AppColors.goldGradient),
-                  child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700)),
-                ),
-              ),
-              const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 36),
-              const SizedBox(height: 8),
-              ValueListenableBuilder<String>(
-                valueListenable: tierNotifier,
-                builder: (context, tier, __) => Text(tr(tier), style: AppText.h4.copyWith(color: Colors.white)),
-              ),
-              const SizedBox(height: 12),
-              Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
-                for (final b in [
-                  trp('{n} free lots', n: '${perksFor(tierNotifier.value).freeLots}'),
-                  trp('+{n} pts / month', n: FanModel.fmtPublic(perksFor(tierNotifier.value).monthlyPoints)),
-                  tr('Priority access'),
-                ])
-                  Pill(color: Colors.white24, child: Text(b, style: AppText.caption1.copyWith(color: Colors.white))),
-              ]),
-              const SizedBox(height: 16),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text('${tr('Renews')} ${_renewLabel()}', style: AppText.body3.copyWith(color: Colors.white70)),
-                Tappable(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ManageSubscriptionScreen())),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Text(tr('Manage Subscription'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
-                    const Icon(Icons.chevron_right_rounded, size: 16, color: Colors.white),
+            child: ValueListenableBuilder<String>(
+              valueListenable: tierNotifier,
+              builder: (context, tier, __) {
+                final p = perksFor(tier);
+                return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Container(width: 42, height: 42, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 24)),
+                    const SizedBox(width: 12),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Row(children: [
+                        Text(tr(tier), style: AppText.label1.copyWith(color: Colors.white)),
+                        const SizedBox(width: 8),
+                        Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Text(tr('Active'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                      ]),
+                      const SizedBox(height: 3),
+                      Text('${p.freeLots} ${tr('free lots')} · +${FanModel.fmtPublic(p.monthlyPoints)} ${tr('pts')} ${tr('/ month')}', style: AppText.body3.copyWith(color: Colors.white70)),
+                    ])),
                   ]),
-                ),
-              ]),
-            ]),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    Text('${tr('Renews')} ${_renewLabel()}', style: AppText.caption1.copyWith(color: Colors.white60)),
+                    const Spacer(),
+                    Tappable(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ManageSubscriptionScreen())),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(tr('Manage'), style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                        const Icon(Icons.chevron_right_rounded, size: 16, color: Colors.white),
+                      ]),
+                    ),
+                  ]),
+                ]);
+              },
+            ),
           ),
         ),
         const SizedBox(height: 16),

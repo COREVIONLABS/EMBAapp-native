@@ -778,19 +778,9 @@ class _NextMatchCard extends StatelessWidget {
             tr('Dortmund'),
           )),
         ]),
-        const SizedBox(height: 14),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
-          decoration: BoxDecoration(color: AppColors.brandDarkest.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(999)),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.sports_soccer_rounded, size: 14, color: AppColors.gold),
-            const SizedBox(width: 6),
-            Flexible(child: Text(tr('Predict the score for +50 points'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
-          ]),
-        ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
         Row(children: [
-          Expanded(child: _cta(tr('Predict Score'), AppColors.gold, AppColors.brandDarkest, onPredict)),
+          Expanded(child: _cta(tr('Predict · +50'), AppColors.gold, AppColors.brandDarkest, onPredict)),
           const SizedBox(width: 10),
           Expanded(child: _cta(tr('Ticket voucher'), Colors.white24, Colors.white, onTicket)),
         ]),

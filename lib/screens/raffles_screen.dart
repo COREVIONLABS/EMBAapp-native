@@ -123,46 +123,28 @@ class _RafflesScreenState extends State<RafflesScreen> {
       builder: (context, _) => SubScaffold(
         title: tr('Tombola'),
         children: [
-          if (_freeLots == 0)
-            Tappable(
-              scale: 0.99,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-                child: Row(children: [
-                  Icon(Icons.info_outline_rounded, size: 16, color: AppColors.brandPrimary),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(tr('You have no free lots yet — become a member to enter every draw, or add a lot for points below.'), style: AppText.body3.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
-                  Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
-                ]),
-              ),
-            )
-          else
-            Row(children: [
-              Icon(Icons.bolt_rounded, size: 15, color: AppColors.brandPrimary),
-              const SizedBox(width: 6),
-              Expanded(child: Text(trp('Your {n} free lots enter every open draw automatically — add extra lots for even more chances.', n: '$_freeLots'),
-                  style: AppText.body3.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w600))),
-            ]),
-          const SizedBox(height: 10),
-          if (!_topTier)
-            Tappable(
-              scale: 0.99,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+          // One compact status line: your free lots + (unless top tier) a
+          // one-tap upgrade shortcut — instead of two stacked info rows.
+          Tappable(
+            scale: 0.99,
+            onTap: _topTier ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen())),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
               child: Row(children: [
-                Icon(Icons.arrow_circle_up_rounded, size: 16, color: AppColors.brandPrimary),
-                const SizedBox(width: 6),
-                Expanded(child: Text(tr('Higher membership = more free lots every month'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
-                Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
+                Icon(_freeLots == 0 ? Icons.info_outline_rounded : Icons.bolt_rounded, size: 16, color: AppColors.brandPrimary),
+                const SizedBox(width: 8),
+                Expanded(child: Text(
+                  _freeLots == 0
+                      ? tr('You have no free lots yet — become a member to enter every draw, or add a lot for points below.')
+                      : _topTier
+                          ? trp('Your {n} free lots auto-enter every draw — add extra lots for even more chances.', n: '$_freeLots')
+                          : trp('Your {n} free lots auto-enter every draw — a higher membership gets you more.', n: '$_freeLots'),
+                  style: AppText.body3.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w600))),
+                if (!_topTier) Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.brandPrimary),
               ]),
-            )
-          else
-            Row(children: [
-              Icon(Icons.verified_rounded, size: 16, color: AppColors.success),
-              const SizedBox(width: 6),
-              Expanded(child: Text('${tr(tierNotifier.value)} · ${tr('you get the most free lots every month')}', style: AppText.body3.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w600))),
-            ]),
+            ),
+          ),
           const SizedBox(height: 18),
           Text(tr('Tombola of the month'), style: AppText.label1),
           const SizedBox(height: 12),

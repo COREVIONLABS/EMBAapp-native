@@ -73,21 +73,19 @@ class _FanPollsScreenState extends State<FanPollsScreen> {
     return SubScaffold(
       title: tr('Fan votes'),
       children: [
-        // Hero
+        // Compact hero — one row, no oversized heading stack.
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              const Icon(Icons.how_to_vote_rounded, color: AppColors.gold, size: 22),
-              const SizedBox(width: 8),
-              Text(tr('Your vote counts'), style: AppText.body2.copyWith(color: Colors.white)),
-            ]),
-            const SizedBox(height: 12),
-            Text(tr('Shape real club decisions'), style: AppText.h4.copyWith(color: Colors.white)),
-            const SizedBox(height: 4),
-            Text(tr('Vote on the captain, the kit and more — and earn points.'), style: AppText.body3.copyWith(color: Colors.white70)),
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(13)), child: const Icon(Icons.how_to_vote_rounded, color: AppColors.gold, size: 24)),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Shape real club decisions'), style: AppText.label2.copyWith(color: Colors.white)),
+              const SizedBox(height: 2),
+              Text(tr('Vote on the captain, the kit and more — and earn points.'), style: AppText.body3.copyWith(color: Colors.white70)),
+            ])),
           ]),
         ),
         const SizedBox(height: 20),

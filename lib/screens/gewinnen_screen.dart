@@ -30,47 +30,28 @@ class GewinnenScreen extends StatelessWidget {
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
-  // Top hero — same shape as the Redeem intro: a brand-gradient header with a
-  // headline stat (free lots this month) and the two ways to win below.
-  Widget _hero() {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
-          decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient)),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(tr('Play & win'), style: AppText.label1.copyWith(color: Colors.white)),
-            const SizedBox(height: 4),
-            Text(tr('Play along and win real experiences.'), style: AppText.body3.copyWith(color: Colors.white70)),
-            const SizedBox(height: 14),
-            ValueListenableBuilder<int>(
-              valueListenable: pointsNotifier,
-              builder: (context, _, __) => Row(children: [
-                const Icon(Icons.hexagon_rounded, size: 18, color: AppColors.gold),
-                const SizedBox(width: 6),
-                Text(FanModel.pointsFormatted, style: AppText.h4.copyWith(color: Colors.white, fontSize: 26)),
-                const SizedBox(width: 6),
-                Padding(padding: const EdgeInsets.only(top: 4), child: Text('${tr('points')} · ${tr('≈')} ${FanModel.balanceEuro}', style: AppText.body3.copyWith(color: Colors.white70))),
-              ]),
-            ),
-          ]),
-        ),
-      ]),
-    );
-  }
+  // Compact balance chip for the tab header (same as Redeem / Fan+) — the
+  // balance is shown once here, not repeated in a big hero box below.
+  Widget _pointsChip() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(999)),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.hexagon_rounded, size: 14, color: AppColors.brandPrimary),
+          const SizedBox(width: 5),
+          ValueListenableBuilder<int>(
+            valueListenable: pointsNotifier,
+            builder: (_, __, ___) => Text(FanModel.pointsFormatted, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+          ),
+        ]),
+      );
 
   @override
   Widget build(BuildContext context) {
     return SubScaffold(
       title: tr('Prizes'),
       showBack: false,
+      trailing: _pointsChip(),
       children: [
-        // ── Hero — mirrors the Redeem intro: gradient header + live balance ──
-        _hero(),
-        const SizedBox(height: 22),
-
         // ══ BLOCK ① Play today — the daily retention hook, top & prominent ══
         AnimatedBuilder(
           animation: dailyGames,

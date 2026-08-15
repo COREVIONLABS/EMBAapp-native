@@ -5,7 +5,6 @@ import '../widgets/sub_scaffold.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/action_sheets.dart';
 import 'buy_points_screen.dart';
-import 'search_screen.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import 'predictions_screen.dart';
@@ -47,9 +46,6 @@ class EarnPointsScreen extends StatelessWidget {
     return SubScaffold(
       title: tr('Earn Points'),
       children: [
-        HubSearchField(hint: 'Search rewards & sponsors', onTap: () => _push(context, const SearchScreen())),
-        const SizedBox(height: 16),
-
         // ── Weekly goal hero (gamified progress + streak) ──
         Container(
           width: double.infinity,
@@ -84,7 +80,43 @@ class EarnPointsScreen extends StatelessWidget {
             ]),
           ]),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+
+        // ── Do it today (one-tap daily actions) — action-first, right up top ──
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Do it today'), style: AppText.label1)),
+        const SizedBox(height: 12),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(child: _DailyAction(icon: Icons.event_available_rounded, label: tr('Check-in'), reward: '+10', color: const Color(0xFF2E7D32),
+              onTap: () => showSuccessSheet(context, title: 'Checked in!', message: '+10 points added — come back tomorrow to keep your streak.'))),
+          const SizedBox(width: 10),
+          Expanded(child: _DailyAction(icon: Icons.casino_rounded, label: tr('Spin'), reward: tr('Play'), color: AppColors.brandPrimary, onTap: () => showDailySpin(context))),
+          const SizedBox(width: 10),
+          Expanded(child: _DailyAction(icon: Icons.style_rounded, label: tr('Scratch'), reward: tr('Play'), color: AppColors.brandPrimary, onTap: () => showScratchCard(context))),
+          const SizedBox(width: 10),
+          Expanded(child: _DailyAction(icon: Icons.sports_soccer_rounded, label: tr('Predict'), reward: '+50', color: const Color(0xFF1B7A3D), onTap: () => _push(context, const PredictionsScreen()))),
+        ]),
+        const SizedBox(height: 24),
+
+        // ── Active challenges (progress + reward) ──
+        Align(alignment: Alignment.centerLeft, child: Text(tr('Active challenges'), style: AppText.label1)),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 176,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _challenges.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, i) {
+              final c = _challenges[i];
+              final onTap = c.$2 == 'Predict 3 matches' ? () => _push(context, const PredictionsScreen()) : null;
+              return SizedBox(
+                width: 210,
+                child: FeaturedGoalCard(icon: c.$1, title: c.$2, sub: c.$3, progress: c.$4, reward: c.$5, onTap: onTap),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 24),
 
         // ── Sponsor missions (the club's 3rd revenue stream — partners pay) ──
         AnimatedBuilder(
@@ -145,44 +177,6 @@ class EarnPointsScreen extends StatelessWidget {
                 child: Text(tr('Vote'), style: AppText.body3.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800)),
               ),
             ]),
-          ),
-        ),
-        const SizedBox(height: 22),
-
-        // ── Do it today (one-tap daily actions) ──
-        Align(alignment: Alignment.centerLeft, child: Text(tr('Do it today'), style: AppText.label1)),
-        const SizedBox(height: 12),
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Expanded(child: _DailyAction(icon: Icons.event_available_rounded, label: tr('Check-in'), reward: '+10', color: const Color(0xFF2E7D32),
-              onTap: () => showSuccessSheet(context, title: 'Checked in!', message: '+10 points added — come back tomorrow to keep your streak.'))),
-          const SizedBox(width: 10),
-          Expanded(child: _DailyAction(icon: Icons.casino_rounded, label: tr('Spin'), reward: tr('Play'), color: AppColors.brandPrimary, onTap: () => showDailySpin(context))),
-          const SizedBox(width: 10),
-          Expanded(child: _DailyAction(icon: Icons.style_rounded, label: tr('Scratch'), reward: tr('Play'), color: AppColors.brandPrimary, onTap: () => showScratchCard(context))),
-          const SizedBox(width: 10),
-          Expanded(child: _DailyAction(icon: Icons.sports_soccer_rounded, label: tr('Predict'), reward: '+50', color: const Color(0xFF1B7A3D), onTap: () => _push(context, const PredictionsScreen()))),
-        ]),
-        const SizedBox(height: 24),
-
-        // ── Active challenges (progress + reward) ──
-        Align(alignment: Alignment.centerLeft, child: Text(tr('Active challenges'), style: AppText.label1)),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 176,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _challenges.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final c = _challenges[i];
-              // Only wire a tap where it leads somewhere real; otherwise pass
-              // null so the card doesn't fake a tappable affordance.
-              final onTap = c.$2 == 'Predict 3 matches' ? () => _push(context, const PredictionsScreen()) : null;
-              return SizedBox(
-                width: 210,
-                child: FeaturedGoalCard(icon: c.$1, title: c.$2, sub: c.$3, progress: c.$4, reward: c.$5, onTap: onTap),
-              );
-            },
           ),
         ),
         const SizedBox(height: 24),

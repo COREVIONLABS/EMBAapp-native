@@ -94,37 +94,6 @@ class _RedeemScreenState extends State<RedeemScreen> {
       showBack: !widget.isTab,
       trailing: widget.isTab ? _pointsChip() : null,
       children: [
-        // ── What points are for (the first thing a fan reads) — a clean hero
-        //    with your balance and the two ways to spend it ──
-        Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            // Headline band — deep brand gradient with the live balance.
-            Container(
-              padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
-              decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: AppColors.pointsGradient)),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(tr('Turn points into rewards'), style: AppText.label1.copyWith(color: Colors.white)),
-                const SizedBox(height: 4),
-                Text(tr('Spend them on vouchers, local partners or the tombola.'), style: AppText.body3.copyWith(color: Colors.white70)),
-                const SizedBox(height: 14),
-                ValueListenableBuilder<int>(
-                  valueListenable: pointsNotifier,
-                  builder: (context, _, __) => Row(children: [
-                    const Icon(Icons.hexagon_rounded, size: 18, color: AppColors.gold),
-                    const SizedBox(width: 6),
-                    Text(FanModel.pointsFormatted, style: AppText.h4.copyWith(color: Colors.white, fontSize: 26)),
-                    const SizedBox(width: 6),
-                    Padding(padding: const EdgeInsets.only(top: 4), child: Text('${tr('points')} · ${tr('≈')} ${FanModel.balanceEuro}', style: AppText.body3.copyWith(color: Colors.white70))),
-                  ]),
-                ),
-              ]),
-            ),
-          ]),
-        ),
-        const SizedBox(height: 14),
-
         // ── Quick access — dismissible 2×2 grid (mirrors Home "How Fan+ works")
         //    so a fan can jump straight to a way of spending points, or clear it
         //    away for a cleaner screen. ──
