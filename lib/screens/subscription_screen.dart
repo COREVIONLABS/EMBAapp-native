@@ -7,9 +7,9 @@ import 'upgrade_plan_screen.dart';
 import 'benefits_screen.dart';
 import '../l10n/strings.dart';
 
-/// Membership plans — tabbed upgrade screen: pick a tier tab, see one rich card
-/// (price + headline benefits + partner perks), then a "show all benefits" link
-/// and a "become a …" CTA. EMBA/S04 tiers.
+/// Membership plans — a true side-by-side comparison: a selectable price header
+/// (Free / Member / Super) above a shared feature matrix, with the held tier
+/// marked "Current" and the selected tier driving the checkout CTA.
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
   @override
@@ -33,8 +33,11 @@ class _Tier {
 }
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
-  // Selected tier drives the CTA; default to the first paid upgrade.
-  int _selected = 1;
+  // Selected tier drives the CTA; open on the plan the fan currently holds.
+  late int _selected = () {
+    final i = _tiers.indexWhere((t) => t.name == tierNotifier.value);
+    return i < 0 ? 1 : i;
+  }();
   bool _annual = false;
 
   // Free + two paid tiers. Entry (€4.99) is the volume hero; Super Fan (€9.99)
@@ -185,9 +188,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         child: Column(children: [
           SizedBox(
             height: 16,
-            child: t.badge != null
-                ? Text(tr(t.badge!), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: const Color(0xFF9A6B00), fontWeight: FontWeight.w800, fontSize: 9))
-                : (isCurrent ? Text(tr('Current'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 9)) : const SizedBox.shrink()),
+            child: isCurrent
+                ? Text(tr('Current'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 9))
+                : (t.badge != null
+                    ? Text(tr(t.badge!), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: const Color(0xFF9A6B00), fontWeight: FontWeight.w800, fontSize: 9))
+                    : const SizedBox.shrink()),
           ),
           const SizedBox(height: 4),
           Text(tr(t.tabLabel), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),

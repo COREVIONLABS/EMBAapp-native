@@ -163,7 +163,7 @@ class _RafflesScreenState extends State<RafflesScreen> {
         // Tombola of the month (featured)
         Text(tr('Tombola of the month'), style: AppText.label1),
         const SizedBox(height: 12),
-        _featured(0),
+        Tappable(scale: 0.99, onTap: () => _openDraw(0), child: _featured(0)),
         const SizedBox(height: 22),
         Text(tr('More draws'), style: AppText.label1),
         const SizedBox(height: 12),

@@ -27,10 +27,11 @@ class _PartnersScreenState extends State<PartnersScreen> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([partnerStore, locationConsent]),
+      animation: Listenable.merge([partnerStore, locationConsent, adsConsent]),
       builder: (context, _) {
         final partners = partnerStore.all;
         final loc = locationConsent.value;
+        final adsOn = adsConsent.value;
         return SubScaffold(
           title: tr('Partners near you'),
           children: [
@@ -132,14 +133,15 @@ class _PartnersScreenState extends State<PartnersScreen> {
             ] else if (partners.isEmpty) ...[
               _emptyCategory(),
             ] else ...[
-              // ── Top-Partner shelf (paid placement, clearly labelled) ──
-              if (partnerStore.topPartners.isNotEmpty) ...[
+              // ── Top-Partner shelf — paid placement, only while advertising
+              //    consent is on (turning ads off hides it) ──
+              if (adsOn && partnerStore.topPartners.isNotEmpty) ...[
                 Row(children: [
                   const Icon(Icons.workspace_premium_rounded, size: 18, color: AppColors.gold),
                   const SizedBox(width: 6),
                   Text(tr('Top-Partner'), style: AppText.label2),
                   const SizedBox(width: 8),
-                  Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w800, fontSize: 9))),
+                  _adTag(),
                 ]),
                 const SizedBox(height: 10),
                 for (final p in partnerStore.topPartners) ...[
@@ -148,15 +150,22 @@ class _PartnersScreenState extends State<PartnersScreen> {
                 ],
                 const SizedBox(height: 6),
               ],
-              // ── Organic list (distance-sorted, no paid rank) ──
-              if (partnerStore.organicPartners.isNotEmpty) ...[
-                Text(loc ? tr('Near you') : tr('More partners'), style: AppText.label2),
-                const SizedBox(height: 10),
-                for (final p in partnerStore.organicPartners) ...[
-                  _PartnerRow(partner: p, showDistance: loc, onTap: () => _open(p)),
-                  const SizedBox(height: 12),
-                ],
-              ],
+              // ── Organic list. With ads off, ALL partners (incl. sponsored,
+              //    now unlabelled/unstyled) show here, sorted purely by distance.
+              Builder(builder: (context) {
+                final organic = adsOn
+                    ? partnerStore.organicPartners
+                    : (List<Partner>.of(partners)..sort((a, b) => a.distanceKm.compareTo(b.distanceKm)));
+                if (organic.isEmpty) return const SizedBox.shrink();
+                return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(loc ? tr('Near you') : tr('More partners'), style: AppText.label2),
+                  const SizedBox(height: 10),
+                  for (final p in organic) ...[
+                    _PartnerRow(partner: p, showDistance: loc, promoted: adsOn, onTap: () => _open(p)),
+                    const SizedBox(height: 12),
+                  ],
+                ]);
+              }),
               const SizedBox(height: 2),
               Row(children: [
                 Icon(Icons.storefront_rounded, size: 14, color: AppColors.textLight),
@@ -213,12 +222,14 @@ class _PartnersScreenState extends State<PartnersScreen> {
 class _PartnerRow extends StatelessWidget {
   final Partner partner;
   final bool showDistance;
+  final bool promoted; // paid styling/label only when advertising consent is on
   final VoidCallback onTap;
-  const _PartnerRow({required this.partner, required this.onTap, this.showDistance = true});
+  const _PartnerRow({required this.partner, required this.onTap, this.showDistance = true, this.promoted = true});
 
   @override
   Widget build(BuildContext context) {
     final p = partner;
+    final ad = promoted && p.sponsored;
     return Tappable(
       scale: 0.98,
       onTap: onTap,
@@ -227,7 +238,7 @@ class _PartnerRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.card),
-          border: Border.all(color: p.sponsored ? AppColors.gold.withValues(alpha: 0.5) : AppColors.borderLightest),
+          border: Border.all(color: ad ? AppColors.gold.withValues(alpha: 0.5) : AppColors.borderLightest),
         ),
         child: Row(children: [
           Container(
@@ -244,9 +255,9 @@ class _PartnerRow extends StatelessWidget {
                 const SizedBox(width: 5),
                 const Icon(Icons.verified_rounded, size: 15, color: AppColors.brandPrimary),
               ],
-              if (p.sponsored) ...[
+              if (ad) ...[
                 const SizedBox(width: 6),
-                Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 9))),
+                _adTag(),
               ],
             ]),
             const SizedBox(height: 4),
@@ -258,10 +269,8 @@ class _PartnerRow extends StatelessWidget {
                 const SizedBox(width: 8),
               ],
               _recommendChip(p),
-              if (p.offers.length > 1) ...[
-                const SizedBox(width: 8),
-                Text('· ${trp('+{n} offers', n: '${p.offers.length - 1}')}', style: AppText.caption1.copyWith(color: AppColors.textLight)),
-              ],
+              const SizedBox(width: 6),
+              Flexible(child: Text('· ${tr(p.recommendBand)}', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700))),
             ]),
           ])),
           const SizedBox(width: 8),
@@ -281,8 +290,17 @@ class _PartnerRow extends StatelessWidget {
 Widget _recommendChip(Partner p) => Row(mainAxisSize: MainAxisSize.min, children: [
       const Icon(Icons.thumb_up_rounded, size: 11, color: AppColors.success),
       const SizedBox(width: 3),
-      Text('${p.recommendPct}%', style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700)),
+      Text('${p.recommendPct}% ${tr('rec.')}', style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700)),
     ]);
+
+/// The single, standardized paid-placement label (EU 2019/1150). Used wherever a
+/// sponsored partner appears, so the legally-required tag looks the same
+/// everywhere.
+Widget _adTag() => Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(5)),
+      child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 9)),
+    );
 
 /// Premium Top-Partner card (paid placement) — a soft gold wash, a crown seal
 /// and a small "Ad" label. Elevated styling + honest label = premium, not spam.
@@ -319,10 +337,8 @@ class _TopPartnerCard extends StatelessWidget {
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   const Icon(Icons.workspace_premium_rounded, size: 14, color: AppColors.gold),
-                  const SizedBox(width: 4),
-                  Text(tr('Top-Partner'), style: AppText.caption1.copyWith(color: const Color(0xFF9A6B00), fontWeight: FontWeight.w800)),
                   const SizedBox(width: 6),
-                  Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700, fontSize: 9)),
+                  _adTag(),
                 ]),
                 const SizedBox(height: 2),
                 Row(children: [
@@ -344,9 +360,9 @@ class _TopPartnerCard extends StatelessWidget {
                 const SizedBox(width: 8),
               ],
               _recommendChip(p),
+              const SizedBox(width: 6),
+              Flexible(child: Text('· ${tr(p.recommendBand)}', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700))),
               const SizedBox(width: 8),
-              Text('· ${tr(p.recommendBand)}', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700)),
-              const Spacer(),
               Text(tr('View offers'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
               const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.brandPrimary),
             ]),
@@ -520,7 +536,12 @@ class PartnerDetailScreen extends StatelessWidget {
                     Text('· ${p.recommendPct}%', style: AppText.body2.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)),
                   ]),
                   const SizedBox(height: 2),
-                  Text(trp('{n} fans recommend this partner', n: '${partnerStore.recommendCountFor(p)}'), style: AppText.body3.copyWith(color: AppColors.textNormal)),
+                  Text(
+                    partnerStore.hasRecommended(p)
+                        ? trp('{n} fans would recommend — including you', n: '${partnerStore.recommendCountFor(p)}')
+                        : trp('{n} fans would recommend this partner', n: '${partnerStore.recommendCountFor(p)}'),
+                    style: AppText.body3.copyWith(color: AppColors.textNormal),
+                  ),
                 ])),
               ]),
             ),
@@ -538,7 +559,7 @@ class PartnerDetailScreen extends StatelessWidget {
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Icon(partnerStore.hasRecommended(p) ? Icons.thumb_up_rounded : Icons.thumb_up_outlined, size: 18, color: AppColors.success),
                   const SizedBox(width: 8),
-                  Text(partnerStore.hasRecommended(p) ? tr('You recommend this 👍') : tr('Recommend 👍'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+                  Text(partnerStore.hasRecommended(p) ? tr('You recommend this') : tr('Recommend this partner'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
                 ]),
               ),
             ),

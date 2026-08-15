@@ -108,9 +108,11 @@ class RedeemScreen extends StatelessWidget {
               color: AppColors.surface,
               padding: const EdgeInsets.all(12),
               child: Row(children: [
-                Expanded(child: _pathTile(Icons.confirmation_number_rounded, tr('Vouchers'), tr('€-value or % off'))),
-                const SizedBox(width: 12),
-                Expanded(child: _pathTile(Icons.local_activity_rounded, tr('Tombola lots'), tr('Win monthly prizes'))),
+                Expanded(child: _pathTile(Icons.confirmation_number_rounded, tr('Vouchers'), tr('€ or % off'))),
+                const SizedBox(width: 10),
+                Expanded(child: _pathTile(Icons.storefront_rounded, tr('Partners'), tr('Local deals'))),
+                const SizedBox(width: 10),
+                Expanded(child: _pathTile(Icons.local_activity_rounded, tr('Tombola'), tr('Win prizes'))),
               ]),
             ),
           ]),
@@ -185,7 +187,7 @@ class RedeemScreen extends StatelessWidget {
                 Row(children: [
                   const Icon(Icons.hexagon_rounded, size: 13, color: AppColors.brandPrimary),
                   const SizedBox(width: 4),
-                  Text('${tr('from')} 500 ${tr('pts')} / ${tr('lot')}', style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+                  Text('${tr('Free with membership')} · +200 ${tr('pts')} / ${tr('extra lot')}', style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
                 ]),
               ])),
               Padding(padding: const EdgeInsets.only(right: 8), child: Icon(Icons.chevron_right_rounded, color: AppColors.textLight)),
@@ -342,6 +344,10 @@ class _MiniPartnerCard extends StatelessWidget {
           Row(children: [
             Container(width: 40, height: 40, decoration: BoxDecoration(color: p.color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(11)), alignment: Alignment.center, child: Text(p.emoji, style: const TextStyle(fontSize: 20))),
             const Spacer(),
+            if (p.sponsored) ...[
+              Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 9))),
+              const SizedBox(width: 5),
+            ],
             Pill(color: AppColors.brandLightest, child: Text(p.bestOffer.badge, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800))),
           ]),
           const SizedBox(height: 10),

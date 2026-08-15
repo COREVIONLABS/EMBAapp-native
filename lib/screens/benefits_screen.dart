@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
 /// All membership benefits (Figma 2194:11585 / 2194:12047) — a grid of
@@ -12,27 +13,32 @@ class AllBenefitsScreen extends StatelessWidget {
   final String tierName;
   const AllBenefitsScreen({super.key, this.tierName = 'Super Fan'});
 
+  // The membership perks for the *selected* tier (so opening this from a Fan
+  // Member / Free plan shows that plan's real numbers, not always Super Fan's).
+  MembershipPerks get _p => perksFor(tierName);
+  String get _presale => tierName == 'Super Fan' ? '48–72h before public sale' : (tierName == 'Fan Member' ? '24h before public sale' : 'Standard public sale');
+
   // (label, icon, badge, colour)
-  static const _perks = [
-    ('Fanshop', Icons.checkroom_rounded, '15% off', Color(0xFF0A2A5E)),
+  List<(String, IconData, String, Color)> get _perks => [
+    ('Fanshop', Icons.checkroom_rounded, '15% off', const Color(0xFF0A2A5E)),
     ('Tickets', Icons.confirmation_number_rounded, '10% off', AppColors.brandPrimary),
-    ('Food & Drink', Icons.fastfood_rounded, '10% off', Color(0xFFE65100)),
+    ('Food & Drink', Icons.fastfood_rounded, '10% off', const Color(0xFFE65100)),
     ('Sponsors', Icons.storefront_rounded, 'Voucher', AppColors.brandPrimary),
     ('Experiences', Icons.stadium_rounded, 'VIP', AppColors.brandPrimary),
-    ('Content', Icons.play_circle_fill_rounded, 'Free', Color(0xFFC2185B)),
-    ('Free tombola lots', Icons.local_activity_rounded, '+8', AppColors.brandPrimary),
-    ('Top up points', Icons.add_rounded, 'Bonus', Color(0xFF2E7D32)),
+    ('Content', Icons.play_circle_fill_rounded, 'Free', const Color(0xFFC2185B)),
+    ('Free tombola lots', Icons.local_activity_rounded, '+${_p.freeLots}', AppColors.brandPrimary),
+    ('Top up points', Icons.add_rounded, 'Bonus', const Color(0xFF2E7D32)),
   ];
 
   // (icon, title, status)
-  static const _included = [
-    (Icons.bolt_rounded, 'Priority ticket access', '48–72h before public sale'),
+  List<(IconData, String, String)> get _included => [
+    (Icons.bolt_rounded, 'Priority ticket access', _presale),
     (Icons.event_seat_rounded, 'Best seats first', 'Matchday seat upgrades'),
-    (Icons.local_fire_department_rounded, 'Monthly FOMO drop', '1 exclusive item / month'),
+    (Icons.local_fire_department_rounded, 'Monthly member drop', '1 exclusive item / month'),
     (Icons.casino_rounded, 'Free spins', '2 / day'),
     (Icons.shield_rounded, 'Streak protection', 'Active'),
     (Icons.block_rounded, 'Ad-free experience', 'Active'),
-    (Icons.savings_rounded, 'Rewards value back', '~€12 / month'),
+    (Icons.savings_rounded, 'Rewards value back', '~${FanModel.euroValue(_p.monthlyPoints)} / month'),
   ];
 
   @override

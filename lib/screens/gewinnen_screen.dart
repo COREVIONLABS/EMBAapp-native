@@ -187,10 +187,10 @@ class GewinnenScreen extends StatelessWidget {
         ),
         const SizedBox(height: 22),
 
-        // ── 2) Your lots (membership) — one live number, one unit ──
-        ValueListenableBuilder<int>(
-          valueListenable: lotsNotifier,
-          builder: (context, lots, __) => Container(
+        // ── 2) Your lots (membership) — tier-driven free lots ──
+        ValueListenableBuilder<String>(
+          valueListenable: tierNotifier,
+          builder: (context, tier, __) => Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -198,7 +198,7 @@ class GewinnenScreen extends StatelessWidget {
                 const Icon(Icons.local_activity_rounded, color: AppColors.brandPrimary),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('$lots ${tr('lots this month')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+                  Text('${perksFor(tier).freeLots} ${tr('lots this month')}', style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
                   Text('${tr(tierNotifier.value)} · ${tr('free lots enter automatically — more lots, more chances')}', style: AppText.body3.copyWith(color: AppColors.onAccent)),
                 ])),
                 Tappable(

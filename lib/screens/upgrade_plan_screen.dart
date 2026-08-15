@@ -65,7 +65,7 @@ class UpgradePlanScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('$plan plan', style: AppText.label1.copyWith(color: Colors.white)),
+                  Text('${tr(plan)} ${tr('plan')}', style: AppText.label1.copyWith(color: Colors.white)),
                   Pill(
                     gradient: const LinearGradient(colors: AppColors.goldGradient),
                     child: Text(tr(_badge(plan)), style: AppText.caption1.copyWith(color: AppColors.brandDarkest)),
@@ -95,7 +95,7 @@ class UpgradePlanScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.check_circle_rounded, color: AppColors.brandPrimary, size: 20),
                 const SizedBox(width: 12),
-                Expanded(child: Text(b, style: AppText.body1.copyWith(color: AppColors.textNormal, fontSize: 15))),
+                Expanded(child: Text(tr(b), style: AppText.body1.copyWith(color: AppColors.textNormal, fontSize: 15))),
               ],
             ),
           ),

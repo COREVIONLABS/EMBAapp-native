@@ -1974,4 +1974,20 @@ const Map<String, String> _de = {
   'Monthly member drop': 'Monatlicher Mitglieder-Drop',
   'Partner perks': 'Partner-Vorteile',
   'Daily games & Fan Points': 'Tägliche Spiele & Fan Points',
+
+  // ── Hard-check round 2 fixes ─────────────────────────────────
+  'rec.': 'Empf.',
+  'You recommend this': 'Von dir empfohlen',
+  'Recommend this partner': 'Diesen Partner empfehlen',
+  '{n} fans would recommend this partner': '{n} Fans würden diesen Partner weiterempfehlen',
+  '{n} fans would recommend — including you': '{n} Fans würden weiterempfehlen — inklusive dir',
+  'Free with membership': 'Gratis mit Mitgliedschaft',
+  'extra lot': 'Extra-Los',
+  'Partners': 'Partner',
+  'Local deals': 'Lokale Deals',
+  'Win prizes': 'Preise gewinnen',
+  '€ or % off': '€ oder % Rabatt',
+  'plan': 'Tarif',
+  'Standard public sale': 'Regulärer Vorverkauf',
+  '24h before public sale': '24h vor dem öffentlichen Verkauf',
 };
