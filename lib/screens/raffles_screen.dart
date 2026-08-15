@@ -99,7 +99,6 @@ class _RafflesScreenState extends State<RafflesScreen> {
     super.dispose();
   }
 
-  String _two(int n) => n.toString().padLeft(2, '0');
   Duration _left(int i) {
     final d = _ends[i].difference(DateTime.now());
     return d.isNegative ? Duration.zero : d;
@@ -170,86 +169,104 @@ class _RafflesScreenState extends State<RafflesScreen> {
 
   Widget _featured(int i) {
     final r = kRaffles[i];
-    final left = _left(i);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(AppRadii.card)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
-          const Spacer(),
-          Pill(color: Colors.white24, child: Text('${FanModel.fmtPublic(raffleTotalEntries(i))} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white))),
-        ]),
-        const SizedBox(height: 16),
-        Icon(r.glyph, color: AppColors.gold, size: 40),
-        const SizedBox(height: 10),
-        Text(tr(r.prize), style: AppText.h4.copyWith(color: Colors.white)),
-        const SizedBox(height: 10),
-        Row(children: [
-          _count(_two(left.inDays), 'Days'),
-          const SizedBox(width: 8),
-          _count(_two(left.inHours % 24), 'Hrs'),
-          const SizedBox(width: 8),
-          _count(_two(left.inMinutes % 60), 'Min'),
-        ]),
-        const SizedBox(height: 14),
-        Row(children: [
-          const Icon(Icons.local_activity_rounded, color: AppColors.gold, size: 18),
-          const SizedBox(width: 8),
-          Expanded(child: Text(
-            raffleMyEntries(i) > 0 ? trp('You’re in with {n} lots', n: '${raffleMyEntries(i)}') : tr('You have no lots in this draw yet'),
-            style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-          )),
-          Text(tr('View draw'), style: AppText.body3.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
-          const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
-        ]),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        // Motif band — brand gradient + a big watermark glyph, with the badges
+        // and a live countdown over it.
+        SizedBox(
+          height: 140,
+          child: Stack(fit: StackFit.expand, children: [
+            DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight))),
+            Positioned(right: -14, bottom: -22, child: Icon(r.glyph, size: 150, color: Colors.white.withValues(alpha: 0.12))),
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                const Spacer(),
+                Pill(color: Colors.black.withValues(alpha: 0.4), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
+                  const SizedBox(width: 4),
+                  CountdownText(_ends[i], style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                ])),
+              ]),
+            ),
+          ]),
+        ),
+        // Solid info panel — clean, legible text.
+        Container(
+          color: AppColors.brandDarkest,
+          padding: const EdgeInsets.all(18),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr(r.prize), style: AppText.label1.copyWith(color: Colors.white)),
+            const SizedBox(height: 8),
+            Row(children: [
+              Icon(raffleMyEntries(i) > 0 ? Icons.check_circle_rounded : Icons.info_outline_rounded, size: 15, color: AppColors.gold),
+              const SizedBox(width: 6),
+              Expanded(child: Text(
+                raffleMyEntries(i) > 0 ? trp('You’re in with {n} lots', n: '${raffleMyEntries(i)}') : tr('You have no lots in this draw yet'),
+                style: AppText.body3.copyWith(color: Colors.white))),
+            ]),
+            const SizedBox(height: 14),
+            Row(children: [
+              const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.gold),
+              const SizedBox(width: 6),
+              Text('${FanModel.fmtPublic(raffleTotalEntries(i))} ${tr('entries')}', style: AppText.body3.copyWith(color: Colors.white70, fontWeight: FontWeight.w700)),
+              const Spacer(),
+              Text(tr('View draw'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
+            ]),
+          ]),
+        ),
       ]),
-    );
-  }
-
-  Widget _count(String value, String unit) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.22), borderRadius: BorderRadius.circular(AppRadii.tile)),
-        child: Column(children: [
-          Text(value, style: AppText.h4.copyWith(color: Colors.white)),
-          const SizedBox(height: 2),
-          Text(tr(unit), style: AppText.caption1.copyWith(color: Colors.white70)),
-        ]),
-      ),
     );
   }
 
   Widget _row(int i) {
     final r = kRaffles[i];
     final left = _left(i);
-    return SurfaceCard(
+    return Tappable(
+      scale: 0.99,
       onTap: () => _open(i),
-      child: Row(children: [
-        Container(
-          width: 52, height: 52,
-          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(12)),
-          child: Icon(r.glyph, color: AppColors.brandPrimary, size: 24),
-        ),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(tr(r.prize), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 2),
-          Row(children: [
-            Icon(Icons.schedule_rounded, size: 13, color: AppColors.textLight),
-            const SizedBox(width: 4),
-            Text('${tr('Draw in')} ${left.inDays}d ${left.inHours % 24}h', style: AppText.body3Regular),
-            const SizedBox(width: 8),
-            const Icon(Icons.local_activity_rounded, size: 12, color: AppColors.brandPrimary),
-            const SizedBox(width: 3),
-            Text(trp('you: {n}', n: '${raffleMyEntries(i)}'), style: AppText.body3.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700)),
-          ]),
-        ])),
-        const SizedBox(width: 8),
-        Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
-      ]),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+        child: Row(children: [
+          // Gradient motif thumbnail with the prize glyph.
+          Container(
+            width: 58, height: 58,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
+            child: Stack(fit: StackFit.expand, children: [
+              DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight))),
+              Positioned(right: -6, bottom: -8, child: Icon(r.glyph, size: 44, color: Colors.white.withValues(alpha: 0.18))),
+              Center(child: Icon(r.glyph, color: Colors.white, size: 26)),
+            ]),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(tr(r.prize), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 6),
+            Row(children: [
+              Pill(color: AppColors.surfaceMinimal, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.schedule_rounded, size: 12, color: AppColors.textLight),
+                const SizedBox(width: 4),
+                Text('${left.inDays}d ${left.inHours % 24}h', style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w700)),
+              ])),
+              const SizedBox(width: 6),
+              Pill(color: AppColors.brandLightest, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.local_activity_rounded, size: 11, color: AppColors.brandPrimary),
+                const SizedBox(width: 3),
+                Text(trp('you: {n}', n: '${raffleMyEntries(i)}'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+              ])),
+            ]),
+          ])),
+          const SizedBox(width: 6),
+          Icon(Icons.chevron_right_rounded, color: AppColors.textLight),
+        ]),
+      ),
     );
   }
 }
