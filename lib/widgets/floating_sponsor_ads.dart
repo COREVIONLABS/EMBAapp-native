@@ -132,13 +132,29 @@ class _McDonaldsAdBadgeState extends State<McDonaldsAdBadge> {
   int _i = 0;
   Timer? _timer;
 
-  // The rotating faces inside the circle.
+  // A "product" face: shows a real photo (assets/images/<asset>.png) if the
+  // sponsor supplied one, otherwise a full-colour food emoji (renders in colour
+  // on the device — far nicer than a flat icon). Drop licensed photos in later
+  // and they replace the emoji automatically, no code change.
+  Widget _product(String asset, String emoji, String key) => SizedBox(
+        key: ValueKey(key),
+        width: 52, height: 52,
+        child: ClipOval(
+          child: Image.asset(
+            'assets/images/$asset.png',
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
+          ),
+        ),
+      );
+
+  // The rotating faces inside the circle: brand mark, product, offer, product…
   List<Widget> get _faces => [
         Text('M', key: const ValueKey('m'), style: AppText.h2.copyWith(color: _gold, fontWeight: FontWeight.w900, fontSize: 30, height: 1)),
-        const Icon(Icons.lunch_dining_rounded, key: ValueKey('burger'), color: Colors.white, size: 30),
+        _product('ad_mc_burger', '🍔', 'burger'),
         Text('-20%', key: const ValueKey('offer'), style: AppText.caption1.copyWith(color: _gold, fontWeight: FontWeight.w900, fontSize: 16)),
-        const Icon(Icons.local_cafe_rounded, key: ValueKey('drink'), color: Colors.white, size: 26),
-        const Icon(Icons.icecream_rounded, key: ValueKey('sweet'), color: Colors.white, size: 26),
+        _product('ad_mc_fries', '🍟', 'fries'),
+        _product('ad_mc_drink', '🥤', 'drink'),
       ];
 
   @override
