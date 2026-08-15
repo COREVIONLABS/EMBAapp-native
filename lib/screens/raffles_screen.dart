@@ -332,23 +332,36 @@ class _RaffleDetailScreenState extends State<RaffleDetailScreen> {
             onTap: _add,
           ),
           children: [
-            // Prize hero
+            // Prize hero — same premium motif band + solid panel as the hub.
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(22),
-              decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(AppRadii.card)),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  if (i == 0) Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
-                  const Spacer(),
-                  Pill(color: Colors.white24, child: Text('${FanModel.fmtPublic(total)} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
-                ]),
-                const SizedBox(height: 18),
-                Icon(r.glyph, color: AppColors.gold, size: 52),
-                const SizedBox(height: 12),
-                Text(tr(r.prize), style: AppText.h4.copyWith(color: Colors.white)),
-                const SizedBox(height: 4),
-                Text(tr('Money-can’t-buy — won in the monthly draw.'), style: AppText.body3.copyWith(color: Colors.white70)),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                SizedBox(
+                  height: 150,
+                  child: Stack(fit: StackFit.expand, children: [
+                    DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight))),
+                    Positioned(right: -16, bottom: -24, child: Icon(r.glyph, size: 170, color: Colors.white.withValues(alpha: 0.12))),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(children: [
+                        if (i == 0) Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                        const Spacer(),
+                        Pill(color: Colors.black.withValues(alpha: 0.4), child: Text('${FanModel.fmtPublic(total)} ${tr('entries')}', style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700))),
+                      ]),
+                    ),
+                  ]),
+                ),
+                Container(
+                  color: AppColors.brandDarkest,
+                  padding: const EdgeInsets.all(18),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(tr(r.prize), style: AppText.h4.copyWith(color: Colors.white)),
+                    const SizedBox(height: 4),
+                    Text(tr('Money-can’t-buy — won in the monthly draw.'), style: AppText.body3.copyWith(color: Colors.white70)),
+                  ]),
+                ),
               ]),
             ),
             const SizedBox(height: 16),

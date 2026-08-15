@@ -204,58 +204,67 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
 
   // Redemption entries shown at the top of the Redeem tab — the ways to turn
   // points into something: value (€) & discount (%) vouchers and the tombola.
+  // A corner chevron makes clear each tile is tappable.
   Widget _redeemTile(IconData icon, Color color, String label, String sub, VoidCallback onTap) => Expanded(
         child: Tappable(
           scale: 0.97,
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+            padding: const EdgeInsets.fromLTRB(12, 12, 10, 12),
             decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
-            child: Column(children: [
-              Container(width: 42, height: 42, decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 22)),
-              const SizedBox(height: 8),
-              Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 12.5)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Container(width: 40, height: 40, decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 22)),
+                const Spacer(),
+                Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textLight),
+              ]),
+              const SizedBox(height: 10),
+              Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800, fontSize: 12.5)),
               Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textLight)),
             ]),
           ),
         ),
       );
 
-  List<Widget> _redeemEntries() => [
-        Text(tr('Redeem your points'), style: AppText.label1),
-        const SizedBox(height: 12),
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _redeemTile(Icons.euro_rounded, AppColors.gold, tr('Value vouchers'), tr('€ off'), () => openValueVouchers(context)),
-          const SizedBox(width: 10),
-          _redeemTile(Icons.percent_rounded, AppColors.brandPrimary, tr('% vouchers'), tr('% off'), () => openDiscountVouchers(context)),
-          const SizedBox(width: 10),
-          _redeemTile(Icons.local_activity_rounded, const Color(0xFFC62828), tr('Tombola'), tr('Win prizes'), () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RafflesScreen()))),
-        ]),
-        const SizedBox(height: 24),
-        Text(tr('Partner deals'), style: AppText.label1),
-        const SizedBox(height: 12),
-      ];
+  Widget _redeemTilesRow() => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _redeemTile(Icons.euro_rounded, AppColors.gold, tr('Value vouchers'), tr('€ off'), () => openValueVouchers(context)),
+        const SizedBox(width: 10),
+        _redeemTile(Icons.percent_rounded, AppColors.brandPrimary, tr('% vouchers'), tr('% off'), () => openDiscountVouchers(context)),
+        const SizedBox(width: 10),
+        _redeemTile(Icons.local_activity_rounded, const Color(0xFFC62828), tr('Tombola'), tr('Win prizes'), () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RafflesScreen()))),
+      ]);
 
   // ── View: Home — the full marketplace ──
   List<Widget> _homeView() {
     final list = _filtered;
+    final isTab = widget.isTab;
     return [
-      if (widget.isTab) ..._redeemEntries(),
+      // Search is always the first thing on the page.
       HubSearchField(hint: 'Search partners & offers'),
       const SizedBox(height: 16),
-      Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
-        child: Row(children: [
-          Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22)),
-          const SizedBox(width: 12),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(tr('Free member discounts'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
-            Text(tr('Claim a voucher, redeem it at the partner. As often as you like.'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
-          ])),
-        ]),
-      ),
-      const SizedBox(height: 22),
+      if (isTab) ...[
+        // Redemption entries (no redundant heading — the tab is already
+        // titled "Einlösen"). Each tile shows a chevron so it reads tappable.
+        _redeemTilesRow(),
+        const SizedBox(height: 24),
+        Text(tr('Partner deals'), style: AppText.label1),
+        const SizedBox(height: 12),
+      ] else ...[
+        // Concept intro (kept on the standalone marketplace, not the tab).
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
+          child: Row(children: [
+            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.workspace_premium_rounded, color: AppColors.gold, size: 22)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('Free member discounts'), style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
+              Text(tr('Claim a voucher, redeem it at the partner. As often as you like.'), style: AppText.body3.copyWith(color: AppColors.onAccent)),
+            ])),
+          ]),
+        ),
+        const SizedBox(height: 22),
+      ],
       _topPartnerCarousel(),
       const SizedBox(height: 24),
       // ── Near you — a map preview + a rail of the closest partners ──
