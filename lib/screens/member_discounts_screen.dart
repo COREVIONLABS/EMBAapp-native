@@ -10,6 +10,8 @@ import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import 'voucher_screen.dart';
 import 'partners_screen.dart';
+import 'raffles_screen.dart';
+import 'redeem_screen.dart' show openValueVouchers, openDiscountVouchers;
 import '../l10n/strings.dart';
 
 /// A single member-discount partner. `sponsored` flags a paid "Top partner"
@@ -35,7 +37,11 @@ class _Partner {
 /// offer cards. Every offer is a Fan+ perk: claiming issues a voucher (code)
 /// the fan redeems in-store or online — no points spent.
 class MemberDiscountsScreen extends StatefulWidget {
-  const MemberDiscountsScreen({super.key});
+  /// When true this is the Redeem tab (top-level): no back button, a points
+  /// chip in the header, redemption entries (vouchers + tombola) at the top,
+  /// and no contextual bottom bar (the app's global nav is already there).
+  final bool isTab;
+  const MemberDiscountsScreen({super.key, this.isTab = false});
 
   @override
   State<MemberDiscountsScreen> createState() => _MemberDiscountsScreenState();
@@ -109,25 +115,45 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
     Navigator.of(context).popUntil((r) => r.isFirst);
   }
 
+  // Compact balance chip for the tab header (same as the other tabs).
+  Widget _pointsChip() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(999)),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.hexagon_rounded, size: 14, color: AppColors.brandPrimary),
+          const SizedBox(width: 5),
+          ValueListenableBuilder<int>(
+            valueListenable: pointsNotifier,
+            builder: (_, __, ___) => Text(FanModel.pointsFormatted, style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+          ),
+        ]),
+      );
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    final isTab = widget.isTab;
     return Stack(children: [
       SubScaffold(
-        title: tr('Member discounts'),
-        trailing: IconButton(
-          onPressed: _goHome,
-          tooltip: tr('Home'),
-          icon: const Icon(Icons.home_rounded, size: 22, color: AppColors.brandPrimary),
-        ),
-        bottomBar: _MarketplaceNav(active: _nav, onTap: (i) => setState(() => _nav = i)),
-        children: switch (_nav) {
-          1 => _favView(),
-          2 => _pizzaView(),
-          3 => _topPartnerView(),
-          4 => _newPartnerView(),
-          _ => _homeView(),
-        },
+        title: isTab ? tr('Redeem') : tr('Member discounts'),
+        showBack: !isTab,
+        trailing: isTab
+            ? _pointsChip()
+            : IconButton(
+                onPressed: _goHome,
+                tooltip: tr('Home'),
+                icon: const Icon(Icons.home_rounded, size: 22, color: AppColors.brandPrimary),
+              ),
+        bottomBar: isTab ? null : _MarketplaceNav(active: _nav, onTap: (i) => setState(() => _nav = i)),
+        children: isTab
+            ? _homeView()
+            : switch (_nav) {
+                1 => _favView(),
+                2 => _pizzaView(),
+                3 => _topPartnerView(),
+                4 => _newPartnerView(),
+                _ => _homeView(),
+              },
       ),
       // The floating McDonald's badge hovers above this page's own nav (noon:
       // Pizza Hut in the bar + M floating over it). This is the ONLY place the M
@@ -176,10 +202,45 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
         ]),
       );
 
+  // Redemption entries shown at the top of the Redeem tab — the ways to turn
+  // points into something: value (€) & discount (%) vouchers and the tombola.
+  Widget _redeemTile(IconData icon, Color color, String label, String sub, VoidCallback onTap) => Expanded(
+        child: Tappable(
+          scale: 0.97,
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
+            child: Column(children: [
+              Container(width: 42, height: 42, decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)), child: Icon(icon, color: color, size: 22)),
+              const SizedBox(height: 8),
+              Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w700, fontSize: 12.5)),
+              Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption1.copyWith(color: AppColors.textLight)),
+            ]),
+          ),
+        ),
+      );
+
+  List<Widget> _redeemEntries() => [
+        Text(tr('Redeem your points'), style: AppText.label1),
+        const SizedBox(height: 12),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _redeemTile(Icons.euro_rounded, AppColors.gold, tr('Value vouchers'), tr('€ off'), () => openValueVouchers(context)),
+          const SizedBox(width: 10),
+          _redeemTile(Icons.percent_rounded, AppColors.brandPrimary, tr('% vouchers'), tr('% off'), () => openDiscountVouchers(context)),
+          const SizedBox(width: 10),
+          _redeemTile(Icons.local_activity_rounded, const Color(0xFFC62828), tr('Tombola'), tr('Win prizes'), () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RafflesScreen()))),
+        ]),
+        const SizedBox(height: 24),
+        Text(tr('Partner deals'), style: AppText.label1),
+        const SizedBox(height: 12),
+      ];
+
   // ── View: Home — the full marketplace ──
   List<Widget> _homeView() {
     final list = _filtered;
     return [
+      if (widget.isTab) ..._redeemEntries(),
       HubSearchField(hint: 'Search partners & offers'),
       const SizedBox(height: 16),
       Container(

@@ -3,7 +3,7 @@ import 'theme/app_theme.dart';
 import 'widgets/bottom_nav.dart';
 import 'widgets/floating_sponsor_ads.dart';
 import 'screens/home_matchday.dart';
-import 'screens/redeem_screen.dart';
+import 'screens/member_discounts_screen.dart';
 import 'screens/gewinnen_screen.dart';
 import 'screens/fanplus_screen.dart';
 import 'screens/profile_screen.dart';
@@ -43,7 +43,7 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     const tabs = <Widget>[
       HomeMatchdayScreen(),
-      RedeemScreen(isTab: true),
+      MemberDiscountsScreen(isTab: true),
       GewinnenScreen(),
       FanPlusScreen(),
       ProfileScreen(),

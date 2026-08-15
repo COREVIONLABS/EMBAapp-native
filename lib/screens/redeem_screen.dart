@@ -31,6 +31,32 @@ void _redeemOffer(BuildContext context, _Offer o) {
   redeemForVoucher(context, title: '$badge ${tr(title)}', category: category, points: points, sponsor: sponsor);
 }
 
+// ── Value vouchers (Wertgutscheine) — a fixed € amount at the club Fanshop or
+//    a sponsor. Badge = the € value. Top-level so the Redeem marketplace tab
+//    can open them without owning the data. ──
+const _kValueVouchers = <_Offer>[
+  ('€10', 'Fanshop voucher', 'FC Schalke 04', 1000, 'Fanshop', 'FC Schalke 04', Icons.storefront_rounded),
+  ('€25', 'Fanshop voucher', 'FC Schalke 04', 2400, 'Fanshop', 'FC Schalke 04', Icons.storefront_rounded),
+  ('€10', 'REWE voucher', 'REWE', 1000, 'Sponsor', 'REWE', Icons.shopping_cart_rounded),
+  ('€15', 'VELTINS voucher', 'Veltins', 1400, 'Sponsor', 'Veltins', Icons.sports_bar_rounded),
+];
+
+// ── Discount vouchers (Rabatt-Gutscheine) — a fixed % off. Badge = the %. ──
+const _kDiscountVouchers = <_Offer>[
+  ('-25%', 'Home jersey 25/26', 'Fanshop', 1200, 'Fanshop', 'adidas', Icons.checkroom_rounded),
+  ('-50%', 'Home scarf 25/26', 'Fanshop', 500, 'Fanshop', 'adidas', Icons.style_rounded),
+  ('-25%', 'Home-match ticket', 'Tickets', 900, 'Tickets', 'FC Schalke 04', Icons.confirmation_number_rounded),
+  ('-10%', 'Vivawest living', 'Sponsor', 400, 'Sponsor', 'Vivawest', Icons.apartment_rounded),
+];
+
+/// Open the value (€) voucher list — public entry for the Redeem marketplace tab.
+void openValueVouchers(BuildContext context) => Navigator.of(context).push(MaterialPageRoute(
+    builder: (_) => _VoucherListScreen(title: tr('Value vouchers'), subtitle: tr('A fixed € amount for the Fanshop or a sponsor.'), list: _kValueVouchers, valueBadge: true)));
+
+/// Open the discount (%) voucher list — public entry for the Redeem marketplace tab.
+void openDiscountVouchers(BuildContext context) => Navigator.of(context).push(MaterialPageRoute(
+    builder: (_) => _VoucherListScreen(title: tr('Discount vouchers'), subtitle: tr('A fixed % off tickets, Fanshop and sponsors.'), list: _kDiscountVouchers, valueBadge: false)));
+
 class RedeemScreen extends StatefulWidget {
   final bool isTab;
   const RedeemScreen({super.key, this.isTab = false});
@@ -42,22 +68,10 @@ class _RedeemScreenState extends State<RedeemScreen> {
   // Selected voucher tab in the merged section: 0 = € value, 1 = % discount.
   int _vTab = 0;
 
-  // ── Value vouchers (Wertgutscheine) — a fixed € amount to spend at the club
-  //    Fanshop or a sponsor. Badge = the € value.
-  static const _valueVouchers = <_Offer>[
-    ('€10', 'Fanshop voucher', 'FC Schalke 04', 1000, 'Fanshop', 'FC Schalke 04', Icons.storefront_rounded),
-    ('€25', 'Fanshop voucher', 'FC Schalke 04', 2400, 'Fanshop', 'FC Schalke 04', Icons.storefront_rounded),
-    ('€10', 'REWE voucher', 'REWE', 1000, 'Sponsor', 'REWE', Icons.shopping_cart_rounded),
-    ('€15', 'VELTINS voucher', 'Veltins', 1400, 'Sponsor', 'Veltins', Icons.sports_bar_rounded),
-  ];
-
-  // ── Discount vouchers (Rabatt-Gutscheine) — a fixed % off. Badge = the %.
-  static const _discountVouchers = <_Offer>[
-    ('-25%', 'Home jersey 25/26', 'Fanshop', 1200, 'Fanshop', 'adidas', Icons.checkroom_rounded),
-    ('-50%', 'Home scarf 25/26', 'Fanshop', 500, 'Fanshop', 'adidas', Icons.style_rounded),
-    ('-25%', 'Home-match ticket', 'Tickets', 900, 'Tickets', 'FC Schalke 04', Icons.confirmation_number_rounded),
-    ('-10%', 'Vivawest living', 'Sponsor', 400, 'Sponsor', 'Vivawest', Icons.apartment_rounded),
-  ];
+  // Voucher offers live at top level (see _kValueVouchers / _kDiscountVouchers)
+  // so the Redeem marketplace tab can open them too.
+  List<_Offer> get _valueVouchers => _kValueVouchers;
+  List<_Offer> get _discountVouchers => _kDiscountVouchers;
 
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));

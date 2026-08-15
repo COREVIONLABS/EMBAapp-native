@@ -15,7 +15,6 @@ import 'club_news_screen.dart';
 import 'experiences_screen.dart';
 import 'leaderboard_screen.dart';
 import 'collection_screen.dart';
-import 'member_discounts_screen.dart';
 import 'search_screen.dart';
 import 'assistant_screen.dart';
 import 'exclusive_content_screen.dart';
@@ -201,14 +200,14 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
 
   // Four round shortcuts under the balance (Socios-style). These mirror the
   // universal voucher/points loop — the SAME for every club, no club-specific
-  // retail (Tickets/Fanshop): Earn points → Vouchers → Discounts → Tombola.
+  // retail (Tickets/Fanshop): Earn points → Vouchers → Buy points → Tombola.
   // One calm brand colour across all four — the glyph does the distinguishing.
   Widget _roundActions() {
     const c = AppColors.brandPrimary;
     final items = <(String, IconData, Color, VoidCallback)>[
       ('Earn', Icons.bolt_rounded, c, () => _push(context, const EarnPointsScreen())),
       ('Vouchers', Icons.confirmation_number_rounded, c, () => _push(context, const MyVouchersScreen())),
-      ('Perks', Icons.percent_rounded, c, () => _push(context, const MemberDiscountsScreen())),
+      ('Buy points', Icons.add_card_rounded, c, () => _push(context, const BuyPointsScreen())),
       ('Tombola', Icons.local_activity_rounded, c, () => _push(context, const RafflesScreen())),
     ];
     return Padding(
