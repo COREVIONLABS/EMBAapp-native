@@ -1845,8 +1845,8 @@ const Map<String, String> _de = {
   'Off: you’ll see the same offers as everyone else.':
       'Aus: Du siehst dieselben Angebote wie alle anderen.',
   'Advertising': 'Werbung',
-  'Show sponsored partner placements (always labelled “Ad”) and let partners reward me for missions.':
-      'Gesponserte Partner-Platzierungen zeigen (immer als „Anzeige“ gekennzeichnet) und Partner-Missionen belohnen lassen.',
+  'Show sponsored partner placements — always clearly labelled “Ad”.':
+      'Gesponserte Partner-Platzierungen zeigen — immer klar als „Anzeige“ gekennzeichnet.',
   'Off: sponsored placements are hidden across the app.':
       'Aus: Gesponserte Platzierungen werden app-weit ausgeblendet.',
   'Location': 'Standort',

@@ -141,7 +141,7 @@ MembershipPerks perksFor(String tier) => kMembershipPerks[tier] ?? const Members
 /// tombola debits points; playing a daily game credits them; using a lot
 /// decrements the lot count. Balance/lot displays wrap these in a
 /// ValueListenableBuilder so they update instantly.
-final ValueNotifier<int> pointsNotifier = ValueNotifier<int>(4820);
+final ValueNotifier<int> pointsNotifier = ValueNotifier<int>(9600);
 final ValueNotifier<int> lotsNotifier = ValueNotifier<int>(8);
 
 /// Live-selected membership tier (prototype state). Set when a fan "becomes" a

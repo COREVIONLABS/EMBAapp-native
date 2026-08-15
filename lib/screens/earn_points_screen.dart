@@ -175,9 +175,12 @@ class EarnPointsScreen extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) {
               final c = _challenges[i];
+              // Only wire a tap where it leads somewhere real; otherwise pass
+              // null so the card doesn't fake a tappable affordance.
+              final onTap = c.$2 == 'Predict 3 matches' ? () => _push(context, const PredictionsScreen()) : null;
               return SizedBox(
                 width: 210,
-                child: FeaturedGoalCard(icon: c.$1, title: c.$2, sub: c.$3, progress: c.$4, reward: c.$5, onTap: () {}),
+                child: FeaturedGoalCard(icon: c.$1, title: c.$2, sub: c.$3, progress: c.$4, reward: c.$5, onTap: onTap),
               );
             },
           ),

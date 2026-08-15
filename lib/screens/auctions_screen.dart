@@ -53,7 +53,7 @@ class AuctionsScreen extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text('${FanModel.pointsFormatted} ${tr('pts')}', style: AppText.body2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
                     const SizedBox(width: 6),
-                    Text('${tr('to bid')} · ${tr('≈')} ${FanModel.balanceEuro}', style: AppText.body3.copyWith(color: Colors.white60)),
+                    Flexible(child: Text('${tr('to bid')} · ${tr('≈')} ${FanModel.balanceEuro}', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white60))),
                   ]),
                 ),
               ]),

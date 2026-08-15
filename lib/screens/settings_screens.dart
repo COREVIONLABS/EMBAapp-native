@@ -163,7 +163,7 @@ class ConsentScreen extends StatelessWidget {
           flag: adsConsent,
           icon: Icons.campaign_rounded,
           title: 'Advertising',
-          purpose: 'Show sponsored partner placements (always labelled “Ad”) and let partners reward me for missions.',
+          purpose: 'Show sponsored partner placements — always clearly labelled “Ad”.',
           off: 'Off: sponsored placements are hidden across the app.',
         ),
         const SizedBox(height: 12),
