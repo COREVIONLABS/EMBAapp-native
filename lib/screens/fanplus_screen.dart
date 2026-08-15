@@ -6,6 +6,7 @@ import '../widgets/tab_scaffold.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/hub_widgets.dart';
 import 'subscription_screen.dart';
+import 'upgrade_plan_screen.dart';
 import 'manage_subscription_screen.dart';
 import 'fomo_drop_screen.dart';
 import 'exclusive_content_screen.dart';
@@ -33,6 +34,12 @@ class FanPlusScreen extends StatefulWidget {
 }
 
 class _FanPlusScreenState extends State<FanPlusScreen> {
+  // Member lounge: 0 = Vorteile (perks), 1 = Inhalte (content).
+  int _loungeTab = 0;
+  // Pitch: selected tier (0 Fan Member, 1 Super Fan) and billing period.
+  int _pitchTier = 1;
+  bool _annual = false;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +48,51 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
   }
 
   void _push(BuildContext context, Widget s) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
+
+  // Reusable pill segmented control (matches the Redeem € / % toggle).
+  Widget _segment(List<String> labels, int selected, ValueChanged<int> onTap) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(999)),
+      child: Row(children: [
+        for (var i = 0; i < labels.length; i++)
+          Expanded(
+            child: Tappable(
+              onTap: () => onTap(i),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: i == selected ? AppColors.surface : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                  boxShadow: i == selected ? const [BoxShadow(color: Color(0x14000000), blurRadius: 6, offset: Offset(0, 1))] : null,
+                ),
+                child: Text(labels[i], maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: i == selected ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w800)),
+              ),
+            ),
+          ),
+      ]),
+    );
+  }
+
+  // Pitch pricing helpers (Fan Member €4.99 · Super Fan €9.99 · annual = 10×).
+  String get _pitchTierName => _pitchTier == 0 ? 'Fan Member' : 'Super Fan';
+  double get _monthly => _pitchTier == 0 ? 4.99 : 9.99;
+  String get _priceLabel => _annual ? '€${(_monthly * 10).toStringAsFixed(2)}' : '€${_monthly.toStringAsFixed(2)}';
+  String _period() => _annual ? tr('/ year') : tr('/ month');
+  List<String> get _pitchBenefits => _pitchTier == 0
+      ? const [
+          'Priority ticket access to top matches (48–72h)',
+          'Monthly exclusive FOMO drop',
+          'Exclusive content & locker-room clips',
+        ]
+      : const [
+          'Priority ticket access to top matches (48–72h)',
+          'Best seats first + matchday upgrades',
+          'Monthly exclusive FOMO drop',
+          'Exclusive content & locker-room clips',
+          'Branded Fan+ Pay card (from Season 2)',
+        ];
 
   // 2-column grid of member-content photo tiles.
   Widget _contentGrid(BuildContext context) {
@@ -106,8 +158,10 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
   }
 
   Widget _pitch(BuildContext context) {
-    final s = perksFor('Super Fan'); // showcase the hero tier's numbers
+    final tierName = _pitchTierName;
+    final s = perksFor(tierName);
     void toPlans() => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SubscriptionScreen()));
+    void toCheckout() => _push(context, UpgradePlanScreen(plan: tierName, price: _priceLabel, period: _period()));
     return TabScaffold(
       onRefresh: () => Future<void>.delayed(const Duration(milliseconds: 900)),
       skeleton: const HubSkeleton(),
@@ -132,18 +186,34 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        // Concrete value grid (2×2) — clearly labelled as the Super Fan tier so
-        // the numbers can't be mistaken for what the €4.99 tier includes.
+        // ── Tier + billing toggles (compare inline, like the voucher switch) ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Align(alignment: Alignment.centerLeft, child: Text('${tr('Super Fan')} (€9.99) ${tr('includes')}:', style: AppText.label2)),
+          child: _segment([tr('Fan Member'), tr('Super Fan')], _pitchTier, (i) => setState(() => _pitchTier = i)),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(children: [
+            Expanded(child: _segment([tr('Monthly'), tr('Yearly')], _annual ? 1 : 0, (i) => setState(() => _annual = i == 1))),
+            const SizedBox(width: 10),
+            _annual
+                ? Pill(color: AppColors.successBg, child: Text(tr('2 months free'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800)))
+                : Pill(color: AppColors.surfaceMinimal, child: Text(tr('Save yearly'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700))),
+          ]),
+        ),
+        const SizedBox(height: 18),
+        // Concrete value grid (2×2) — reflects the selected tier & billing.
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Align(alignment: Alignment.centerLeft, child: Text('${tr(tierName)} ($_priceLabel ${_period()}) ${tr('includes')}:', style: AppText.label2)),
         ),
         const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
             Row(children: [
-              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: AppColors.brandPrimary, title: tr('Double points'), sub: tr('on every purchase'))),
+              Expanded(child: _ValueTile(icon: Icons.bolt_rounded, color: AppColors.brandPrimary, title: _pitchTier == 1 ? tr('Double points') : tr('1.5× points'), sub: tr('on every purchase'))),
               const SizedBox(width: 12),
               Expanded(child: _ValueTile(icon: Icons.local_activity_rounded, color: AppColors.brandPrimary, title: '${s.freeLots} ${tr('free lots')}', sub: tr('every month'))),
             ]),
@@ -164,7 +234,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             child: Row(children: [
               const Icon(Icons.savings_rounded, color: AppColors.success),
               const SizedBox(width: 12),
-              Expanded(child: Text('${tr('Super Fan')}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} (${tr('≈')} ${FanModel.euroValue(s.monthlyPoints)} ${tr('in rewards')}) + ${s.freeLots} ${tr('free lots')} — ${tr('for €9.99 / month.')}',
+              Expanded(child: Text('${tr(tierName)}: +${FanModel.fmtPublic(s.monthlyPoints)} ${tr('pts')} (${tr('≈')} ${FanModel.euroValue(s.monthlyPoints)} ${tr('in rewards')}) + ${s.freeLots} ${tr('free lots')} — $_priceLabel ${_period()}.',
                   style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w600))),
             ]),
           ),
@@ -173,13 +243,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         // Everything you get
         Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: Align(alignment: Alignment.centerLeft, child: Text(tr('Everything you get'), style: AppText.label1))),
         const SizedBox(height: 12),
-        for (final t in const [
-          'Priority ticket access to top matches (48–72h)',
-          'Best seats first + matchday upgrades',
-          'Monthly exclusive FOMO drop',
-          'Exclusive content & locker-room clips',
-          'Branded Fan+ Pay card (from Season 2)',
-        ])
+        for (final t in _pitchBenefits)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
             child: Row(children: [
@@ -192,12 +256,12 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         // Trial CTA
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: PrimaryButton(tr('Start 7-day free trial'), onTap: toPlans),
+          child: PrimaryButton(tr('Start 7-day free trial'), onTap: toCheckout),
         ),
         const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Center(child: Text(tr('Then from €4.99 / month · auto-renews · cancel anytime'), style: AppText.caption1.copyWith(color: AppColors.textLight))),
+          child: Center(child: Text('${tr('7 days free, then')} $_priceLabel ${_period()} · ${tr('cancel anytime')}', style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ),
         const SizedBox(height: 6),
         Padding(
@@ -263,6 +327,13 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ),
         ),
         const SizedBox(height: 16),
+        // ── Vorteile / Inhalte toggle (same pattern as the voucher switch) ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _segment([tr('Perks'), tr('Content')], _loungeTab, (i) => setState(() => _loungeTab = i)),
+        ),
+        const SizedBox(height: 20),
+        if (_loungeTab == 0) ...[
         // Unlocked perks
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -273,6 +344,8 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ]),
         ),
         const SizedBox(height: 24),
+        ],
+        if (_loungeTab == 1) ...[
         // The one real monthly drop (Super Fan exclusive)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -333,6 +406,8 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ),
         ),
         const SizedBox(height: 24),
+        ],
+        if (_loungeTab == 0) ...[
         // Member discounts — fixed % vouchers at club partners & sponsors
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -358,6 +433,8 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           ),
         ),
         const SizedBox(height: 24),
+        ],
+        if (_loungeTab == 1) ...[
         // Member content — real photo tiles (matches Redeem / Prizes)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -369,6 +446,8 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
           child: _contentGrid(context),
         ),
         const SizedBox(height: 24),
+        ],
+        if (_loungeTab == 0) ...[
         // Tombola perk — compact link (the numbers already live on the
         // membership card, so this stays a lean shortcut, not a repeat).
         Padding(
@@ -381,6 +460,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             onTap: () => _push(context, const RafflesScreen()),
           ),
         ),
+        ],
       ],
     );
   }
