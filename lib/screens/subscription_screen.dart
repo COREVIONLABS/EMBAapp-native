@@ -124,7 +124,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   border: r == 0 ? null : Border(top: BorderSide(color: AppColors.borderLightest)),
                 ),
                 child: Row(children: [
-                  Expanded(flex: 5, child: Text(tr(_compare[r].$1), style: AppText.body3.copyWith(color: AppColors.textDark, fontWeight: FontWeight.w600))),
+                  Expanded(flex: 4, child: Text(tr(_compare[r].$1), maxLines: 2, style: AppText.body3.copyWith(color: AppColors.textDark, fontWeight: FontWeight.w600))),
                   Expanded(flex: 3, child: _cell(_compare[r].$2, 0)),
                   Expanded(flex: 3, child: _cell(_compare[r].$3, 1)),
                   Expanded(flex: 3, child: _cell(_compare[r].$4, 2)),

@@ -83,7 +83,7 @@ class MyVouchersScreen extends StatelessWidget {
         const SizedBox(width: 8),
         v.redeemed
             ? Pill(color: AppColors.surfaceMinimal, child: Text(tr('Used'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700)))
-            : Pill(color: AppColors.successBg, child: Text(tr('Open'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700))),
+            : Pill(color: AppColors.successBg, child: Text(tr('Ready'), style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w700))),
       ]),
     );
   }

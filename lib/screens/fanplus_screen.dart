@@ -18,7 +18,9 @@ import '../l10n/strings.dart';
 /// stale in a demo.
 String _renewLabel() {
   final d = DateTime.now().add(const Duration(days: 30));
-  const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const en = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const de = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+  final m = localeNotifier.value == AppLocale.de ? de : en;
   return '${d.day} ${m[d.month - 1]} ${d.year}';
 }
 

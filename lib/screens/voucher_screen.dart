@@ -40,12 +40,14 @@ class VoucherScreen extends StatelessWidget {
   /// A local partner voucher is redeemed at the merchant, not the stadium kiosk.
   bool get _isPartner => category == 'Partner';
 
-  /// Dynamic expiry — 90 days out — so different vouchers don't all show one
-  /// hard-coded date.
+  /// Dynamic, localized expiry — 90 days out — so different vouchers don't all
+  /// show one hard-coded date, and the month reads in the active language.
   static String _expiryLabel() {
     final d = DateTime.now().add(const Duration(days: 90));
-    const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return 'Valid until ${d.day} ${m[d.month - 1]} ${d.year}';
+    const en = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const de = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    final m = localeNotifier.value == AppLocale.de ? de : en;
+    return '${tr('Valid until')} ${d.day} ${m[d.month - 1]} ${d.year}';
   }
 
   @override

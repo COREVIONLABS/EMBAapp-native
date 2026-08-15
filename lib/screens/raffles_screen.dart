@@ -24,25 +24,23 @@ class _Raffle {
   final String prize;
   final IconData glyph;
   final List<Color> gradient;
-  final int entryPoints;
   final Duration drawIn;
   final int entries;
-  final bool superFanFree;
-  const _Raffle(this.title, this.prize, this.glyph, this.gradient, this.entryPoints, this.drawIn, this.entries, {this.superFanFree = false});
+  const _Raffle(this.title, this.prize, this.glyph, this.gradient, this.drawIn, this.entries);
 }
 
 class _RafflesScreenState extends State<RafflesScreen> {
   static const _raffles = <_Raffle>[
     _Raffle('Derby Tombola', '2× VIP tickets — vs Dortmund', Icons.confirmation_number_rounded,
-        [Color(0xFF0A2A5E), Color(0xFF000D22)], 500, Duration(days: 3, hours: 6, minutes: 12), 1840, superFanFree: true),
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], Duration(days: 3, hours: 6, minutes: 12), 1840),
     _Raffle('Play on the pitch', 'Play a match in the VELTINS-Arena', Icons.sports_soccer_rounded,
-        [Color(0xFF0A2A5E), Color(0xFF000D22)], 800, Duration(days: 5, hours: 8), 1290),
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], Duration(days: 5, hours: 8), 1290),
     _Raffle('VIP box on matchday', 'Private box incl. catering', Icons.stadium_rounded,
-        [Color(0xFF0A2A5E), Color(0xFF000D22)], 700, Duration(days: 6, hours: 2), 970),
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], Duration(days: 6, hours: 2), 970),
     _Raffle('Signed Home Shirt', 'Match-worn, signed by the squad', Icons.checkroom_rounded,
-        [Color(0xFF0A2A5E), Color(0xFF000D22)], 300, Duration(days: 8, hours: 14), 860),
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], Duration(days: 8, hours: 14), 860),
     _Raffle('Meet the team', 'Meet & Greet backstage before kickoff', Icons.groups_rounded,
-        [Color(0xFF0A2A5E), Color(0xFF000D22)], 400, Duration(days: 12, hours: 4), 410),
+        [Color(0xFF0A2A5E), Color(0xFF000D22)], Duration(days: 12, hours: 4), 410),
   ];
 
   /// Cost of one extra lot in points (the "extra lots cost points" economy — a

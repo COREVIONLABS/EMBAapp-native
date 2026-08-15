@@ -1990,4 +1990,6 @@ const Map<String, String> _de = {
   'plan': 'Tarif',
   'Standard public sale': 'Regulärer Vorverkauf',
   '24h before public sale': '24h vor dem öffentlichen Verkauf',
+  'Valid until': 'Gültig bis',
+  'Ready': 'Bereit',
 };
