@@ -1577,6 +1577,10 @@ const Map<String, String> _de = {
   'redeem in-store or online.': 'im Geschäft oder online einlösen.',
   'Discounts are a Fan+ perk — free to claim, as often as you like.': 'Rabatte sind ein Fan+ Vorteil — kostenlos und so oft du willst.',
   '20% off': '20% Rabatt',
+  '30% off': '30% Rabatt',
+  '25% off': '25% Rabatt',
+  '2-for-1': '2 für 1',
+  'Fast food': 'Fast Food',
   '5% off': '5% Rabatt',
   'View drop': 'Drop ansehen',
 
@@ -1816,6 +1820,25 @@ const Map<String, String> _de = {
   'Partners join free and reward you with vouchers — no ads, real value.':
       'Partner sind kostenlos dabei und belohnen dich mit Gutscheinen — keine Werbung, echter Mehrwert.',
   'Ad': 'Anzeige',
+  // ── Redeem / Prizes quick-access grids + Member-discounts marketplace ──
+  '€ off': '€ Rabatt',
+  '% vouchers': '% Gutscheine',
+  '% off': '% Rabatt',
+  'Partner deals': 'Partner-Deals',
+  'Auction & tombola': 'Auktion & Tombola',
+  'Hide quick access?': 'Schnellzugriff ausblenden?',
+  'You can turn this shortcut grid back on anytime under Account → Demo.':
+      'Du kannst das Kachel-Menü jederzeit unter Konto → Demo wieder einschalten.',
+  'Ways to win': 'So gewinnst du',
+  'Bid to win': 'Mitbieten & gewinnen',
+  'Stickers & badges': 'Sticker & Abzeichen',
+  'Search partners & offers': 'Partner & Angebote suchen',
+  'Free member discounts': 'Kostenlose Mitglieder-Rabatte',
+  'Claim a voucher, redeem it at the partner. As often as you like.':
+      'Gutschein holen und beim Partner einlösen. So oft du willst.',
+  'Top partners': 'Top-Partner',
+  'Featured offers from our sponsors.': 'Ausgewählte Angebote unserer Sponsoren.',
+  'partners': 'Partner',
   '{n} offers': '{n} Angebote',
   'Official partner': 'Offizieller Partner',
   'Directions': 'Route',

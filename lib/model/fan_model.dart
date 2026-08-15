@@ -164,6 +164,14 @@ final ValueNotifier<int?> tabRequestNotifier = ValueNotifier<int?>(null);
 /// dismissal it hides (it still lives permanently on the Points tab).
 final ValueNotifier<bool> howToNotifier = ValueNotifier<bool>(true);
 
+/// Redeem tab: show the dismissible 4-tile quick-access grid (Value / % voucher,
+/// Partner deals, Auction & tombola). Mirrors the Home "How Fan+ works" pattern.
+final ValueNotifier<bool> redeemQuickNavNotifier = ValueNotifier<bool>(true);
+
+/// Prizes tab: show the dismissible 4-tile quick-access grid (Daily games,
+/// Tombola, Auctions, Collection) — same dismiss pattern for consistency.
+final ValueNotifier<bool> winQuickNavNotifier = ValueNotifier<bool>(true);
+
 /// Onboarding: show the first-run "starter tasks" activation card on Home.
 /// ON by default so a new fan is guided into the core loop; a returning fan
 /// (or a presenter) can switch it off to see the clean Home.

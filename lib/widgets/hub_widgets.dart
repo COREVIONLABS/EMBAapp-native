@@ -599,6 +599,70 @@ class SponsorPromoCard extends StatelessWidget {
   }
 }
 
+/// One entry in a [QuickNavCard]: a coloured icon, a label, a sub-line and a tap.
+class QuickNavItem {
+  final IconData icon;
+  final Color color;
+  final String label;
+  final String sub;
+  final VoidCallback onTap;
+  const QuickNavItem({required this.icon, required this.color, required this.label, required this.sub, required this.onTap});
+}
+
+/// Dismissible 2-column quick-access grid (Home "How Fan+ works" pattern):
+/// a titled card with a close "×" and a 2×N grid of shortcut tiles. Used at the
+/// top of the Redeem and Prizes tabs so the two feel consistent, and a fan (or
+/// presenter) can clear it away for a cleaner screen.
+class QuickNavCard extends StatelessWidget {
+  final String title;
+  final List<QuickNavItem> items;
+  final VoidCallback onDismiss;
+  const QuickNavCard({super.key, required this.title, required this.items, required this.onDismiss});
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = <Widget>[];
+    for (var i = 0; i < items.length; i += 2) {
+      rows.add(Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Expanded(child: _tile(items[i])),
+        const SizedBox(width: 10),
+        Expanded(child: i + 1 < items.length ? _tile(items[i + 1]) : const SizedBox()),
+      ]));
+      if (i + 2 < items.length) rows.add(const SizedBox(height: 10));
+    }
+    return SurfaceCard(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(child: Text(tr(title), style: AppText.label2.copyWith(color: AppColors.textDarker))),
+          GestureDetector(
+            onTap: onDismiss,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(padding: const EdgeInsets.only(left: 8), child: Icon(Icons.close_rounded, size: 20, color: AppColors.textLight)),
+          ),
+        ]),
+        const SizedBox(height: 12),
+        ...rows,
+      ]),
+    );
+  }
+
+  Widget _tile(QuickNavItem it) => Tappable(
+        scale: 0.97,
+        onTap: it.onTap,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.tile), border: Border.all(color: AppColors.borderLightest)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(width: 34, height: 34, decoration: BoxDecoration(color: it.color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)), child: Icon(it.icon, color: it.color, size: 18)),
+            const SizedBox(height: 10),
+            Text(tr(it.label), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 1),
+            Text(tr(it.sub), maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3Regular),
+          ]),
+        ),
+      );
+}
+
 /// White list row used for Earn / Redeem category lists: circular icon,
 /// title, subtitle (the "rate" line) and a chevron.
 class HubListRow extends StatelessWidget {

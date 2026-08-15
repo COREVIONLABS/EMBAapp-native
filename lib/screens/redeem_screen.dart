@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
+import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import '../model/partners.dart';
@@ -54,6 +55,16 @@ class RedeemScreen extends StatelessWidget {
   void _push(BuildContext context, Widget s) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => s));
 
+  // Clear the quick-access grid (with a confirm so it isn't lost by accident).
+  Future<void> _dismissQuickNav(BuildContext context) async {
+    final ok = await showConfirmDialog(
+      context,
+      title: 'Hide quick access?',
+      message: 'You can turn this shortcut grid back on anytime under Account → Demo.',
+      confirmLabel: 'Hide',
+    );
+    if (ok) redeemQuickNavNotifier.value = false;
+  }
 
   // Compact balance chip for the tab header (Socios-style points count).
   Widget _pointsChip() => Container(
@@ -103,21 +114,35 @@ class RedeemScreen extends StatelessWidget {
                 ),
               ]),
             ),
-            // Two pathways.
-            Container(
-              color: AppColors.surface,
-              padding: const EdgeInsets.all(12),
-              child: Row(children: [
-                Expanded(child: _pathTile(Icons.confirmation_number_rounded, tr('Vouchers'), tr('€ or % off'))),
-                const SizedBox(width: 10),
-                Expanded(child: _pathTile(Icons.storefront_rounded, tr('Partners'), tr('Local deals'))),
-                const SizedBox(width: 10),
-                Expanded(child: _pathTile(Icons.local_activity_rounded, tr('Tombola'), tr('Win prizes'))),
-              ]),
-            ),
           ]),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 14),
+
+        // ── Quick access — dismissible 2×2 grid (mirrors Home "How Fan+ works")
+        //    so a fan can jump straight to a way of spending points, or clear it
+        //    away for a cleaner screen. ──
+        ValueListenableBuilder<bool>(
+          valueListenable: redeemQuickNavNotifier,
+          builder: (context, show, __) => show
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: QuickNavCard(
+                    title: 'Redeem your points',
+                    onDismiss: () => _dismissQuickNav(context),
+                    items: [
+                      QuickNavItem(icon: Icons.euro_rounded, color: AppColors.gold, label: tr('Value vouchers'), sub: tr('€ off'),
+                          onTap: () => _push(context, _VoucherListScreen(title: tr('Value vouchers'), subtitle: tr('A fixed € amount for the Fanshop or a sponsor.'), list: _valueVouchers, valueBadge: true))),
+                      QuickNavItem(icon: Icons.percent_rounded, color: AppColors.brandPrimary, label: tr('% vouchers'), sub: tr('% off'),
+                          onTap: () => _push(context, _VoucherListScreen(title: tr('Discount vouchers'), subtitle: tr('A fixed % off tickets, Fanshop and sponsors.'), list: _discountVouchers, valueBadge: false))),
+                      QuickNavItem(icon: Icons.storefront_rounded, color: const Color(0xFF2E7D32), label: tr('Partner deals'), sub: tr('Near you'),
+                          onTap: () => _push(context, const PartnersScreen())),
+                      QuickNavItem(icon: Icons.local_activity_rounded, color: const Color(0xFFC62828), label: tr('Auction & tombola'), sub: tr('Win prizes'),
+                          onTap: () => _push(context, const RafflesScreen())),
+                    ],
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
 
         // ── Partners near you — local merchant marketplace (points → voucher) ──
         Row(children: [
@@ -235,19 +260,6 @@ class RedeemScreen extends StatelessWidget {
       ],
     );
   }
-
-  // One of the two "how to spend points" pathway tiles in the intro hero.
-  Widget _pathTile(IconData icon, String title, String sub) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(width: 34, height: 34, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: AppColors.brandPrimary, size: 18)),
-          const SizedBox(height: 10),
-          Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
-          const SizedBox(height: 1),
-          Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.onAccent)),
-        ]),
-      );
 
   // Section header with a title, a "See all" link, and a subtitle line under it.
   Widget _sectionHead(BuildContext context, {required String title, required String subtitle, required List<_Offer> list, required bool valueBadge}) {

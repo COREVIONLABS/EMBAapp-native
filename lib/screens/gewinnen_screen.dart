@@ -4,6 +4,7 @@ import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/asset_img.dart';
+import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import 'raffles_screen.dart';
@@ -54,30 +55,20 @@ class GewinnenScreen extends StatelessWidget {
             ),
           ]),
         ),
-        Container(
-          color: AppColors.surface,
-          padding: const EdgeInsets.all(12),
-          child: Row(children: [
-            Expanded(child: _pathTile(Icons.casino_rounded, tr('Daily games'), tr('Spin & scratch'))),
-            const SizedBox(width: 12),
-            Expanded(child: _pathTile(Icons.local_activity_rounded, tr('Monthly tombola'), tr('Win big prizes'))),
-          ]),
-        ),
       ]),
     );
   }
 
-  Widget _pathTile(IconData icon, String title, String sub) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(width: 34, height: 34, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: AppColors.brandPrimary, size: 18)),
-          const SizedBox(height: 10),
-          Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body2.copyWith(color: AppColors.onAccent, fontWeight: FontWeight.w800)),
-          const SizedBox(height: 1),
-          Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: AppColors.onAccent)),
-        ]),
-      );
+  // Clear the quick-access grid (with a confirm so it isn't lost by accident).
+  Future<void> _dismissQuickNav(BuildContext context) async {
+    final ok = await showConfirmDialog(
+      context,
+      title: 'Hide quick access?',
+      message: 'You can turn this shortcut grid back on anytime under Account → Demo.',
+      confirmLabel: 'Hide',
+    );
+    if (ok) winQuickNavNotifier.value = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +76,32 @@ class GewinnenScreen extends StatelessWidget {
       title: tr('Prizes'),
       showBack: false,
       children: [
-        // ── Hero — mirrors the Redeem intro: gradient header + two pathways ──
+        // ── Hero — mirrors the Redeem intro: gradient header + live balance ──
         _hero(),
-        const SizedBox(height: 24),
+        const SizedBox(height: 14),
+        // ── Quick access — dismissible 2×2 grid (same pattern as Redeem) ──
+        ValueListenableBuilder<bool>(
+          valueListenable: winQuickNavNotifier,
+          builder: (context, show, __) => show
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: QuickNavCard(
+                    title: 'Ways to win',
+                    onDismiss: () => _dismissQuickNav(context),
+                    items: [
+                      QuickNavItem(icon: Icons.casino_rounded, color: AppColors.brandPrimary, label: tr('Daily games'), sub: tr('Spin & scratch'),
+                          onTap: () { if (!dailyGames.spinDone) dailyGames.playSpin(); showDailySpin(context); }),
+                      QuickNavItem(icon: Icons.local_activity_rounded, color: const Color(0xFFC62828), label: tr('Monthly tombola'), sub: tr('Win big prizes'),
+                          onTap: () => _push(context, const RafflesScreen())),
+                      QuickNavItem(icon: Icons.gavel_rounded, color: AppColors.gold, label: tr('Points auctions'), sub: tr('Bid to win'),
+                          onTap: () => _push(context, const AuctionsScreen())),
+                      QuickNavItem(icon: Icons.grid_view_rounded, color: const Color(0xFF6A1B9A), label: tr('Collection'), sub: tr('Stickers & badges'),
+                          onTap: () => _push(context, const CollectionScreen())),
+                    ],
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
         // ── 1) Your daily chance (retention hook) ──
         AnimatedBuilder(
           animation: dailyGames,
