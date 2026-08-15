@@ -34,7 +34,9 @@ jobs:
       - name: Get packages
         run: flutter pub get
       - name: Build APK
-        run: flutter build apk --release
+        # --build-number injects a strictly-increasing versionCode (CI run number)
+        # so every published APK installs as an update over the previous one.
+        run: flutter build apk --release --build-number=${{ github.run_number }}
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
