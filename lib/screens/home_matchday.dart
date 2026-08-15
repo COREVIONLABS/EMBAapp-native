@@ -15,7 +15,7 @@ import 'club_news_screen.dart';
 import 'experiences_screen.dart';
 import 'leaderboard_screen.dart';
 import 'collection_screen.dart';
-import 'deals_hub_screen.dart';
+import 'member_discounts_screen.dart';
 import 'search_screen.dart';
 import 'assistant_screen.dart';
 import 'exclusive_content_screen.dart';
@@ -207,7 +207,7 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
     final items = <(String, IconData, Color, VoidCallback)>[
       ('Earn', Icons.bolt_rounded, c, () => _push(context, const EarnPointsScreen())),
       ('Vouchers', Icons.confirmation_number_rounded, c, () => _push(context, const MyVouchersScreen())),
-      ('Deals %', Icons.percent_rounded, c, () => _push(context, const DealsHubScreen())),
+      ('Perks', Icons.percent_rounded, c, () => _push(context, const MemberDiscountsScreen())),
       ('Tombola', Icons.local_activity_rounded, c, () => _push(context, const RafflesScreen())),
     ];
     return Padding(
@@ -236,10 +236,10 @@ class _HomeMatchdayScreenState extends State<HomeMatchdayScreen> {
           )),
           const SizedBox(width: 12),
           Expanded(child: _EngageTile(
-            icon: Icons.route_rounded,
+            icon: Icons.emoji_events_rounded,
             iconColor: AppColors.gold,
-            title: tr('Road to Gold'),
-            sub: '${FanModel.seasonPercent}% · ${tr('season journey')}',
+            title: tr('Fan of the Season'),
+            sub: '${FanModel.seasonPercent}% · ${tr('win the grand prize')}',
             onTap: () => _push(context, const SeasonJourneyScreen()),
           )),
         ]),

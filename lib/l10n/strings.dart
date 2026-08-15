@@ -1992,4 +1992,39 @@ const Map<String, String> _de = {
   '24h before public sale': '24h vor dem öffentlichen Verkauf',
   'Valid until': 'Gültig bis',
   'Ready': 'Bereit',
+
+  // ── Top-up (buy points) ──────────────────────────────────────
+  'Choose a top-up': 'Aufladung wählen',
+  'After top-up: {n} pts': 'Nach Aufladung: {n} Pkt.',
+  'You get {n} pts total': 'Du bekommst insgesamt {n} Pkt.',
+  'No bonus': 'Kein Bonus',
+  '100 points = €1 · bought points never affect the leaderboard':
+      '100 Punkte = 1 € · gekaufte Punkte zählen nie fürs Ranking',
+
+  // ── Home / Fan of the Season ─────────────────────────────────
+  'Perks': 'Vorteile',
+  'Fan of the Season': 'Fan der Saison',
+  'Become Fan of the Season': 'Werde Fan der Saison',
+  'win the grand prize': 'gewinne den Hauptpreis',
+  'The grand prize': 'Der Hauptpreis',
+  'Reach the final stop to become Fan of the Season — VIP season finale + a signed shirt.':
+      'Erreiche die letzte Stufe und werde Fan der Saison — VIP-Saisonfinale + signiertes Trikot.',
+  'VIP season finale + signed shirt': 'VIP-Saisonfinale + signiertes Trikot',
+
+  // ── Tombola detail ───────────────────────────────────────────
+  'View draw': 'Ziehung ansehen',
+  'Money-can’t-buy — won in the monthly draw.': 'Unbezahlbar — in der monatlichen Ziehung gewinnen.',
+  'Your chance': 'Deine Chance',
+  'win chance': 'Gewinnchance',
+  'Your free lots enter automatically every month.': 'Deine Freilose sind jeden Monat automatisch dabei.',
+  'Add extra lots with points — each lot is one more entry.':
+      'Extra-Lose mit Punkten hinzufügen — jedes Los ist eine weitere Teilnahme.',
+  'Winners are drawn at the timer and notified in the app.':
+      'Gewinner werden zum Timer gezogen und in der App benachrichtigt.',
+  'Recently entered': 'Kürzlich teilgenommen',
+  '{a} and {n} others just entered': '{a} und {n} weitere haben gerade teilgenommen',
+  'Your {n} free lots are already in — add extra lots to boost your chance.':
+      'Deine {n} Freilose sind schon dabei — setze Extra-Lose ein, um deine Chance zu erhöhen.',
+  'You have no free lots yet — add a lot with points to enter.':
+      'Du hast noch keine Freilose — setze ein Los mit Punkten ein, um teilzunehmen.',
 };

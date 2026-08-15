@@ -32,7 +32,7 @@ class SeasonJourneyScreen extends StatelessWidget {
     _Milestone(3200, '1958', 'Meisterjahr', 'Double-points weekend', Icons.stars_rounded),
     _Milestone(5400, '1972', 'Pokalnacht', 'VIP Arena upgrade', Icons.military_tech_rounded),
     _Milestone(8500, '1997', 'Europapokal-Nacht', 'Signed shirt raffle entry', Icons.public_rounded),
-    _Milestone(12000, 'Gold', 'Saison-Held', 'Money-can\'t-buy legend day', Icons.diamond_rounded),
+    _Milestone(12000, 'Finale', 'Fan der Saison', 'VIP season finale + signed shirt', Icons.diamond_rounded),
   ];
 
   @override
@@ -48,7 +48,7 @@ class SeasonJourneyScreen extends StatelessWidget {
     final unlockedCount = _stops.where((m) => m.points <= pts).length;
 
     return SubScaffold(
-      title: tr('Road to Gold'),
+      title: tr('Fan of the Season'),
       children: [
         // ── Hero: progress to the next historic milestone ──
         Container(
@@ -57,9 +57,9 @@ class SeasonJourneyScreen extends StatelessWidget {
           decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(AppRadii.card)),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              const Icon(Icons.route_rounded, color: AppColors.gold, size: 20),
+              const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 20),
               const SizedBox(width: 8),
-              Text(tr('This season'), style: AppText.body2.copyWith(color: Colors.white)),
+              Text(tr('Become Fan of the Season'), style: AppText.body2.copyWith(color: Colors.white)),
               const Spacer(),
               Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text('$unlockedCount / ${_stops.length}', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
             ]),
@@ -78,6 +78,20 @@ class SeasonJourneyScreen extends StatelessWidget {
               const Spacer(),
               Text('${FanModel.fmtPublic(remaining)} ${tr('pts to go')}', style: AppText.body3.copyWith(color: Colors.white70)),
             ]),
+          ]),
+        ),
+        const SizedBox(height: 12),
+        // The payoff — reaching the final stop wins the grand prize.
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(color: AppColors.gold.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.gold.withValues(alpha: 0.5))),
+          child: Row(children: [
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 24)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('The grand prize'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+              Text(tr('Reach the final stop to become Fan of the Season — VIP season finale + a signed shirt.'), style: AppText.body3.copyWith(color: AppColors.textNormal)),
+            ])),
           ]),
         ),
         const SizedBox(height: 12),
