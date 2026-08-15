@@ -20,7 +20,7 @@ class AllBenefitsScreen extends StatelessWidget {
     ('Sponsors', Icons.storefront_rounded, 'Voucher', AppColors.brandPrimary),
     ('Experiences', Icons.stadium_rounded, 'VIP', AppColors.brandPrimary),
     ('Content', Icons.play_circle_fill_rounded, 'Free', Color(0xFFC2185B)),
-    ('Extra Raffle Tickets', Icons.local_activity_rounded, '+3', AppColors.brandPrimary),
+    ('Free tombola lots', Icons.local_activity_rounded, '+8', AppColors.brandPrimary),
     ('Top up points', Icons.add_rounded, 'Bonus', Color(0xFF2E7D32)),
   ];
 
@@ -32,7 +32,7 @@ class AllBenefitsScreen extends StatelessWidget {
     (Icons.casino_rounded, 'Free spins', '2 / day'),
     (Icons.shield_rounded, 'Streak protection', 'Active'),
     (Icons.block_rounded, 'Ad-free experience', 'Active'),
-    (Icons.savings_rounded, 'Rewards value back', 'up to ~€14 / month'),
+    (Icons.savings_rounded, 'Rewards value back', '~€12 / month'),
   ];
 
   @override

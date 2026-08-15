@@ -15,9 +15,8 @@ class UpgradePlanScreen extends StatelessWidget {
 
   // Benefits + badge for the actually-chosen tier (not always Super Fan).
   String _badge(String plan) => switch (plan) {
-        'Fan Member' => 'POPULAR',
-        'Ultra' => 'MAXIMUM',
-        _ => 'BEST VALUE',
+        'Fan Member' => 'Most popular',
+        _ => 'Best value',
       };
 
   List<String> _benefits(String plan) => switch (plan) {
@@ -26,12 +25,6 @@ class UpgradePlanScreen extends StatelessWidget {
             '+500 bonus points every month',
             'Double Fan Points on every purchase',
             '24h ticket presale + member discounts',
-          ],
-        'Ultra' => const [
-            '20 free tombola lots every month',
-            '+3,000 bonus points every month',
-            'Everything in Super Fan',
-            'Top priority + personal concierge',
           ],
         _ => const [
             '8 free tombola lots every month',

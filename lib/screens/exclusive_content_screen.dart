@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/sub_scaffold.dart';
+import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 import 'subscription_screen.dart';
 
@@ -19,11 +20,11 @@ class ExclusiveContentScreen extends StatelessWidget {
   const ExclusiveContentScreen({super.key});
 
   static const _featured = _Clip(
-      'Inside the dressing room — Bayern win', 'Behind the scenes · Fan+', '4:12', Icons.meeting_room_rounded,
+      'Inside the dressing room — derby win', 'Behind the scenes · Fan+', '4:12', Icons.meeting_room_rounded,
       locked: true);
 
   static const _clips = [
-    _Clip('Dzeko: "This club means everything"', 'Interview', '6:30', Icons.mic_rounded),
+    _Clip('Terodde: "This club means everything"', 'Interview', '6:30', Icons.mic_rounded),
     _Clip('Matchday walkout — pitchside cam', 'Behind the scenes · Fan+', '2:45', Icons.stadium_rounded, locked: true),
     _Clip('Training ground: set-piece session', 'Training · Fan+', '5:18', Icons.sports_soccer_rounded, locked: true),
     _Clip('Academy talent — first team debut', 'Feature', '3:52', Icons.school_rounded),
@@ -79,10 +80,12 @@ class ExclusiveContentScreen extends StatelessWidget {
   }
 
   void _open(BuildContext context, _Clip c) {
-    if (c.locked) {
+    // A paying member already has access — never upsell them their own content.
+    final isMember = tierNotifier.value != 'Free Fan';
+    if (c.locked && !isMember) {
       _showUpsell(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${tr('Now playing')}: ${c.title}')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${tr('Now playing')}: ${c.title}'), behavior: SnackBarBehavior.floating));
     }
   }
 

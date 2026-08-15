@@ -14,6 +14,14 @@ import 'raffles_screen.dart';
 import '../model/fan_model.dart';
 import '../l10n/strings.dart';
 
+/// A forward-dated renewal label (~30 days out) so the "Renews …" line is never
+/// stale in a demo.
+String _renewLabel() {
+  final d = DateTime.now().add(const Duration(days: 30));
+  const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return '${d.day} ${m[d.month - 1]} ${d.year}';
+}
+
 /// Fan+ (Figma 2145:8198 Non-Subscriber / 2145:8275 Subscriber).
 class FanPlusScreen extends StatefulWidget {
   final bool subscribed;
@@ -231,12 +239,16 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
               ),
               const SizedBox(height: 12),
               Wrap(spacing: 8, runSpacing: 8, alignment: WrapAlignment.center, children: [
-                for (final b in const ['Priority Access', 'Best Seats', '+3 VIP Draws'])
-                  Pill(color: Colors.white24, child: Text(tr(b), style: AppText.caption1.copyWith(color: Colors.white))),
+                for (final b in [
+                  trp('{n} free lots', n: '${perksFor(tierNotifier.value).freeLots}'),
+                  trp('+{n} pts / month', n: FanModel.fmtPublic(perksFor(tierNotifier.value).monthlyPoints)),
+                  tr('Priority access'),
+                ])
+                  Pill(color: Colors.white24, child: Text(b, style: AppText.caption1.copyWith(color: Colors.white))),
               ]),
               const SizedBox(height: 16),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(tr('Renews: 28 May 2026'), style: AppText.body3.copyWith(color: Colors.white70)),
+                Text('${tr('Renews')} ${_renewLabel()}', style: AppText.body3.copyWith(color: Colors.white70)),
                 Tappable(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ManageSubscriptionScreen())),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -305,7 +317,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
                   padding: const EdgeInsets.all(18),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
-                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Members only'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
                       const Spacer(),
                       Pill(color: Colors.black.withValues(alpha: 0.4), child: Row(mainAxisSize: MainAxisSize.min, children: [
                         const Icon(Icons.local_fire_department_rounded, size: 12, color: AppColors.gold),
@@ -314,7 +326,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
                       ])),
                     ]),
                     const Spacer(),
-                    Text(tr('Signed Retro Shirt — April Drop'), style: AppText.h4.copyWith(color: Colors.white)),
+                    Text(tr('Signed Retro Shirt — this month’s drop'), style: AppText.h4.copyWith(color: Colors.white)),
                     const SizedBox(height: 4),
                     Text(tr('A limited signed 1997 UEFA Cup retro shirt — dropped once, never restocked.'), maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.body3.copyWith(color: Colors.white70)),
                     const SizedBox(height: 12),
@@ -384,7 +396,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
             decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF6A1B9A), Color(0xFF311B92)]), borderRadius: BorderRadius.circular(AppRadii.card)),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Super Fan perk'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
+                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Membership perk'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w700))),
                 const Spacer(),
                 const Icon(Icons.local_activity_rounded, color: AppColors.gold, size: 24),
               ]),

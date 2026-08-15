@@ -1945,4 +1945,15 @@ const Map<String, String> _de = {
       'Ein Sticker-Pack kostet {n} Punkte. Sammle welche und komm wieder.',
   'New sticker! 🎉': 'Neuer Sticker! 🎉',
   'You unlocked {a} — {n} of {b} collected.': '{a} freigeschaltet — {n} von {b} gesammelt.',
+
+  // ── Fan+ coherence ───────────────────────────────────────────
+  '{n} free lots': '{n} Freilose',
+  '+{n} pts / month': '+{n} Pkt./Monat',
+  'Priority access': 'Priority-Zugang',
+  'Renews': 'Verlängert sich am',
+  'Membership perk': 'Mitglieds-Vorteil',
+  'Signed Retro Shirt — this month’s drop': 'Signiertes Retro-Trikot — Drop des Monats',
+  'Free tombola lots': 'Freilose',
+  'Inside the dressing room — derby win': 'In der Kabine — Derbysieg',
+  'Terodde: "This club means everything"': 'Terodde: „Dieser Verein bedeutet alles"',
 };

@@ -94,8 +94,10 @@ class FanModel {
   // Subscription tiers (final concept: Free Fan / Fan Member / Super Fan).
   static const String membershipTier = 'Super Fan';
 
-  /// Current member's monthly perks, tied to the core loop.
-  static MembershipPerks get perks => perksFor(membershipTier);
+  /// Current member's monthly perks, tied to the core loop — driven by the
+  /// live-selected tier so the whole app (lounge, Tombola perk, Home card)
+  /// reflects the plan the fan actually holds, not a hard-coded Super Fan.
+  static MembershipPerks get perks => perksFor(tierNotifier.value);
 
   static String _fmt(int n) {
     final s = n.toString();
