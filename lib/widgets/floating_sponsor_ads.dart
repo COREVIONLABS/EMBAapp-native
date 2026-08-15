@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../model/consent.dart';
@@ -110,22 +111,56 @@ class _PizzaHutButton extends StatelessWidget {
   }
 }
 
-/// Floating McDonald's badge: a red circle with a golden "M", a tiny "Anzeige"
-/// tag underneath, and (when [onDismiss] is given) a small "×" to hide it.
-/// Public so pages with their own nav (the discounts marketplace) can float it.
-class McDonaldsAdBadge extends StatelessWidget {
+/// Floating McDonald's badge: a red circle whose content cycles (the golden "M",
+/// a burger, the "-20%" offer, a drink) with a soft fade/scale — an eye-catching
+/// animated placement. A tiny "Anzeige" tag underneath, and (when [onDismiss] is
+/// given) a small "×" to hide it. Public so pages with their own nav (the
+/// discounts marketplace) can float it.
+class McDonaldsAdBadge extends StatefulWidget {
   final VoidCallback onTap;
   final VoidCallback? onDismiss;
   const McDonaldsAdBadge({super.key, required this.onTap, this.onDismiss});
+
+  @override
+  State<McDonaldsAdBadge> createState() => _McDonaldsAdBadgeState();
+}
+
+class _McDonaldsAdBadgeState extends State<McDonaldsAdBadge> {
   static const _red = Color(0xFFDA291C);
   static const _gold = Color(0xFFFFC72C);
+
+  int _i = 0;
+  Timer? _timer;
+
+  // The rotating faces inside the circle.
+  List<Widget> get _faces => [
+        Text('M', key: const ValueKey('m'), style: AppText.h2.copyWith(color: _gold, fontWeight: FontWeight.w900, fontSize: 30, height: 1)),
+        const Icon(Icons.lunch_dining_rounded, key: ValueKey('burger'), color: Colors.white, size: 30),
+        Text('-20%', key: const ValueKey('offer'), style: AppText.caption1.copyWith(color: _gold, fontWeight: FontWeight.w900, fontSize: 16)),
+        const Icon(Icons.local_cafe_rounded, key: ValueKey('drink'), color: Colors.white, size: 26),
+        const Icon(Icons.icecream_rounded, key: ValueKey('sweet'), color: Colors.white, size: 26),
+      ];
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 2200), (_) {
+      if (mounted) setState(() => _i = (_i + 1) % _faces.length);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Stack(clipBehavior: Clip.none, children: [
         GestureDetector(
-          onTap: onTap,
+          onTap: widget.onTap,
           behavior: HitTestBehavior.opaque,
           child: Container(
             width: 56, height: 56,
@@ -135,14 +170,23 @@ class McDonaldsAdBadge extends StatelessWidget {
               boxShadow: [BoxShadow(color: _red.withValues(alpha: 0.45), blurRadius: 14, offset: const Offset(0, 5))],
             ),
             alignment: Alignment.center,
-            child: Text('M', style: AppText.h2.copyWith(color: _gold, fontWeight: FontWeight.w900, fontSize: 30, height: 1)),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 450),
+              switchInCurve: Curves.easeOutBack,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (child, anim) => FadeTransition(
+                opacity: anim,
+                child: ScaleTransition(scale: Tween<double>(begin: 0.6, end: 1).animate(anim), child: child),
+              ),
+              child: _faces[_i],
+            ),
           ),
         ),
-        if (onDismiss != null)
+        if (widget.onDismiss != null)
           Positioned(
             right: -4, top: -4,
             child: GestureDetector(
-              onTap: onDismiss,
+              onTap: widget.onDismiss,
               behavior: HitTestBehavior.opaque,
               child: Container(
                 width: 22, height: 22,
