@@ -92,7 +92,7 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
     ('Official Fanshop', 'Club', '15% off', Icons.storefront_rounded, Color(0xFF004B9C)),
     ('adidas', 'Sportswear', '20% off', Icons.sports_soccer_rounded, Color(0xFF111111)),
     ('Veltins', 'Beverages', '10% off', Icons.sports_bar_rounded, Color(0xFF00623A)),
-    ("Ernsting's family", 'Fashion', '15% off', Icons.checkroom_rounded, Color(0xFFE30613)),
+    ('Vivawest', 'Housing', '10% off', Icons.apartment_rounded, Color(0xFF6A1B9A)),
   ];
 
   // Member content (title, subtitle, image)

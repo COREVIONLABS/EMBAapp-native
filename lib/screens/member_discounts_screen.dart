@@ -47,7 +47,7 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
   // · 2 Pizza Hut (sponsored centre) · 3 Top partners · 4 New partners.
   int _nav = 0;
   final Set<String> _fav = <String>{};
-  static const _newNames = <String>{'Trattoria Napoli', 'Cineworld GE', 'McFit Gelsenkirchen', 'ZOOM Erlebniswelt'};
+  static const _newNames = <String>{'Vivawest', 'REWE'};
 
   List<_Partner> get _favPartners => _partners.where((p) => _fav.contains(p.name)).toList();
   List<_Partner> get _newPartners => _partners.where((p) => _newNames.contains(p.name)).toList();
@@ -69,13 +69,7 @@ class _MemberDiscountsScreenState extends State<MemberDiscountsScreen> {
     _Partner('adidas', 'Sportswear', '20% off', 'Online & in-store', Icons.sports_soccer_rounded, Color(0xFF111111), '4.7', false, 'Online'),
     _Partner('Veltins', 'Beverages', '10% off', 'Matchday crates & more', Icons.sports_bar_rounded, Color(0xFF00623A), '4.4', false, '1.5 km'),
     _Partner('Vivawest', 'Housing', '10% off', 'Rent & services', Icons.apartment_rounded, Color(0xFF6A1B9A), '4.1', false, '2.0 km'),
-    _Partner("Ernsting's family", 'Fashion', '15% off', 'Family fashion', Icons.checkroom_rounded, Color(0xFFE30613), '4.3', false, '1.2 km'),
     _Partner('REWE', 'Groceries', '5% off', 'In all REWE stores', Icons.shopping_cart_rounded, Color(0xFFC8102E), '4.6', false, '650 m'),
-    _Partner('ZOOM Erlebniswelt', 'Local', '20% off', 'Gelsenkirchen zoo tickets', Icons.pets_rounded, Color(0xFF2E7D32), '4.7', false, '3.4 km'),
-    _Partner('Cineworld GE', 'Local', '25% off', 'Cinema tickets on matchdays', Icons.local_movies_rounded, Color(0xFF5E35B1), '4.5', false, '2.1 km'),
-    _Partner('McFit Gelsenkirchen', 'Fitness', '10% off', 'Monthly gym membership', Icons.fitness_center_rounded, Color(0xFFEF6C00), '4.0', false, '1.8 km'),
-    _Partner('Trattoria Napoli', 'Dining', '15% off', 'Post-match dinner in GE', Icons.restaurant_rounded, Color(0xFFC62828), '4.6', false, '750 m'),
-    _Partner('VRR / Bahn', 'Transport', '10% off', 'Matchday travel to the arena', Icons.directions_bus_rounded, Color(0xFF00695C), '4.2', false, 'Arena'),
   ];
 
   List<_Partner> get _sponsored => _partners.where((p) => p.sponsored).toList();
