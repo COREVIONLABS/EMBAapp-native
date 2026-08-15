@@ -14,6 +14,7 @@ class VoucherScreen extends StatelessWidget {
   final String sponsor;
   final String code;
   final String expiry;
+  final String category;
 
   /// When opened from the wallet / a fresh redemption, the underlying voucher so
   /// its status can flip to "used" once the staff PIN confirms it.
@@ -24,6 +25,7 @@ class VoucherScreen extends StatelessWidget {
     this.sponsor = 'Veltins',
     this.code = 'S04-VEL-9F3K',
     this.expiry = 'Valid until 30 Apr 2026',
+    this.category = 'Sponsor',
     this.issued,
   });
 
@@ -31,8 +33,20 @@ class VoucherScreen extends StatelessWidget {
       : title = v.title,
         sponsor = v.sponsor ?? v.category,
         code = v.code,
-        expiry = 'Valid until 30 Jun 2026',
+        expiry = _expiryLabel(),
+        category = v.category,
         issued = v;
+
+  /// A local partner voucher is redeemed at the merchant, not the stadium kiosk.
+  bool get _isPartner => category == 'Partner';
+
+  /// Dynamic expiry — 90 days out — so different vouchers don't all show one
+  /// hard-coded date.
+  static String _expiryLabel() {
+    final d = DateTime.now().add(const Duration(days: 90));
+    const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return 'Valid until ${d.day} ${m[d.month - 1]} ${d.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +79,7 @@ class VoucherScreen extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.card), border: Border.all(color: AppColors.borderLightest)),
           child: Column(children: [
-            Pill(color: AppColors.brandLightest, child: Text('${tr('Powered by')} $sponsor', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
+            Pill(color: AppColors.brandLightest, child: Text(_isPartner ? '${tr('Partner')} · $sponsor' : '${tr('Powered by')} $sponsor', style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w700))),
             const SizedBox(height: 16),
             Text(tr(title), textAlign: TextAlign.center, style: AppText.h4.copyWith(color: AppColors.textDarker)),
             const SizedBox(height: 20),
@@ -77,7 +91,7 @@ class VoucherScreen extends StatelessWidget {
               child: CustomPaint(painter: _QrPainter(), size: const Size.square(156)),
             ),
             const SizedBox(height: 16),
-            Text(tr('Scan at the kiosk'), style: AppText.body3Regular),
+            Text(_isPartner ? '${tr('Show this at')} $sponsor' : tr('Scan at the kiosk'), style: AppText.body3Regular),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
@@ -104,7 +118,7 @@ class VoucherScreen extends StatelessWidget {
             const SizedBox(width: 14),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(tr('Staff redemption'), style: AppText.body2.copyWith(color: AppColors.textDarker)),
-              Text(tr('Kiosk staff enter the Entertainer PIN to confirm'), style: AppText.body3Regular),
+              Text(_isPartner ? tr('Staff scan it in the Merchant app to confirm') : tr('Kiosk staff enter the Entertainer PIN to confirm'), style: AppText.body3Regular),
             ])),
           ]),
         ),
@@ -112,7 +126,7 @@ class VoucherScreen extends StatelessWidget {
         Row(children: [
           Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
           const SizedBox(width: 6),
-          Expanded(child: Text(tr('Screenshots won\'t work — the code is single-use and confirmed by staff PIN.'),
+          Expanded(child: Text(_isPartner ? tr('Screenshots won\'t work — the code is single-use and confirmed on scan.') : tr('Screenshots won\'t work — the code is single-use and confirmed by staff PIN.'),
               style: AppText.caption1.copyWith(color: AppColors.textLight))),
         ]),
       ],

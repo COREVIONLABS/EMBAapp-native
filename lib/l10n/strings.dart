@@ -1879,4 +1879,40 @@ const Map<String, String> _de = {
   'Partners only ever see aggregated numbers — never your personal data.':
       'Partner sehen nur aggregierte Zahlen — niemals deine persönlichen Daten.',
   'Continue with essentials only': 'Nur mit dem Nötigsten fortfahren',
+
+  // ── Partner marketplace: Top-Partner + recommendations ───────
+  'Top-Partner': 'Top-Partner',
+  'Near you': 'In deiner Nähe',
+  'More partners': 'Weitere Partner',
+  'Partners join free and reward you with vouchers. Top-Partner placements are clearly labelled.':
+      'Partner sind kostenlos dabei und belohnen dich mit Gutscheinen. Top-Partner-Platzierungen sind klar gekennzeichnet.',
+  'No partners here yet': 'Noch keine Partner hier',
+  'No partners in this category near you yet — check back soon.':
+      'Noch keine Partner in dieser Kategorie in deiner Nähe — schau bald wieder rein.',
+  'Show all partners': 'Alle Partner zeigen',
+  '+{n} offers': '+{n} Angebote',
+  'View offers': 'Angebote ansehen',
+  'Good': 'Gut',
+  'Very good': 'Sehr gut',
+  'Top recommendation': 'Top-Empfehlung',
+  '{n} fans recommend this partner': '{n} Fans empfehlen diesen Partner',
+  'You recommend this 👍': 'Von dir empfohlen 👍',
+  'Recommend 👍': 'Weiterempfehlen 👍',
+  'Top-Partner is a paid placement. Every partner is vetted by the club.':
+      'Top-Partner ist eine bezahlte Platzierung. Jeder Partner wird vom Verein geprüft.',
+  // Redeem-tab partner rail
+  'Spend them on vouchers, local partners or the tombola.':
+      'Gib sie für Gutscheine, lokale Partner oder die Tombola aus.',
+  '{n} cafés, restaurants & shops near you — pay with points.':
+      '{n} Cafés, Restaurants & Läden in deiner Nähe — mit Punkten bezahlen.',
+  'All partners': 'Alle Partner',
+  'On the map': 'Auf der Karte',
+  // Voucher (source-aware) + wallet
+  'Show this at': 'Zeig das bei',
+  'Staff scan it in the Merchant app to confirm': 'Das Personal scannt ihn in der Merchant-App zur Bestätigung',
+  'Screenshots won\'t work — the code is single-use and confirmed on scan.':
+      'Screenshots funktionieren nicht — der Code ist einmalig und wird beim Scannen bestätigt.',
+  'Ready to redeem': 'Bereit zum Einlösen',
+  'Show the code in the shop or at the partner to redeem.':
+      'Zeig den Code im Shop oder beim Partner zum Einlösen.',
 };

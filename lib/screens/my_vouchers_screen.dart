@@ -5,7 +5,6 @@ import '../widgets/sub_scaffold.dart';
 import '../model/fan_model.dart';
 import '../model/voucher_store.dart';
 import 'voucher_screen.dart';
-import 'redeem_screen.dart';
 import '../l10n/strings.dart';
 
 /// "My Vouchers" — every reward the fan redeemed points for. Each is a code they
@@ -32,21 +31,39 @@ class MyVouchersScreen extends StatelessWidget {
           builder: (context, _) {
             final list = voucherStore.vouchers;
             if (list.isEmpty) return _empty(context);
-            return Column(children: [
-              for (final v in list) ...[_row(context, v), const SizedBox(height: 10)],
-              const SizedBox(height: 6),
-              Row(children: [
-                Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
-                const SizedBox(width: 6),
-                Expanded(child: Text(tr('Show the code in the official shop or at the counter to redeem.'),
-                    style: AppText.caption1.copyWith(color: AppColors.textLight))),
-              ]),
+            final open = list.where((v) => !v.redeemed).toList();
+            final used = list.where((v) => v.redeemed).toList();
+            return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              if (open.isNotEmpty) ...[
+                _header(tr('Ready to redeem'), open.length),
+                const SizedBox(height: 10),
+                for (final v in open) ...[_row(context, v), const SizedBox(height: 10)],
+                const SizedBox(height: 6),
+                Row(children: [
+                  Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textLight),
+                  const SizedBox(width: 6),
+                  Expanded(child: Text(tr('Show the code in the shop or at the partner to redeem.'),
+                      style: AppText.caption1.copyWith(color: AppColors.textLight))),
+                ]),
+              ],
+              if (used.isNotEmpty) ...[
+                const SizedBox(height: 22),
+                _header(tr('Used'), used.length),
+                const SizedBox(height: 10),
+                for (final v in used) ...[_row(context, v), const SizedBox(height: 10)],
+              ],
             ]);
           },
         ),
       ],
     );
   }
+
+  Widget _header(String label, int n) => Row(children: [
+        Text(label, style: AppText.label2),
+        const SizedBox(width: 8),
+        Pill(color: AppColors.surfaceMinimal, child: Text('$n', style: AppText.caption1.copyWith(color: AppColors.textNormal, fontWeight: FontWeight.w800))),
+      ]);
 
   Widget _row(BuildContext context, IssuedVoucher v) {
     return SurfaceCard(
@@ -89,7 +106,11 @@ class MyVouchersScreen extends StatelessWidget {
         SizedBox(
           width: 220,
           child: PrimaryButton('${tr('Redeem')} ${FanModel.pointsFormatted} ${tr('pts')}',
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RedeemScreen()))),
+              onTap: () {
+                // Switch to the Redeem tab rather than stacking a second copy.
+                tabRequestNotifier.value = 1;
+                Navigator.of(context).popUntil((r) => r.isFirst);
+              }),
         ),
       ]),
     );
