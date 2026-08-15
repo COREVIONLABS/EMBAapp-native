@@ -1855,6 +1855,7 @@ const Map<String, String> _de = {
   'Earned': 'Verdient',
   'Spent': 'Ausgegeben',
   'Nothing here yet': 'Hier ist noch nichts',
+  'All missions done — new ones drop weekly.': 'Alle Missionen erledigt — jede Woche kommen neue dazu.',
   '1.5× points': '1,5× Punkte',
   'automatically entered': 'automatisch dabei',
   'Hide this ad?': 'Anzeige ausblenden?',

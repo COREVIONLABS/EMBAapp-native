@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/sponsor_missions.dart';
@@ -10,8 +11,14 @@ import '../l10n/strings.dart';
 /// Sponsor Missions — the club's third revenue stream made tangible. Partners
 /// pay to activate fans (watch, survey, scan, share); the fan earns Fan Points.
 /// Every card is co-branded "powered by `sponsor`". Pushed from Home / Earn.
-class SponsorMissionsScreen extends StatelessWidget {
+class SponsorMissionsScreen extends StatefulWidget {
   const SponsorMissionsScreen({super.key});
+  @override
+  State<SponsorMissionsScreen> createState() => _SponsorMissionsScreenState();
+}
+
+class _SponsorMissionsScreenState extends State<SponsorMissionsScreen> {
+  int _tab = 0; // 0 = open, 1 = completed
 
   Future<void> _run(BuildContext context, SponsorMission m) async {
     bool ok = false;
@@ -87,30 +94,38 @@ class SponsorMissionsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            if (open.isNotEmpty) ...[
-              Align(alignment: Alignment.centerLeft, child: Text(tr('Open missions'), style: AppText.label1)),
-              const SizedBox(height: 12),
-              for (final m in open) ...[
-                _MissionCard(mission: m, onTap: () => _run(context, m)),
-                const SizedBox(height: 12),
-              ],
+            // Offen / Erledigt toggle — shown once the fan has completed some.
+            if (done.isNotEmpty) ...[
+              SegmentedToggle(
+                labels: ['${tr('Open')} (${open.length})', '${tr('Completed')} (${done.length})'],
+                selected: _tab,
+                onTap: (i) => setState(() => _tab = i),
+              ),
+              const SizedBox(height: 16),
             ],
 
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
-              child: Row(children: [
-                Icon(Icons.info_outline_rounded, size: 18, color: AppColors.brandPrimary),
-                const SizedBox(width: 10),
-                Expanded(child: Text(tr('Fresh missions drop every week — the more you do, the more the sponsors give back.'), style: AppText.body3.copyWith(color: AppColors.onAccent))),
-              ]),
-            ),
-
-            if (done.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              Align(alignment: Alignment.centerLeft, child: Text(tr('Completed'), style: AppText.label1)),
-              const SizedBox(height: 12),
+            if (_tab == 0) ...[
+              if (open.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30),
+                  child: Center(child: Text(tr('All missions done — new ones drop weekly.'), textAlign: TextAlign.center, style: AppText.body3Regular)),
+                )
+              else
+                for (final m in open) ...[
+                  _MissionCard(mission: m, onTap: () => _run(context, m)),
+                  const SizedBox(height: 12),
+                ],
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.tile)),
+                child: Row(children: [
+                  Icon(Icons.info_outline_rounded, size: 18, color: AppColors.brandPrimary),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(tr('Fresh missions drop every week — the more you do, the more the sponsors give back.'), style: AppText.body3.copyWith(color: AppColors.onAccent))),
+                ]),
+              ),
+            ] else ...[
               for (final m in done) ...[
                 _MissionCard(mission: m, onTap: null),
                 const SizedBox(height: 12),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
+import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
 import '../widgets/action_sheets.dart';
 import '../model/fan_model.dart';
@@ -33,28 +34,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
     return SubScaffold(
       title: tr('Predictions'),
       children: [
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(AppRadii.pill)),
-          child: Row(
-            children: [
-              for (var i = 0; i < 2; i++)
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => _seg = i),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: i == _seg ? AppColors.surface : Colors.transparent,
-                        borderRadius: BorderRadius.circular(AppRadii.pill),
-                      ),
-                      child: Center(child: Text(i == 0 ? tr('Upcoming') : tr('Past Results'), style: AppText.body2.copyWith(color: i == _seg ? AppColors.brandPrimary : AppColors.textLight, fontWeight: FontWeight.w700))),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
+        SegmentedToggle(labels: [tr('Upcoming'), tr('Past Results')], selected: _seg, onTap: (i) => setState(() => _seg = i)),
         const SizedBox(height: 16),
         if (_seg == 0) ...[
           Container(
