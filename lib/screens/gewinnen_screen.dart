@@ -151,10 +151,11 @@ class GewinnenScreen extends StatelessWidget {
                   SizedBox(
                     height: 120,
                     child: Stack(fit: StackFit.expand, children: [
+                      // Always a branded motif so the header never looks empty;
+                      // a real product photo layers on top when one is bundled.
+                      DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [a.color, Color.lerp(a.color, Colors.black, 0.5)!])), child: Center(child: Icon(a.glyph, size: 54, color: Colors.white70))),
                       if (a.image != null)
-                        AssetImg(a.image!, fit: BoxFit.cover, fallbackIcon: a.glyph)
-                      else
-                        DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [a.color, Color.lerp(a.color, Colors.black, 0.5)!])), child: Center(child: Icon(a.glyph, size: 54, color: Colors.white70))),
+                        Positioned.fill(child: Image.asset('assets/images/${a.image}.png', fit: BoxFit.cover, errorBuilder: (_, __, ___) => const SizedBox.shrink())),
                       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x33000D22), Color(0x66000D22)]))),
                       Padding(
                         padding: const EdgeInsets.all(12),

@@ -283,9 +283,9 @@ class _FanPlusScreenState extends State<FanPlusScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
-            Expanded(child: _UnlockedCard(icon: 'ic_daily_spin', label: tr('Extra Spin'))),
+            Expanded(child: _UnlockedCard(fallback: Icons.casino_rounded, label: tr('Extra Spin'))),
             const SizedBox(width: 12),
-            Expanded(child: _UnlockedCard(icon: 'ic_scratch', label: tr('Extra Scratch Card'))),
+            Expanded(child: _UnlockedCard(fallback: Icons.style_rounded, label: tr('Extra Scratch Card'))),
           ]),
         ),
         const SizedBox(height: 24),
@@ -456,9 +456,9 @@ class _ValueTile extends StatelessWidget {
 }
 
 class _UnlockedCard extends StatelessWidget {
-  final String icon;
+  final IconData fallback;
   final String label;
-  const _UnlockedCard({required this.icon, required this.label});
+  const _UnlockedCard({required this.fallback, required this.label});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -474,7 +474,11 @@ class _UnlockedCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        AssetImg(icon, width: 44, height: 44, fallbackIcon: Icons.card_giftcard_rounded),
+        Container(
+          width: 44, height: 44,
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12)),
+          child: Icon(fallback, color: AppColors.brandPrimary, size: 24),
+        ),
         const SizedBox(height: 8),
         Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body3),
       ]),
