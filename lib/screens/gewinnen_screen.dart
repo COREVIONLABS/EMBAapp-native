@@ -3,22 +3,18 @@ import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/hub_widgets.dart';
 import '../widgets/sub_scaffold.dart';
-import '../widgets/asset_img.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import 'raffles_screen.dart';
 import 'auctions_screen.dart';
 import '../model/auctions.dart';
+import '../model/tombola.dart';
 import 'my_wins_screen.dart';
 import 'past_tombolas_screen.dart';
 import 'collection_screen.dart';
 import 'daily_spin_screen.dart';
 import 'scratch_card_screen.dart';
 import '../l10n/strings.dart';
-
-/// Stable end time for the monthly-tombola preview countdown (set once at app
-/// start so the ticker counts down smoothly instead of resetting each build).
-final DateTime _monthlyDrawEnd = DateTime.now().add(const Duration(days: 3, hours: 6));
 
 /// "Gewinnen" tab — the play-&-win hub: daily games (spin / scratch, once a day,
 /// with a streak to pull fans back), then the monthly Tombola where membership
@@ -121,13 +117,14 @@ class GewinnenScreen extends StatelessWidget {
     );
   }
 
-  // ── Tombola of the month — ONE card that folds in your membership free
-  //    lots, so the tombola is stated exactly once (no repeated surfaces). ──
+  // ── Monthly-raffle teaser — same key-visual as the Tombola page, so
+  //    "Große Preise" and the Tombola read as ONE system. ──
   Widget _tombolaCard(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: tierNotifier,
-      builder: (context, tier, __) {
-        final lots = perksFor(tier).freeLots;
+    return AnimatedBuilder(
+      animation: Listenable.merge([tierNotifier, raffleStore]),
+      builder: (context, __) {
+        final r = kMonthlyRaffle;
+        final lots = raffleMyLots(r.id);
         return Tappable(
           scale: 0.98,
           onTap: () => _push(context, const RafflesScreen()),
@@ -136,47 +133,52 @@ class GewinnenScreen extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.card)),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              // Photo strip with the label + live countdown.
+              // Key-visual band: month, total prizes, live countdown.
               SizedBox(
-                height: 132,
+                height: 150,
                 child: Stack(fit: StackFit.expand, children: [
-                  const AssetImg('img_tickets', fit: BoxFit.cover, fallbackIcon: Icons.emoji_events_rounded),
-                  const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x55000D22), Color(0x11000D22)]))),
+                  DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: r.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight))),
+                  Positioned(right: -18, top: -22, child: Icon(r.heroGlyph, size: 150, color: Colors.white.withValues(alpha: 0.10))),
                   Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Row(children: [
-                      Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr('Draw of the month'), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                    padding: const EdgeInsets.all(14),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Row(children: [
+                        Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text('${raffleMonthName()} ${tr('monthly raffle')}', style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800))),
+                        const Spacer(),
+                        Pill(color: Colors.black.withValues(alpha: 0.4), child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
+                          const SizedBox(width: 4),
+                          CountdownText(raffleDrawEnd(r), style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+                        ])),
+                      ]),
                       const Spacer(),
-                      Pill(color: Colors.black.withValues(alpha: 0.5), child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        const Icon(Icons.schedule_rounded, size: 12, color: Colors.white),
-                        const SizedBox(width: 4),
-                        CountdownText(_monthlyDrawEnd, style: AppText.caption1.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
-                      ])),
+                      Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+                        Text('${r.totalPrizes}', style: AppText.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                        const SizedBox(width: 6),
+                        Padding(padding: const EdgeInsets.only(bottom: 3), child: Text(tr('prizes to win'), style: AppText.body3.copyWith(color: Colors.white))),
+                      ]),
                     ]),
                   ),
                 ]),
               ),
-              // Solid info panel — prize + your free lots (the consolidation).
+              // Solid panel: your lots + prize cluster + CTA.
               Container(
                 color: AppColors.brandDarkest,
                 padding: const EdgeInsets.all(18),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(tr('2× VIP tickets — vs Dortmund'), style: AppText.label1.copyWith(color: Colors.white)),
-                  const SizedBox(height: 8),
-                  // Your free lots — the single place the membership benefit is shown.
                   Row(children: [
                     const Icon(Icons.check_circle_rounded, size: 15, color: AppColors.gold),
                     const SizedBox(width: 6),
-                    Expanded(child: Text(trp('You’re in with {n} free lots — more lots, more chances.', n: '$lots'),
-                        style: AppText.body3.copyWith(color: Colors.white))),
+                    Expanded(child: Text(trp('You’re in with {n} lots', n: '$lots'), style: AppText.body3.copyWith(color: Colors.white))),
                   ]),
                   const SizedBox(height: 12),
                   Row(children: [
-                    const Icon(Icons.local_activity_rounded, size: 15, color: AppColors.gold),
-                    const SizedBox(width: 6),
-                    Text('${FanModel.fmtPublic(1840)} ${tr('entries')}', style: AppText.body3.copyWith(color: Colors.white70, fontWeight: FontWeight.w700)),
+                    for (final p in r.prizes.take(5)) ...[
+                      Container(width: 30, height: 30, decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(9)), child: Icon(p.glyph, size: 16, color: Colors.white)),
+                      const SizedBox(width: 6),
+                    ],
                     const Spacer(),
-                    Text(tr('See all draws'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
+                    Text(tr('View prizes'), style: AppText.body2.copyWith(color: AppColors.gold, fontWeight: FontWeight.w800)),
                     const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 18),
                   ]),
                 ]),
