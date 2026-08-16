@@ -5,6 +5,7 @@ import '../widgets/scratch_card.dart';
 import '../model/fan_model.dart';
 import '../model/daily_games.dart';
 import '../model/voucher_store.dart';
+import '../widgets/sponsor_banner.dart';
 import '../l10n/strings.dart';
 
 /// Presents Daily Card Scratch as a modal sheet over the current screen
@@ -82,8 +83,8 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(tr('Scratch to win points, tickets or sponsor prizes!'), textAlign: TextAlign.center, style: AppText.body2.copyWith(color: AppColors.textLight)),
-                  const SizedBox(height: 12),
-                  const _SponsorBanner(),
+                  const SizedBox(height: 14),
+                  const SponsorAdBanner(),
                   const SizedBox(height: 18),
                   ScratchCard(
                     height: 200,
@@ -136,25 +137,5 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
           ])),
         );
     }
-  }
-}
-
-/// Paid "presented by the sponsor" banner — the sellable ad slot on the game.
-class _SponsorBanner extends StatelessWidget {
-  const _SponsorBanner();
-  @override
-  Widget build(BuildContext context) {
-    const s = kDailyGamesSponsor;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: s.color.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(999), border: Border.all(color: s.color.withValues(alpha: 0.25))),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Container(width: 22, height: 22, decoration: BoxDecoration(color: s.color, borderRadius: BorderRadius.circular(6)), child: Icon(s.icon, size: 14, color: Colors.white)),
-        const SizedBox(width: 8),
-        Text('${tr('presented by')} ${s.name}', style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-        const SizedBox(width: 8),
-        Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700, fontSize: 9))),
-      ]),
-    );
   }
 }
