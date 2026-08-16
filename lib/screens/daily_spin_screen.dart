@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../model/fan_model.dart';
+import '../model/daily_games.dart';
+import '../model/voucher_store.dart';
 import '../l10n/strings.dart';
 
 /// Presents Daily Spin as a modal sheet over the current screen (Figma 2145:8385).
@@ -27,38 +29,36 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
   late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 3400));
   Animation<double> _anim = const AlwaysStoppedAnimation(0);
   bool _spun = false;
-  int _reward = 0;
-
-  // Points-only wheel (no fake "Extra Spin / 25 Tickets" units). Weighted so
-  // small wins are common and the jackpot is rare.
-  static const _values = [20, 25, 30, 50, 75, 100, 150, 250];
-  static const _labels = ['20 Points', '25 Points', '30 Points', '50 Points', '75 Points', '100 Points', '150 Points', '250 Points'];
-  static const _weights = [26, 22, 18, 14, 9, 6, 3, 2]; // sums to 100
-
-  int _rollReward() {
-    var r = math.Random().nextInt(100);
-    for (var i = 0; i < _weights.length; i++) {
-      if (r < _weights[i]) return _values[i];
-      r -= _weights[i];
-    }
-    return _values.first;
-  }
+  int _prizeIdx = 0;
 
   void _spin() {
     if (_c.isAnimating || _spun) return;
-    // Roll the reward first, then stop the wheel *on that segment* — so the
-    // pointer always lands on the value actually awarded (fairness/trust).
-    final reward = _rollReward();
-    final idx = _values.indexOf(reward);
+    // Roll the segment first, then stop the wheel *on it* — so the pointer
+    // always lands on the prize actually awarded (fairness/trust).
+    final idx = rollPrizeIndex(kSpinWeights);
     const twoPi = 2 * math.pi;
-    final sweep = twoPi / _values.length;
+    final sweep = twoPi / kSpinPrizes.length;
     final stop = (twoPi - ((idx + 0.5) * sweep) % twoPi) % twoPi;
     _anim = Tween<double>(begin: 0, end: 6 * twoPi + stop).animate(CurvedAnimation(parent: _c, curve: Curves.easeOutCubic));
     _c.forward(from: 0).whenComplete(() {
-      FanModel.addPoints(reward); // credit the balance for real
-      if (mounted) setState(() { _reward = reward; _spun = true; });
+      _award(kSpinPrizes[idx]);
+      if (mounted) setState(() { _prizeIdx = idx; _spun = true; });
     });
     setState(() {});
+  }
+
+  void _award(DailyPrize p) {
+    switch (p.type) {
+      case DailyPrizeType.points:
+        FanModel.addPoints(p.points);
+        break;
+      case DailyPrizeType.ticket:
+        voucherStore.issue(title: p.label, category: 'Tickets', points: 0, detail: tr('Won on the Daily Spin'));
+        break;
+      case DailyPrizeType.sponsor:
+        voucherStore.issue(title: p.label, category: 'Sponsor', points: 0, sponsor: p.sponsor, detail: tr('Won on the Daily Spin'));
+        break;
+    }
   }
 
   @override
@@ -101,13 +101,10 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(tr('Spin the wheel to win rewards!'), style: AppText.body2.copyWith(color: AppColors.textLight)),
+                  Text(tr('Spin to win points, tickets or sponsor prizes!'), textAlign: TextAlign.center, style: AppText.body2.copyWith(color: AppColors.textLight)),
                   const SizedBox(height: 12),
-                  Pill(
-                    color: AppColors.brandLightest,
-                    child: Text(tr('1 Spin Left'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
-                  ),
-                  const SizedBox(height: 20),
+                  const _SponsorBanner(),
+                  const SizedBox(height: 18),
                   SizedBox(
                     height: 290,
                     child: Stack(
@@ -115,7 +112,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                       children: [
                         AnimatedBuilder(
                           animation: _anim,
-                          builder: (_, _) => Transform.rotate(angle: _anim.value, child: CustomPaint(size: const Size(280, 280), painter: _WheelPainter(_labels))),
+                          builder: (_, _) => Transform.rotate(angle: _anim.value, child: CustomPaint(size: const Size(280, 280), painter: _WheelPainter(kSpinPrizes))),
                         ),
                         Positioned(top: -2, child: Icon(Icons.arrow_drop_down_rounded, size: 44, color: AppColors.gold)),
                         GestureDetector(
@@ -133,15 +130,7 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
                   ),
                   const SizedBox(height: 20),
                   if (_spun)
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.tile)),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        const Icon(Icons.celebration_rounded, color: AppColors.success),
-                        const SizedBox(width: 10),
-                        Text('${tr('You won')} +$_reward ${tr('points')}!', style: AppText.label2.copyWith(color: AppColors.success)),
-                      ]),
-                    )
+                    _WinBanner(prize: kSpinPrizes[_prizeIdx])
                   else
                     PrimaryButton(tr('Spin Now'), onTap: _spin),
                 ],
@@ -154,35 +143,82 @@ class _DailySpinScreenState extends State<DailySpinScreen> with SingleTickerProv
   }
 }
 
+/// Paid "presented by the sponsor" banner — the sellable ad slot on the game.
+class _SponsorBanner extends StatelessWidget {
+  const _SponsorBanner();
+  @override
+  Widget build(BuildContext context) {
+    const s = kDailyGamesSponsor;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(color: s.color.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(999), border: Border.all(color: s.color.withValues(alpha: 0.25))),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Container(width: 22, height: 22, decoration: BoxDecoration(color: s.color, borderRadius: BorderRadius.circular(6)), child: Icon(s.icon, size: 14, color: Colors.white)),
+        const SizedBox(width: 8),
+        Text('${tr('presented by')} ${s.name}', style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+        const SizedBox(width: 8),
+        Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700, fontSize: 9))),
+      ]),
+    );
+  }
+}
+
+/// The win result — points, ticket or a branded sponsor reward.
+class _WinBanner extends StatelessWidget {
+  final DailyPrize prize;
+  const _WinBanner({required this.prize});
+  @override
+  Widget build(BuildContext context) {
+    final isPoints = prize.type == DailyPrizeType.points;
+    final accent = isPoints ? AppColors.success : prize.color;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: accent.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppRadii.tile)),
+      child: Column(children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(isPoints ? Icons.celebration_rounded : prize.icon, color: accent),
+          const SizedBox(width: 10),
+          Flexible(child: Text(
+            isPoints ? '${tr('You won')} +${prize.points} ${tr('points')}!' : '${tr('You won')}: ${prize.label}!',
+            textAlign: TextAlign.center, style: AppText.label2.copyWith(color: accent))),
+        ]),
+        if (!isPoints) ...[
+          const SizedBox(height: 4),
+          Text(prize.type == DailyPrizeType.sponsor ? '${tr('Sponsor prize')} · ${tr('saved to My Vouchers')}' : tr('saved to My Vouchers'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
+        ],
+      ]),
+    );
+  }
+}
+
 class _WheelPainter extends CustomPainter {
-  final List<String> labels;
-  _WheelPainter(this.labels);
-  static const _colors = [AppColors.brandPrimary, AppColors.gold, AppColors.brandDark, Color(0xFFFF8C00)];
+  final List<DailyPrize> prizes;
+  _WheelPainter(this.prizes);
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final radius = size.width / 2;
-    final n = labels.length;
+    final n = prizes.length;
     final sweep = 2 * math.pi / n;
     for (var i = 0; i < n; i++) {
       final start = -math.pi / 2 + i * sweep;
-      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), start, sweep, true, Paint()..color = _colors[i % _colors.length]);
+      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), start, sweep, true, Paint()..color = prizes[i].color);
       final divider = Paint()
         ..color = Colors.white.withValues(alpha: 0.35)
         ..strokeWidth = 1.5
         ..style = PaintingStyle.stroke;
       canvas.drawLine(center, center + Offset(math.cos(start) * radius, math.sin(start) * radius), divider);
       final ang = start + sweep / 2;
-      final gold = _colors[i % _colors.length] == AppColors.gold;
       final tp = TextPainter(
-        text: TextSpan(text: labels[i], style: TextStyle(fontFamily: 'Urbanist', fontSize: 10, fontWeight: FontWeight.w700, color: gold ? AppColors.brandDarkest : Colors.white)),
+        text: TextSpan(text: prizes[i].short, style: const TextStyle(fontFamily: 'Urbanist', fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white)),
         textDirection: TextDirection.ltr,
         textAlign: TextAlign.center,
       )..layout(maxWidth: 64);
       canvas.save();
       canvas.translate(center.dx, center.dy);
       canvas.rotate(ang);
-      canvas.translate(radius * 0.58, 0);
+      canvas.translate(radius * 0.60, 0);
       canvas.rotate(math.pi / 2);
       tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
       canvas.restore();

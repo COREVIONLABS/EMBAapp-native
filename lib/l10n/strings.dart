@@ -1743,6 +1743,15 @@ const Map<String, String> _de = {
   'New lots drop regularly — check back soon.': 'Neue Objekte kommen regelmäßig — schau bald wieder vorbei.',
   'Memorabilia': 'Erinnerungsstücke',
   'No offers found for this selection.': 'Für diese Auswahl wurden keine Angebote gefunden.',
+  // ── Sponsored daily games ──
+  'presented by': 'präsentiert von',
+  'Spin to win points, tickets or sponsor prizes!': 'Dreh und gewinne Punkte, Tickets oder Sponsor-Preise!',
+  'Scratch to win points, tickets or sponsor prizes!': 'Rubbel und gewinne Punkte, Tickets oder Sponsor-Preise!',
+  'Sponsor prize': 'Sponsor-Preis',
+  'saved to My Vouchers': 'in Meine Gutscheine gelegt',
+  'Save to My Vouchers': 'In Meine Gutscheine',
+  'Won on the Daily Spin': 'Beim Glücksrad gewonnen',
+  'Won on the Scratch Card': 'Beim Rubbellos gewonnen',
 
   // ── Experiences as tombola prizes ──────────────────────────
   'Enter tombola to win': 'An der Tombola teilnehmen',

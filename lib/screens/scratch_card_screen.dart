@@ -1,9 +1,10 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_widgets.dart';
 import '../widgets/scratch_card.dart';
 import '../model/fan_model.dart';
+import '../model/daily_games.dart';
+import '../model/voucher_store.dart';
 import '../l10n/strings.dart';
 
 /// Presents Daily Card Scratch as a modal sheet over the current screen
@@ -28,22 +29,26 @@ class ScratchCardScreen extends StatefulWidget {
 class _ScratchCardScreenState extends State<ScratchCardScreen> {
   bool _revealed = false;
 
-  // Reward decided up front (so the revealed art matches), weighted to small.
-  static const _values = [20, 25, 30, 50, 75, 100];
-  static const _weights = [30, 25, 20, 13, 8, 4];
-  late final int _reward = _rollReward();
+  // Prize decided up front (so the revealed art matches), weighted to small.
+  late final DailyPrize _prize = kScratchPrizes[rollPrizeIndex(kScratchWeights)];
 
-  int _rollReward() {
-    var r = math.Random().nextInt(100);
-    for (var i = 0; i < _weights.length; i++) {
-      if (r < _weights[i]) return _values[i];
-      r -= _weights[i];
+  void _award() {
+    switch (_prize.type) {
+      case DailyPrizeType.points:
+        FanModel.addPoints(_prize.points);
+        break;
+      case DailyPrizeType.ticket:
+        voucherStore.issue(title: _prize.label, category: 'Tickets', points: 0, detail: tr('Won on the Scratch Card'));
+        break;
+      case DailyPrizeType.sponsor:
+        voucherStore.issue(title: _prize.label, category: 'Sponsor', points: 0, sponsor: _prize.sponsor, detail: tr('Won on the Scratch Card'));
+        break;
     }
-    return _values.first;
   }
 
   @override
   Widget build(BuildContext context) {
+    final isPoints = _prize.type == DailyPrizeType.points;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
@@ -76,36 +81,24 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(tr('Scratch the card to win rewards!'), style: AppText.body2.copyWith(color: AppColors.textLight)),
+                  Text(tr('Scratch to win points, tickets or sponsor prizes!'), textAlign: TextAlign.center, style: AppText.body2.copyWith(color: AppColors.textLight)),
                   const SizedBox(height: 12),
-                  Pill(
-                    color: AppColors.brandLightest,
-                    child: Text(tr('1 Scratch Left'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary, fontSize: 11)),
-                  ),
-                  const SizedBox(height: 20),
+                  const _SponsorBanner(),
+                  const SizedBox(height: 18),
                   ScratchCard(
                     height: 200,
                     onRevealed: () {
-                      FanModel.addPoints(_reward); // credit for real
+                      _award();
                       setState(() => _revealed = true);
                     },
-                    reward: Container(
-                      decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.goldGradient)),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.emoji_events_rounded, color: AppColors.brandDarkest, size: 44),
-                            const SizedBox(height: 8),
-                            Text('+$_reward ${tr('Points')}', style: AppText.h2.copyWith(color: AppColors.brandDarkest)),
-                          ],
-                        ),
-                      ),
-                    ),
+                    reward: _prizeArt(_prize),
                   ),
                   const SizedBox(height: 16),
                   if (_revealed)
-                    PrimaryButton('${tr('Claim')} +$_reward ${tr('Points')}', onTap: () => Navigator.of(context).maybePop())
+                    PrimaryButton(
+                      isPoints ? '${tr('Claim')} +${_prize.points} ${tr('Points')}' : tr('Save to My Vouchers'),
+                      onTap: () => Navigator.of(context).maybePop(),
+                    )
                   else
                     Text(tr('Scratch at least 40% of the card to reveal your reward'),
                         textAlign: TextAlign.center, style: AppText.body3Regular),
@@ -115,6 +108,53 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _prizeArt(DailyPrize p) {
+    switch (p.type) {
+      case DailyPrizeType.points:
+        return Container(
+          decoration: const BoxDecoration(gradient: LinearGradient(colors: AppColors.goldGradient)),
+          child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.emoji_events_rounded, color: AppColors.brandDarkest, size: 44),
+            const SizedBox(height: 8),
+            Text('+${p.points} ${tr('Points')}', style: AppText.h2.copyWith(color: AppColors.brandDarkest)),
+          ])),
+        );
+      default:
+        return Container(
+          decoration: BoxDecoration(gradient: LinearGradient(colors: [p.color, Color.lerp(p.color, Colors.black, 0.4)!], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+          child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Icon(p.icon, color: Colors.white, size: 42),
+            const SizedBox(height: 8),
+            Text(p.label, textAlign: TextAlign.center, style: AppText.label1.copyWith(color: Colors.white)),
+            if (p.type == DailyPrizeType.sponsor) ...[
+              const SizedBox(height: 2),
+              Text(tr('Sponsor prize'), style: AppText.caption1.copyWith(color: Colors.white70)),
+            ],
+          ])),
+        );
+    }
+  }
+}
+
+/// Paid "presented by the sponsor" banner — the sellable ad slot on the game.
+class _SponsorBanner extends StatelessWidget {
+  const _SponsorBanner();
+  @override
+  Widget build(BuildContext context) {
+    const s = kDailyGamesSponsor;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(color: s.color.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(999), border: Border.all(color: s.color.withValues(alpha: 0.25))),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Container(width: 22, height: 22, decoration: BoxDecoration(color: s.color, borderRadius: BorderRadius.circular(6)), child: Icon(s.icon, size: 14, color: Colors.white)),
+        const SizedBox(width: 8),
+        Text('${tr('presented by')} ${s.name}', style: AppText.caption1.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+        const SizedBox(width: 8),
+        Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColors.surfaceMinimal, borderRadius: BorderRadius.circular(5)), child: Text(tr('Ad'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700, fontSize: 9))),
+      ]),
     );
   }
 }
