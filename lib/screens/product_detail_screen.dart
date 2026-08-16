@@ -83,7 +83,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         const SizedBox(height: 20),
         Text(tr('Description'), style: AppText.label2),
         const SizedBox(height: 6),
-        Text('Official FC Schalke 04 ${p.category.toLowerCase()} item for the 2025/26 season. Made with recycled polyester for comfort and sustainability. Features the iconic royal blue design.',
+        Text(tr('Official FC Schalke 04 merchandise for the 2025/26 season. Made from recycled polyester for comfort and sustainability, with the iconic royal-blue design.'),
             style: AppText.body1.copyWith(color: AppColors.textNormal, height: 1.6, fontSize: 14)),
       ],
     );

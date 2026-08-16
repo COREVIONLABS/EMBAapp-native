@@ -87,35 +87,49 @@ class _BuyPointsScreenState extends State<BuyPointsScreen> {
             ),
           ]),
         ),
-        const SizedBox(height: 20),
-        // ── Escalating-bonus explainer (Revolut RevPoints idea) ──
+        const SizedBox(height: 24),
+        // ── Choose a pack (RevPoints-style tile grid) ──
+        Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Expanded(child: Text(tr('Choose a top-up'), style: AppText.label1)),
+          Text(tr('The more you buy, the more you save'), style: AppText.caption1.copyWith(color: AppColors.textLight)),
+        ]),
+        const SizedBox(height: 14),
+        for (var r = 0; r < _packs.length; r += 2) ...[
+          IntrinsicHeight(
+            child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Expanded(child: _PackTile(
+                points: _packs[r].$1, price: _packs[r].$2, bonus: _packs[r].$3, badge: _packs[r].$4,
+                selected: r == _sel, onTap: () => setState(() => _sel = r),
+              )),
+              const SizedBox(width: 12),
+              if (r + 1 < _packs.length)
+                Expanded(child: _PackTile(
+                  points: _packs[r + 1].$1, price: _packs[r + 1].$2, bonus: _packs[r + 1].$3, badge: _packs[r + 1].$4,
+                  selected: r + 1 == _sel, onTap: () => setState(() => _sel = r + 1),
+                ))
+              else
+                const Expanded(child: SizedBox()),
+            ]),
+          ),
+          const SizedBox(height: 12),
+        ],
+        const SizedBox(height: 8),
+        // ── Selected-pack summary ──
         Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(AppRadii.card)),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(color: AppColors.brandLightest, borderRadius: BorderRadius.circular(AppRadii.card)),
           child: Row(children: [
-            Container(width: 40, height: 40, decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.trending_up_rounded, color: AppColors.success, size: 22)),
-            const SizedBox(width: 12),
+            Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.hexagon_rounded, color: AppColors.brandPrimary, size: 24)),
+            const SizedBox(width: 14),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(tr('The more you buy, the bigger the bonus'), style: AppText.body2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
-              Text(tr('Extra points on top — up to +15% free.'), style: AppText.body3Regular),
+              Text(trp('You get {n} pts', n: FanModel.fmtPublic(_total)), style: AppText.label2.copyWith(color: AppColors.textDarker, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 2),
+              Text(_bonus > 0 ? trp('incl. {n} bonus points free', n: FanModel.fmtPublic(_bonus)) : tr('No bonus on this pack'), style: AppText.body3Regular),
             ])),
+            Text('€${p.$2.toStringAsFixed(2)}', style: AppText.h2.copyWith(color: AppColors.brandPrimary, fontSize: 24)),
           ]),
         ),
-        const SizedBox(height: 20),
-        Text(tr('Choose a top-up'), style: AppText.label1),
-        const SizedBox(height: 12),
-        for (var i = 0; i < _packs.length; i++) ...[
-          _PackTile(
-            points: _packs[i].$1,
-            price: _packs[i].$2,
-            bonus: _packs[i].$3,
-            badge: _packs[i].$4,
-            selected: i == _sel,
-            onTap: () => setState(() => _sel = i),
-          ),
-          const SizedBox(height: 10),
-        ],
-        const SizedBox(height: 10),
+        const SizedBox(height: 24),
 
         // ── Payment method ──
         Text(tr('Payment method'), style: AppText.label2),
@@ -165,40 +179,51 @@ class _PackTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bonusPts = (points * bonus / 100).round();
-    final total = points + bonusPts;
     return Tappable(
       scale: 0.98,
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
         decoration: BoxDecoration(
           color: selected ? AppColors.brandLightest : AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.card),
-          border: Border.all(color: selected ? AppColors.brandPrimary : AppColors.borderLightest, width: selected ? 1.8 : 1),
+          border: Border.all(color: selected ? AppColors.brandPrimary : AppColors.borderLightest, width: selected ? 2 : 1),
+          boxShadow: selected ? [BoxShadow(color: AppColors.brandPrimary.withValues(alpha: 0.22), blurRadius: 18, offset: const Offset(0, 6))] : null,
         ),
-        child: Row(children: [
-          Icon(selected ? Icons.radio_button_checked_rounded : Icons.radio_button_unchecked_rounded,
-              color: selected ? AppColors.brandPrimary : AppColors.textLight, size: 22),
-          const SizedBox(width: 14),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top row: hexagon token + selected check
             Row(children: [
-              Text('${FanModel.fmtPublic(points)} ${tr('pts')}', style: AppText.label2.copyWith(color: AppColors.textDarker)),
-              if (bonus > 0) ...[
-                const SizedBox(width: 8),
-                Pill(color: AppColors.successBg, padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2), child: Text('+$bonus%', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 11))),
-              ],
-              if (badge != null) ...[
-                const SizedBox(width: 8),
-                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), child: Text(tr(badge!), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 10))),
-              ],
+              Container(
+                width: 34, height: 34,
+                decoration: BoxDecoration(gradient: const LinearGradient(colors: AppColors.pointsGradient), borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.hexagon_rounded, color: AppColors.gold, size: 18),
+              ),
+              const Spacer(),
+              if (selected)
+                const Icon(Icons.check_circle_rounded, color: AppColors.brandPrimary, size: 22)
+              else if (badge != null)
+                Pill(gradient: const LinearGradient(colors: AppColors.goldGradient), padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Text(tr(badge!), style: AppText.caption1.copyWith(color: AppColors.brandDarkest, fontWeight: FontWeight.w800, fontSize: 9))),
             ]),
-            const SizedBox(height: 3),
-            Text(bonus > 0 ? trp('You get {n} pts total', n: FanModel.fmtPublic(total)) : tr('No bonus'), style: AppText.body3Regular),
-          ])),
-          const SizedBox(width: 10),
-          Text('€${price.toStringAsFixed(2)}', style: AppText.label1.copyWith(color: AppColors.brandPrimary, fontSize: 18)),
-        ]),
+            const SizedBox(height: 12),
+            // Big amount
+            Text(FanModel.fmtPublic(points), style: AppText.h2.copyWith(color: AppColors.textDarkest, fontSize: 28, height: 1.0)),
+            const SizedBox(height: 2),
+            Text(tr('pts'), style: AppText.body3.copyWith(color: AppColors.textLight)),
+            const SizedBox(height: 12),
+            // Bonus chip + price
+            Row(children: [
+              if (bonus > 0)
+                Pill(color: AppColors.successBg, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Text('+$bonus% ${tr('free')}', style: AppText.caption1.copyWith(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 11)))
+              else
+                Pill(color: AppColors.surfaceMinimal, padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), child: Text(tr('Starter'), style: AppText.caption1.copyWith(color: AppColors.textLight, fontWeight: FontWeight.w700, fontSize: 11))),
+              const Spacer(),
+              Text('€${price.toStringAsFixed(2)}', style: AppText.label2.copyWith(color: AppColors.brandPrimary, fontWeight: FontWeight.w800)),
+            ]),
+          ],
+        ),
       ),
     );
   }

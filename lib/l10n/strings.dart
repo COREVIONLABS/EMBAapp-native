@@ -2191,4 +2191,21 @@ const Map<String, String> _de = {
       'Deine {n} Freilose sind schon dabei — setze Extra-Lose ein, um deine Chance zu erhöhen.',
   'You have no free lots yet — add a lot with points to enter.':
       'Du hast noch keine Freilose — setze ein Los mit Punkten ein, um teilzunehmen.',
+
+  // ── Translation-audit fixes ────────────────────────────────
+  'Scratch here': 'Jetzt freirubbeln',
+  'Swipe your finger': 'Mit dem Finger wischen',
+  'No.': 'Nr.',
+  // Buy-points (RevPoints-style) tiles
+  'The more you buy, the more you save': 'Je mehr du kaufst, desto mehr sparst du',
+  'You get {n} pts': 'Du erhältst {n} Pkt',
+  'incl. {n} bonus points free': 'inkl. {n} Bonus-Punkte gratis',
+  'No bonus on this pack': 'Kein Bonus bei diesem Paket',
+  'free': 'gratis',
+  'Starter': 'Starter',
+  'Expires': 'Gültig bis',
+  'Exp': 'Gültig bis',
+  'No results for “{n}”.': 'Keine Ergebnisse für „{n}“.',
+  'Official FC Schalke 04 merchandise for the 2025/26 season. Made from recycled polyester for comfort and sustainability, with the iconic royal-blue design.':
+      'Offizielles FC Schalke 04 Merchandise für die Saison 2025/26. Aus recyceltem Polyester für Komfort und Nachhaltigkeit, im ikonischen königsblauen Design.',
 };

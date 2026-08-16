@@ -45,7 +45,7 @@ class ManageCardsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(tr('Max Mustermann'), style: AppText.body2.copyWith(color: Colors.white70)),
-                      Text('Exp ${c.$3}', style: AppText.body2.copyWith(color: Colors.white70)),
+                      Text('${tr('Exp')} ${c.$3}', style: AppText.body2.copyWith(color: Colors.white70)),
                     ],
                   ),
                 ],

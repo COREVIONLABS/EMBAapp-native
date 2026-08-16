@@ -85,13 +85,13 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         const SizedBox(height: 20),
         if (_q.isEmpty) ...[
-          _chips('Recent', _recent),
+          _chips(tr('Recent'), _recent),
           const SizedBox(height: 22),
-          _chips('Trending', _trending),
+          _chips(tr('Trending'), _trending),
         ] else if (results.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 60),
-            child: Center(child: Text('No results for “$_q”.', style: AppText.body2.copyWith(color: AppColors.textLight))),
+            child: Center(child: Text(trp('No results for “{n}”.', n: _q), style: AppText.body2.copyWith(color: AppColors.textLight))),
           )
         else
           for (final r in results) ...[_ResultRow(r), const SizedBox(height: 8)],

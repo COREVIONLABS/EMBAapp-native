@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../l10n/strings.dart';
 
 /// Real finger-scratch card (ported from the original EMBA prototype),
 /// restyled to the Schalke design. Swipe to erase the cover; the reward
@@ -75,16 +76,16 @@ class _ScratchPainter extends CustomPainter {
       ..shader = const LinearGradient(colors: AppColors.pointsGradient).createShader(rect);
     canvas.drawRect(rect, cover);
     final title = TextPainter(
-      text: const TextSpan(
-        text: 'Scratch Here',
-        style: TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: 22),
+      text: TextSpan(
+        text: tr('Scratch here'),
+        style: const TextStyle(fontFamily: 'Urbanist', color: Colors.white, fontWeight: FontWeight.w800, fontSize: 22),
       ),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: size.width);
     title.paint(canvas, Offset((size.width - title.width) / 2, size.height / 2 - title.height - 2));
     final sub = TextPainter(
       text: TextSpan(
-        text: 'Swipe your finger',
+        text: tr('Swipe your finger'),
         style: TextStyle(fontFamily: 'Urbanist', color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w500, fontSize: 13),
       ),
       textDirection: TextDirection.ltr,

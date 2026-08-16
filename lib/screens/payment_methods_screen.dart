@@ -29,7 +29,7 @@ class PaymentMethodsScreen extends StatelessWidget {
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('${c.$1} ${c.$2}', style: AppText.body2.copyWith(color: AppColors.textDarker)),
                   const SizedBox(height: 2),
-                  Text('Expires ${c.$3}', style: AppText.body3Regular),
+                  Text('${tr('Expires')} ${c.$3}', style: AppText.body3Regular),
                 ])),
                 if (c.$4) Pill(color: AppColors.brandLightest, child: Text(tr('Default'), style: AppText.caption1.copyWith(color: AppColors.brandPrimary))),
               ]),
